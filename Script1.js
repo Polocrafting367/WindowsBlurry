@@ -8,7 +8,7 @@
     }
         function changerFichierCSSXP() {
         var styleSheet = document.getElementById("styleSheet");
-        styleSheet.href = "https://cdn.jsdelivr.net/gh/Polocrafting367/WindowsBlurry-1@master/"; // Remplacez "NouveauFichier.css" par le nom de votre nouveau fichier CSS
+        styleSheet.href = "https://cdn.jsdelivr.net/gh/Polocrafting367/WindowsBlurry-1@master/WXP.css"; // Remplacez "NouveauFichier.css" par le nom de votre nouveau fichier CSS
                 var bouton = document.getElementById("download");
         bios.style.display = "none";
         bts.style.display = "none";
