@@ -8,7 +8,7 @@ Page HTML crée en partie avec des IA, le code n'est pas vraiment optimisé. Mai
 
 
 
-Télécharger les fichiers: https://github.com/Polocrafting/WindowsBlurry/releases/tag/WindowsBlurry <br>
+Télécharger les fichiers: [https://github.com/Polocrafting/WindowsBlurry/releases/tag/WindowsBlurry](https://github.com/Polocrafting367/WindowsBlurry-1/releases) <br>
 Chaine Youtube : https://www.youtube.com/channel/UCTL3fXI8aZnYweRvys6m2bA
 
 
