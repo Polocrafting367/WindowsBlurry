@@ -3,7 +3,7 @@ Page HTML crée en partie avec des IA, le code n'est pas vraiment optimisé. Mai
 
 À voir en ligne à cette adresse : https://sites.google.com/view/polocrafting/blurry-windows
 
-![image]([https://github.com/Polocrafting367/WindowsBlurry-1/blob/main/2023-12-02%2019-46-35_1.gif](https://github.com/Polocrafting367/WindowsBlurry-1/blob/main/Pr%C3%A9sentation%20annim%C3%A9))
+![image]([[https://github.com/Polocrafting367/WindowsBlurry-1/blob/main/2023-12-02%2019-46-35_1.gif](https://github.com/Polocrafting367/WindowsBlurry-1/blob/main/Pr%C3%A9sentation%20annim%C3%A9)](https://github.com/Polocrafting367/WindowsBlurry-1/blob/main/Pr%C3%A9sentation%20Annim%C3%A9.gif))
 
 
 
