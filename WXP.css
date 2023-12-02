@@ -19,8 +19,8 @@ body {
     width: 100%;
     position: fixed;
 
-    height: 50px;
-    background-color: rgba(0, 0, 255, 0);
+    height: 35px;
+    background-color: rgba(0, 0, 255, 1);
     z-index: 999;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     backdrop-filter: blur(10px);
@@ -44,8 +44,8 @@ body {
 
 .button {
     position: absolute;
-    bottom: 8px;
-    left: 50%;
+    bottom: 0px;
+    left: 70px;
     z-index: 1000;
     height: 35px;
     padding: 0px;
@@ -54,9 +54,12 @@ body {
     background-color: #fff;
     border: none;
     cursor: pointer;
-    border-radius: 15px;
+border-top-right-radius: 40px;
+
+border-bottom-right-radius: 40px;
+
     transform: translateX(-70px);
-    background-color: rgba(255, 255, 255, 1);
+    background-color: rgba(0, 255, 0, 1);
 }
 
 .phone {
@@ -78,18 +81,21 @@ body {
 
 #Donwload {
     position: absolute;
-    bottom: 8px;
-    left: 80px;
+    bottom: 0px;
+    left: 225px; /* Ajout du "px" après la valeur de la propriété left */
     z-index: 1000;
     height: 35px;
     padding: 0px;
     font-size: 18px;
-    width: 300px;
+    width: 250px;
     background-color: #fff;
     border: none;
     cursor: pointer;
-    border-radius: 15px;
-    background-color: rgba(255, 255, 255, 1);
+    border-radius: 5px;
+    background-color: rgba(50, 150, 255, 1);
+    float: right;
+    text-align: left; /* Ajout de cette ligne pour aligner le texte à gauche */
+    padding-left:20px;
 }
 
 .button:hover {
@@ -110,18 +116,25 @@ body {
 
 #guitt {
     position: absolute;
-    bottom: 8px;
-    left:390px;
+    bottom: 0px;
+    left: 480px; /* Ajout du "px" après la valeur de la propriété left */
     z-index: 1000;
-    width: 110px;
     height: 35px;
     padding: 0px;
     font-size: 18px;
+    width: 250px;
     background-color: #fff;
     border: none;
     cursor: pointer;
-    border-radius: 15px;
-    background-color: rgba(255, 255, 255, 1);
+    border-radius: 5px;
+    background-color: rgba(50, 150, 255, 1);
+    float: right;
+    text-align: left; /* Ajout de cette ligne pour aligner le texte à gauche */
+    padding-left:20px;
+}
+
+
+
 }
   #guitt:hover {
 
@@ -202,7 +215,7 @@ background-color: rgba(255, 255, 255, 0.1);
     left: 0;
     width: 100%;
     height: 30px;
-background-color: rgba(255, 255, 255, 0.1);
+background-color: rgba(0, 0, 255, 1);
     backdrop-filter: blur(10px);
     cursor: move;
     border-top-left-radius: 10px;
@@ -217,7 +230,7 @@ background-color: rgba(255, 255, 255, 0.1);
     left: 0;
     width: 100%;
     height: calc(100% - 30px);
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 255,255, 1);
     backdrop-filter: blur(50px);
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
@@ -229,7 +242,7 @@ background-color: rgba(255, 255, 255, 0.1);
     left: 200px;
     width: 500px;
     height: 450px;
-    background-color: rgba(255, 255, 255, 0.0);
+    background-color:rgba(0, 0, 255, 1);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     z-index: 1;
     border-bottom-left-radius: 10px;
@@ -247,7 +260,7 @@ background-color: rgba(255, 255, 255, 0.1);
     left: 0;
     width: 100%;
     height: 30px;
-background-color: rgba(255, 255, 255, 0.1);
+background-color: rgba(0, 0, 255, 1);
     backdrop-filter: blur(10px);
     cursor: move;
     border-top-left-radius: 10px;
@@ -261,7 +274,7 @@ background-color: rgba(255, 255, 255, 0.1);
     left: 0;
     width: 100%;
     height: calc(100% - 30px);
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 255, 255, 1);
     backdrop-filter: blur(50px);
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
@@ -274,7 +287,7 @@ background-color: rgba(255, 255, 255, 0.1);
     left: 50px;
     width: 400px;
     height: 320px;
-    background-color: rgba(255, 255, 255, 0.0);
+    background-color: rgba(0, 0, 255, 1);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     z-index: 1;
     border-bottom-left-radius: 10px;
@@ -292,7 +305,7 @@ background-color: rgba(255, 255, 255, 0.1);
     left: 0;
     width: 100%;
     height: 30px;
-background-color: rgba(255, 255, 255, 0.1);
+background-color: rgba(0, 0, 255, 1);
     backdrop-filter: blur(10px);
     cursor: move;
     border-top-left-radius: 10px;
@@ -306,7 +319,7 @@ background-color: rgba(255, 255, 255, 0.1);
     left: 0;
     width: 100%;
     height: calc(100% - 30px);
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 255, 255,1);
     backdrop-filter: blur(50px);
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
@@ -337,7 +350,7 @@ top: 25px;
 left: 50px;
 width: calc(100vw / 2);
 height: calc(100vh/1.7);
-background-color: rgba(255, 255, 255, 0.0);
+background-color:rgba(0, 0, 255, 1);
 box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 z-index: 1;
 border-radius: 10px;
@@ -351,7 +364,7 @@ will-change: transform;
     left: 0;
     width: 100%;
     height: 30px;
-background-color: rgba(255, 255, 255, 0.1);
+background-color: rgba(0, 0, 255, 1);
     backdrop-filter: blur(10px);
     cursor: move;
     border-top-left-radius: 10px;
@@ -365,7 +378,7 @@ background-color: rgba(255, 255, 255, 0.1);
 
     width: 100%;
     height: 100%;
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 255, 255, 1);
     backdrop-filter: blur(50px);
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
@@ -383,18 +396,17 @@ z-index: 3;
 
 
 .menu {
-background-color: rgba(255, 255, 255, 0.1);
+background-color: rgba(0, 0, 255, 1);
 backdrop-filter: blur(10px);
 width: 450px;
 height: 600px;
 position: fixed;
 transform: translate(-225px, -75px);
-border-top-right-radius: 10px;
-border-top-left-radius: 10px;
-border-bottom-right-radius: 10px;
-border-bottom-left-radius: 10px;
-bottom: 0;
-left: 50%;
+border-top-right-radius: 20px;
+
+
+bottom: -39px;
+left: 225px;
 
 display: flex;
 flex-direction: column;
@@ -422,7 +434,7 @@ color: #CCC;
 }
 
 .bottom-bar {
-background-color: rgba(255, 255, 255, 0.5);
+background-color: rgba(50, 150, 255, 1);
 bottom: 0;
 width: 100%;
 height: 90px;
@@ -432,9 +444,6 @@ justify-content: space-between;
 box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   position: absolute;
 
-
-border-bottom-right-radius: 10px;
-border-bottom-left-radius: 10px;
 
 }
 
@@ -464,17 +473,19 @@ margin-right: 20px;
 
 
 .close {
-  width: 60px;
+  width: 30px;
   height: 30px;
   background-color: transparent;
   position: relative;
   left: 100%;
   transform: translatex(-100%);
   overflow: hidden;
+  background-color : red;
+  border-radius: 10px;
 
 }
 .close:hover {
-  background-color: rgba(255, 0, 0, 0.5);
+  background-color: rgba(200, 20, 20, 1);
           border-top-right-radius: 10px;
 }
 .line {
@@ -668,18 +679,23 @@ font-size: 18px;
     #generate-btn{
 position: absolute;
 
-background-color: rgba(0, 0, 0, 0.5);
-color: white;
-border: none;
-border-radius: 15px;
+background-color: rgba(50, 150, 255, 1);
+
+
 top: 4%;
 left: 30px;
 right:30px;
 font-size: 18px;
+
+
+color: white; 
+border: none;
+border-radius: 5px;
 }
+
 #generate-btn:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-          border-radius: 15px;
+  background-color: rgba(20, 20, 200, 1);
+          border-radius: 5px;
 }
     #POWERbu{
 background-color: rgba(0, 0, 0, 0);
@@ -693,10 +709,10 @@ border: none;
     #btn-rapide{
 position: absolute;
 padding: 10px;
-background-color: rgba(0, 0, 0, 0.5);
+background-color: rgba(50, 150, 255, 1);
 color: white;
 border: none;
-border-radius: 15px;
+border-radius: 5px;
 top: 50%;
 left: 30px;
 width: 86%;
