@@ -8,3 +8,7 @@ Page HTML crée en partie avec des IA, le code n'est pas vraiment optimisé. Mai
 
 Télécharger les fichiers: https://github.com/Polocrafting/WindowsBlurry/releases/tag/WindowsBlurry <br>
 Chaine Youtube : https://www.youtube.com/channel/UCTL3fXI8aZnYweRvys6m2bA
+
+
+J'ai perdu l'acces à mon encien compre "polocrafting" mais je reste le créateur du porjet. je vais continuer son développement ici donc.
+Merci à @Zerbaib pour ça petite contribution sur l'ancien projet pour l'idée de séparrer les fichier pour que ce soit plus propre.
