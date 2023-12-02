@@ -13,7 +13,18 @@ body {
     overflow: hidden;
 }
 
+.rectangle {
+    bottom: 0px;
 
+    width: 100%;
+    position: fixed;
+
+    height: 50px;
+    background-color: rgba(0, 0, 255, 0);
+    z-index: 999;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+}
 
 .info {
     bottom: 60px;
