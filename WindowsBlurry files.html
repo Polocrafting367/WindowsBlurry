@@ -1,0 +1,164 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Bureau de Windows 7</title>
+    
+    <!-- Ajout du css -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    <!-- Ajout de la bibliothèque d'icônes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  </head>
+  
+  <body>
+    <div id="slidingDiv"class="ombre">
+      <span id="heure2"></span>
+      <span id="date2"></span>
+      <div class="info" id="info">Crée par polocrafting aidé par des IA tels que ChatGPT ou BingChat.
+        <br><br>Les image ébergé par https://www.zupimages.net/ peuvent parfoir être caprisieuse à chargé mais rien de bien grave.
+        <br><br>La page est toujours en développement, donc soyez compréhensif si vous rencontré un bug, bonne naviguation :) 
+        <br><br>V:310523-6
+      </div>
+      <button id="phone" class="phone" onclick="phone()">Mode Téléphone</button>
+      <img src="https://www.svgrepo.com/download/175749/double-up-arrow.svg" class="image-animation" style="filter: invert(100%);" draggable="false" alt="Votre image">
+    </div>
+
+    <div class="rectangle" id="rectangle" style="display: none;">
+      <button id="Donwload" class="button" onclick="window.open('https://github.com/Polocrafting/WindowsBlurry/releases/download/WindowsBlurry/A.telecharger.Windows.Blurry.dev.html')">
+        <img src="https://icon-icons.com/icons2/692/PNG/512/seo-social-web-network-internet_12_icon-icons.com_61498.png" width="15" height="15">          &nbsp;&nbsp;Télécharger le code HTML?
+      </button>
+      <button id="guitt" class="button" onclick="window.open('https://github.com/Polocrafting/WindowsBlurry')">
+        <img src="https://seeklogo.com/images/G/github-logo-7880D80B8D-seeklogo.com.png" width="15" height="15">
+        &nbsp;&nbsp;github
+      </button>
+      <button id="start-btn" class="button">
+        <img src="https://zupimages.net/up/23/21/vmcp.png" width="15" height="15">
+        &nbsp;&nbsp;Démarrer
+      </button>
+      <span id="heure"></span>
+      <span id="date"></span>
+    </div>
+    
+    <div class="yout" id="yout" style="display: none;">
+      <div class="yout-header">
+        <div id="titrefn">Visioneur Youtube (BETA)</div>
+      </div>
+      <div class="close" onclick="closeYout()">
+        <div class="line"></div>
+        <div class="line"></div>
+      </div>
+      <div class="yout-content">
+        <form>
+          <input type="text" placeholder="Rechercher" id="query">
+          <button type="submit">Rechercher</button>
+        </form>
+        <div id="resultat"></div>
+        <script src="assets/js/script1.js"></script>
+      </div>
+    </div>
+    
+    <div class="window" id="window1" style="display: none;">
+      <div class="window-header"><div id="titrefn">Bloc Note</div>
+    </div>
+    <div class="close" onclick="close()">
+      <div class="line"></div>
+      <div class="line"></div>
+    </div>
+    <div class="window-content">
+      <iframe src="https://notepad-online.com/fr/" id="note" style="width: 99.5%; height: 99.5%;" style="overflow: hidden;"></iframe>
+    </div>
+    <div class="bggene" id="window5" style="display: none;">
+      <div class="bggene-top"><div id="titrefn">Générateur de fond d'écran</div>
+    </div>
+    <div class="close" onclick="closeBG()">
+      <div class="line"></div>
+      <div class="line"></div>
+    </div>
+    <div class="bggene-content">
+      <button id="generate-btn" >
+        Générer le fond (ça peut être long avec un grand écran)
+        <br><br>
+        La résolution de l’image dépend de la taille de la page actuelle et de son zoom
+        <br>
+        Pour retiré la barre de navigation, téléchargez la page html (voir la barre des tâches)
+        <br>
+        Actualisez la page pour d’autres couleurs/motifs
+      </button>
+      <button id="saveim" style="display: none;">
+        Enregistrer l'image en local sur la machine (Actualiser la page (f5 ou ↻ pour actualiser))
+      </button>
+      <div id="image-container"></div>
+      <div class="loading-bar-container" id="charge">
+        <div>
+          <img src="https://media.flixcar.com/delivery/static/inpage/9/images/loading.gif" alt="GIF animé" width="100%" height="100%">
+        </div>
+        <div id="textt">Création de l'image en cours ...</div>
+      </div>
+    </div>  
+    <div class="windowsett" id="window4" style="display: none;">
+      <div class="windowsett-top"><div id="titrefn">Personnaliser</div>
+    </div>
+    <div class="close" onclick="closesett()">
+      <div class="line"></div>
+      <div class="line"></div>
+    </div>
+    <div class="windowsett-content">
+      <div id="opp" class="opp">
+        Changer l'opacité : &nbsp;
+        <input type="range" min="0" max="1" step="0.01" value="0.1" id="opacity-slider" onchange="changeTransparency()" />
+      </div>
+      <div id="blurr" class="blurr">
+        Flou  des fenêtres :  &nbsp;
+        <input type="range" min="0" max="50" value="10" id="blur-slider" oninput="changeBlur(this.value)">
+      </div>
+      <button id="changer-arriere-plan">
+        Changer l'arrière-plan
+      </button>
+      <button class="button-color" id="button-color" onclick="changeColor()">
+        Changer la couleur
+      </button>
+      <button class="dark" id="dark" onclick="changeDarkMode()">
+        Dark Mode
+      </button>
+      <button class="light" id="light" onclick="changeLightMode()">
+        Light Mode
+      </button>
+    </div>
+
+    <div class="window2" id="window3" style="display: none;">
+      <div class="window2-header">
+        <div id="titrefn">Calculatrice</div>
+      </div>
+      <div class="close" onclick="close()">
+        <div class="line"></div>
+        <div class="line"></div>
+      </div>
+      <div class="window2-content">
+        <iframe src="https://www.desmos.com/fourfunction?lang=fr" id="calc" style="width: 99%; height: 99.5%;" style="overflow: hidden;"></iframe>
+      </div>
+    </div>
+    
+    <br>
+    
+    <div id="menu" class="menu" style="display: none;">
+      <div class="top-bar">
+        <input type="text" placeholder="Chercher un élément ici">
+      </div>
+      <div class="bottom-bar">
+        <div class="profil">
+          <img src="https://yt3.ggpht.com/1Kmoh17x3yENxM4Xv0LSayWwIxdmqPn6eiRCwvV1DOvgrECifBI5twBpKoaWtETOaAt7uNqo=s176-c-k-c0x00ffffff-no-rj-mo" alt="Image de profil"> 
+        </div>
+        <div class="status-icon">
+          <button id="POWERbu" onclick="Power()"><img id="POWER" src="https://zupimages.net/up/23/09/7351.png" alt="Image de profil" ></button>
+        </div>
+      </div>
+      <button class="par" id="par" onclick="asett()">Personnaliser</button>
+      <button class="newwind" id="newwind" onclick="NewWIN()">Bloc Note</button>
+      <button class="newwind2" id="newwind2" onclick="NewWIN2()">Calculatrice</button>
+      <button class="newwind3" id="newwind3" onclick="aBG()">Générateur de fond d'écran</button>
+      <button class="newwind4" id="newwind4" onclick="NewWIN3()">Visioneur Youtube (BETA)</button>
+    </div>
+    <img id="off" class="fullscreen-image" draggable="false" src="https://cdn.dribbble.com/users/580/screenshots/2367300/spinkit3.gif" alt="Image en plein écran" style="display: block;">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+    <script src="assets/js/script2.js"></script>
+  </body>
+</html>
