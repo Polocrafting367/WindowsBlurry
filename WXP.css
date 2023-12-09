@@ -136,7 +136,7 @@ body {
  button {
     font-family: var(--sans-serif);
     -webkit-font-smoothing: antialiased;
-    font-size: 11px;
+    font-size: 18px;
     box-sizing: border-box;
     border: 1px solid #003c74;
 
@@ -149,52 +149,56 @@ body {
     box-shadow: none;
     border-radius: 3px;
  
-        
+                    box-shadow: inset -1px 1px #fff0cf, inset 1px 2px #fdd889, inset -2px 2px #fbc761, inset 2px -2px #e5a01a;
+
     
 }
- .buttonbb {  
+button:hover{box-shadow: inset -1px 1px #cee7ff, inset 1px 2px #98b8ea, inset -2px 2px #bcd4f6, inset 1px -1px #89ade4,
+            inset 2px -2px #89ade4;}
+
+.button-image {
+    filter: invert(100%); /* Inversion des couleurs uniquement pour l'image */
+}
+
+
+.buttonbb {
+
     -webkit-font-smoothing: antialiased;
     font-size: 11px;
     box-sizing: border-box;
     border: 1px solid #003c74;
-    background: linear-gradient(
-
-        #2CA4D9 0%,
-        #17AFEE 8%,
-        #139CEA 40%,
-        #1290E7 88%,
-        #1889E5 93%,
-        #1889E5 95%,
-        #0D75D6 96%,
-        #0064C0 100%
-    );
-    box-shadow: none;
+    background: linear-gradient(180deg, #4993E6 0%, #3475DB 8%, #488EF6 40%, #3980F4 88%, #2C62D4 93%, #2351BE 95%, #1D4DBE 96%, #1D4DBE 100%);
     border-radius: 3px;
+    box-shadow: 0px 5px 5px rgba(0,0,0,0.3); /* Ombre noire à l'extérieur */
+    color: white;
     &:not(:disabled) {
-        &:active,
-        &.active {
+        &:hover,
+        &.hover {
             box-shadow: none;
-            background: linear-gradient(
-                180deg,
-                rgba(205, 202, 195, 1) 0%,
-                rgba(227, 227, 219, 1) 8%,
-                rgba(229, 229, 222, 1) 94%,
-                rgba(242, 242, 241, 1) 100%
-            );
+            background: linear-gradient(180deg, #4993E6 0%, #4993E6 2%, #4993E6 5%, #55A3FF 25%, #55A0FF 80%, #4593FF 95%, #1D45A4 96%, #1941A5 100%);
+
         }
-        &:hover {
-            box-shadow: inset -1px 1px #fff0cf, inset 1px 2px #fdd889, inset -2px 2px #fbc761, inset 2px -2px #e5a01a;
+
+        &:active {
+            box-shadow: none;
+            background: linear-gradient(180deg, #4993E6 0%, #246BD5 2%, #15449E 5%, #1950B8 25%, #1A50B8 80%, #174AB3 95%, #1142B4 96%, #1941A5 100%);
+
         }
     }
+
     &:focus,
     &.focused {
-        box-shadow: inset -1px 1px #cee7ff, inset 1px 2px #98b8ea, inset -2px 2px #bcd4f6, inset 1px -1px #89ade4,
-            inset 2px -2px #89ade4;
+        box-shadow: none;
+        background: linear-gradient(180deg, #4993E6 0%, #4993E6 2%, #4993E6 5%, #55A3FF 25%, #55A0FF 80%, #4593FF 95%, #1D45A4 96%, #1941A5 100%);
+
     }
+
     &::-moz-focus-inner {
         border: 0;
     }
 }
+
+
 
 
 
@@ -219,10 +223,10 @@ body {
 
 #Donwload {
     position: absolute;
-    bottom: 0px;
+    bottom: 2px;
     left: 225px; /* Ajout du "px" après la valeur de la propriété left */
     z-index: 1000;
-    height: 35px;
+    height: 30px;
     padding: 0px;
     font-size: 18px;
     width: 250px;
@@ -254,10 +258,10 @@ body {
 
 #guitt {
     position: absolute;
-    bottom: 0px;
+    bottom: 2px;
     left: 480px; /* Ajout du "px" après la valeur de la propriété left */
     z-index: 1000;
-    height: 35px;
+    height: 30px;
     padding: 0px;
     font-size: 18px;
     width: 250px;
@@ -653,15 +657,16 @@ margin-right: 20px;
     font-size: 15px;
     font-style:bold;
     color:white;
-
-
+box-shadow: none;
     background: url(https://raw.githubusercontent.com/Polocrafting367/WindowsBlurry-1/628fe7c4086f33a1a7288b900b61e29e6d3584d5/Cr%C3%A9ation%20themes/SVG/close.svg)
   }
 
 .close:hover {
+box-shadow: none;
  background: url(https://raw.githubusercontent.com/Polocrafting367/WindowsBlurry-1/628fe7c4086f33a1a7288b900b61e29e6d3584d5/Cr%C3%A9ation%20themes/SVG/close-hover.svg)
 }
 .close:active  {
+box-shadow: none;
  background: url(https://raw.githubusercontent.com/Polocrafting367/WindowsBlurry-1/628fe7c4086f33a1a7288b900b61e29e6d3584d5/Cr%C3%A9ation%20themes/SVG/close-active.svg)
 }
 
