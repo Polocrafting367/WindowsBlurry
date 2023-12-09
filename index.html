@@ -43,9 +43,9 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 
-        </head><div class="rectangle" id="rectangle" style="display: none;">
+        </head><div class="rectangle" id="rectangle" >
 
-<button id="Donwload" class="button" onclick="window.open('https://polocrafting367.github.io/WindowsBlurry-1/')"><img src="https://cdn.icon-icons.com/icons2/780/PNG/512/full-screen_icon-icons.com_64712.png" width="15" height="15">&nbsp;&nbsp;Afficher en plein écran</button>
+<button id="Donwload" class="button" onclick="window.open('https://github.com/Polocrafting367/WindowsBlurry-1/releases/download/WindowsBlurry/A.telecharger.Windows.Blurry.dev.html')"><img src="https://cdn.icon-icons.com/icons2/780/PNG/512/full-screen_icon-icons.com_64712.png" width="15" height="15">&nbsp;&nbsp;Afficher en plein écran</button>
 
 <button id="guitt" class="button" onclick="window.open('https://github.com/Polocrafting367/WindowsBlurry-1')"><img src="https://seeklogo.com/images/G/github-logo-7880D80B8D-seeklogo.com.png" width="15" height="15">&nbsp;&nbsp;github</button>
 
@@ -59,14 +59,13 @@
     </div>
 
 <div class="yout" id="yout" style="display: none;">
-  <div class="yout-header">
+  <div class="yout-header" id="TOPSTY">
     <div id="titrefn">Visioneur Youtube (BETA)</div>
   </div>
 
-  <div class="close" onclick="closeYout()">
-    <div class="line"></div>
-    <div class="line"></div>
-  </div>
+
+<button class="close" onclick="closeYout()"></button>
+
 
   <div class="yout-content">
 
@@ -79,20 +78,17 @@
 
 
 
+ </div>
+ </div>
+ 
 
 
-    </div>
-  </div>
-</div>
 
+<div class="WSTY" id="window1" style="display: none;">
+  <div class="window-header" id="TOPSTY">
+    <div id="titrefn">Bloc Note</div></div>
 
-<div class="window" id="window1" style="display: none;">
-  <div class="window-header"><div id="titrefn">Bloc Note</div></div>
-
-      <div class="close" onclick="close()">
-    <div class="line"></div>
-    <div class="line"></div>
-  </div>
+      <button class="close" onclick="close()"></button>
   <div class="window-content">
 
 
@@ -101,16 +97,17 @@
 
 
   </div>
-</div>
-<div class="bggene" id="window5" style="display: none;">
-  <div class="bggene-top"><div id="titrefn">Générateur de fond d'écran</div></div>
+ </div>
 
-      <div class="close" onclick="closeBG()">
-    <div class="line"></div>
-    <div class="line"></div>
-  </div>
+
+<div class="bggene" id="window5" style="display: none;">
+  <div class="bggene-top" id="TOPSTY"><div id="titrefn">Générateur de fond d'écran</div></div>
+
+
+      <button class="close" onclick="closeBG()"></button>
+
   <div class="bggene-content">
-<button id="generate-btn" >Générer le fond (ça peut être long avec un grand écran)<br><br>La résolution de l’image dépend de la taille de la page actuelle et de son zoom<br>
+<button Class="BTSY" id="generate-btn" >Générer le fond (ça peut être long avec un grand écran)<br><br>La résolution de l’image dépend de la taille de la page actuelle et de son zoom<br>
 Pour retiré la barre de navigation, téléchargez la page html (voir la barre des tâches)<br>
 Actualisez la page pour d’autres couleurs/motifs</button>
    <button id="saveim" style="display: none;">Enregistrer l'image en local sur la machine (Actualiser la page (f5 ou ↻ pour actualiser))</button>
@@ -129,14 +126,11 @@ Actualisez la page pour d’autres couleurs/motifs</button>
 
   </div>
   <div class="windowsett" id="window4" style="display: none;">
-  <div class="windowsett-top"><div id="titrefn">Personnaliser</div>
-</div>
+  <div class="windowsett-top" id="TOPSTY"><div id="titrefn">Personnaliser</div></div>
 
 
-      <div class="close" onclick="closesett()">
-    <div class="line"></div>
-    <div class="line"></div>
-  </div>
+      <button class="close" onclick="closesett()"></button>
+
   <div class="windowsett-content">
 <div id="opp" class="opp">
   Changer l'opacité : &nbsp;
@@ -158,12 +152,10 @@ Flou  des fenêtres :  &nbsp;
   </div>
 
 <div class="window2" id="window3" style="display: none;">
-  <div class="window2-header"><div id="titrefn">Calculatrice</div></div>
+  <div class="window2-header" id="TOPSTY"><div id="titrefn">Calculatrice</div></div>
 
-      <div class="close" onclick="close()">
-    <div class="line"></div>
-    <div class="line"></div>
-  </div>
+      <button class="close" onclick="close()"></button>
+
 
   <div class="window2-content">
 
@@ -208,16 +200,14 @@ Flou  des fenêtres :  &nbsp;
   </div>
 
 
-
-
-  <button class="newwind" id="newwind" onclick="NewWIN()">Bloc Note</button>
-
-<button class="newwind2" id="newwind2" onclick="NewWIN2()">Calculatrice</button>
-<button class="newwind3" id="newwind3" onclick="aBG()">Générateur de fond d'écran</button>
-<button class="newwind4" id="newwind4" onclick="NewWIN3()">Visioneur Youtube (BETA)</button>
   <button class="par" id="par" onclick="asett()">Personnaliser</button>
-  <button class="dual" onclick="changerFichierCSS367()">367</button>
-  <button class="dual" onclick="changerFichierCSSXP()">XP</button>
+
+
+
+  <button class="BTSY" id="newwind" onclick="NewWIN()">Bloc Note</button>
+<button class="BTSY" id="newwind2" onclick="NewWIN2()">Calculatrice</button>
+<button class="BTSY" id="newwind3" onclick="aBG()">Générateur de fond d'écran</button>
+<button class="BTSY" id="newwind4" onclick="NewWIN3()">Visioneur Youtube (BETA)</button>
 
 </div>
 
