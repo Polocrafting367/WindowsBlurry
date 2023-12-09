@@ -3,7 +3,8 @@ Page HTML crée en partie avec des IA, le code n'est pas vraiment optimisé. Mai
 
 À voir en ligne à cette adresse : https://sites.google.com/view/polocrafting/blurry-windows
 
-https://github.com/Polocrafting367/WindowsBlurry-1/blob/main/Images/Pr%C3%A9sentation%20Annim%C3%A9.gif
+![image](https://github.com/Polocrafting367/WindowsBlurry-1/assets/152706679/fd4ab2bc-be05-4fe2-9887-902015191375)
+
 
 Télécharger les fichiers: https://github.com/Polocrafting367/WindowsBlurry-1/releases <br>
 Chaine Youtube : https://www.youtube.com/channel/UCTL3fXI8aZnYweRvys6m2bA
