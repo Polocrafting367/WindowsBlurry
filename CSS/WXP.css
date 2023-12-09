@@ -6,7 +6,7 @@ html, body {
 }
 
 body {
-    animation: backgroundAnimation 0.25s forwards;
+    animation: backgroundAnimation 0.5s forwards;
     position: relative;
     background-size: cover;
     background-position: center;
@@ -14,16 +14,16 @@ body {
 }
 @keyframes backgroundAnimation {
     0%, 20% {
-        background-image: url("https://raw.githubusercontent.com/Polocrafting367/WindowsBlurry-1/628fe7c4086f33a1a7288b900b61e29e6d3584d5/Cr%C3%A9ation%20themes/SVG/close.svg");
+        background-image: url("https://raw.githubusercontent.com/Polocrafting367/WindowsBlurry-1/d8cce4cc6e2ce7eee2e75f629f4273a5ac4e8e88/Images/close-active.svg");
     }
     25%, 45% {
-        background-image: url("https://raw.githubusercontent.com/Polocrafting367/WindowsBlurry-1/628fe7c4086f33a1a7288b900b61e29e6d3584d5/Cr%C3%A9ation%20themes/SVG/close-hover.svg");
+        background-image: url("https://raw.githubusercontent.com/Polocrafting367/WindowsBlurry-1/d8cce4cc6e2ce7eee2e75f629f4273a5ac4e8e88/Images/close-hover.svg");
     }
     50%, 70% {
-        background-image: url("https://raw.githubusercontent.com/Polocrafting367/WindowsBlurry-1/628fe7c4086f33a1a7288b900b61e29e6d3584d5/Cr%C3%A9ation%20themes/SVG/close-active.svg");
+        background-image: url("https://raw.githubusercontent.com/Polocrafting367/WindowsBlurry-1/d8cce4cc6e2ce7eee2e75f629f4273a5ac4e8e88/Images/close.svg");
     }
     75%, 100% {
-        background-image: url("https://hdqwalls.com/wallpapers/windows-xp-bliss-4k-lu.jpg");
+        background-image: url("https://github.com/Polocrafting367/WindowsBlurry-1/blob/main/Images/desktop-bg.jpg?raw=true");
     }
 }
 .rectangle {
@@ -658,16 +658,16 @@ margin-right: 20px;
     font-style:bold;
     color:white;
 box-shadow: none;
-    background: url(https://raw.githubusercontent.com/Polocrafting367/WindowsBlurry-1/628fe7c4086f33a1a7288b900b61e29e6d3584d5/Cr%C3%A9ation%20themes/SVG/close.svg)
+    background: url(https://raw.githubusercontent.com/Polocrafting367/WindowsBlurry-1/d8cce4cc6e2ce7eee2e75f629f4273a5ac4e8e88/Images/close.svg)
   }
 
 .close:hover {
 box-shadow: none;
- background: url(https://raw.githubusercontent.com/Polocrafting367/WindowsBlurry-1/628fe7c4086f33a1a7288b900b61e29e6d3584d5/Cr%C3%A9ation%20themes/SVG/close-hover.svg)
+ background: url(https://raw.githubusercontent.com/Polocrafting367/WindowsBlurry-1/d8cce4cc6e2ce7eee2e75f629f4273a5ac4e8e88/Images/close-hover.svg)
 }
 .close:active  {
 box-shadow: none;
- background: url(https://raw.githubusercontent.com/Polocrafting367/WindowsBlurry-1/628fe7c4086f33a1a7288b900b61e29e6d3584d5/Cr%C3%A9ation%20themes/SVG/close-active.svg)
+ background: url(https://raw.githubusercontent.com/Polocrafting367/WindowsBlurry-1/d8cce4cc6e2ce7eee2e75f629f4273a5ac4e8e88/Images/close-active.svg)
 }
 
 
