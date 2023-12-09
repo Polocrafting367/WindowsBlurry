@@ -464,19 +464,25 @@ margin-right: 20px;
 
 
 .close {
-  width: 60px;
-  height: 30px;
-  background-color: transparent;
-  position: relative;
-  left: 100%;
-  transform: translatex(-100%);
-  overflow: hidden;
+    width: 60px;
+    height: 30px;
+    left: 100%;
+    transform: translateX(-100%);
+    position: relative;
+    border: none;
+    font-size: 15px;
+    font-weight: bold; /* Correction de la propriété "font-style" à "font-weight" */
+    color: white;
+    border-top-right-radius: 10px;
+    background: url(https://atlona.com/wp-content/uploads/2016/08/close-button.png) center center/12px 12px no-repeat; /* Centrage de l'image avec taille spécifiée */
+}
 
-}
 .close:hover {
-  background-color: rgba(255, 0, 0, 0.5);
-          border-top-right-radius: 10px;
-}
+ background-color: rgba(255,0,0,0.7);}
+.close:active  {
+ background-color: rgba(150,0,0,0.7);}
+
+
 .line {
   position: absolute;
   top: 50%;
