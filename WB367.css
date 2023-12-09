@@ -498,7 +498,7 @@ margin-right: 20px;
   transform: rotate(-45deg);
 }
 
-.blurr {
+#blurr {
 position: absolute;
 top: 25PX;
 left: 30px;
@@ -513,12 +513,12 @@ font-family:arial;
 justify-content: center;
 align-items: center;
 }
-.blurr:hover {
+#blurr:hover {
 background-color: rgba(255, 255, 255, 0.1);
           border-radius: 15px;
 }
 
-.opp {
+#opp {
 position: absolute;
 top: 75px;
 left: 30px;
@@ -533,7 +533,7 @@ font-family:arial;
 justify-content: center;
 align-items: center;
 }
-.opp:hover {
+#opp:hover {
 background-color: rgba(255, 255, 255, 0.1);
           border-radius: 15px;
 }
@@ -945,4 +945,3 @@ transform: translateY(-50px);
 transform: translateY(0);
 }
 }
-
