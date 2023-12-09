@@ -1,0 +1,56 @@
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    user-select: none;
+    background-color:Black;
+        position: relative;
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+    
+}
+
+.bios {
+    position: absolute;
+             top : 30px;
+            background-color: grey;
+
+            width: 60%;
+            right: 20%;
+            height: 30px;
+            text-align: center;
+
+
+            font-size: 20px;
+            font-family: arial;
+            cursor: pointer;
+            color: black;
+             display: flex;
+    align-items: center; /* Pour aligner le contenu verticalement */
+    justify-content: center; /* Pour aligner le contenu horizontalement */
+
+}
+
+
+img, #fullscreen-image, #defaultCanvas0 {
+display: none
+
+}
+
+.dual {
+            background-color: black;
+            border: 0px solid #ccc;
+            font-size: 20px;
+            cursor: pointer;
+            color: grey;
+            font-family: arial;
+            height: 30px;
+}
+.bts {
+    position: absolute;
+            top : 70px;
+            left: 25%;
+            width: 600px;
+
+}
