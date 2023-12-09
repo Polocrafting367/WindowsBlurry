@@ -6,25 +6,36 @@ html, body {
 }
 
 body {
-    animation: backgroundAnimation 0.5s forwards;
+    animation: backgroundAnimation 1s forwards;
     position: relative;
     background-size: cover;
     background-position: center;
     overflow: hidden;
 }
 @keyframes backgroundAnimation {
-    0%, 20% {
+    0%, 10% {
         background-image: url("https://raw.githubusercontent.com/Polocrafting367/WindowsBlurry-1/d8cce4cc6e2ce7eee2e75f629f4273a5ac4e8e88/Images/close-active.svg");
     }
-    25%, 45% {
+    10%, 20% {
         background-image: url("https://raw.githubusercontent.com/Polocrafting367/WindowsBlurry-1/d8cce4cc6e2ce7eee2e75f629f4273a5ac4e8e88/Images/close-hover.svg");
     }
-    50%, 70% {
+    20%, 30% {
         background-image: url("https://raw.githubusercontent.com/Polocrafting367/WindowsBlurry-1/d8cce4cc6e2ce7eee2e75f629f4273a5ac4e8e88/Images/close.svg");
     }
-    75%, 100% {
+    30%, 40% {
+        background-image: url("https://github.com/Polocrafting367/WindowsBlurry-1/blob/main/Images/off%20hovver.png?raw=true");
+    }
+    40%, 50% {
+        background-image: url("https://github.com/Polocrafting367/WindowsBlurry-1/blob/main/Images/off%20norm.png?raw=true");
+    }    
+    50%, 60% {
+        background-image: url("https://github.com/Polocrafting367/WindowsBlurry-1/blob/main/Images/off%20clic.png?raw=true");
+    }
+    60%, 100% {
         background-image: url("https://github.com/Polocrafting367/WindowsBlurry-1/blob/main/Images/desktop-bg.jpg?raw=true");
     }
+
+
 }
 .rectangle {
     position: fixed;
@@ -140,21 +151,16 @@ body {
     box-sizing: border-box;
     border: 1px solid #003c74;
 
-    background: linear-gradient(
-        180deg,
-        rgba(255, 255, 255, 1) 0%,
-        rgba(236, 235, 229, 1) 86%,
-        rgba(216, 208, 196, 1) 100%
-    );
     box-shadow: none;
     border-radius: 3px;
- 
-                    box-shadow: inset -1px 1px #fff0cf, inset 1px 2px #fdd889, inset -2px 2px #fbc761, inset 2px -2px #e5a01a;
-
-    
+    box-shadow: inset -1px 1px #fff0cf, inset 1px 2px #fdd889, inset -2px 2px #fbc761, inset 2px -2px #e5a01a;
 }
-button:hover{box-shadow: inset -1px 1px #cee7ff, inset 1px 2px #98b8ea, inset -2px 2px #bcd4f6, inset 1px -1px #89ade4,
-            inset 2px -2px #89ade4;}
+
+button:hover {
+    box-shadow: inset -1px 1px #cee7ff, inset 1px 2px #98b8ea, inset -2px 2px #bcd4f6, inset 1px -1px #89ade4,
+        inset 2px -2px #89ade4;
+}
+
 
 .button-image {
     filter: invert(100%); /* Inversion des couleurs uniquement pour l'image */
@@ -241,6 +247,7 @@ button:hover{box-shadow: inset -1px 1px #cee7ff, inset 1px 2px #98b8ea, inset -2
 }
 
 .button:hover {
+
     background-color: rgba(200, 200, 200, 0.6);
 }
 
@@ -252,10 +259,18 @@ button:hover{box-shadow: inset -1px 1px #cee7ff, inset 1px 2px #98b8ea, inset -2
     background-color: rgba(200, 200, 200, 0.6);
 }
 
-#POWER:hover {
-    background-color: rgba(200, 200, 200, 0.6);
+#power:hover {
+
+    background-image: url(https://github.com/Polocrafting367/WindowsBlurry-1/blob/main/Images/off%20hovver.png?raw=true);
 }
 
+#power {
+    background-image: url(https://github.com/Polocrafting367/WindowsBlurry-1/blob/main/Images/off%20norm.png?raw=true);
+}
+#power:active {
+
+    background-image: url(https://github.com/Polocrafting367/WindowsBlurry-1/blob/main/Images/off%20clic.png?raw=true);
+}
 #guitt {
     position: absolute;
     bottom: 2px;
@@ -636,7 +651,7 @@ color: #CCC;
 
 width: 30px;
 height: 30px;
-border-radius: 50%;
+border-radius: 10%;
 box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
 background-color: rgba(0, 0, 0, 0.5);
 margin-right: 20px;
@@ -836,16 +851,16 @@ width: 95%;
 }
 
 #generate-btn:hover {
-  background-color: rgba(20, 20, 200, 1);
+  background-color: rgba(0, 0, 0, 0);
           border-radius: 5px;
 }
-    #POWERbu{
-background-color: rgba(0, 0, 0, 0);
-border: none;
+#POWERbu {
+    background-color: transparent;
+        box-shadow: 0px rgba(0,0,0,0);
+    border: none;
+    padding: 0;
+
 }
-
-
-
 
 
     #btn-rapide{
