@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        // Récupérer le thème depuis localStorage
+        var style = localStorage.getItem('Theme') || 'style.css';
+    </script>
+    <link rel="stylesheet" href="" id="theme-stylesheet">
+    <script>
+        // Mettre à jour l'attribut href de la balise link avec la variable style
+        document.getElementById('theme-stylesheet').href = style;
+    </script>
+    <title>Néomorphisme Calculator</title>
+</head>
+<body>
+    <div class="calculator">
+        <div class="display" id="display">0</div>
+        <div class="buttons">
+            <button class="Calc operator" onclick="clearDisplay()">C</button>
+            <button class="Calc operator" onclick="appendInput('/')">/</button>
+            <button class="Calc operator" onclick="appendInput('*')">*</button>
+            <button class="Calc operator" onclick="appendInput('-')">-</button>
+            <button class="Calc" onclick="appendInput('7')">7</button>
+            <button class="Calc" onclick="appendInput('8')">8</button>
+            <button class="Calc" onclick="appendInput('9')">9</button>
+            <button class="Calc operator double-height" onclick="appendInput('+')">+</button>
+            <button class="Calc" onclick="appendInput('4')">4</button>
+            <button class="Calc" onclick="appendInput('5')">5</button>
+            <button class="Calc" onclick="appendInput('6')">6</button>
+            <button class="Calc" onclick="appendInput('1')">1</button>
+            <button class="Calc" onclick="appendInput('2')">2</button>
+            <button class="Calc" onclick="appendInput('3')">3</button>
+            <button class="Calc operator double-height" onclick="calculateResult()">=</button>
+            <button class="Calc double-width" onclick="appendInput('0')">0</button>
+            <button class="Calc" onclick="appendInput('.')">.</button>
+        </div>
+    </div>
+    <script src="Calc.js"></script>
+</body>
+</html>

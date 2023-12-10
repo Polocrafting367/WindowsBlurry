@@ -72,33 +72,36 @@ function Power(){
 
 
 function black() {
-    var image = document.getElementById("off");
-  image.src ="../Images/balck.png";
+  var image = document.getElementById("off");
+  image.classList.replace(image.className, "black-image");
   off.style.display = "block";
-   offIsVisible = true;}
+  offIsVisible = true;
+}
 
 setTimeout(black, 1000);
 
-
 function changerImage() {
   var image = document.getElementById("off");
-  image.src ="../Images/restrarting-window_02.gif";
+  image.classList.replace(image.className, "changer-image");
 }
 
 setTimeout(changerImage, 1500);
 
 function restart() {
-
   var image = document.getElementById("off");
-  image.src ="../Images/balck.png";
+  image.classList.replace(image.className, "black-image");
 }
 
 setTimeout(restart, 4000);
 
 function glow() {
   var image = document.getElementById("off");
-  image.src ="../Images/Welcom.gif";
+  image.classList.replace(image.className, "glow-image");
   slidingDiv.style.display = "block";
+
+
+
+
 
 // Sélectionner tous les éléments qui ont la classe window
 var windows = document.querySelectorAll(".window");

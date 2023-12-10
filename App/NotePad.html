@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mon Bloc-Notes</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    #editor {
+      width: 80%;
+      margin: 20px auto;
+      padding: 10px;
+      border: 1px solid #ccc;
+      min-height: 200px;
+      font-size: 16px;
+    }
+    #options {
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="options">
+    <label for="fontSize">Taille de police:</label>
+    <select id="fontSize" onchange="changeFontSize()">
+      <option value="12">12px</option>
+      <option value="16">16px</option>
+      <option value="20">20px</option>
+      <option value="24">24px</option>
+    </select>
+
+    <button onclick="saveText()">Enregistrer</button>
+  </div>
+
+  <div id="editor" contenteditable="true" oninput="updateLocalStorage()">
+    <!-- Le contenu du bloc-notes sera affiché ici -->
+  </div>
+
+  <script>
+    // Charger le contenu depuis le stockage local
+    document.getElementById('editor').innerHTML = localStorage.getItem('editorContent') || '';
+
+    // Fonction pour mettre à jour le stockage local à chaque modification
+    function updateLocalStorage() {
+      var content = document.getElementById('editor').innerHTML;
+      localStorage.setItem('editorContent', content);
+    }
+
+    // Fonction pour changer la taille de la police
+    function changeFontSize() {
+      var fontSize = document.getElementById('fontSize').value;
+      document.getElementById('editor').style.fontSize = fontSize + 'px';
+    }
+
+    // Fonction pour enregistrer le contenu dans un fichier (simulé ici avec une alerte)
+    function saveText() {
+      var content = document.getElementById('editor').innerHTML;
+      alert("Contenu enregistré:\n\n" + content);
+    }
+  </script>
+
+</body>
+</html>

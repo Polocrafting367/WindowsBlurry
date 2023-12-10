@@ -79,15 +79,12 @@ body {
     right: 60px;
     width: 350px;
     position: absolute;
-    border-radius: 20px;
-    height: 320px;
-    background-color: rgba(255, 255, 255, 0.3);
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(10px);
-    font-family: arial;
-    font-size: 20px;
-    color: white;
-    padding: 20px;
+
+  background-color: #FFA; /* couleur du ballon */
+  padding: 15px;
+  border-radius: 15px;
+
+  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.5);
 }
 
 
@@ -413,8 +410,8 @@ background-color: white;
     position: absolute;
     top: 50px;
     left: 200px;
-    width: 500px;
-    height: 450px;
+    width: 350px;
+    height: 390px;
     
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     z-index: 1;
@@ -888,6 +885,13 @@ font-size: 18px;
           border-radius: 15px;
 }
 
+#supp{
+position: absolute;
+bottom: 120px;
+left: 63%;
+width: 34%;
+font-size: 18px;
+}
 .content {
 margin: 10px auto;
 max-width: 600px;
@@ -968,12 +972,12 @@ input[type=text] {
   margin: 0;
   position: absolute;
   right:20px;
-  top:3px;
+  top:5px;
   color:white;
 }
 #date {
         position: absolute;
-
+display:none;
   top:30%;
 }
 
@@ -982,14 +986,14 @@ input[type=text] {
   font-weight: bold;
   margin: 0;
   position: absolute;
-bottom:120px;
+bottom:28%;
 left: 60px;
   color:white;
 }
 #date2 {
         position: absolute;
 
-  bottom:60px;
+  bottom:18%;
 }
 
 #video-container {
@@ -1041,12 +1045,16 @@ border-bottom-left-radius: 0;
 }
 
         .fullscreen-image {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 9998;
+            background-image: url('../Images/installer-xp-cd-19.jpg');
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw; /* Utilisation de vw (viewport width) pour la largeur */
+  height: 100vh; /* Utilisation de vh (viewport height) pour la hauteur */
+  background-size: cover; /* Ajuste la taille de l'image pour couvrir entièrement le conteneur */
+  background-position: center; /* Centre l'image dans le conteneur */
+  z-index: 9998;
+
     }
 
 #slidingDiv {
@@ -1074,7 +1082,7 @@ cursor: -webkit-grab;
 
 .image-animation {
 position: absolute;
-bottom: 30px;
+bottom: 120px;
 left: 0;
 right: 0;
 margin: auto;
@@ -1097,4 +1105,120 @@ transform: translateY(-50px);
 100% {
 transform: translateY(0);
 }
+}
+
+
+
+.calculator {
+    background-color: #ecf0f3;
+
+    box-shadow: 20px 20px 60px #b8c1c9, -20px -20px 60px #ffffff;
+    overflow: hidden;
+    max-width: 400px;
+    width: 100%;
+}
+
+.display {
+    font-size: 2em;
+    background-color: #ecf0f3;
+    padding: 10px;
+    text-align: right;
+}
+
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    padding: 10px;
+}
+
+.Calc {
+    font-size: 1.5em;
+    padding: 10px;
+    
+   
+    cursor: pointer;
+  
+
+
+font-family: var(--sans-serif);
+    -webkit-font-smoothing: antialiased;
+
+    box-sizing: border-box;
+    border: 1px solid #003c74;
+
+    box-shadow: none;
+    border-radius: 3px;
+    &:not(:disabled) {
+        &:active,
+
+        &:hover {
+            box-shadow: inset -1px 1px #fff0cf, inset 1px 2px #fdd889, inset -2px 2px #fbc761, inset 2px -2px #e5a01a;
+        }
+    }
+    &:focus,
+    &.focused {
+        box-shadow: inset -1px 1px #cee7ff, inset 1px 2px #98b8ea, inset -2px 2px #bcd4f6, inset 1px -1px #89ade4,
+            inset 2px -2px #89ade4;
+    }
+    &::-moz-focus-inner {
+        border: 0;
+    }
+
+
+
+}
+
+.Calc:active {
+    transform: scale(0.95);
+}
+
+.operator {
+    background-color: #ff9f43;
+}
+
+.Calc.double-height {
+    grid-row: span 2;
+}
+
+.Calc.double-width {
+    grid-column: span 2;
+}
+
+
+.black-image {
+  background-image: url('../Images/Black.png');
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw; /* Utilisation de vw (viewport width) pour la largeur */
+  height: 100vh; /* Utilisation de vh (viewport height) pour la hauteur */
+  background-size: cover; /* Ajuste la taille de l'image pour couvrir entièrement le conteneur */
+  background-position: center; /* Centre l'image dans le conteneur */
+  z-index: 9998;
+
+}
+.changer-image {
+  background-image: url('../Images/XPboot.gif');
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw; /* Utilisation de vw (viewport width) pour la largeur */
+  height: 100vh; /* Utilisation de vh (viewport height) pour la hauteur */
+  background-size: cover; /* Ajuste la taille de l'image pour couvrir entièrement le conteneur */
+  background-position: center; /* Centre l'image dans le conteneur */
+  z-index: 9998;
+}
+
+
+.glow-image {
+  background-image: url('../Images/installer-xp-cd-19.jpg');
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw; /* Utilisation de vw (viewport width) pour la largeur */
+  height: 100vh; /* Utilisation de vh (viewport height) pour la hauteur */
+  background-size: cover; /* Ajuste la taille de l'image pour couvrir entièrement le conteneur */
+  background-position: center; /* Centre l'image dans le conteneur */
+  z-index: 9998;
 }

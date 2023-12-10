@@ -6,11 +6,11 @@ html, body {
 }
 
 body {
-    background-image: url("../Images/zyta.png");
     position: relative;
     background-size: cover;
     background-position: center;
     overflow: hidden;
+    background-image: url("../Images/zyta.png");
 }
 
 .rectangle {
@@ -24,6 +24,7 @@ body {
     z-index: 999;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     backdrop-filter: blur(10px);
+
 }
 
 .info {
@@ -678,6 +679,22 @@ font-size: 18px;
   background-color: rgba(255, 255, 255, 0.1);
           border-radius: 15px;
 }
+          #supp{
+position: absolute;
+padding: 10px;
+background-color: rgba(0, 0, 0, 0.5);
+color: white;
+border: none;
+border-radius: 15px;
+top: 310px;
+left: 30px;
+width: 86%;
+font-size: 18px;
+}
+#supp:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+          border-radius: 15px;
+}
     #generate-btn{
 position: absolute;
 
@@ -731,6 +748,7 @@ right: 70px;
 width: 30%;
 font-size: 18px;
 }
+
 #btn-rapide:hover {
   background-color: rgba(255, 255, 255, 0.1);
           border-radius: 15px;
@@ -838,9 +856,9 @@ left: 60px;
 }
 
 #note ,#calc {
-filter: brightness(1) contrast(0.5);
-opacity: 0.75;
-filter: invert(1);
+
+
+
 background-color: transparent;
 
       border-bottom-right-radius: 10px;
@@ -895,12 +913,16 @@ border-bottom-left-radius: 0;
 }
 
         .fullscreen-image {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 9998;
+          background-image: url('../Images/Welcom.gif');
+    position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw; /* Utilisation de vw (viewport width) pour la largeur */
+  height: 100vh; /* Utilisation de vh (viewport height) pour la hauteur */
+  background-size: cover; /* Ajuste la taille de l'image pour couvrir entièrement le conteneur */
+  background-position: center; /* Centre l'image dans le conteneur */
+  z-index: 9998;
+
     }
 
 #slidingDiv {
@@ -951,4 +973,95 @@ transform: translateY(-50px);
 100% {
 transform: translateY(0);
 }
+}
+
+
+
+.calculator {
+    background-color: #ecf0f3;
+    border-radius: 15px;
+    box-shadow: 20px 20px 60px #b8c1c9, -20px -20px 60px #ffffff;
+    overflow: hidden;
+    max-width: 400px;
+    width: 100%;
+}
+
+.display {
+    font-size: 2em;
+    background-color: #ecf0f3;
+    padding: 10px;
+    text-align: right;
+}
+
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    padding: 10px;
+}
+
+.Calc {
+    font-size: 1.5em;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #ecf0f3;
+    box-shadow: 10px 10px 30px #b8c1c9, -10px -10px 30px #ffffff;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.Calc:active {
+    transform: scale(0.95);
+}
+
+.operator {
+    background-color: #ff9f43;
+}
+
+.Calc.double-height {
+    grid-row: span 2;
+}
+
+.Calc.double-width {
+    grid-column: span 2;
+}
+
+
+
+.black-image {
+  background-image: url('../Images/Black.png');
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw; /* Utilisation de vw (viewport width) pour la largeur */
+  height: 100vh; /* Utilisation de vh (viewport height) pour la hauteur */
+  background-size: cover; /* Ajuste la taille de l'image pour couvrir entièrement le conteneur */
+  background-position: center; /* Centre l'image dans le conteneur */
+  z-index: 9998;
+
+}
+.changer-image {
+  background-image: url('../Images/restrarting-window_02.gif');
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw; /* Utilisation de vw (viewport width) pour la largeur */
+  height: 100vh; /* Utilisation de vh (viewport height) pour la hauteur */
+  background-size: cover; /* Ajuste la taille de l'image pour couvrir entièrement le conteneur */
+  background-position: center; /* Centre l'image dans le conteneur */
+  z-index: 9998;
+
+}
+
+.glow-image {
+  background-image: url('../Images/Welcom.gif');
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw; /* Utilisation de vw (viewport width) pour la largeur */
+  height: 100vh; /* Utilisation de vh (viewport height) pour la hauteur */
+  background-size: cover; /* Ajuste la taille de l'image pour couvrir entièrement le conteneur */
+  background-position: center; /* Centre l'image dans le conteneur */
+  z-index: 9998;
 }
