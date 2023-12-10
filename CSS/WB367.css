@@ -104,8 +104,10 @@ body {
     background-color: rgba(200, 200, 200, 0.6);
 }
 
-#POWER {    background-image: url(https://zupimages.net/up/23/09/7351.png);
-background-color: rgba(200, 200, 200, 1)}
+#POWER {    
+  background-image: url(https://zupimages.net/up/23/09/7351.png);
+background-color: rgba(200, 200, 200, 1)
+}
 #POWER:hover {
     background-color: rgba(200, 200, 200, 0.6);
 
