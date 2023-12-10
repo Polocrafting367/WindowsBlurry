@@ -7,8 +7,18 @@
 
 
         localStorage.setItem('Theme', "../CSS/WB367.css");
-        localStorage.setItem('Boot', "changerFichierCSS367");
+        localStorage.setItem('Boot', "FichierCSS367");
+        location.reload(true);
+        
     }
+    function FichierCSS367() {
+        var styleSheet = document.getElementById("styleSheet");
+        styleSheet.href = "CSS/WB367.css"; // Remplacez "NouveauFichier.css" par le nom de votre nouveau fichier CSS
+                var bouton = document.getElementById("download");
+        bios.style.display = "none";
+    }
+
+
         function changerFichierCSSXP() {
         var styleSheet = document.getElementById("styleSheet");
         styleSheet.href = "CSS/WXP.css"; // Remplacez "NouveauFichier.css" par le nom de votre nouveau fichier CSS
@@ -17,9 +27,18 @@
 
 
         localStorage.setItem('Theme', "../CSS/WXP.css");
-        localStorage.setItem('Boot', "changerFichierCSSXP");
+        localStorage.setItem('Boot', "FichierCSSXP");
+        location.reload(true);
+
     }
 
+        function FichierCSSXP() {
+        var styleSheet = document.getElementById("styleSheet");
+        styleSheet.href = "CSS/WXP.css"; // Remplacez "NouveauFichier.css" par le nom de votre nouveau fichier CSS
+                var bouton = document.getElementById("download");
+        bios.style.display = "none";
+
+    }
 
 
     function phone(){
@@ -43,7 +62,9 @@
  function Supp() {        
     localStorage.setItem('Theme', "");
     localStorage.setItem('Boot', "");
-    localStorage.setItem('editorContent', "");}
+    localStorage.setItem('editorContent', "");
+alert("La page va redémarrer sans sauvegarde");
+location.reload(true);}
 
 
 var fonctionAExecuter = localStorage.getItem('Boot');
@@ -79,5 +100,5 @@ function verr() {
 setTimeout(verr, 3000);
 
 } else {
-    
+
 }
