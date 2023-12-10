@@ -1,14 +1,14 @@
 
     function changerFichierCSS367() {
         var styleSheet = document.getElementById("styleSheet");
-        styleSheet.href = "https://rawcdn.githack.com/Polocrafting367/WindowsBlurry-1/7ee789ad48dc6a9ee86fedd0bf9edb76cdd179d0/WB367.css"; // Remplacez "NouveauFichier.css" par le nom de votre nouveau fichier CSS
+        styleSheet.href = "CSS/WB367.css"; // Remplacez "NouveauFichier.css" par le nom de votre nouveau fichier CSS
                 var bouton = document.getElementById("download");
         bios.style.display = "none";
         bts.style.display = "none";
     }
         function changerFichierCSSXP() {
         var styleSheet = document.getElementById("styleSheet");
-        styleSheet.href = "https://rawcdn.githack.com/Polocrafting367/WindowsBlurry-1/7ee789ad48dc6a9ee86fedd0bf9edb76cdd179d0/WXP.css"; // Remplacez "NouveauFichier.css" par le nom de votre nouveau fichier CSS
+        styleSheet.href = "CSS/WXP.css"; // Remplacez "NouveauFichier.css" par le nom de votre nouveau fichier CSS
                 var bouton = document.getElementById("download");
         bios.style.display = "none";
         bts.style.display = "none";
@@ -28,7 +28,7 @@
         B2IsVisible = false;
         var styleSheet = document.getElementById("styleSheet");
 
-        styleSheet.href = "https://rawcdn.githack.com/Polocrafting367/WindowsBlurry-1/7ee789ad48dc6a9ee86fedd0bf9edb76cdd179d0/WP.css"; // Remplacez "NouveauFichier.css" par le nom de votre nouveau fichier CSS
+        styleSheet.href = "CSS/WP.css"; // Remplacez "NouveauFichier.css" par le nom de votre nouveau fichier CSS
         bts.style.display = "none";
         bios.style.display = "none";
         var bouton = document.getElementById("download");

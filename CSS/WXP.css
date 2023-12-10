@@ -6,7 +6,7 @@ html, body {
 }
 
 body {
-    animation: backgroundAnimation 10s forwards;
+    animation: backgroundAnimation 1s forwards;
     position: relative;
     background-size: cover;
     background-position: center;
@@ -14,25 +14,25 @@ body {
 }
 @keyframes backgroundAnimation {
     0%, 10% {
-        background-image: url("https://raw.githubusercontent.com/Polocrafting367/WindowsBlurry-1/d8cce4cc6e2ce7eee2e75f629f4273a5ac4e8e88/Images/close-active.svg");
+        background-image: url("../Images/close-active.svg") ;
     }
     10%, 20% {
-        background-image: url("https://raw.githubusercontent.com/Polocrafting367/WindowsBlurry-1/d8cce4cc6e2ce7eee2e75f629f4273a5ac4e8e88/Images/close-hover.svg");
+        background-image: url("../Images/close-hover.svg") ;
     }
     20%, 30% {
-        background-image: url("https://raw.githubusercontent.com/Polocrafting367/WindowsBlurry-1/d8cce4cc6e2ce7eee2e75f629f4273a5ac4e8e88/Images/close.svg");
+        background-image: url("../Images/close.svg") ;
     }
     30%, 40% {
-        background-image: url("https://github.com/Polocrafting367/WindowsBlurry-1/blob/main/Images/off%20hovver.png?raw=true");
+        background-image: url("../Images/off%20hovver.png") ;
     }
     40%, 50% {
-        background-image: url("https://github.com/Polocrafting367/WindowsBlurry-1/blob/main/Images/off%20norm.png?raw=true");
+        background-image: url("../Images/off%20norm.png") ;
     }    
     50%, 60% {
-        background-image: url("https://github.com/Polocrafting367/WindowsBlurry-1/blob/main/Images/off%20clic.png?raw=true");
+        background-image: url("../Images/off%20clic.png") ;
     }
     60%, 100% {
-        background-image: url("https://github.com/Polocrafting367/WindowsBlurry-1/blob/main/Images/desktop-bg.jpg?raw=true");
+        background-image: url("../Images/desktop-bg.jpg") ;
     }
 
 
@@ -261,15 +261,15 @@ button:hover {
 
 #power:hover {
 
-    background-image: url(https://github.com/Polocrafting367/WindowsBlurry-1/blob/main/Images/off%20hovver.png?raw=true);
+    background-image: url(../Images/off%20hovver.png);
 }
 
 #power {
-    background-image: url(https://github.com/Polocrafting367/WindowsBlurry-1/blob/main/Images/off%20norm.png?raw=true);
+    background-image: url(../Images/off%20norm.png);
 }
 #power:active {
 
-    background-image: url(https://github.com/Polocrafting367/WindowsBlurry-1/blob/main/Images/off%20clic.png?raw=true);
+    background-image: url(../Images/off%20clic.png);
 }
 #guitt {
     position: absolute;
@@ -673,16 +673,16 @@ margin-right: 20px;
     font-style:bold;
     color:white;
 box-shadow: none;
-    background: url(https://raw.githubusercontent.com/Polocrafting367/WindowsBlurry-1/d8cce4cc6e2ce7eee2e75f629f4273a5ac4e8e88/Images/close.svg)
+    background: url(../Images/close.svg)
   }
 
 .close:hover {
 box-shadow: none;
- background: url(https://raw.githubusercontent.com/Polocrafting367/WindowsBlurry-1/d8cce4cc6e2ce7eee2e75f629f4273a5ac4e8e88/Images/close-hover.svg)
+ background: url(../Images/close-hover.svg)
 }
 .close:active  {
 box-shadow: none;
- background: url(https://raw.githubusercontent.com/Polocrafting367/WindowsBlurry-1/d8cce4cc6e2ce7eee2e75f629f4273a5ac4e8e88/Images/close-active.svg)
+ background: url(../Images/close-active.svg)
 }
 
 
@@ -1055,7 +1055,7 @@ width: 100%;
 height: 100%;
 background-color: black;
 position: absolute;
-background-image: url("https://github.com/Polocrafting367/WindowsBlurry-1/blob/main/Images/welcome-long.png?raw=true");
+background-image: url("../Images/welcome-long.png");
 bottom: 0;
    
     background-size: cover;

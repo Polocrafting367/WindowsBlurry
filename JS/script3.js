@@ -73,7 +73,7 @@ function Power(){
 
 function black() {
     var image = document.getElementById("off");
-  image.src ="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACoCAMAAABt9SM9AAAAA1BMVEUAAACnej3aAAAAR0lEQVR4nO3BAQEAAACCIP+vbkhAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAO8GxYgAAb0jQ/cAAAAASUVORK5CYII=";
+  image.src ="../Images/balck.png";
   off.style.display = "block";
    offIsVisible = true;}
 
@@ -82,7 +82,7 @@ setTimeout(black, 1000);
 
 function changerImage() {
   var image = document.getElementById("off");
-  image.src ="https://cdn.dribbble.com/users/3656783/screenshots/6713099/restrarting-window_02.gif";
+  image.src ="../Images/restrarting-window_02.gif";
 }
 
 setTimeout(changerImage, 1500);
@@ -90,14 +90,14 @@ setTimeout(changerImage, 1500);
 function restart() {
 
   var image = document.getElementById("off");
-  image.src ="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACoCAMAAABt9SM9AAAAA1BMVEUAAACnej3aAAAAR0lEQVR4nO3BAQEAAACCIP+vbkhAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAO8GxYgAAb0jQ/cAAAAASUVORK5CYII=";
+  image.src ="../Images/balck.png";
 }
 
 setTimeout(restart, 4000);
 
 function glow() {
   var image = document.getElementById("off");
-  image.src ="https://cdn.dribbble.com/users/580/screenshots/2367300/spinkit3.gif";
+  image.src ="../Images/Welcom.gif";
   slidingDiv.style.display = "block";
 
 // Sélectionner tous les éléments qui ont la classe window
