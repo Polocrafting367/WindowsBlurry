@@ -6,7 +6,7 @@ html, body {
 }
 
 body {
-    animation: backgroundAnimation 1s forwards;
+    animation: backgroundAnimation 10s forwards;
     position: relative;
     background-size: cover;
     background-position: center;
