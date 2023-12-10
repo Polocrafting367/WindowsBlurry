@@ -4,6 +4,17 @@ var slidingDiv = document.getElementById("slidingDiv");
 var initialY = null;
 var offsetY = 0;
 
+function boot() {
+  document.body.classList.add("background");
+}
+
+setTimeout(boot, 0);
+
+
+
+
+
+
 // Gérer l'événement de clic de souris lorsqu'il commence
 slidingDiv.addEventListener("mousedown", function(event) {
   initialY = event.clientY;

@@ -16,6 +16,8 @@
         styleSheet.href = "CSS/WB367.css"; // Remplacez "NouveauFichier.css" par le nom de votre nouveau fichier CSS
                 var bouton = document.getElementById("download");
         bios.style.display = "none";
+                localStorage.setItem('Theme', "../CSS/WB367.css");
+        localStorage.setItem('Boot', "FichierCSS367");
     }
 
 
@@ -37,6 +39,8 @@
         styleSheet.href = "CSS/WXP.css"; // Remplacez "NouveauFichier.css" par le nom de votre nouveau fichier CSS
                 var bouton = document.getElementById("download");
         bios.style.display = "none";
+                localStorage.setItem('Theme', "../CSS/WXP.css");
+        localStorage.setItem('Boot', "FichierCSSXP");
 
     }
 
@@ -59,12 +63,18 @@
         alert.style.display = "none";
         var bouton = document.getElementById("download");
 }
- function Supp() {        
-    localStorage.setItem('Theme', "");
+ function Supp() {  
+ var confirmation = window.confirm("Êtes-vous sûr de vouloir supprimer, cela redémarrera la page sans sauvegarde ?");    
+ if (confirmation) {
+        // L'utilisateur a cliqué sur "OK"
+            localStorage.setItem('Theme', "");
     localStorage.setItem('Boot', "");
     localStorage.setItem('editorContent', "");
-alert("La page va redémarrer sans sauvegarde");
-location.reload(true);}
+
+location.reload(true);
+        // Mettez ici le code que vous souhaitez exécuter si l'utilisateur a confirmé
+    }  
+}
 
 
 var fonctionAExecuter = localStorage.getItem('Boot');

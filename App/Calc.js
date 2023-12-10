@@ -19,3 +19,6 @@ function calculateResult() {
         display.textContent = 'Error';
     }
 }
+
+
+
