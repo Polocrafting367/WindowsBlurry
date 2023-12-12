@@ -8,13 +8,8 @@ body {
     background-size: cover;
     background-position: center;
     overflow: hidden;
-        margin: 0;
-    padding: 0;
-
+    
 }
- p{color:white;}
-     p.enterPressed {
-      background-color:grey; }
 
 .bios {
     position: absolute;
@@ -37,67 +32,9 @@ body {
 
 }
 
-.Text {
-    position: absolute;
-             top : 30px;
-            background-color: grey;
-
-            width: 60%;
-            right: 20%;
-            height: 30px;
-            text-align: center;
-
-
-            font-size: 20px;
-            font-family: arial;
-            cursor: pointer;
-            color: black;
-             display: flex;
-    align-items: center; /* Pour aligner le contenu verticalement */
-    justify-content: center; /* Pour aligner le contenu horizontalement */
-
-}
-
-#typewriter {
-
-display:none;
-}
-#typewriter2 {
-
-display:none;
-}
-
-#logogo{          
-    position: fixed;
-    top: 20%;
-    left: 50%;
-    transform: translate(-50%);
-}
-
-
-#logo {
-
-            color: white;
-font: 8px monospace;
-
-
-
-
-);
-}
-
-
-
-#indus {
-    font: 8px monospace;
-    position: fixed;
-    top: 80%;
-    left: 3%; /* Ajoutez cette ligne pour placer l'élément en bas à droite */
-}
-
 
 img, #fullscreen-image, #defaultCanvas0 {
-display: none;
+display: none
 
 }
 

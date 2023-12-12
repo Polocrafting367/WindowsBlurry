@@ -1,48 +1,57 @@
 
-    function changerFichierCSS367() {
+    function FichierCSS367() {
         var styleSheet = document.getElementById("styleSheet");
-        styleSheet.href = "CSS/WB367.css"; // Remplacez "NouveauFichier.css" par le nom de votre nouveau fichier CSS
+        styleSheet.href = "../CSS/WB367.css"; // Remplacez "NouveauFichier.css" par le nom de votre nouveau fichier CSS
                 var bouton = document.getElementById("download");
-        bios.style.display = "none";
+
 
 
         localStorage.setItem('Theme', "../CSS/WB367.css");
         localStorage.setItem('Boot', "FichierCSS367");
-        location.reload(true);
+  
         
     }
-    function FichierCSS367() {
-        var styleSheet = document.getElementById("styleSheet");
-        styleSheet.href = "CSS/WB367.css"; // Remplacez "NouveauFichier.css" par le nom de votre nouveau fichier CSS
-                var bouton = document.getElementById("download");
-        bios.style.display = "none";
-                localStorage.setItem('Theme', "../CSS/WB367.css");
-        localStorage.setItem('Boot', "FichierCSS367");
-    }
 
 
-        function changerFichierCSSXP() {
+
+        function FichierCSSXP() {
         var styleSheet = document.getElementById("styleSheet");
-        styleSheet.href = "CSS/WXP.css"; // Remplacez "NouveauFichier.css" par le nom de votre nouveau fichier CSS
+        styleSheet.href = "../CSS/WXP.css"; // Remplacez "NouveauFichier.css" par le nom de votre nouveau fichier CSS
                 var bouton = document.getElementById("download");
-        bios.style.display = "none";
+
 
 
         localStorage.setItem('Theme', "../CSS/WXP.css");
         localStorage.setItem('Boot', "FichierCSSXP");
-        location.reload(true);
+
 
     }
 
-        function FichierCSSXP() {
+
+        document.addEventListener("DOMContentLoaded", function() {
+            // Vérifier si la valeur "Boot" est présente dans le stockage local
+            var bootValue = localStorage.getItem('Boot');
+
+            if (bootValue && bootValue === "FichierCSS367") {
         var styleSheet = document.getElementById("styleSheet");
-        styleSheet.href = "CSS/WXP.css"; // Remplacez "NouveauFichier.css" par le nom de votre nouveau fichier CSS
-                var bouton = document.getElementById("download");
-        bios.style.display = "none";
-                localStorage.setItem('Theme', "../CSS/WXP.css");
-        localStorage.setItem('Boot', "FichierCSSXP");
+        styleSheet.href = "../CSS/WB367.css";
+            }
+            if (bootValue && bootValue === "FichierCSSXP") {
+       var styleSheet = document.getElementById("styleSheet");
+        styleSheet.href = "../CSS/WXP.css";
+            }
 
-    }
+  setTimeout(function() {
+  document.body.classList.add("background");
+}, 300);
+
+
+  setTimeout(function() {
+          rectangle.style.display = "block";
+    rectangleIsVisible = true;
+}, 1200);
+
+        });
 
 
     function phone(){
@@ -57,7 +66,7 @@
         B2IsVisible = false;
         var styleSheet = document.getElementById("styleSheet");
 
-        styleSheet.href = "CSS/WP.css"; // Remplacez "NouveauFichier.css" par le nom de votre nouveau fichier CSS
+        styleSheet.href = "../CSS/WP.css"; // Remplacez "NouveauFichier.css" par le nom de votre nouveau fichier CSS
         bts.style.display = "none";
         bios.style.display = "none";
         alert.style.display = "none";
@@ -71,44 +80,8 @@
     localStorage.setItem('Boot', "");
     localStorage.setItem('editorContent', "");
 
-location.reload(true);
+window.location.href = "bios.html";
         // Mettez ici le code que vous souhaitez exécuter si l'utilisateur a confirmé
     }  
 }
 
-
-var fonctionAExecuter = localStorage.getItem('Boot');
-
-if (fonctionAExecuter !== null) {
-    // La fonction existe, vous pouvez l'exécuter
-    window[fonctionAExecuter](); 
-
-
-
-function restart() {
-  var image = document.getElementById("off");
-  image.classList.replace(image.className, "changer-image");
-}
-setTimeout(restart, 0);
-
-
-function glow() {
-  var image = document.getElementById("off");
-  image.classList.replace(image.className, "black-image");
-  
-}
-
-setTimeout(glow, 2000);
-
-function verr() {
-  var image = document.getElementById("off");
-  image.classList.replace(image.className, "glow-image");
-  off.style.zIndex = "100";
-
-}
-
-setTimeout(verr, 3000);
-
-} else {
-
-}

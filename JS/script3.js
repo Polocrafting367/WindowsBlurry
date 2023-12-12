@@ -1,78 +1,9 @@
 
 
-var slidingDiv = document.getElementById("slidingDiv");
-var initialY = null;
-var offsetY = 0;
-
-function boot() {
-  document.body.classList.add("background");
-}
-
-setTimeout(boot, 0);
 
 
 
-
-
-
-// Gérer l'événement de clic de souris lorsqu'il commence
-slidingDiv.addEventListener("mousedown", function(event) {
-  initialY = event.clientY;
-  slidingDiv.style.cursor = "grabbing";
-});
-
-// Gérer l'événement de déplacement de souris pendant le clic
-window.addEventListener("mousemove", function(event) {
-  if (initialY !== null) {
-    offsetY = event.clientY - initialY;
-    slidingDiv.style.top = offsetY + "px";
-
-    // Calculer la hauteur minimale de l'écran à 80%
-    var minHeight = -(window.innerHeight * 0.8);
-
-    // Vérifier si la hauteur de la div atteint ou dépasse la hauteur minimale
-    if (offsetY <= minHeight) {
-      slidingDiv.style.display = "none"; // Cacher la div
-
-        function desabl() {
-        off.style.display = "none";
-        offIsVisible = false;
-}
-
-setTimeout(desabl, 1000);
-
-        function men() {
-          rectangle.style.display = "block";
-    rectangleIsVisible = true;
-}
-
-setTimeout(men, 2000);
-
-    } 
-  }
-});
-
-// Gérer l'événement de relâchement de souris
-window.addEventListener("mouseup", function(event) {
-  if (initialY !== null) {
-    slidingDiv.style.cursor = "grab";
-    initialY = null;
-    offsetY = 0;
-
-    // Récupérer la position initiale de la div
-    var initialTop = 0;
-
-    // Vérifier si la div n'a pas disparu et la ramener à la position initiale
-    if (slidingDiv.style.display !== "none") {
-      slidingDiv.style.top = initialTop + "px";
-    }
-       if (slidingDiv.style.display !== "block") {
-      slidingDiv.style.top = initialTop + "px";
-    }
-  }
-});
-
-
+//
 
 
 function Power(){
@@ -92,8 +23,7 @@ function black() {
 setTimeout(black, 1000);
 
 function changerImage() {
-  var image = document.getElementById("off");
-  image.classList.replace(image.className, "changer-image");
+window.location.href = "bios.html";
 }
 
 setTimeout(changerImage, 1500);
@@ -367,8 +297,7 @@ document.querySelector("canvas").style.display = "none";
       var dateAffichee = jour + '/' + mois + '/' + annee;
       document.getElementById("heure").innerHTML = heureAffichee;
       document.getElementById("date").innerHTML = dateAffichee;
-       document.getElementById("heure2").innerHTML = heureAffichee;
-      document.getElementById("date2").innerHTML = dateAffichee;
+
     }
     afficherHeureDate();
     setInterval(afficherHeureDate, 1000);
@@ -951,3 +880,8 @@ function setTranslate(xPos, yPos, el) {
 
       a.click();
     }
+
+
+
+
+
