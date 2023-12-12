@@ -43,13 +43,13 @@
 
   setTimeout(function() {
   document.body.classList.add("background");
-}, 300);
+}, 400);
 
 
   setTimeout(function() {
           rectangle.style.display = "block";
     rectangleIsVisible = true;
-}, 1200);
+}, 1500);
 
         });
 

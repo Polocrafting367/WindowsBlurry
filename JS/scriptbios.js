@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
             // Passer à la ligne suivante
             setTimeout(function() {
                 typeText(lineIndex);
-            }, 10); // Changer la valeur pour ajuster la vitesse de frappe
+            }, 70); // Changer la valeur pour ajuster la vitesse de frappe
         }
     }
 
@@ -80,21 +80,21 @@ setTimeout(function() {
             // Passer à la ligne suivante
             setTimeout(function() {
                 typeText(lineIndex);
-            }, 10); // Changer la valeur pour ajuster la vitesse de frappe
+            }, 70); // Changer la valeur pour ajuster la vitesse de frappe
         }
     }
 
     // Démarrer l'effet de machine à écrire
     typeText(0);
-}, 400);
+}, 1600);
 
 setTimeout(function() {
    document.getElementById('logo').style.display = 'none'; 
    document.getElementById('indus').style.display = 'none';
    document.getElementById('entert').style.display = 'none';
-}, 2300);
+}, 3000);
 
 setTimeout(function() {
 window.location.href = "../Boot/boot.html";
-}, 3000);
+}, 3200);
 
