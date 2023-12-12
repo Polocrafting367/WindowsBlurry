@@ -1,8 +1,14 @@
+setTimeout(function() {
+    var maDiv = document.getElementById("tem");
+    maDiv.style.display = "block";
+}, 200);
+
+
 
     function changerFichierCSS367() {
         var styleSheet = document.getElementById("styleSheet");
         styleSheet.href = "../CSS/WB367.css"; // Remplacez "NouveauFichier.css" par le nom de votre nouveau fichier CSS
-                var bouton = document.getElementById("download");
+        var bouton = document.getElementById("download");
         bios.style.display = "none";
 
 
@@ -11,6 +17,7 @@
 
  
         window.location.href = "../Boot/367boot.html";
+
     }
 
 
@@ -32,8 +39,8 @@
 
 
         document.addEventListener("DOMContentLoaded", function() {
-            // Vérifier si la valeur "Boot" est présente dans le stockage local
-            var bootValue = localStorage.getItem('Boot');
+             //Vérifier si la valeur "Boot" est présente dans le stockage local
+                 var bootValue = localStorage.getItem('Boot');
 
             if (bootValue && bootValue === "FichierCSS367") {
                     window.location.href = "367boot.html";

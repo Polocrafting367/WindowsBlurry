@@ -92,9 +92,9 @@ setTimeout(function() {
    document.getElementById('logo').style.display = 'none'; 
    document.getElementById('indus').style.display = 'none';
    document.getElementById('entert').style.display = 'none';
-}, 3000);
+}, 3500);
 
 setTimeout(function() {
 window.location.href = "../Boot/boot.html";
-}, 3200);
+}, 3900);
 
