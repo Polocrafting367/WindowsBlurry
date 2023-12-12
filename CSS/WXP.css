@@ -139,7 +139,7 @@ button:hover {
 
 
 .button-image {
-    filter: invert(100%); /* Inversion des couleurs uniquement pour l'image */
+   /* filter: invert(100%);  Inversion des couleurs uniquement pour l'image */
 }
 
 

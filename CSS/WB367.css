@@ -80,12 +80,12 @@ body {
 #Donwload {
     position: absolute;
     bottom: 8px;
-    left: 80px;
+    left: 20px;
     z-index: 1000;
     height: 35px;
     padding: 0px;
     font-size: 18px;
-    width: 300px;
+    width: 160px;
     background-color: #fff;
     border: none;
     cursor: pointer;
@@ -119,7 +119,7 @@ background-color: rgba(10, 10, 10, 0.8)
 #guitt {
     position: absolute;
     bottom: 8px;
-    left:390px;
+    left:200px;
     z-index: 1000;
     width: 110px;
     height: 35px;
