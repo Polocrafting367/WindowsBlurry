@@ -48,7 +48,7 @@ setTimeout(function() {
         localStorage.setItem('Boot', "FichierCSS7");
 
  
-        window.location.href = "../Boot/367boot.html";
+        window.location.href = "../Boot/7boot.html";
 
     }
 
