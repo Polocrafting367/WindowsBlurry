@@ -6,9 +6,6 @@
     
     <!-- Ajout du css -->
     <link id="styleSheet" rel="stylesheet" href="../CSS/BIOS.css">
-
-    <!-- Ajout de la bibliothèque d'icônes -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   </head>
 
 
@@ -17,151 +14,114 @@
 
 
 
+  </head>
+    <div class="rectangle" id="rectangle" style="display: none;">
 
+        <button id="Donwload" class="" onclick="window.open('https://www.youtube.com/channel/UCTL3fXI8aZnYweRvys6m2bA?view_as=subscriber')">
+          <img class="button-image" src="../Images/YT.png" width="22" height="15">&nbsp;&nbsp;Polocrafting
+        </button>
 
+        <button id="guitt" class="" onclick="window.open('https://github.com/Polocrafting367/WindowsBlurry-1')">
+          <img class="button-image" src="../Images/github-logo.png" width="15" height="15">&nbsp;&nbsp;GitHub
+        </button>
 
-
-
-
-
-
-    <!-- Ajouter la bibliothèque d'icônes -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-
-        </head><div class="rectangle" id="rectangle" style="display: none;">
-
-<button id="Donwload" class="buttonbb" onclick="window.open('https://www.youtube.com/channel/UCTL3fXI8aZnYweRvys6m2bA?view_as=subscriber')">
-  <img class="button-image" src="../Images/YT.png" width="22" height="15">&nbsp;&nbsp;Polocrafting
-</button>
-
-<button id="guitt" class="buttonbb" onclick="window.open('https://github.com/Polocrafting367/WindowsBlurry-1')">
-  <img class="button-image" src="../Images/github-logo.png" width="15" height="15">&nbsp;&nbsp;GitHub
+<button id="start-btn" class="button">
+  <img id="logostart" src="../Images/367LOGO.png" alt="Logo" class="logostart">&nbsp;&nbsp;Démarrer
 </button>
 
 
-      <button id="start-btn" class="button"><img src="../Images/367LOGO.png" width="15" height="15">&nbsp;&nbsp;Démarrer</button>
-
- <span id="heure"></span>
-    <span id="date"></span>
+        <span id="heure"></span>
+        <span id="date"></span>
 
 
 
     </div>
+    
+<!-- fenêtres-->
 
 <div class="yout" id="yout" style="display: none;">
   <div class="yout-header" id="TOPSTY">
-    <div id="titrefn">Visioneur Youtube (BETA)</div>
+    <div id="titrefn">Visionneur Youtube (BETA)</div>
   </div>
-
-
-<button class="close" onclick="closeYout()"></button>
-
+  <button class="close" onclick="closeYout()"></button>
 
   <div class="yout-content">
-
-
-<form>
-  <input  type="text" placeholder="Rechercher" id="query">
-  <button type="submit">Rechercher</button>
-</form>
-<div id="resultat"></div>
-
-
-
- </div>
- </div>
- 
+    <form>
+      <input type="text" placeholder="Rechercher" id="query">
+      <button type="submit">Rechercher</button>
+    </form>
+    <div id="resultat"></div>
+  </div>
+</div>
 
 
 
 <div class="window1" id="window1" style="display: none;">
   <div class="window-header" id="TOPSTY">
-    <div id="titrefn">Bloc Note</div></div>
-
-      <button class="close" onclick="close()"></button>
-  <div class="window-content">
-
-
- <iframe src="../App/NotePad.html" id="note" style="width: 99.5%; height: 99.5%;" style="overflow: hidden;"></iframe>
-
-
-
+    <div id="titrefn">Bloc Note</div>
   </div>
- </div>
+  <button class="close" onclick="close()"></button>
+  <div class="window-content">
+    <iframe src="../App/NotePad.html" id="note" style="width: 99.5%; height: 99.5%; overflow: hidden;"></iframe>
+  </div>
+</div>
+
+
 
 
 <div class="bggene" id="window5" style="display: none;">
-  <div class="bggene-top" id="TOPSTY"><div id="titrefn">Générateur de fond d'écran</div></div>
-
-
-      <button class="close" onclick="closeBG()"></button>
-
+  <div class="bggene-top" id="TOPSTY">
+    <div id="titrefn">Générateur de fond d'écran</div>
+  </div>
+  <button class="close" onclick="closeBG()"></button>
   <div class="bggene-content">
-<button Class="BTSY" id="generate-btn" >Générer le fond (ça peut être long avec un grand écran)<br><br>La résolution de l’image dépend de la taille de la page actuelle et de son zoom<br>
-Pour retiré la barre de navigation, téléchargez la page html (voir la barre des tâches)<br>
-Actualisez la page pour d’autres couleurs/motifs</button>
-   <button id="saveim" style="display: none;">Enregistrer l'image en local sur la machine (Actualiser la page (f5 ou ↻ pour actualiser))</button>
-
-   <div id="image-container"></div>
-
-<div class="loading-bar-container" id="charge">
-  <div>  <img src="../Images/loading.gif" alt="GIF animé" width="100%" height="100%"></div>
-  <div id="textt">Création de l'image en cours ...</div>
+    <button class="BTSY" id="generate-btn">Générer le fond (ça peut être long avec un grand écran)<br><br>La résolution de l’image dépend de la taille de la page actuelle et de son zoom<br>Pour retirer la barre de navigation, téléchargez la page html (voir la barre des tâches)<br>Actualisez la page pour d’autres couleurs/motifs</button>
+    <button id="saveim" style="display: none;">Enregistrer l'image en local sur la machine (Actualiser la page (f5 ou ↻ pour actualiser))</button>
+    <div id="image-container"></div>
+    <div class="loading-bar-container" id="charge">
+      <div><img src="../Images/loading.gif" alt="GIF animé" width="100%" height="100%"></div>
+      <div id="textt">Création de l'image en cours ...</div>
+    </div>
+  </div>
 </div>
 
 
-  </div>  
 
+
+<div class="windowsett" id="window4" style="display: none;">
+  <div class="windowsett-top" id="TOPSTY">
+    <div id="titrefn">Personnaliser</div>
   </div>
-
-  </div>
-  <div class="windowsett" id="window4" style="display: none;">
-  <div class="windowsett-top" id="TOPSTY"><div id="titrefn">Personnaliser</div></div>
-
-
-      <button class="close" onclick="closesett()"></button>
-
+  <button class="close" onclick="closesett()"></button>
   <div class="windowsett-content">
-<div id="opp" class="BTSY">
-  Changer l'opacité : &nbsp;
-  <input type="range" min="0" max="1" step="0.01" value="0.1" id="opacity-slider" onchange="changeTransparency()" />
+    <div id="opp" class="BTSY">
+      Changer l'opacité : &nbsp;
+      <input type="range" min="0" max="1" step="0.01" value="0.1" id="opacity-slider" onchange="changeTransparency()" />
+    </div>
+    <div id="blurr" class="BTSY">
+      Flou des fenêtres : &nbsp;
+      <input type="range" min="0" max="50" value="10" id="blur-slider" oninput="changeBlur(this.value)">
+    </div>
+    <button id="changer-arriere-plan" class="BTSY">Changer l'arrière-plan</button>
+    <button id="button-color" class="BTSY" onclick="changeColor()">Changer la couleur</button>
+    <button class="BTSY" id="dark" onclick="FichierCSS367()">367</button>
+    <button class="BTSY" id="light" onclick="FichierCSSXP()">XP</button>
+    <button class="BTSY" id="Theme3" onclick="FichierCSS7()">W7</button>
+  </div>
 </div>
 
-  <div id="blurr" class="BTSY">
 
 
-Flou  des fenêtres :  &nbsp;
-<input type="range" min="0" max="50" value="10" id="blur-slider" oninput="changeBlur(this.value)">
-</div>
-<button id="changer-arriere-plan" class="BTSY">Changer l'arrière-plan</button>
-
-  <button id="button-color" class="BTSY" onclick="changeColor()">Changer la couleur</button>
-
-  <button class="BTSY" id="light" onclick="FichierCSS367()">367</button>
-  <button class="BTSY" id="dark" onclick="FichierCSSXP()">XP</button>
-  </div>
-  </div>
 
 <div class="window2" id="window3" style="display: none;">
-  <div class="window2-header" id="TOPSTY"><div id="titrefn">Calculatrice</div></div>
-
-      <button class="close" onclick="close()"></button>
-
-
+  <div class="window2-header" id="TOPSTY">
+    <div id="titrefn">Calculatrice</div>
+  </div>
+  <button class="close" onclick="close()"></button>
   <div class="window2-content">
-
- <iframe src="../App/Calc.html" id="calc" style="width: 99%; height: 99.5%;" style="overflow: hidden;"></iframe>
-
+    <iframe src="../App/Calc.html" id="calc" style="width: 99%; height: 99.5%; overflow: hidden;"></iframe>
+  </div>
 </div>
-
-</div>
-
-</div>
-
-
-
-  
 
 
     <br>
@@ -192,11 +152,9 @@ Flou  des fenêtres :  &nbsp;
 
   </div>
 
-  <button class="BTSY" id="par" onclick="asett()">Personnaliser</button>
-
+<button class="BTSY" id="par" onclick="asett()">Personnaliser</button>
 <button class="BTSY" id="supp" onclick="Supp()">Supprimer cookies</button>
-
-  <button class="BTSY" id="newwind" onclick="NewWIN()">Bloc Note</button>
+<button class="BTSY" id="newwind" onclick="NewWIN()">Bloc Note</button>
 <button class="BTSY" id="newwind2" onclick="NewWIN2()">Calculatrice</button>
 <button class="BTSY" id="newwind3" onclick="aBG()">Générateur de fond d'écran</button>
 <button class="BTSY" id="newwind4" onclick="NewWIN3()">Visioneur Youtube (BETA)</button>
@@ -212,7 +170,7 @@ Flou  des fenêtres :  &nbsp;
 <script src="../JS/Script1.js"></script>
 <script src="../JS/script2.js"></script>
 <script src="../JS/script3.js"></script>
-
+<script src="../JS/script4 déplacement et fen.js"></script>
   
 
 </body></html>

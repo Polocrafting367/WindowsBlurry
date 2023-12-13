@@ -27,6 +27,20 @@
 
     }
 
+    function FichierCSS7() {
+        var styleSheet = document.getElementById("styleSheet");
+        styleSheet.href = "../CSS/W7.css"; // Remplacez "NouveauFichier.css" par le nom de votre nouveau fichier CSS
+        var bouton = document.getElementById("download");
+
+
+
+        localStorage.setItem('Theme', "../CSS/W7.css");
+        localStorage.setItem('Boot', "FichierCSS7");
+
+ 
+
+
+    }
 
         document.addEventListener("DOMContentLoaded", function() {
             // Vérifier si la valeur "Boot" est présente dans le stockage local
@@ -40,6 +54,14 @@
        var styleSheet = document.getElementById("styleSheet");
         styleSheet.href = "../CSS/WXP.css";
             }
+            if (bootValue && bootValue === "FichierCSS7") {
+         var styleSheet = document.getElementById("styleSheet");
+        styleSheet.href = "../CSS/W7.css";
+            
+
+            }
+
+
 
   setTimeout(function() {
   document.body.classList.add("background");

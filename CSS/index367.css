@@ -56,3 +56,9 @@ iframe {
     display: block;
     margin: 0 auto 190px;
 }
+
+.title {color:white;}
+
+.centred {
+    text-align: center; /* Ajoutez cette ligne pour centrer le texte */
+}

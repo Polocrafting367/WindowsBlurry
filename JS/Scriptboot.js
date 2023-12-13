@@ -37,6 +37,21 @@ setTimeout(function() {
     }
 
 
+    function changerFichierCSS7() {
+        var styleSheet = document.getElementById("styleSheet");
+        styleSheet.href = "../CSS/W7.css"; // Remplacez "NouveauFichier.css" par le nom de votre nouveau fichier CSS
+        var bouton = document.getElementById("download");
+        bios.style.display = "none";
+
+
+        localStorage.setItem('Theme', "../CSS/W7.css");
+        localStorage.setItem('Boot', "FichierCSS7");
+
+ 
+        window.location.href = "../Boot/367boot.html";
+
+    }
+
 
         document.addEventListener("DOMContentLoaded", function() {
              //Vérifier si la valeur "Boot" est présente dans le stockage local
@@ -47,6 +62,9 @@ setTimeout(function() {
             }
             if (bootValue && bootValue === "FichierCSSXP") {
                     window.location.href = "XPboot.html";
+            }
+            if (bootValue && bootValue === "FichierCSS7") {
+                    window.location.href = "7boot.html";
             }
         });
 

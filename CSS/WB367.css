@@ -469,7 +469,9 @@ background-color: rgba(0, 0, 0, 0.5);
 margin-right: 20px;
 }
 
-
+.logostart {    
+  height: 15px;
+width: 15px;}
 
 
 .close {
@@ -589,9 +591,12 @@ background-color: rgba(0, 0, 0, 0.5);
 color: white;
 border: none;
 border-radius: 15px;
+
+
+
 top: 225px;
 left: 30px;
-width: 42%;
+width: 17%;
 font-size: 18px;
 }
 #dark:hover {
@@ -606,14 +611,37 @@ color: white;
 border: none;
 border-radius: 15px;
 top: 225px;
-right: 26px;
-width: 42%;
+left: 100px;
+width: 17%;
+
 font-size: 18px;
 }
 #light:hover {
   background-color: rgba(255, 255, 255, 0.1);
           border-radius: 15px;
 }
+
+
+
+#theme3{
+position: absolute;
+padding: 10px;
+background-color: rgba(0, 0, 0, 0.5);
+color: white;
+border: none;
+border-radius: 15px;
+top: 225px;
+left: 170px;
+width: 17%;
+font-size: 18px;
+}
+#theme3:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+          border-radius: 15px;
+}
+
+
+
 
     #newwind{
 position: absolute;

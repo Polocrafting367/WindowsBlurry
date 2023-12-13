@@ -491,7 +491,7 @@ makeWindowDraggable(bggeneWindowElement, bggeneWindowHeaderElement);
 function raiseWindow(window) {
   // Récupérer le z-index le plus élevé des autres fenêtres
   let highestZIndex = 0;
-  const windowsz = document.querySelectorAll('.window, .window2, .windowsett,.bggene,.yout');
+  const windowsz = document.querySelectorAll('.window, .window1,.window2,.window3,.window4, .windowsett,.bggene,.yout');
   for (let w of windowsz) {
     if (w !== window) {
       let zIndex = parseInt(w.style.zIndex);
@@ -505,7 +505,7 @@ function raiseWindow(window) {
 }
 
 // Récupérer toutes les fenêtres avec la classe "window"
-const windowsz = document.querySelectorAll('.window,.window2,.windowsett,.bggene,.yout');
+const windowsz = document.querySelectorAll('.window, .window1,.window2,.window3,.window4, .windowsett,.bggene,.yout');
 // Parcourir la liste des fenêtres
 for (let w of windowsz) {
   // Ajouter un événement de souris "mousedown" pour chaque fenêtre
@@ -585,7 +585,7 @@ function NewWIN() {
 function raiseWindow(window) {
   // Récupérer le z-index le plus élevé des autres fenêtres
   let highestZIndex = 0;
-  const windowsz = document.querySelectorAll('.window, .window2,.windowsett,.bggene,.yout');
+  const windowsz = document.querySelectorAll('.window, .window1,.window2,.window3,.window4, .windowsett,.bggene,.yout');
   for (let w of windowsz) {
     if (w !== window) {
       let zIndex = parseInt(w.style.zIndex);
@@ -599,7 +599,7 @@ function raiseWindow(window) {
 }
 
 // Récupérer toutes les fenêtres avec la classe "window"
-const windowsz = document.querySelectorAll('.window,.window2,.windowsett,.bggene,.yout');
+const windowsz = document.querySelectorAll('.window, .window1,.window2,.window3,.window4, .windowsett,.bggene,.yout');
 // Parcourir la liste des fenêtres
 for (let w of windowsz) {
   // Ajouter un événement de souris "mousedown" pour chaque fenêtre
@@ -683,7 +683,7 @@ clone.style.zIndex = 1;
 function raiseWindow(window2) {
   // Récupérer le z-index le plus élevé des autres fenêtres
   let highestZIndex = 0;
-  const windowsz = document.querySelectorAll('.window2, .window,.windowsett, .bggene,.yout');
+  const windowsz = document.querySelectorAll('.window, .window1,.window2,.window3,.window4, .windowsett,.bggene,.yout');
   for (let w of windowsz) {
     if (w !== window2) {
       let zIndex = parseInt(w.style.zIndex);
@@ -697,7 +697,7 @@ function raiseWindow(window2) {
 }
 
 // Récupérer toutes les fenêtres avec la classe "window"
-const windowsz = document.querySelectorAll('.window2, .window,.windowsett,.bggene,.yout');
+const windowsz = document.querySelectorAll('.window, .window1,.window2,.window3,.window4, .windowsett,.bggene,.yout');
 // Parcourir la liste des fenêtres
 for (let w of windowsz) {
   // Ajouter un événement de souris "mousedown" pour chaque fenêtre
@@ -782,7 +782,7 @@ for (let w of windowsz) {
 function raiseWindow(window2) {
   // Récupérer le z-index le plus élevé des autres fenêtres
   let highestZIndex = 0;
-  const windowsz = document.querySelectorAll('.window2, .window,.windowsett, .bggene,.yout');
+  const windowsz = document.querySelectorAll('.window, .window1,.window2,.window3,.window4, .windowsett,.bggene,.yout');
   for (let w of windowsz) {
     if (w !== window2) {
       let zIndex = parseInt(w.style.zIndex);
@@ -796,7 +796,7 @@ function raiseWindow(window2) {
 }
 
 // Récupérer toutes les fenêtres avec la classe "window"
-const windowsz = document.querySelectorAll('.window2, .window,.windowsett,.bggene,.yout');
+const windowsz = document.querySelectorAll('.window, .window1,.window2,.window3,.window4, .windowsett,.bggene,.yout');
 // Parcourir la liste des fenêtres
 for (let w of windowsz) {
   // Ajouter un événement de souris "mousedown" pour chaque fenêtre
