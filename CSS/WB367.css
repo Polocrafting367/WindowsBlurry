@@ -12,6 +12,11 @@ body {
     overflow: hidden;
 
 }
+   iframe {
+      border: none;
+    }
+
+.bggc{background: transparent;}
 
 .rectangle {
     bottom: 10px;
@@ -1110,3 +1115,5 @@ transform: translateY(0);
   background-image: url('../Images/zyta.png');
   /* Autres propriétés de style si nécessaire */
 }
+
+

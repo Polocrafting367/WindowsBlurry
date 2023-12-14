@@ -101,7 +101,9 @@
             localStorage.setItem('Theme', "");
     localStorage.setItem('Boot', "");
     localStorage.setItem('editorContent', "");
-
+localStorage.setItem('COLOR', "");
+localStorage.setItem('OPACITY', "");
+localStorage.setItem('PICT', "");
 window.location.href = "bios.html";
         // Mettez ici le code que vous souhaitez exécuter si l'utilisateur a confirmé
     }  

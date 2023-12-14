@@ -91,82 +91,8 @@ function masqe(){
 
 
 // Sélectionner tous les éléments qui ont la classe window
-var windows = document.querySelectorAll(".window");
-var windows2 = document.querySelectorAll(".window2");
-var windowssett = document.querySelectorAll(".windowsett");
 
 
-var bggene = document.querySelectorAll(".bggene");
-var yout = document.querySelectorAll(".yout");
-// Fonction pour changer la couleur de fond des éléments
-function changeTransparencycolors(red,green,blue,opacity) {
-  // Changer la couleur des éléments ayant la classe "window"
-  var windows = document.getElementsByClassName("window-header");
-  for (var i = 0; i < windows.length; i++) {
-    windows[i].style.backgroundColor = "rgba(" + red + ", " + green + ", " + blue + ", "+ opacity + ")";
-  }
-  var windows = document.getElementsByClassName("window-content");
-  for (var i = 0; i < windows.length; i++) {
-    windows[i].style.backgroundColor = "rgba(" + red + ", " + green + ", " + blue + ", "+ opacity*1.2 + ")";
-  }
-    var windows = document.getElementsByClassName("window2-header");
-  for (var i = 0; i < windows.length; i++) {
-    windows[i].style.backgroundColor = "rgba(" + red + ", " + green + ", " + blue + ", "+ opacity + ")";
-  }
-  var windows = document.getElementsByClassName("window2-content");
-  for (var i = 0; i < windows.length; i++) {
-    windows[i].style.backgroundColor = "rgba(" + red + ", " + green + ", " + blue + ", "+ opacity*1.2 + ")";
-  }
-
-  // Changer la couleur des éléments ayant la classe "windowsett"
-  windowssett.forEach(function(window) {
-    window.querySelector(".windowsett-top").style.backgroundColor = "rgba(" + red + ", " + green + ", " + blue + ", "+ opacity + ")";
-    window.querySelector(".windowsett-content").style.backgroundColor = "rgba(" + red + ", " + green + ", " + blue + ", "+ opacity *1.2+ ")";
-  });
-  // Changer la couleur des éléments ayant la classe "windowsett"
-  bggene.forEach(function(window) {
-    window.querySelector(".bggene-top").style.backgroundColor = "rgba(" + red + ", " + green + ", " + blue + ", "+ opacity + ")";
-    window.querySelector(".bggene-content").style.backgroundColor = "rgba(" + red + ", " + green + ", " + blue + ", "+ opacity *1.2+ ")";
-  });
-  yout.forEach(function(window) {
-    window.querySelector(".yout-header").style.backgroundColor = "rgba(" + red + ", " + green + ", " + blue + ", "+ opacity + ")";
-    window.querySelector(".yout-content").style.backgroundColor = "rgba(" + red + ", " + green + ", " + blue + ", "+ opacity *1.2+ ")";
-  });
-
-  // Changer la couleur des autres éléments
-  document.querySelector(".rectangle").style.backgroundColor = "rgba(" + red + ", " + green + ", " + blue + ", "+ opacity *1.2+ ")";
-  document.querySelector(".menu").style.backgroundColor = "rgba(" + red + ", " + green + ", " + blue + ", "+ opacity + ")";
-  document.querySelector(".bottom-bar").style.backgroundColor = "rgba(" + red + ", " + green + ", " + blue + ", "+ opacity *1.5+ ")";
-}
-
-// Fonction pour changer la couleur selon le choix de l'utilisateur
-function changeTransparency() {
-  // Récupérer la valeur du slider
-  var opacity = document.getElementById("opacity-slider").value;
-
-var element = document.querySelector('.menu');
-var style = getComputedStyle(element);
-var backgroundColor = style.backgroundColor;
-var matches = backgroundColor.match(/\d+/g);
-var red = matches[0];
-var green = matches[1];
-var blue = matches[2];
-
-
-//console.log(rgba);
-
-  // Ajouter un écouteur d'événement sur l'élément <input type="color">
-
-    // Récupérer la nouvelle couleur choisie par l'utilisateur
-
-
-    // Appliquer la nouvelle couleur en fonction de l'opacité choisie par l'utilisateur
-    //var color = "rgba(" + red + ", " + green + ", " + blue + ", "+ opacity + ")";
-    changeTransparencycolors(red,green,blue,opacity);
-//console.log(color);
-  // Cliquer sur l'élément <input type="color> pour afficher la palette de couleurs
-
-}
 
 
 
@@ -305,114 +231,10 @@ document.querySelector("canvas").style.display = "none";
 
 
 
-// Définir les couleurs
-var darkColor = "rgba(0, 0, 0, ";
-var lightColor = "rgba(255, 255, 255, ";
-
-// Sélectionner tous les éléments qui ont la classe window
-var windows = document.querySelectorAll(".window");
-var windows2 = document.querySelectorAll(".window2");
-var windowssett = document.querySelectorAll(".windowsett");
-var bggene = document.querySelectorAll(".bggene");
-
-
-// Fonction pour changer la couleur de fond des éléments
-
-function changeBackgroundColor(color) {
-  var opacity = document.getElementById("opacity-slider").value;
-    console.log(opacity);
-  console.log(color);
-  var windows = document.querySelectorAll(".window, .window-cloned");
-  windows.forEach(function(window) {
-    window.querySelector(".window-header").style.backgroundColor = color + opacity+ ")";
-    window.querySelector(".window-content").style.backgroundColor = color + opacity*1.2+")";
-  });
-  var windows2 = document.querySelectorAll(".window2, .window-cloned2");
-  windows2.forEach(function(window) {
-    window.querySelector(".window2-header").style.backgroundColor = color + opacity+")";
-    window.querySelector(".window2-content").style.backgroundColor = color + opacity*1.2+")";
-  });
-    var windowssett = document.querySelectorAll(".windowsett");
-  windowssett.forEach(function(window) {
-    window.querySelector(".windowsett-top").style.backgroundColor = color +opacity+ ")";
-    window.querySelector(".windowsett-content").style.backgroundColor = color +opacity*1.2+ ")";
-  });
-      var bggene = document.querySelectorAll(".bggene");
-  bggene.forEach(function(window) {
-    window.querySelector(".bggene-top").style.backgroundColor = color +opacity+ ")";
-    window.querySelector(".bggene-content").style.backgroundColor = color +opacity*1.2+ ")";
-  });
-        var yout = document.querySelectorAll(".yout");
-  yout.forEach(function(window) {
-    window.querySelector(".yout-header").style.backgroundColor = color +opacity+ ")";
-    window.querySelector(".yout-content").style.backgroundColor = color +opacity*1.2+ ")";
-  });
-
-  document.querySelector(".rectangle").style.backgroundColor = color +opacity*1.2+ ")";
-  document.querySelector(".menu").style.backgroundColor = color +opacity+ ")";
-  document.querySelector(".bottom-bar").style.backgroundColor = color +opacity*1.5+ ")";
-}
 
 
 
-// Fonction pour changer la couleur selon le choix de l'utilisateur
-function changeColor() {
-  var newColor = document.createElement("input");
-  newColor.type = "color";
-  newColor.addEventListener("change", function() {
-    var rgba = hexToRgba(newColor.value);
-    changeBackgroundColor("rgba(" + rgba + ", ");
-  });
-  newColor.click();
 
-}
-
-// Fonction pour changer la couleur personnalisée
-function changeCustomColor() {
-  var newColor = document.createElement("input");
-  newColor.type = "color";
-  newColor.addEventListener("change", function() {
-    var rgba = hexToRgba(newColor.value);
-    changeBackgroundColor("rgba(" + rgba + ", ");
-  });
-  newColor.click();
-}
-
-// Fonction pour changer en mode sombre
-function changeDarkMode() {
-  changeBackgroundColor(darkColor);
-}
-
-// Fonction pour changer en mode clair
-function changeLightMode() {
-  changeBackgroundColor(lightColor);
-}
-
-// Fonction pour convertir une couleur hexadécimale en RGBA
-function hexToRgba(hex) {
-  var r = parseInt(hex.substr(1, 2), 16);
-  var g = parseInt(hex.substr(3, 2), 16);
-  var b = parseInt(hex.substr(5, 2), 16);
-
-  return r + ", " + g + ", " + b;
-}
-
-
-
-document.getElementById('changer-arriere-plan').addEventListener('click', function() {
-  var input = document.createElement('input');
-  input.type = 'file';
-  input.accept = 'image/*';
-  input.onchange = function() {
-    var file = this.files[0];
-    var reader = new FileReader();
-    reader.onload = function() {
-      document.body.style.backgroundImage = 'url(' + reader.result + ')';
-    };
-    reader.readAsDataURL(file);
-  };
-  input.click();
-});
 
 function closesett(){
 
@@ -811,57 +633,7 @@ for (let w of windowsz) {
 }
 
 
-function changeBlur(value) {
 
-  var windows = document.getElementsByClassName("window-header");
-  for (var i = 0; i < windows.length; i++) {
-    windows[i].style.backdropFilter = "blur(" + value + "px)";
-  }
-  var windows = document.getElementsByClassName("window-content");
-  for (var i = 0; i < windows.length; i++) {
-    windows[i].style.backdropFilter = "blur(" + value*5 + "px)";
-  }
-    var windows = document.getElementsByClassName("window2-header");
-  for (var i = 0; i < windows.length; i++) {
-    windows[i].style.backdropFilter = "blur(" + value + "px)";
-  }
-  var windows = document.getElementsByClassName("window2-content");
-  for (var i = 0; i < windows.length; i++) {
-    windows[i].style.backdropFilter = "blur(" + value*5 + "px)";
-  }
-  var menus = document.getElementsByClassName("menu");
-  for (var i = 0; i < menus.length; i++) {
-    menus[i].style.backdropFilter = "blur(" + value + "px)";
-  }
-
-  var rectangles = document.getElementsByClassName("rectangle");
-  for (var i = 0; i < rectangles.length; i++) {
-    rectangles[i].style.backdropFilter = "blur(" + value + "px)";
-  }
-
-    var windows = document.getElementsByClassName("windowsett-top");
-  for (var i = 0; i < windows.length; i++) {
-    windows[i].style.backdropFilter = "blur(" + value + "px)";
-  }
-  var windows = document.getElementsByClassName("windowsett-content");
-  for (var i = 0; i < windows.length; i++) {
-    windows[i].style.backdropFilter = "blur(" + value*5 + "px)";
-  }
-      var windows = document.getElementsByClassName("bggene-top");
-  for (var i = 0; i < windows.length; i++) {
-    windows[i].style.backdropFilter = "blur(" + value + "px)";
-  }
-  var windows = document.getElementsByClassName("bggene-content");
-  for (var i = 0; i < windows.length; i++) {
-    windows[i].style.backdropFilter = "blur(" + value*5 + "px)";
-
-  }
-        var windows = document.getElementsByClassName("yout");
-  for (var i = 0; i < windows.length; i++) {
-    windows[i].style.backdropFilter = "blur(" + value + "px)";
-  }
-
-}
 
 
 

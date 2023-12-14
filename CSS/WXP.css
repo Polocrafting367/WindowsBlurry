@@ -13,8 +13,10 @@ body {
     overflow: hidden;
 }
 
-
-
+   iframe {
+      border: none;
+    }
+.bggc{background: white;}
 
 .rectangle {
     position: fixed;
@@ -1242,3 +1244,4 @@ font-family: var(--sans-serif);
   background-image: url('../Images/desktop-bg.jpg');
   /* Autres propriétés de style si nécessaire */
 }
+
