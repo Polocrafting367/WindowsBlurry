@@ -44,56 +44,75 @@
     aniIsVisible = false;
 
 
-function closesett(){
+// Declare variables outside functions
+let nouveauBoutonsett;
+let nouveauBoutonbg;
 
-       sett.style.display = "none";
-      settIsVisible = false;
-
-
-
+function closesett() {
+  sett.style.display = "none";
+  settIsVisible = false;
+  // Remove the button
+  if (nouveauBoutonsett) {
+    nouveauBoutonsett.remove();
+  }
 }
-
 
 function asett() {
-  // Afficher la fenêtre "sett"
   sett.style.display = "block";
   settIsVisible = false;
-
-  // Cacher la fenêtre "menu"
   menu.style.display = "none";
   menuIsVisible = false;
-
-  // Mettre la fenêtre "sett" au premier plan
   raiseWindow(sett);
+
+  var boutonOriginal = document.getElementById("FenDEFF");
+
+  nouveauBoutonsett = boutonOriginal.cloneNode(true);
+  nouveauBoutonsett.innerHTML = "Paramètres";
+  nouveauBoutonsett.style.display = "block";
+  var taskbarre = document.getElementById("taskbarre");
+  taskbarre.appendChild(nouveauBoutonsett);
+  
+  nouveauBoutonsett.addEventListener("click", function () {
+    sett.style.display = "block";
+    settIsVisible = true;
+    raiseWindow(sett);
+  });
 }
 
-// Ajouter un événement ou un déclencheur approprié pour appeler la fonction asett()
-// par exemple, si vous avez un bouton qui déclenche l'affichage de la fenêtre "sett"
-const buttonToShowSett = document.getElementById('par'); // Remplacez 'buttonToShowSett' par l'id de votre bouton
-
-buttonToShowSett.addEventListener('click', asett);
-
-
-function closeBG(){
-
-       bgclose.style.display = "none";
-      bgcloseIsVisible = false;
-
-
-
-}
-
-
-function aBG(){       
-  bgclose.style.display = "block";
-      bgcloseIsVisible = false;
-
-      menu.style.display = "none";
-      menuIsVisible = false;
-
-      raiseWindow(window5);
-
+function closeBG() {
+  bgclose.style.display = "none";
+  bgcloseIsVisible = false;
+  // Remove the button
+  if (nouveauBoutonbg) {
+    nouveauBoutonbg.remove();
   }
+}
+
+
+function aBG() {
+  bgclose.style.display = "block";
+  bgcloseIsVisible = false;
+  menu.style.display = "none";
+  menuIsVisible = false;
+  raiseWindow(window5);
+
+  var boutonOriginal = document.getElementById("FenDEFF");
+
+  nouveauBoutonbg = boutonOriginal.cloneNode(true);
+  nouveauBoutonbg.innerHTML = "Générateur...";
+  nouveauBoutonbg.style.display = "block";
+  var taskbarre = document.getElementById("taskbarre");
+  taskbarre.appendChild(nouveauBoutonbg);
+  
+  nouveauBoutonbg.addEventListener("click", function () {
+    bgclose.style.display = "block";
+    bgcloseIsVisible = true;
+    raiseWindow(bgclose);
+  });
+}
+
+// Add an event listener for the button to trigger the asett function
+
 
 
 
@@ -215,7 +234,7 @@ function Yout() {
 
 
 
-function NouvelleFenetre(id, titre, lien, menu, menuIsVisible) {
+function NouvelleFenetre(id, titre, lien, menu) {
   var div = document.getElementById("window");
   var clone = div.cloneNode(true);
   clone.style.zIndex = 1;
@@ -223,18 +242,30 @@ function NouvelleFenetre(id, titre, lien, menu, menuIsVisible) {
   // Changer l'ID de la div clonée
   clone.id = id;
 
-
   raiseWindow(clone);
 
   var header = clone.querySelector(".window-content");
   header.id = "window-content-" + id;
 
-  clone.querySelector(".close").addEventListener("click", function() {
+ clone.querySelector(".close").addEventListener("click", function () {
+    // Supprimer la fenêtre clonée
     clone.remove();
+
+    // Supprimer le bouton de duplication
+    nouveauBouton.remove();
   });
 
-  menu.style.display = "none";
-  menuIsVisible = false;
+  var boutonReduc = clone.querySelector(".reduit");
+  if (boutonReduc) {
+    boutonReduc.addEventListener("click", function () {
+      clone.style.display = "none";
+    });
+  }
+
+  // Assurez-vous que "menu" est défini avant de manipuler son style
+  if (menu) {
+    menu.style.display = "none";
+  }
 
   document.body.appendChild(clone);
   clone.style.display = "block";
@@ -242,11 +273,41 @@ function NouvelleFenetre(id, titre, lien, menu, menuIsVisible) {
   makeWindowDraggable(clone, clone.querySelector('.window-header'));
 
   var Lien = clone.querySelector("#Lien");
-  Lien.src = lien;
+  if (Lien) {
+    Lien.src = lien;
+  }
 
   var Titre = clone.querySelector("#titrefn");
-  Titre.textContent = titre;
+  if (Titre) {
+    Titre.textContent = titre;
+  }
+
+    var boutonReduc = clone.querySelector(".reduit");
+
+
+// Sélectionnez le bouton original
+var boutonOriginal = document.getElementById("FenDEFF");
+
+// Clonez le bouton original avec tous ses descendants
+var nouveauBouton = boutonOriginal.cloneNode(true);
+
+// Modifiez le texte du nouveau bouton
+nouveauBouton.innerHTML = titre;
+nouveauBouton.style.display = "block";
+// Ajoutez le nouveau bouton à la div avec l'ID "taskbarre"
+var taskbarre = document.getElementById("taskbarre");
+taskbarre.appendChild(nouveauBouton);
+
+  nouveauBouton.addEventListener("click", function () {
+
+      clone.style.display = "block";
+      isWindowVisible = true;
+
+raiseWindow(clone)
+
+  });
 }
+
 
 
 

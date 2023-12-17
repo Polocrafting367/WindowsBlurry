@@ -393,7 +393,7 @@ font: var(--font);
     height: 40px;
     padding: 0px;
     font-size: 0px;
-    width: 90px;
+    width: 110px;
 
 
 
@@ -432,24 +432,7 @@ font: var(--font);
 
     background-image: url(../Images/off%20clic.png);
 }
-#guitt {
-    position: absolute;
-    bottom: 0px;
-    left: 200px; /* Ajout du "px" après la valeur de la propriété left */
-    z-index: 1000;
-    height: 40px;
-    padding: 0px;
-    font-size: 0px;
-    width: 90px;
 
-
-background: var(--window-background-glass-stripes);
-font: var(--font);
-  box-shadow: 2px 2px 10px 1px var(--window-border-color), inset 0 0 0 1px #fffa;
-  border: var(--window-border) var(--window-border-color);
-  border-radius: var(--window-border-radius);
-
-}
 
 
 
@@ -477,7 +460,62 @@ font: var(--font);
 
   }
 
+#guitt {
+    position: absolute;
+    bottom: 0px;
+    left: 220px; /* Ajout du "px" après la valeur de la propriété left */
+    z-index: 1000;
+    height: 40px;
+    padding: 0px;
+    font-size: 0px;
+    width: 100px;
 
+
+background: var(--window-background-glass-stripes);
+font: var(--font);
+  box-shadow: 2px 2px 10px 1px var(--window-border-color), inset 0 0 0 1px #fffa;
+  border: var(--window-border) var(--window-border-color);
+  border-radius: var(--window-border-radius);
+
+}
+
+
+
+#guitt:hover {
+    background-color: rgba(50, 200, 200, 0.6);
+}
+
+#taskbarre {
+    position: absolute;
+    bottom: 0px;
+    left: 330px; /* Ajout du "px" après la valeur de la propriété left */
+    z-index: 1000;
+    height: 40px;
+    padding: 0px;
+    font-size: 0px;
+    width: calc(100% - 420px);
+
+
+
+    display: flex; /* Utilisation de flexbox pour aligner les éléments horizontalement */
+    align-items: center; /* Centrer les éléments verticalement */
+}
+
+.taskbutt {
+  height: 40px;
+  width: 100px;
+  margin-right: 10px; /* Ajout du décalage de 10px à droite */
+  background: var(--window-background-glass-stripes);
+  font: var(--font);
+  box-shadow: 2px 2px 10px 1px var(--window-border-color), inset 0 0 0 1px #fffa;
+  border: var(--window-border) var(--window-border-color);
+  border-radius: var(--window-border-radius);
+
+}
+.taskbutt:hover {
+
+background-color: rgba(50, 200, 200, 0.6);
+}
   .yout-header {
 
 
@@ -806,12 +844,12 @@ margin-right: 20px;
 
 
 .close {
+  position: absolute;
   top: 1px;
-  left: 99.5%;
+
   width: 55px;
   height: 22px;
-  transform: translatex(-100%);
-  position: relative;
+  right: 3px;
 
 
            content: "";
@@ -836,21 +874,39 @@ box-shadow: 0 0 0px 0px #e68e75, var(--control-inset-shadow);
 
 }
 
+.reduit {
 
-.line {
   position: absolute;
-  top: 50%;
-  left: 36%;
-  width: 25%;
-  height: 1px;
-  background-color: white;
-  transform: rotate(45deg);
-  transform-origin: center;
+  top: 1px;
+
+  width: 35px;
+  height: 22px;
+  right: 58px;
+
+
+
+
+            background: url(../Images/reduit.png) center center/10px 5px no-repeat,
+            var(--control-background);
+            border-bottom-left-radius: var(--control-border-radius);
+            box-shadow: var(--control-inset-shadow);
+
+  }
+
+.reduit:hover {
+            background: url(../Images/reduit.png) center center/10px 5px no-repeat,
+             var(--control-background-hovered);
+            box-shadow: 0 0 7px 3px #5dc4f0, var(--control-inset-shadow);
+            transition: box-shadow 0.3s linear;
+}
+.reduit:active {
+            background: url(../Images/reduit.png) center center/10px 5px no-repeat,
+              var(--control-background-active);
 
 }
-.line:nth-child(2) {
-  transform: rotate(-45deg);
-}
+
+
+
 
 #blurr {
 position: absolute;

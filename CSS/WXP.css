@@ -50,11 +50,48 @@ body {
         #0D75D6 96%,
         #0064C0 100% );
     
-    background-size: 85% 100%, 100% 100%;
+    background-size: 93% 100%, 100% 100%;
     background-repeat: no-repeat;
 }
 
+#taskbarre {
+    position: absolute;
+    top: -7px;
+    left: 530px; /* Ajout du "px" après la valeur de la propriété left */
+    z-index: 1000;
+    height: 50px;
+    padding: 0px;
+    font-size: 0px;
+    width: calc(100% - 635px);
 
+
+
+    display: flex; /* Utilisation de flexbox pour aligner les éléments horizontalement */
+    align-items: center; /* Centrer les éléments verticalement */
+}
+
+.taskbutt {
+margin-right: 5px; /* Ajout du décalage de 10px à droite */
+
+    z-index: 1000;
+    height: 30px;
+    padding: 0px;
+    font-size: 18px;
+    width: 175px;
+    background-color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    background-color: rgba(50, 150, 255, 1);
+    float: right;
+    text-align: left; /* Ajout de cette ligne pour aligner le texte à gauche */
+    padding-left:20px;
+
+}
+.taskbutt:hover {
+
+background-color: rgba(50, 200, 200, 0.6);
+}
 .info {
     bottom: 60px;
     right: 60px;
@@ -212,12 +249,12 @@ button:hover {
 #Donwload {
     position: absolute;
     bottom: 2px;
-    left: 225px; /* Ajout du "px" après la valeur de la propriété left */
+    left: 170px; /* Ajout du "px" après la valeur de la propriété left */
     z-index: 1000;
     height: 30px;
     padding: 0px;
     font-size: 18px;
-    width: 250px;
+    width: 175px;
     background-color: #fff;
     border: none;
     cursor: pointer;
@@ -256,12 +293,12 @@ button:hover {
 #guitt {
     position: absolute;
     bottom: 2px;
-    left: 480px; /* Ajout du "px" après la valeur de la propriété left */
+    left: 350px; /* Ajout du "px" après la valeur de la propriété left */
     z-index: 1000;
     height: 30px;
     padding: 0px;
     font-size: 18px;
-    width: 250px;
+    width: 175px;
     background-color: #fff;
     border: none;
     cursor: pointer;
@@ -683,12 +720,12 @@ margin-right: 20px;
 
 
 .close {
+  position: absolute;
   top: 3px;
-  left: 99.5%;
+
   width: 25px;
   height: 25px;
-  transform: translatex(-100%);
-  position: relative;
+  right: 5px;
   border: none;
    
     font-size: 15px;
@@ -707,6 +744,37 @@ box-shadow: none;
  background: url(../Images/close-active.svg)
 }
 
+
+.reduit {
+
+  position: absolute;
+  top: 3px;
+
+  width: 25px;
+  height: 25px;
+  right: 33px;
+
+
+
+
+  border: none;
+   
+    font-size: 15px;
+    font-style:bold;
+    color:white;
+box-shadow: none;
+    background: url(../Images/minimize.svg)
+
+  }
+
+.reduit:hover {
+box-shadow: none;
+ background: url(../Images/minimize-hover.svg)
+}
+.reduit:active {
+box-shadow: none;
+ background: url(../Images/minimize-active.svg)
+}
 
 .line {
   position: absolute;
