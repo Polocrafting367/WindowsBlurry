@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YouTube Video Player</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #333;
+      color: #fff;
+      padding: 10px;
+      text-align: center;
+    }
+
+    #video-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .video-wrapper {
+      margin: 10px;
+    }
+
+    iframe {
+      width: 560px; /* You can adjust the width and height according to your preference */
+      height: 315px;
+    }
+
+    #search-form {
+      text-align: center;
+      margin: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>YouTube Video Player</h1>
+  </header>
+
+  <div id="search-form">
+    <form onsubmit="changeVideo(); return false;">
+      <label for="video-url">Enter YouTube Video URL:</label>
+      <input type="text" id="video-url" placeholder="https://www.youtube.com/watch?v=VIDEO_ID" required>
+      <button type="submit">Change Video</button>
+    </form>
+  </div>
+
+  <div id="video-container"></div>
+
+  <script>
+    function createVideoElement(videoId) {
+      const videoWrapper = document.createElement('div');
+      videoWrapper.classList.add('video-wrapper');
+
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://www.youtube.com/embed/${videoId}`;
+      iframe.frameborder = "0";
+      iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+      iframe.allowFullscreen = true;
+
+      videoWrapper.appendChild(iframe);
+      document.getElementById('video-container').appendChild(videoWrapper);
+    }
+
+    function changeVideo() {
+      const videoUrl = document.getElementById('video-url').value;
+      const videoId = extractVideoId(videoUrl);
+
+      if (videoId) {
+        // Clear existing videos
+        document.getElementById('video-container').innerHTML = '';
+        // Create new video element
+        createVideoElement(videoId);
+      } else {
+        alert('Invalid YouTube video URL');
+      }
+    }
+
+    function extractVideoId(url) {
+      const regExp = /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+      const match = url.match(regExp);
+      return match && match[1];
+    }
+
+    // Replace 'VIDEO_ID' with the actual YouTube video ID
+    const videoIds = ['RuL8obqoaPw', '8Dr4UngKmyk', 'fzONOPNtwrE'];
+
+    // Create video elements for each video ID
+    videoIds.forEach(createVideoElement);
+  </script>
+
+</body>
+</html>

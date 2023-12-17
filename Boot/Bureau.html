@@ -37,32 +37,18 @@
 
     </div>
     
-<!-- fenêtres-->
-
-<div class="yout" id="yout" style="display: none;">
-  <div class="yout-header" id="TOPSTY">
-    <div id="titrefn">Visionneur Youtube (BETA)</div>
-  </div>
-  <button class="close" onclick="closeYout()"></button>
-
-  <div class="yout-content">
-    <form>
-      <input type="text" placeholder="Rechercher" id="query">
-      <button type="submit">Rechercher</button>
-    </form>
-    <div id="resultat"></div>
-  </div>
-</div>
 
 
 
-<div class="window1" id="window1" style="display: none;">
-  <div class="window-header" id="TOPSTY">
-    <div id="titrefn">Bloc Note</div>
+
+
+<div class="window" id="window" style="display: none;">
+  <div class="window-header window-cloned-header" id="TOPSTY">
+    <div id="titrefn">Titre de la fenêtre</div>
   </div>
   <button class="close" onclick="close()"></button>
   <div class="window-content">
-    <iframe src="../App/NotePad.html" id="note" style="width: 99.5%; height: 99.5%; overflow: hidden;"></iframe>
+    <iframe src="Lien de l'app" id="Lien" style="width: 99.5%; height: 99.5%; overflow: hidden;"></iframe>
   </div>
 </div>
 
@@ -93,7 +79,7 @@
     <div id="titrefn">Personnaliser</div>
   </div>
   <button class="close" onclick="closesett()"></button>
-  <div class="windowsett-content">
+  <div class="window-content">
     <div id="opp" class="BTSY">
       Changer l'opacité : &nbsp;
       <input type="range" min="0" max="1" step="0.01" value="0.1" id="opacity-slider" onchange="changeTransparency()" />
@@ -113,16 +99,6 @@
 
 
 
-
-<div class="window2" id="window3" style="display: none;">
-  <div class="window2-header" id="TOPSTY">
-    <div id="titrefn">Calculatrice</div>
-  </div>
-  <button class="close" onclick="close()"></button>
-  <div class="window2-content">
-    <iframe src="../App/Calc.html" id="calc" style="width: 99%; height: 99.5%; overflow: hidden;"></iframe>
-  </div>
-</div>
 
 
     <br>
@@ -155,10 +131,10 @@
 
 <button class="BTSY" id="par" onclick="asett()">Personnaliser</button>
 <button class="BTSY" id="supp" onclick="Supp()">Supprimer cookies</button>
-<button class="BTSY" id="newwind" onclick="NewWIN()">Bloc Note</button>
-<button class="BTSY" id="newwind2" onclick="NewWIN2()">Calculatrice</button>
+<button class="BTSY" id="newwind" onclick="BlocNote()">Redémarrer</button>
+<button class="BTSY" id="newwind2" onclick="Calculatrice()">Calculatrice</button>
 <button class="BTSY" id="newwind3" onclick="aBG()">Générateur de fond d'écran</button>
-<button class="BTSY" id="newwind4" onclick="NewWIN3()">Visioneur Youtube (BETA)</button>
+<button class="BTSY" id="newwind4" onclick="Yout()">Youtube player</button>
 
 
 

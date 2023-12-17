@@ -2,14 +2,17 @@ document.addEventListener("DOMContentLoaded", function() {
   //alert(localStorage.getItem('OPACITY') + "<br>" + localStorage.getItem('COLOR'))
   var color = localStorage.getItem('COLOR');
   var opacity = localStorage.getItem('OPACITY');
+  var Blurr = localStorage.getItem('BLURR');
   var fond = localStorage.getItem('PICT');
   //alert(fond)
   // Vérifier si une couleur est stockée localement
   if (color) {
     // Changer la couleur de fond de la page avec la couleur stockée
+    changeBackgroundColor(color, opacity); 
+    document.getElementById("opacity-slider").value = opacity;
+    document.getElementById("blur-slider").value = Blurr;
+    changeBlur(Blurr);
 
-    
-    changeBackgroundColor(color, opacity); // Pass both color and opacity to the function
   }
 
 if (fond !== "") {
@@ -37,7 +40,7 @@ document.getElementById('changer-arriere-plan').addEventListener('click', functi
 
 
 
-var windows = document.querySelectorAll(".window1");
+var windows = document.querySelectorAll(".window");
 var windows2 = document.querySelectorAll(".window2");
 var windowssett = document.querySelectorAll(".windowsett");
 var bggene = document.querySelectorAll(".bggene");
@@ -73,39 +76,44 @@ function changeColor() {
 // Fonction pour changer la couleur de fond des éléments
 
 function changeBackgroundColor(color, opcacite) {
-  
-
-
-
-  var windows = document.querySelectorAll(".window1, .window-cloned");
-  windows.forEach(function(window) {
-    window.querySelector(".window-header").style.backgroundColor = color + opcacite+ ")";
-    window.querySelector(".window-content").style.backgroundColor = color + opcacite*1.2+")";
-  });
-  var windows2 = document.querySelectorAll(".window2, .window-cloned2");
-  windows2.forEach(function(window) {
-    window.querySelector(".window2-header").style.backgroundColor = color + opcacite+")";
-    window.querySelector(".window2-content").style.backgroundColor = color + opcacite*1.2+")";
-  });
-    var windowssett = document.querySelectorAll(".windowsett");
-  windowssett.forEach(function(window) {
-    window.querySelector(".windowsett-top").style.backgroundColor = color +opcacite+ ")";
-    window.querySelector(".windowsett-content").style.backgroundColor = color +opcacite*1.2+ ")";
-  });
-      var bggene = document.querySelectorAll(".bggene");
-  bggene.forEach(function(window) {
-    window.querySelector(".bggene-top").style.backgroundColor = color +opcacite+ ")";
-    window.querySelector(".bggene-content").style.backgroundColor = color +opcacite*1.2+ ")";
-  });
-        var yout = document.querySelectorAll(".yout");
-  yout.forEach(function(window) {
-    window.querySelector(".yout-header").style.backgroundColor = color +opcacite+ ")";
-    window.querySelector(".yout-content").style.backgroundColor = color +opcacite*1.2+ ")";
+  var windows = document.querySelectorAll(".window");
+  windows.forEach(function (window) {
+    var header = window.querySelector(".window-header");
+    if (header) {
+     header.style.backgroundColor = color + opcacite + ")";
+    }
   });
 
-  document.querySelector(".rectangle").style.backgroundColor = color +opcacite*1.2+ ")";
-  document.querySelector(".menu").style.backgroundColor = color +opcacite+ ")";
-  document.querySelector(".bottom-bar").style.backgroundColor = color +opcacite*1.5+ ")";
+  var windowssett = document.querySelectorAll(".windowsett");
+  windowssett.forEach(function (window) {
+    var window4 = document.getElementById("window4");
+    if (window4) {
+      window4.style.backgroundColor = color + opcacite + ")";
+    }
+  });
+
+  var bggene = document.querySelectorAll(".bggene");
+  bggene.forEach(function (window) {
+    var bggeneTop = window.querySelector(".bggene-top");
+    if (bggeneTop) {
+      bggeneTop.style.backgroundColor = color + opcacite + ")";
+    }
+  });
+
+  var rectangle = document.querySelector(".rectangle");
+  if (rectangle) {
+    rectangle.style.backgroundColor = color + opcacite * 1.2 + ")";
+  }
+
+  var menu = document.querySelector(".menu");
+  if (menu) {
+    menu.style.backgroundColor = color + opcacite + ")";
+  }
+
+  var bottomBar = document.querySelector(".bottom-bar");
+  if (bottomBar) {
+    bottomBar.style.backgroundColor = color + opcacite * 1.5 + ")";
+  }
 }
 
 
@@ -135,6 +143,7 @@ function changeBlur(value) {
   var windows = document.getElementsByClassName("window-header");
   for (var i = 0; i < windows.length; i++) {
     windows[i].style.backdropFilter = "blur(" + value + "px)";
+
   }
   var windows = document.getElementsByClassName("window-content");
   for (var i = 0; i < windows.length; i++) {
@@ -179,5 +188,5 @@ function changeBlur(value) {
   for (var i = 0; i < windows.length; i++) {
     windows[i].style.backdropFilter = "blur(" + value + "px)";
   }
-
+localStorage.setItem('BLURR', value);
 }

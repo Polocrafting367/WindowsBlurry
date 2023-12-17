@@ -281,13 +281,36 @@ button:hover {
 
   }
 
-.yout {
+#Calculatrice {
+    position: absolute;
+    top: 50px;
+    left: 200px;
+    width: 350px;
+    height: 390px;
+    
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    z-index: 1;
+
+  }
+
+#BlocNote {
+    position: absolute;
+    top: 75px;
+    left:5%;
+    width: 700px;
+    height: 400px;
+
+
+
+  }
+
+#yout {
     position: absolute;
     top: 75px;
     left: 100px;
     width: 700px;
     height: 525px;
-    background-color: rgba(255, 255, 255, 1);
+
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 
     z-index: 1;
@@ -298,7 +321,24 @@ button:hover {
 
   }
 
+  .window-header {
 
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+
+
+     cursor: move;
+
+    height: 100%;
+
+    
+
+
+
+  }
   .yout-header {
 
 
