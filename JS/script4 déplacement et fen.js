@@ -208,8 +208,6 @@ function makeWindowDraggable(windowElement, windowHeaderElement) {
   }
 }
 
-// Récupérer toutes les fenêtres avec la classe "window"
-
 
 // Parcourir la liste des fenêtres
 for (let window of windows) {
@@ -219,95 +217,77 @@ for (let window of windows) {
 }
 
 
+function loadContentWithObject(url, targetElement) {
+  var objectElement = document.createElement('object');
+  objectElement.data = url;
+  targetElement.appendChild(objectElement);
+}
 
 
 function BlocNote() {
-NouvelleFenetre("BlocNote", "Bloc Notes", "../App/NotePad.html", menu, menuIsVisible);
-
+  NouvelleFenetre("BlocNote", "Bloc Notes", "../App/NotePad.html", menu, menuIsVisible);
 }
+
 function Calculatrice() {
   NouvelleFenetre("Calculatrice", "Calculatrice", "../App/Calc.html", menu, menuIsVisible);
 }
+
 function Yout() {
-  NouvelleFenetre("Yout", "Youtube PLayer", "../App/yout.html", menu, menuIsVisible);
+  NouvelleFenetre("Yout", "Personnaliser", "../App/yout.html", menu, menuIsVisible);
 }
 
+function NouvelleFenetre(id, title, contentUrl, menu, menuIsVisible) {
+  var windowDiv = document.getElementById("window");
+  var windowClone = windowDiv.cloneNode(true);
+  windowClone.style.zIndex = 1;
+  windowClone.id = id;
 
+  raiseWindow(windowClone);
 
-function NouvelleFenetre(id, titre, lien, menu) {
-  var div = document.getElementById("window");
-  var clone = div.cloneNode(true);
-  clone.style.zIndex = 1;
-
-  // Changer l'ID de la div clonée
-  clone.id = id;
-
-  raiseWindow(clone);
-
-  var header = clone.querySelector(".window-content");
+  var header = windowClone.querySelector(".window-content");
   header.id = "window-content-" + id;
 
- clone.querySelector(".close").addEventListener("click", function () {
-    // Supprimer la fenêtre clonée
-    clone.remove();
-
-    // Supprimer le bouton de duplication
-    nouveauBouton.remove();
-  });
-
-  var boutonReduc = clone.querySelector(".reduit");
-  if (boutonReduc) {
-    boutonReduc.addEventListener("click", function () {
-      clone.style.display = "none";
-    });
-  }
-
-  // Assurez-vous que "menu" est défini avant de manipuler son style
   if (menu) {
     menu.style.display = "none";
   }
 
-  document.body.appendChild(clone);
-  clone.style.display = "block";
+  document.body.appendChild(windowClone);
+  windowClone.style.display = "block";
 
-  makeWindowDraggable(clone, clone.querySelector('.window-header'));
+  makeWindowDraggable(windowClone, windowClone.querySelector('.window-header'));
 
-  var Lien = clone.querySelector("#Lien");
-  if (Lien) {
-    Lien.src = lien;
+  var contentContainer = windowClone.querySelector(".window-content");
+
+  loadContentWithObject(contentUrl, contentContainer);
+
+  var reduceButton = windowClone.querySelector(".reduit");
+  if (reduceButton) {
+    reduceButton.addEventListener("click", function () {
+      windowClone.style.display = "none";
+    });
   }
 
-  var Titre = clone.querySelector("#titrefn");
-  if (Titre) {
-    Titre.textContent = titre;
+  var titleElement = windowClone.querySelector("#titrefn");
+  if (titleElement) {
+    titleElement.textContent = title;
   }
 
-    var boutonReduc = clone.querySelector(".reduit");
+  var originalButton = document.getElementById("FenDEFF");
+  var newButton = originalButton.cloneNode(true);
+  newButton.innerHTML = title;
+  newButton.style.display = "block";
 
+  var taskbar = document.getElementById("taskbarre");
+  taskbar.appendChild(newButton);
 
-// Sélectionnez le bouton original
-var boutonOriginal = document.getElementById("FenDEFF");
+  newButton.addEventListener("click", function () {
+    windowClone.style.display = "block";
+    isWindowVisible = true;
+    raiseWindow(windowClone);
+  });
 
-// Clonez le bouton original avec tous ses descendants
-var nouveauBouton = boutonOriginal.cloneNode(true);
-
-// Modifiez le texte du nouveau bouton
-nouveauBouton.innerHTML = titre;
-nouveauBouton.style.display = "block";
-// Ajoutez le nouveau bouton à la div avec l'ID "taskbarre"
-var taskbarre = document.getElementById("taskbarre");
-taskbarre.appendChild(nouveauBouton);
-
-  nouveauBouton.addEventListener("click", function () {
-
-      clone.style.display = "block";
-      isWindowVisible = true;
-
-raiseWindow(clone)
-
+  windowClone.querySelector(".close").addEventListener("click", function () {
+    windowClone.remove();
+    newButton.remove();
   });
 }
-
-
-
-

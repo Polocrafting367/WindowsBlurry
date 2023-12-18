@@ -13,8 +13,10 @@ body {
     overflow: hidden;
 }
 
-   iframe {
+   object {
       border: none;
+      height: 100%;
+      width:100%;
     }
 .bggc{background: white;}
 

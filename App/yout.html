@@ -1,101 +1,211 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>YouTube Video Player</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
+
+    <div class="px-6 py-2 overflow-auto mx-auto">
+        <div data-v-6cc133d3="" class="title-1"> Changer les visuels et les sons sur votre ordinateur </div>
+        <div data-v-6cc133d3=""> Cliquez sur un thème pour changer l'arrière-plan du bureau, la couleur de la fenêtre et le son en même temps </div>
+        <section data-v-6cc133d3="" class="gallery">
+            <!---->
+            <div data-v-6cc133d3="" class="headline">Thèmes Aéro (4)</div>
+            <ul data-v-6cc133d3="" class="theme-collection">
+                <li data-v-6cc133d3="" id="aero-1" class="theme selected" onclick="changeThemeClass(this)">
+                    <div data-v-6cc133d3="" class="theme-bg" style="--bg: url('../Images/zyta.png');"></div><button data-v-01d2dd84="" data-v-6cc133d3="" aria-label="#aad1fb" class="color-preview theme-color"  style="background: radial-gradient(circle at 100% 100%, rgba(170, 209, 251, 0.6) 65%, rgba(170, 209, 251, 0.3) 68%);"></button><label data-v-6cc133d3="">Windows XP</label>
+                </li>
+                <li data-v-6cc133d3="" id="aero-2" class="theme" onclick="changeThemeClass(this)">
+                    <div data-v-6cc133d3="" class="theme-bg" style="--bg: url('../Images/zyta.png');"></div><button data-v-01d2dd84="" data-v-6cc133d3="" aria-label="#5986ca" class="color-preview theme-color" style="background: radial-gradient(circle at 100% 100%, rgba(89, 134, 202, 0.6) 65%, rgba(89, 134, 202, 0.3) 68%);"></button><label data-v-6cc133d3="">Windows 7</label>
+                </li>
+
+                <li data-v-6cc133d3="" id="aero-3" class="theme" onclick="changeThemeClass(this)">
+                    <div data-v-6cc133d3="" class="theme-bg" style="--bg: url('../Images/zyta.png');"></div><button data-v-01d2dd84="" data-v-6cc133d3="" aria-label="#ababab" class="color-preview theme-color"  style="background: radial-gradient(circle at 100% 100%, rgba(171, 171, 171, 0.6) 65%, rgba(171, 171, 171, 0.3) 68%);"></button><label data-v-6cc133d3="" >Windows 367</label>
+                </li></ul>
+
+                <div data-v-6cc133d3="" class="headline">Flou d'arrière plan</div>
+                        <ul data-v-6cc133d3="" class="theme-collection">
+                    <div id="blurr" class="BTSY">
+                         &nbsp;
+                        <input type="range" min="0" max="50" value="10" id="blur-slider" oninput="changeBlur(this.value)">
+                    </div></ul>
+
+                <div data-v-6cc133d3="" class="headline">Opacité d'arrière plan</div>
+                                <ul data-v-6cc133d3="" class="theme-collection">
+                    <div id="blurr" class="BTSY">
+                        &nbsp;
+                        <input type="range" min="0" max="50" value="10" id="blur-slider" oninput="changeBlur(this.value)">
+                    </div></ul>
+
+
+</div>
+
+<section data-v-6cc133d3="" class="options">
+    <div data-v-6cc133d3="" class="option">
+        <div data-v-6cc133d3="" style="--bg: url('../Images/zyta.png');"></div><label data-v-6cc133d3="">Fond d'écran</label><span data-v-6cc133d3="">Windows 7</span>
+    </div>
+    <div data-v-6cc133d3="" class="option">
+        <div data-v-6cc133d3="">
+            <button data-v-01d2dd84="" data-v-6cc133d3="" class="color-preview" style="background: radial-gradient(circle at 100% 100%, rgba(170, 209, 251, 0.6) 65%, rgba(170, 209, 251, 0.3) 68%);"
+            >
+            </button>
+        </div><label data-v-6cc133d3="">Couleur de la fenêtre</label><span data-v-6cc133d3="">Défaut</span>
+    </div>
+    <div data-v-6cc133d3="" class="option muted">
+        <div data-v-6cc133d3="" style="background-image: url(&quot;../Images/zyta.png&quot;);"></div><label data-v-6cc133d3="">Sonner</label><span data-v-6cc133d3="">Défaut</span>
+    </div>
+    <div data-v-6cc133d3="" class="option">
+        <div data-v-6cc133d3="" style="background-image: url(&quot;../Images/zyta.png&quot;);"><img data-v-6cc133d3="" src="./Win7 Simu _ A simulator of Windows 7_files/none.b18751c7.webp"></div><label data-v-6cc133d3="">Screen Saver</label><span data-v-6cc133d3="">(Rien)</span>
+    </div>
+</section>
+<script src="../JS/Script1.js"></script>
+<script>
+
+    function changeThemeClass(element) {
+        // Supprime la classe "selected" de tous les boutons avec la classe "theme"
+        var allButtons = document.querySelectorAll('.theme button');
+        allButtons.forEach(function (button) {
+            button.classList.remove('selected');
+        });
+
+        // Ajoute la classe "selected" au bouton cliqué
+        element.querySelector('button').classList.add('selected');
+        alert('tex')
+        // Ajoute ici le code que vous souhaitez exécuter lorsqu'un thème est sélectionné
+// Vous pouvez remplacer cela par votre propre code
     }
+</script>
 
-    header {
-      background-color: #333;
-      color: #fff;
-      padding: 10px;
-      text-align: center;
-    }
 
-    #video-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
 
-    .video-wrapper {
-      margin: 10px;
-    }
+<style>
+    .theme.selected,  .theme:hover {
+    border-color: #b1d0f4;
+    background-color: rgba(177,208,244,.3);
+}
+.theme-bg {
+    right: 5px;
+}
 
-    iframe {
-      width: 560px; /* You can adjust the width and height according to your preference */
-      height: 315px;
-    }
+ .theme-bg {
+    background: var(--bg) 50% no-repeat;
+    background-size: cover;
+    
 
-    #search-form {
-      text-align: center;
-      margin: 20px;
-    }
-  </style>
-</head>
-<body>
+}
+.theme-bg {
+    width: 70%;
+    height: 45%;
+    position: absolute;
+    top: 5px;
 
-  <header>
-    <h1>YouTube Video Player</h1>
-  </header>
+}
 
-  <div id="search-form">
-    <form onsubmit="changeVideo(); return false;">
-      <label for="video-url">Enter YouTube Video URL:</label>
-      <input type="text" id="video-url" placeholder="https://www.youtube.com/watch?v=VIDEO_ID" required>
-      <button type="submit">Change Video</button>
-    </form>
-  </div>
+.options[data-v-6cc133d3] {
+    margin-top: 1em;
+}
+.options[data-v-6cc133d3] {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -webkit-box-pack: space-evenly;
+    -ms-flex-pack: space-evenly;
+    justify-content: space-evenly;
+}
+ .option[data-v-6cc133d3] {
+    padding: .5em;
+}
+.option[data-v-6cc133d3] {
+    min-width: 100px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+    .title-1 {
+    margin: 8px 0;
+}
 
-  <div id="video-container"></div>
+.title-1 {
+    color: #039;
+    font-size: 18px;
+}
 
-  <script>
-    function createVideoElement(videoId) {
-      const videoWrapper = document.createElement('div');
-      videoWrapper.classList.add('video-wrapper');
+.gallery {
+    margin-top: 10px;
+    border: 1px solid #999;
+    padding: 8px;
+}
 
-      const iframe = document.createElement('iframe');
-      iframe.src = `https://www.youtube.com/embed/${videoId}`;
-      iframe.frameborder = "0";
-      iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
-      iframe.allowFullscreen = true;
+.headline {
+    color: #039;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+ .headline:after {
+    margin-left: 4px;
+}
+ .headline:after {
+    border-top: 1px solid #ccc;
+}
+.headline:after {
+    content: "";
+    width: 100%;
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+}
 
-      videoWrapper.appendChild(iframe);
-      document.getElementById('video-container').appendChild(videoWrapper);
-    }
+ .theme-collection {
+    padding: 0;
+    text-align: center;
+}
+.theme-collection {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+}
 
-    function changeVideo() {
-      const videoUrl = document.getElementById('video-url').value;
-      const videoId = extractVideoId(videoUrl);
+ .theme {
+        width: 130px;
+    height: 130px;
+    list-style: none;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    position: relative;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-pack: end;
+    -ms-flex-pack: end;
+    justify-content: flex-end;
+    font-size: 12px;
+    border: 1px solid transparent;
+    padding: 5px;
+    margin: 3px;}
+   .color-preview[data-v-01d2dd84] {
+    border: 1px solid #888;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 0 0 1px #fff;
+    box-shadow: inset 0 0 0 1px #fff;
+      z-index: 5000;
+}
 
-      if (videoId) {
-        // Clear existing videos
-        document.getElementById('video-container').innerHTML = '';
-        // Create new video element
-        createVideoElement(videoId);
-      } else {
-        alert('Invalid YouTube video URL');
-      }
-    }
-
-    function extractVideoId(url) {
-      const regExp = /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
-      const match = url.match(regExp);
-      return match && match[1];
-    }
-
-    // Replace 'VIDEO_ID' with the actual YouTube video ID
-    const videoIds = ['RuL8obqoaPw', '8Dr4UngKmyk', 'fzONOPNtwrE'];
-
-    // Create video elements for each video ID
-    videoIds.forEach(createVideoElement);
-  </script>
-
-</body>
-</html>
+.color-preview[data-v-01d2dd84] {
+    width: 64px;
+    height: 64px;
+        z-index: 5000;
+}
+</style>
