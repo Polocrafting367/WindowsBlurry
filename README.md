@@ -13,10 +13,10 @@ J'ai perdu l'accès à mon ancien compte "polocrafting", mais je reste le créat
 
 ## Changelog
 
-<details>
-  <summary>Changelog</summary>
+
 
   ```plaintext
+Changelog.txt
 
 
 
