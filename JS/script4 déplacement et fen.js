@@ -235,6 +235,9 @@ function Calculatrice() {
 function Yout() {
   NouvelleFenetre("Yout", "Personnaliser", "../App/yout.html", menu, menuIsVisible);
 }
+function LOGO() {
+  NouvelleFenetre("Yout", "Crédits", "../App/Logo.html", menu, menuIsVisible);
+}
 
 function NouvelleFenetre(id, title, contentUrl, menu, menuIsVisible) {
   var windowDiv = document.getElementById("window");
@@ -290,4 +293,11 @@ function NouvelleFenetre(id, title, contentUrl, menu, menuIsVisible) {
     windowClone.remove();
     newButton.remove();
   });
+
+windowClone.querySelector(".actualiser").addEventListener("click", function () {
+  contentContainer.innerHTML = ""; // Vide le conteneur
+  loadContentWithObject(contentUrl, contentContainer); // Recharge le contenu
+});
+
+
 }

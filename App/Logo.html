@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page de remerciement</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #4CAF50;
+            text-align: center;
+        }
+        p {
+            font-size: 18px;
+            line-height: 1.5;
+        }
+        a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Windows Blurry</h1>
+        <p>Petit projet fait en solo car j'aime bien travailler sur mon temps libre...</p>
+        <p>Dans un premier temps créé sur le thème "W367", j'ai voulu développer le projet en intégrant des thèmes comme XP puis 7.</p>
+        <p>Franchement seul, j'aurais galéré, donc je crédite les projets que j'ai utilisés :</p>
+        <p>Pour le thème Windows XP, le projet GitHub :
+            <br> <a href="https://github.com/botoxparty/XP.css" target="_blank">https://github.com/botoxparty/XP.css/</a> </p>
+        <p>Pour le thème Windows 7, le projet GitHub :
+            <br> <a href="https://github.com/khang-nd/7.css/" target="_blank">https://github.com/khang-nd/7.css/</a> </p>
+        <p>Pendant un temps, j'ai mis le projet de côté, mais avec l'idée que je n'avais pas eue de @Zerbaib (sur GitHub), j'ai repris le projet avec joie :) </p>
+        <h1>ChangeLog :</h1>
+
+        <iframe id="mon-iframe" width="600" height="400"></iframe>
+    </div>
+
+    <script>
+        var iframe = document.getElementById("mon-iframe");
+        iframe.src = "../Changelog.txt";
+    </script>
+</body>
+</html>
