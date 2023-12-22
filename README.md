@@ -14,9 +14,8 @@ J'ai perdu l'accès à mon ancien compte "polocrafting", mais je reste le créat
 ## Changelog
 
 
+[Changelog](changelog.txt)
 
-  ```plaintext
-Changelog.txt
 
 
 
