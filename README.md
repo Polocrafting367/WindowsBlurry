@@ -12,3 +12,7 @@ Chaine Youtube : https://www.youtube.com/channel/UCTL3fXI8aZnYweRvys6m2bA
 
 J'ai perdu l'acces à mon encien compre "polocrafting" mais je reste le créateur du porjet. je vais continuer son développement ici donc.
 Merci à @Zerbaib pour ça petite contribution sur l'ancien projet pour l'idée de séparrer les fichier pour que ce soit plus propre.
+
+Changelog :
+
+[txt]:https://raw.githubusercontent.com/Polocrafting367/WindowsBlurry-1/main/Changelog.txt
