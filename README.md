@@ -12,5 +12,8 @@ Chaîne YouTube : [Ma chaine Youtube](https://www.youtube.com/channel/UCTL3fXI8a
 J'ai perdu l'accès à mon ancien compte "polocrafting", mais je reste le créateur du projet. Je vais continuer son développement ici. Merci à [@Zerbaib](https://github.com/Zerbaib) pour sa petite contribution sur l'ancien projet et l'idée de séparer les fichiers pour une meilleure organisation.
 
 ## Changelog
-Consultez le [Changelog](https://raw.githubusercontent.com/Polocrafting367/WindowsBlurry-1/main/Changelog.txt) pour connaître les dernières mises à jour.
+Changelog :
+
+[Changelog.txt](https://raw.githubusercontent.com/Polocrafting367/WindowsBlurry-1/main/Changelog.txt)
+
 
