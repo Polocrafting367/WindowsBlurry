@@ -4,48 +4,64 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            background-color: #f4f4f4;
-            padding: 5px;
-            overflow: hidden; /* Masquer les barres de défilement */
-        }
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    background-color: #f4f4f4;
+    overflow: hidden;
+    padding: 15px;
+}
 
-        #overlay {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
+#overlay {
+    position: absolute;
+    top: 5px;
+    left: 90px;
+    display: flex; /* Ajout : spécifier la disposition flex pour align-items et justify-content */
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px;
+}
 
-        #Message {
-            flex: 1; /* Le texte prendra autant d'espace que possible à gauche */
-        }
+#butt {
+    position: absolute;
+    bottom: 5px;
+    right: 50px;
+    display: flex; /* Ajout : spécifier la disposition flex pour align-items et justify-content */
+    justify-content: space-between;
+    padding: 5px;
+}
 
-        #bt1, #bt2 {
-            margin-left: 10px; /* Espacement entre les boutons */
-        }
 
         img {
-            max-width: 100%; /* Pour s'assurer que l'image ne dépasse pas la largeur du conteneur */
+
             margin-right: 10px; /* Espacement entre l'image et les boutons à droite */
         }
     </style>
     <title>Info Window</title>
 </head>
 <body>
+    <div id="img">
+
+    <img src="../Images/close-hover.svg" alt="Votre Image" style="width: 60px; height: 60px;">
+</div>
+
+
     <div id="overlay">
         <div id="Message"></div>
+    </div>
+
+
+
+    <div id="butt">
         <button id="bt1"></button>
         <button id="bt2" onclick="Supp()"></button>
-        <img src="chemin/vers/votre/image.jpg" alt="Votre Image">
+
+
         <button id="btnAnnuler">Annuler</button>
     </div>
+
 
     <script>
          document.getElementById("btnAnnuler").addEventListener("click", function () {
