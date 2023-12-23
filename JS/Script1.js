@@ -94,18 +94,18 @@
         alert.style.display = "none";
         var bouton = document.getElementById("download");
 }
- function Supp() {  
- var confirmation = window.confirm("Êtes-vous sûr de vouloir supprimer, cela redémarrera la page sans sauvegarde ?");    
- if (confirmation) {
+ //function Supp() {  
+ //var confirmation = window.confirm("Êtes-vous sûr de vouloir supprimer, cela redémarrera la page sans sauvegarde ?");    
+ //if (confirmation) {
         // L'utilisateur a cliqué sur "OK"
-            localStorage.setItem('Theme', "");
-    localStorage.setItem('Boot', "");
-    localStorage.setItem('editorContent', "");
-localStorage.setItem('COLOR', "");
-localStorage.setItem('OPACITY', "");
-localStorage.setItem('PICT', "");
-window.location.href = "bios.html";
+   //         localStorage.setItem('Theme', "");
+   // localStorage.setItem('Boot', "");
+   // localStorage.setItem('editorContent', "");
+//localStorage.setItem('COLOR', "");
+//localStorage.setItem('OPACITY', "");
+//localStorage.setItem('PICT', "");
+//window.location.href = "bios.html";
         // Mettez ici le code que vous souhaitez exécuter si l'utilisateur a confirmé
-    }  
-}
+  //  }  
+//}
 

@@ -133,7 +133,7 @@ makeWindowDraggable(bggeneWindowElement, bggeneWindowHeaderElement);
 function raiseWindow(window) {
   // Récupérer le z-index le plus élevé des autres fenêtres
   let highestZIndex = 0;
-  const windowsz = document.querySelectorAll('.window, .window1,.window2,.window3,.window4, .windowsett,.bggene,.yout');
+  const windowsz = document.querySelectorAll('.window, .window1,.window2,.window3,.window4, .windowsett,.bggene,.yout,.Message');
   for (let w of windowsz) {
     if (w !== window) {
       let zIndex = parseInt(w.style.zIndex);
@@ -149,7 +149,7 @@ function raiseWindow(window) {
 
 
 // Récupérer toutes les fenêtres avec la classe "window"
-const windowsz = document.querySelectorAll('.window, .window1,.window2,.window3,.window4, .windowsett,.bggene,.yout');
+const windowsz = document.querySelectorAll('.window, .window1,.window2,.window3,.window4, .windowsett,.bggene,.yout,.Message');
 // Parcourir la liste des fenêtres
 for (let w of windowsz) {
   // Ajouter un événement de souris "mousedown" pour chaque fenêtre
@@ -238,6 +238,17 @@ function Yout() {
 function LOGO() {
   NouvelleFenetre("Yout", "Crédits", "../App/Logo.html", menu, menuIsVisible);
 }
+function Supp() {
+  localStorage.setItem('MessageINFO', "Êtes-vous sûr de vouloir supprimer, cela redémarrera la page sans sauvegarde ?");
+  localStorage.setItem('B1', "Annuler");
+  localStorage.setItem('B2', "Supprimer");
+
+  NouvelleFenetre("Message", "Cookies", "../App/Message box.html", menu, menuIsVisible);
+}
+function FermerFenetre(windowClone, newButton) {
+  windowClone.remove();
+  newButton.remove();
+}
 
 function NouvelleFenetre(id, title, contentUrl, menu, menuIsVisible) {
   var windowDiv = document.getElementById("window");
@@ -270,6 +281,10 @@ function NouvelleFenetre(id, title, contentUrl, menu, menuIsVisible) {
     });
   }
 
+    windowClone.querySelector(".close").addEventListener("click", function () {
+    FermerFenetre(windowClone, newButton);
+  });
+
   var titleElement = windowClone.querySelector("#titrefn");
   if (titleElement) {
     titleElement.textContent = title;
@@ -290,14 +305,11 @@ function NouvelleFenetre(id, title, contentUrl, menu, menuIsVisible) {
   });
 
   windowClone.querySelector(".close").addEventListener("click", function () {
-    windowClone.remove();
-    newButton.remove();
+    FermerFenetre(windowClone, newButton);
   });
 
-windowClone.querySelector(".actualiser").addEventListener("click", function () {
-  contentContainer.innerHTML = ""; // Vide le conteneur
-  loadContentWithObject(contentUrl, contentContainer); // Recharge le contenu
-});
-
-
+  windowClone.querySelector(".actualiser").addEventListener("click", function () {
+    contentContainer.innerHTML = ""; // Vide le conteneur
+    loadContentWithObject(contentUrl, contentContainer); // Recharge le contenu
+  });
 }

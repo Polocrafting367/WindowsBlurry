@@ -21,7 +21,22 @@ body {
     }
 
 .bggc{background: transparent;}
+  #Message {
+    position: absolute;
+    top: 75px;
+    left: 200px;
+    width: 450px;
+    height: 125px;
 
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+
+    z-index: 1;
+
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+      will-change: transform;
+
+  }
 .rectangle {
     bottom: 10px;
     left: 1%;

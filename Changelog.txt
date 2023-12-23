@@ -1,3 +1,4 @@
+        22/12/23 : ajout bouton actualisation sur les fenêtre réduit
         18/12/23 : ajout bouton réduire sur les fenêtre clonées
         18/12/23 : Modification de la barre des tahche pour l'ajout de boutons fonctionnel ! 
         17/12/23 : Obtimisation des themes en fonction des changements réaliser

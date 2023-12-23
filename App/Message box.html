@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            background-color: #f4f4f4;
+            padding: 5px;
+            overflow: hidden; /* Masquer les barres de défilement */
+        }
+
+        #overlay {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        #Message {
+            flex: 1; /* Le texte prendra autant d'espace que possible à gauche */
+        }
+
+        #bt1, #bt2 {
+            margin-left: 10px; /* Espacement entre les boutons */
+        }
+
+        img {
+            max-width: 100%; /* Pour s'assurer que l'image ne dépasse pas la largeur du conteneur */
+            margin-right: 10px; /* Espacement entre l'image et les boutons à droite */
+        }
+    </style>
+    <title>Info Window</title>
+</head>
+<body>
+    <div id="overlay">
+        <div id="Message"></div>
+        <button id="bt1"></button>
+        <button id="bt2" onclick="Supp()"></button>
+        <img src="chemin/vers/votre/image.jpg" alt="Votre Image">
+        <button id="btnAnnuler">Annuler</button>
+    </div>
+
+    <script>
+         document.getElementById("btnAnnuler").addEventListener("click", function () {
+            // Appeler la fonction pour fermer la fenêtre depuis l'iframe
+            window.parent.FermerFenetre(window.frameElement, window.parent.document.getElementById("FenDEFF"));
+        });
+        // Mise à jour de l'élément avec l'ID "Message"
+        document.getElementById("Message").innerHTML = localStorage.getItem('MessageINFO');
+        document.getElementById("bt1").innerHTML = localStorage.getItem('B1');
+        document.getElementById("bt2").innerHTML = localStorage.getItem('B2');
+
+
+        var confirmation = localStorage.getItem('B2');
+
+        if (confirmation === "Supprimer") {
+            // L'utilisateur a cliqué sur "Supprimer"
+            function Supp() {
+                localStorage.setItem('Theme', "");
+                localStorage.setItem('Boot', "");
+                localStorage.setItem('editorContent', "");
+                localStorage.setItem('COLOR', "");
+                localStorage.setItem('OPACITY', "");
+                localStorage.setItem('PICT', "");
+                localStorage.setItem('Theme', "");
+                localStorage.setItem('Boot', "");
+                localStorage.setItem('editorContent', "");
+                localStorage.setItem('B1', "");
+                localStorage.setItem('B2', "");
+                localStorage.setItem('MessageINFO', "");
+
+                window.top.location.href = "../Boot/bios.html";
+            }
+            // Appel de la fonction Supp
+        }
+    </script>
+</body>
+</html>
