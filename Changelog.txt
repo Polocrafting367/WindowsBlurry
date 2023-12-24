@@ -1,3 +1,15 @@
+Info sur le code pour crée une nouvelle fenêtre dans "script4" crée une nouvelle fonction:
+
+function MAFENETRE() {
+  NouvelleFenetre("FENDESTYLE(garger yout pour tail par défaut)", "TITRE DE LA FAN", "../App/MAFEN.html", menu, menuIsVisible, false);
+}
+
+Le false à la fin permet d'afficher ou non le bouton actualiuser en haut de la fen, pratique pendant le dev
+
+
+
+
+
         24/12/23 : Obtimisation général + Nouvelle fenêtre adapative de m'essage d'érreur
         22/12/23 : ajout bouton actualisation sur les fenêtre réduit
         18/12/23 : ajout bouton réduire sur les fenêtre clonées
