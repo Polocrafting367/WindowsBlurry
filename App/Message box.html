@@ -28,10 +28,19 @@ body {
     padding: 5px;
 }
 
-#butt {
+#btnAnnuler{
     position: absolute;
     bottom: 5px;
-    right: 20px;
+    right:120px;
+    display: flex; /* Ajout : spécifier la disposition flex pour align-items et justify-content */
+    justify-content: space-between;
+     gap: 10px; /* Ajout : espacement entre les boutons */
+    padding: 5px;
+}
+ #bt2 {
+    position: absolute;
+    bottom: 5px;
+    right: 30px;
     display: flex; /* Ajout : spécifier la disposition flex pour align-items et justify-content */
     justify-content: space-between;
      gap: 10px; /* Ajout : espacement entre les boutons */
@@ -51,7 +60,7 @@ body {
 
     <div >
 
-    <img id="imgINFO" src="../Images/close-hover.svg" alt="Votre Image" style="width: 60px; height: 60px;">
+    <img id="imgINFO" src="../Images/vide.png" alt="Votre Image" style="width: 60px; height: 60px;">
     </div>
 
 
@@ -63,8 +72,8 @@ body {
     </div>
 
     <div id="butt">
-        <button id="btnAnnuler"></button>
-        <button id="bt2" onclick="Supp()"></button>
+        <button id="btnAnnuler" class="BTSY"></button>
+        <button id="bt2" onclick="Supp()" class="BTSY"></button>
 
 
 
@@ -104,6 +113,29 @@ body {
             }
             // Appel de la fonction Supp
         }
+
+
+
+
+
+        window.addEventListener('storage', handleStorageChange);
+
+
+
+function handleStorageChange(event) {
+
+
+
+
+
+  if (event.key === 'Boot') {
+    // La valeur de Theme a changé, vous pouvez effectuer votre action ici
+
+// Actualiser la page
+location.reload();
+
+  }
+}
     </script>
 
 </html>

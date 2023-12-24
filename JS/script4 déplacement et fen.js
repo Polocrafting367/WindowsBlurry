@@ -289,18 +289,22 @@ function NouvelleFenetre(id, title, contentUrl, menu, menuIsVisible, Actualisati
   });
 
   // Fonction à exécuter en cas de changement dans le localStorage
-  function handleStorageChange(event) {
-    localStorage.setItem('CloseFEN', "CLOSEOPASOK");
+// Ajoutez cet écouteur d'événements pour détecter les changements de stockage local
+window.addEventListener('storage', handleStorageChange);
 
-    if (event.key === 'CloseFEN') {
-      // La valeur de CloseFEN a changé, vous pouvez effectuer votre action ici
-      console.log('La valeur de CloseFEN a changé :', event.newValue);
-      FermerFenetre(windowClone, newButton);
-    }
+function handleStorageChange(event) {
+  localStorage.setItem('CloseFEN', 'CLOSEOPASOK');
+
+
+  if (event.key === 'CloseFEN') {
+    // La valeur de CloseFEN a changé, vous pouvez effectuer votre action ici
+   
+    FermerFenetre(windowClone, newButton);
   }
 
-  // Ajouter un écouteur d'événement storage
-  window.addEventListener('storage', handleStorageChange);
+
+}
+
 
   var titleElement = windowClone.querySelector("#titrefn");
   if (titleElement) {
@@ -330,6 +334,9 @@ function NouvelleFenetre(id, title, contentUrl, menu, menuIsVisible, Actualisati
     // Check the value of Actualisation and set the display property accordingly
     actualiserButton.style.display = Actualisation ? "block" : "none";
 
+
+
+ 
     // Add an event listener only if the button is visible
     if (Actualisation) {
       actualiserButton.addEventListener("click", function () {

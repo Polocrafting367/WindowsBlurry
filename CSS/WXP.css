@@ -195,6 +195,7 @@ background-color: rgba(50, 200, 200, 0.6);
 .logostart {    
   height: 15px;
 width: 15px;}
+
  button {
     font-family: var(--sans-serif);
     -webkit-font-smoothing: antialiased;
@@ -922,8 +923,7 @@ width: 17%;
 .BTSY {
   position: absolute;
   padding: 10px;
-left: 10px;
-width: 55%;
+
 border-radius: 15px;
     display: flex;
     align-items: center;

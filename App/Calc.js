@@ -22,3 +22,21 @@ function calculateResult() {
 
 
 
+        window.addEventListener('storage', handleStorageChange);
+
+
+
+function handleStorageChange(event) {
+  localStorage.setItem('CloseFEN', 'CLOSEOPASOK');
+
+
+
+
+  if (event.key === 'Boot') {
+    // La valeur de Theme a changé, vous pouvez effectuer votre action ici
+
+// Actualiser la page
+location.reload();
+
+  }
+}

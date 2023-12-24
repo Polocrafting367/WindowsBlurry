@@ -435,8 +435,13 @@ font: var(--font);
     background-color: rgba(0, 150, 150, 0.6);
 }
 
+button {
+border:   0px;
+}
 
+button:hover {
 
+}
 
 #guitt {
     position: absolute;
