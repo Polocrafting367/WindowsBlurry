@@ -233,7 +233,7 @@ function Calculatrice() {
 }
 
 function Yout() {
-  NouvelleFenetre("Yout", "Personnaliser", "../App/yout.html", menu, menuIsVisible, false);
+  NouvelleFenetre("Yout", "Personnaliser", "../App/yout.html", menu, menuIsVisible, true);
 }
 
 function LOGO() {
