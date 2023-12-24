@@ -135,6 +135,12 @@ margin-right: 10px; /* Ajout du décalage de 10px à droite */
 
 background-color: rgba(50, 200, 200, 0.6);
 }
+
+#imgINFO {
+  background-image: url('../Images/tention.png');
+    background-size: 100% 60px;
+}
+
 .info {
     bottom: 60px;
     right: 60px;

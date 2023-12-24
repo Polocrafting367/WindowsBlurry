@@ -1301,7 +1301,10 @@ transform: translateY(0);
 }
 }
 
-
+#imgINFO {
+  background-image: url('../Images/Critical.png');
+    background-size: 100% 60px;
+}
 
 .calculator {
     background-color: #ecf0f3;
