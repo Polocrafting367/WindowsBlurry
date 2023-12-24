@@ -309,35 +309,6 @@ font: var(--font);
 
 
 
- button {
-    border: 1px solid #AAAAAA;
-background:linear-gradient(
-    to bottom,
-    var(--button-face) 45%,
-    var(--button-shade-light) 45%,
-    var(--button-shade-dark)
-  );
- 
-
-
- 
-}
-button:hover{
-  background:  linear-gradient(
-    to bottom,
-    var(--button-face-hover) 45%,
-    var(--button-shade-light-hovered) 45%,
-    #a7d9f5
-  );
-}
-
-button:active{  background: linear-gradient(
-    to bottom,
-    #e5f4fc,
-    var(--button-face-active) 30% 50%,
-    var(--button-shade-light-active) 50%,
-    #68b3db
-  );}
 
 
 .button-image {
