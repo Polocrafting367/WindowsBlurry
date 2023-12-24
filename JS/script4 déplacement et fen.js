@@ -229,7 +229,7 @@ function BlocNote() {
 }
 
 function Calculatrice() {
-  NouvelleFenetre("Calculatrice", "Calculatrice", "../App/Calc.html", menu, menuIsVisible, true);
+  NouvelleFenetre("Calculatrice", "Calculatrice", "../App/Calc.html", menu, menuIsVisible, false);
 }
 
 function Yout() {
