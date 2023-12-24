@@ -225,32 +225,35 @@ function loadContentWithObject(url, targetElement) {
 
 
 function BlocNote() {
-  NouvelleFenetre("BlocNote", "Bloc Notes", "../App/NotePad.html", menu, menuIsVisible);
+  NouvelleFenetre("BlocNote", "Bloc Notes", "../App/NotePad.html", menu, menuIsVisible, false);
 }
 
 function Calculatrice() {
-  NouvelleFenetre("Calculatrice", "Calculatrice", "../App/Calc.html", menu, menuIsVisible);
+  NouvelleFenetre("Calculatrice", "Calculatrice", "../App/Calc.html", menu, menuIsVisible, true);
 }
 
 function Yout() {
-  NouvelleFenetre("Yout", "Personnaliser", "../App/yout.html", menu, menuIsVisible);
+  NouvelleFenetre("Yout", "Personnaliser", "../App/yout.html", menu, menuIsVisible, false);
 }
+
 function LOGO() {
-  NouvelleFenetre("Yout", "Crédits", "../App/Logo.html", menu, menuIsVisible);
+  NouvelleFenetre("Yout", "Crédits", "../App/Logo.html", menu, menuIsVisible, false);
 }
+
 function Supp() {
-  localStorage.setItem('MessageINFO', "Êtes-vous sûr de vouloir supprimer, cela redémarrera la page sans sauvegarde ?");
+  localStorage.setItem('MessageINFO', "Êtes-vous sûr de vouloir supprimer, cela redémarrera l'ordinateur sans sauvegarde des données ?");
   localStorage.setItem('B1', "Annuler");
   localStorage.setItem('B2', "Supprimer");
 
   NouvelleFenetre("Message", "Cookies", "../App/Message box.html", menu, menuIsVisible);
 }
+
 function FermerFenetre(windowClone, newButton) {
   windowClone.remove();
   newButton.remove();
 }
 
-function NouvelleFenetre(id, title, contentUrl, menu, menuIsVisible) {
+function NouvelleFenetre(id, title, contentUrl, menu, menuIsVisible, Actualisation) {
   var windowDiv = document.getElementById("window");
   var windowClone = windowDiv.cloneNode(true);
   windowClone.style.zIndex = 1;
@@ -281,9 +284,23 @@ function NouvelleFenetre(id, title, contentUrl, menu, menuIsVisible) {
     });
   }
 
-    windowClone.querySelector(".close").addEventListener("click", function () {
+  windowClone.querySelector(".close").addEventListener("click", function () {
     FermerFenetre(windowClone, newButton);
   });
+
+  // Fonction à exécuter en cas de changement dans le localStorage
+  function handleStorageChange(event) {
+    localStorage.setItem('CloseFEN', "CLOSEOPASOK");
+
+    if (event.key === 'CloseFEN') {
+      // La valeur de CloseFEN a changé, vous pouvez effectuer votre action ici
+      console.log('La valeur de CloseFEN a changé :', event.newValue);
+      FermerFenetre(windowClone, newButton);
+    }
+  }
+
+  // Ajouter un écouteur d'événement storage
+  window.addEventListener('storage', handleStorageChange);
 
   var titleElement = windowClone.querySelector("#titrefn");
   if (titleElement) {
@@ -308,8 +325,17 @@ function NouvelleFenetre(id, title, contentUrl, menu, menuIsVisible) {
     FermerFenetre(windowClone, newButton);
   });
 
-  windowClone.querySelector(".actualiser").addEventListener("click", function () {
-    contentContainer.innerHTML = ""; // Vide le conteneur
-    loadContentWithObject(contentUrl, contentContainer); // Recharge le contenu
-  });
+  var actualiserButton = windowClone.querySelector(".actualiser");
+  if (actualiserButton) {
+    // Check the value of Actualisation and set the display property accordingly
+    actualiserButton.style.display = Actualisation ? "block" : "none";
+
+    // Add an event listener only if the button is visible
+    if (Actualisation) {
+      actualiserButton.addEventListener("click", function () {
+        contentContainer.innerHTML = ""; // Vide le conteneur
+        loadContentWithObject(contentUrl, contentContainer); // Recharge le contenu
+      });
+    }
+  }
 }

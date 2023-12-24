@@ -310,17 +310,34 @@ font: var(--font);
 
 
  button {
-    font-family: var(--sans-serif);
-    -webkit-font-smoothing: antialiased;
-    font-size: 18px;
-    box-sizing: border-box;
-    border: 1px solid #003c74;
+    border: 1px solid #AAAAAA;
+background:linear-gradient(
+    to bottom,
+    var(--button-face) 45%,
+    var(--button-shade-light) 45%,
+    var(--button-shade-dark)
+  );
+ 
 
-    box-shadow: none;
-    border: none;
- }
+
+ 
+}
+button:hover{
+  background:  linear-gradient(
+    to bottom,
+    var(--button-face-hover) 45%,
+    var(--button-shade-light-hovered) 45%,
+    #a7d9f5
+  );
 }
 
+button:active{  background: linear-gradient(
+    to bottom,
+    #e5f4fc,
+    var(--button-face-active) 30% 50%,
+    var(--button-shade-light-active) 50%,
+    #68b3db
+  );}
 
 
 .button-image {
@@ -448,23 +465,6 @@ font: var(--font);
 }
 
 
-
-  #Message {
-    position: absolute;
-    top: 75px;
-    left: 200px;
-    width: 450px;
-    height: 125px;
-
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-
-    z-index: 1;
-
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-      will-change: transform;
-
-  }
 
 
 #guitt {
@@ -1124,7 +1124,12 @@ top: 260px;
 left:50px;
  
 }
+#newwind5 {
 
+top: 310px;
+left:50px;
+ 
+}
     #generate-btn{
 
 top: 50px;
@@ -1419,6 +1424,39 @@ transform: translateY(0);
     max-width: 400px;
     width: 100%;
 }
+
+ #Message {
+    position: absolute;
+    top: 50px;
+    left: 100px;
+    width: 450px;
+
+    height: 125px;
+    
+
+}
+ #MessageTXT {
+    position: absolute;
+    top: 10px;
+    left: 80px;
+    width:400px;
+
+    height: 125px;
+    
+    z-index: -1;
+
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    will-change: transform; /* Cela peut ne pas être nécessaire dans ce contexte */
+}
+
+#imgINFO{   
+    position: absolute;
+    top: 10px;
+    left: 10px;         
+    margin-right: 10px; /* Espacement entre l'image et les boutons à droite */}
+
+
 
 .display {
     font-size: 2em;

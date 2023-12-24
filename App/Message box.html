@@ -1,17 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
+    <script>
+        // Récupérer le thème depuis localStorage
+        var style = localStorage.getItem('Theme') || 'style.css';
+
+    </script>
+
+    <link rel="stylesheet" href="" id="theme-stylesheet">
+    <script>
+        // Mettre à jour l'attribut href de la balise link avec la variable style
+        document.getElementById('theme-stylesheet').href = style;
+    </script>
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    background-color: #f4f4f4;
-    overflow: hidden;
-    padding: 15px;
+
 }
 
 #overlay {
@@ -27,50 +31,54 @@ body {
 #butt {
     position: absolute;
     bottom: 5px;
-    right: 50px;
+    right: 20px;
     display: flex; /* Ajout : spécifier la disposition flex pour align-items et justify-content */
     justify-content: space-between;
+     gap: 10px; /* Ajout : espacement entre les boutons */
     padding: 5px;
 }
 
 
         img {
 
-            margin-right: 10px; /* Espacement entre l'image et les boutons à droite */
+
         }
     </style>
     <title>Info Window</title>
 </head>
-<body>
-    <div id="img">
+<div id="Message">
+    </div>
 
-    <img src="../Images/close-hover.svg" alt="Votre Image" style="width: 60px; height: 60px;">
-</div>
+    <div >
+
+    <img id="imgINFO" src="../Images/close-hover.svg" alt="Votre Image" style="width: 60px; height: 60px;">
+    </div>
 
 
     <div id="overlay">
-        <div id="Message"></div>
+        <div id=""></div>
     </div>
 
-
+<div id="MessageTXT">
+    </div>
 
     <div id="butt">
-        <button id="bt1"></button>
+        <button id="btnAnnuler"></button>
         <button id="bt2" onclick="Supp()"></button>
 
 
-        <button id="btnAnnuler">Annuler</button>
-    </div>
 
+
+    </div>
 
     <script>
          document.getElementById("btnAnnuler").addEventListener("click", function () {
             // Appeler la fonction pour fermer la fenêtre depuis l'iframe
-            window.parent.FermerFenetre(window.frameElement, window.parent.document.getElementById("FenDEFF"));
+            localStorage.setItem('CloseFEN', "CLOSEOK");
         });
         // Mise à jour de l'élément avec l'ID "Message"
-        document.getElementById("Message").innerHTML = localStorage.getItem('MessageINFO');
-        document.getElementById("bt1").innerHTML = localStorage.getItem('B1');
+        document.getElementById("MessageTXT").innerHTML = localStorage.getItem('MessageINFO');
+        document.getElementById("btnAnnuler").innerHTML = localStorage.getItem('B1');
         document.getElementById("bt2").innerHTML = localStorage.getItem('B2');
 
 
@@ -97,5 +105,5 @@ body {
             // Appel de la fonction Supp
         }
     </script>
-</body>
+
 </html>

@@ -19,23 +19,37 @@ body {
       width:100%;
     }
 .bggc{background: white;}
-
-  #Message {
+ #Message {
     position: absolute;
-    top: 75px;
-    left: 200px;
+    top: 50px;
+    left: 100px;
     width: 450px;
+
     height: 125px;
+    
 
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+ #MessageTXT {
+    position: absolute;
+    top: 10px;
+    left: 80px;
+    width:400px;
 
-    z-index: 1;
+    height: 125px;
+    
+    z-index: -1;
 
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
-      will-change: transform;
+    will-change: transform; /* Cela peut ne pas être nécessaire dans ce contexte */
+}
 
-  }
+#imgINFO{   
+    position: absolute;
+    top: 10px;
+    left: 10px;         
+    margin-right: 10px; /* Espacement entre l'image et les boutons à droite */}
+
 .rectangle {
     position: fixed;
     bottom: 0;
@@ -982,6 +996,12 @@ top: 160px;
 #newwind4 {
 
 top: 260px;
+
+ 
+}
+#newwind5 {
+
+top: 310px;
 
  
 }

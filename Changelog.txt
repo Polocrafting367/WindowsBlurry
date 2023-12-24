@@ -1,3 +1,4 @@
+        24/12/23 : Obtimisation général + Nouvelle fenêtre adapative de m'essage d'érreur
         22/12/23 : ajout bouton actualisation sur les fenêtre réduit
         18/12/23 : ajout bouton réduire sur les fenêtre clonées
         18/12/23 : Modification de la barre des tahche pour l'ajout de boutons fonctionnel ! 
