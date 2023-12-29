@@ -898,7 +898,8 @@ position: absolute;
 
 top: 225px;
 left: 30px;
-width: 17%;
+
+width: 60px;
 
 }
 
@@ -907,7 +908,7 @@ position: absolute;
 
 top: 225px;
 left: 100px;
-width: 17%;
+width: 60px;
 
 }
 
@@ -916,13 +917,28 @@ position: absolute;
 
 top: 225px;
 left: 170px;
-width: 17%;
+width: 60px;
 
 }
+#theme4{
+position: absolute;
 
+top: 225px;
+left: 240px;
+width: 60px;
+
+}
+#theme5{
+position: absolute;
+
+top: 225px;
+left: 310px;
+width: 60px;
+
+}
 .BTSY {
   position: absolute;
-  padding: 10px;
+  padding: 5px;
 
 border-radius: 15px;
     display: flex;

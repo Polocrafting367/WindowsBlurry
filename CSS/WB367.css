@@ -832,9 +832,42 @@ font-size: 18px;
   background-color: rgba(255, 255, 255, 0.1);
           border-radius: 15px;
 }
+#theme4{
+position: absolute;
+padding: 10px;
+background-color: rgba(0, 0, 0, 0.5);
+color: white;
+border: none;
+border-radius: 15px;
+font-size: 18px;
+top: 225px;
+left: 240px;
+width: 17%;
 
+}
 
+#theme4:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+          border-radius: 15px;
+}
 
+#theme5{
+position: absolute;
+padding: 10px;
+background-color: rgba(0, 0, 0, 0.5);
+color: white;
+border: none;
+border-radius: 15px;
+font-size: 18px;
+top: 225px;
+left: 310px;
+width: 60px;
+
+}
+#theme5:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+          border-radius: 15px;
+}
 
     #newwind{
 position: absolute;

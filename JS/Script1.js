@@ -27,7 +27,22 @@
 
     }
 
-    function FichierCSS7() {
+    function FichierCSS8B() {
+        var styleSheet = document.getElementById("styleSheet");
+        styleSheet.href = "../CSS/W8BETA.css"; // Remplacez "NouveauFichier.css" par le nom de votre nouveau fichier CSS
+        var bouton = document.getElementById("download");
+
+
+
+        localStorage.setItem('Theme', "../CSS/W8BETA.css");
+        localStorage.setItem('Boot', "FichierCSS8B");
+
+ 
+
+
+    }
+
+        function FichierCSS7() {
         var styleSheet = document.getElementById("styleSheet");
         styleSheet.href = "../CSS/W7.css"; // Remplacez "NouveauFichier.css" par le nom de votre nouveau fichier CSS
         var bouton = document.getElementById("download");
@@ -36,6 +51,20 @@
 
         localStorage.setItem('Theme', "../CSS/W7.css");
         localStorage.setItem('Boot', "FichierCSS7");
+
+ 
+
+
+    }
+        function FichierCSS8() {
+        var styleSheet = document.getElementById("styleSheet");
+        styleSheet.href = "../CSS/W8.css"; // Remplacez "NouveauFichier.css" par le nom de votre nouveau fichier CSS
+        var bouton = document.getElementById("download");
+
+
+
+        localStorage.setItem('Theme', "../CSS/W8.css");
+        localStorage.setItem('Boot', "FichierCSS8B");
 
  
 
@@ -57,9 +86,18 @@
             if (bootValue && bootValue === "FichierCSS7") {
          var styleSheet = document.getElementById("styleSheet");
         styleSheet.href = "../CSS/W7.css";
+        }
+                    if (bootValue && bootValue === "FichierCSS8B") {
+         var styleSheet = document.getElementById("styleSheet");
+        styleSheet.href = "../CSS/W8BETA.css";
+            
             
 
             }
+                        if (bootValue && bootValue === "FichierCSS8") {
+         var styleSheet = document.getElementById("styleSheet");
+        styleSheet.href = "../CSS/W8.css";
+        }
 
 
 
