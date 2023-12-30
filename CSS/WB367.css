@@ -31,6 +31,10 @@ body {
     
 
 }
+#Bureau {
+
+display: none;
+}
  #MessageTXT {
     position: absolute;
     top: 10px;

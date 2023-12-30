@@ -219,12 +219,14 @@ font: var(--font);
     position: relative;
     height: 54px;
     width: 54px;
-    margin-left: 10px;
-    margin-top: -10px;
+    margin-left: 0px;
+    margin-top: -7Px;
     font-size: 0px;
     border-radius: 54px;
     overflow: hidden;
     transition: background 0.3s ease-in-out;
+      background:transparent;
+      filter: saturate(0);
 }
 
 #start-btn::before {
@@ -234,8 +236,8 @@ font: var(--font);
     left: 0;
     right: 0;
     bottom: 0;
-    background: url('../Images/367LOGO.png') no-repeat center center;
-    background-size: 60%;
+   
+    background-size: 90%;
     filter: blur(10px);
     opacity: 0;
     z-index: 0;
@@ -244,18 +246,20 @@ font: var(--font);
 
 #logostart {
     position: relative;
-    height: 25px;
-    width: 25px;
+    height: 32PX;
+    width: 32px;
     z-index: 1;
     transition: filter 0.3s ease-in-out;
+
+
 }
 
-#start-btn:hover #logostart {
-    filter: brightness(1.1);
+#start-btn:hover  {
+    filter: saturate(1);
 }
 
-#start-btn:active #logostart {
-    filter: brightness(1);
+#start-btn:active  {
+    filter: saturate(0.5);
 }
 
 #start-btn:hover::before {
@@ -267,38 +271,9 @@ font: var(--font);
     filter: blur(0px); /* Ajustez la valeur selon vos besoins */
 }
 
-#start-btn {
-    background: linear-gradient(
-        180deg,
-        #CCD7DF 0%,
-        #2E6285 49%,
-        #00365D 51%,
-        #086499 80%,
-        #02E7FE 100%
-    );
-}
 
-#start-btn:hover {
-    background: linear-gradient(
-        180deg,
-        #DBDDDC 0%,
-        #7AABBA 49%,
-        #087798 51%,
-        #30939E 80%,
-        #4FE8CD 100%
-    );
-}
 
-#start-btn:active {
-    background: linear-gradient(
-        180deg,
-        #DBDDDC 0%,
-        #7AABBA 49%,
-        #087798 51%,
-        #09B6D6 80%,
-        #42E4CC 100%
-    );
-}
+
 
 
 
@@ -487,7 +462,7 @@ font: var(--font);
   box-shadow: 2px 2px 10px 1px var(--window-border-color), inset 0 0 0 1px #fffa;
   border: var(--window-border) var(--window-border-color);
   border-radius: var(--window-border-radius);
-
+    font-size: 18px;
 }
 .taskbutt:hover {
 
@@ -702,21 +677,19 @@ z-index: 3;
 
 .menu {
 
-   background: var(--window-background-glass-stripes);
-backdrop-filter: blur(3px);
-font: var(--font);
-  box-shadow: 2px 2px 10px 1px var(--window-border-color), inset 0 0 0 1px #fffa;
-  border: var(--window-border) var(--window-border-color);
-  border-radius: var(--window-border-radius);
 
-width: 400px;
-height: 425px;
+backdrop-filter: blur(300px);
+font: var(--font);
+
+
+width: 100%;
+height: 100%;
 position: fixed;
 transform: translate(-225px, -75px);
 border-top-right-radius: 5px;
 border-top-left-radius: 5px;
 
-bottom: -34px;
+bottom: -75px;
 left: 225px;
 
 display: flex;
@@ -724,7 +697,7 @@ flex-direction: column;
 align-items: center;
 justify-content: space-between;
 box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-z-index: 800;
+z-index: 999999999;
 }
 
 .top-bar input[type="text"] {
@@ -746,7 +719,7 @@ color: #CCC;
 }
 
 .bottom-bar {
-  bottom: 0;
+  top: 0;
   width: 100%;
   height: 50px;
   display: flex;
@@ -1085,39 +1058,70 @@ left: 295px;
   }
 }
 
+#Bureau {
+
+  padding-bottom: 30px; /* Ajustez la valeur en fonction de la hauteur de votre image */
+   background-image: url('../Images/R.JPEG');
+  background-size: contain; /* ou cover en fonction de vos besoins */
+  text-align: center;
+  color: #000; /* Couleur du texte */
+  font-size: 16px; /* Taille du texte */
+
+  cursor: pointer;
+    height: 100px;
+width: 100px;
+  top: 410px;
+  left:150px;
+}
 
  #newwind {
 
   top: 110px;
   left:50px;
+  height: 100px;
+width: 100px;
+
 
 }
 
 
     #newwind2{
-top: 160px;
+top: 210px;
 left:50px;
+height: 100px;
+width: 100px;
 }
       #newwind3{
-        top: 210px;
+        top: 360px;
 left:50px;
+height: 100px;
+width: 100px;
+
 }
 #newwind4 {
 
-top: 260px;
+top: 460px;
 left:50px;
- 
+height: 100px;
+width: 100px;
+
+
 }
 #newwind5 {
 
 top: 310px;
-left:50px;
+left:150px;
+height: 100px;
+width: 100px;s
+
  
 }
     #generate-btn{
 
 top: 50px;
 width: 95%;
+
+
 
 }
 
@@ -1149,9 +1153,10 @@ font-size: 18px;
 
 #par{
 position: absolute;
-bottom: 60px;
-left: 63%;
-width: 34%;
+top: 460px;
+left:310px;
+width: 100px;
+height: 100px;
 font-size: 18px;
 }
 #btn-rapide:hover {
@@ -1161,9 +1166,10 @@ font-size: 18px;
 
 #supp{
 position: absolute;
-bottom: 120px;
-left: 63%;
-width: 34%;
+top: 310px;
+left: 310;
+width: 100px;
+height: 100px;
 font-size: 18px;
 }
 .content {
@@ -1559,6 +1565,6 @@ background-color: rgba(0, 150, 200, 0.6);
 }
 
 .background {
-  background-image: url('../Images/W7bg.png');
+  background-image: url('../Images/R.JPEG');
   /* Autres propriétés de style si nécessaire */
 }

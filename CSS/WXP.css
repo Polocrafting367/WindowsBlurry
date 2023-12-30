@@ -59,28 +59,30 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     
     /* Dégradé principal */
-    background: linear-gradient( 180deg,
-     rgba(255, 255, 255, 0.8) 0%,
-     rgba(255, 255, 255, 0.4) 8%,
-      rgba(255, 255, 255, 0) 40%,
-       rgba(255, 255, 255, 0.1) 88%,
-        rgba(50, 50, 50, 0.3) 93%,
-         rgba(50, 50, 50, 0.6) 95%,
-          rgba(50, 50, 50, 0.8) 96%,
-           rgba(0, 0, 0, 0.9) 100% ),
+    background: linear-gradient(
+        180deg,
+        rgba(9, 151, 255, 1) 0%,
+        rgba(0, 83, 238, 1) 8%,
+        rgba(0, 80, 238, 1) 40%,
+        rgba(0, 102, 255, 1) 88%,
+        rgba(0, 102, 255, 1) 93%,
+        rgba(0, 91, 255, 1) 95%,
+        rgba(0, 61, 215, 1) 96%,
+        rgba(0, 61, 215, 1) 100%
+    ),
     
     /* Dégradé blanc sur la partie droite */
     linear-gradient(        180deg,
-        rgba(0, 0, 0, 0.9) 0%,
-        rgba(50, 50, 50, 0.8) 8%,
-       rgba(50, 50, 50, 0.6) 40%,
-        rgba(50, 50, 50, 0.3) 88%,
-        rgba(255, 255, 255, 0.1) 93%,
-       rgba(255, 255, 255, 0) 95%,
-        rgba(255, 255, 255, 0.4) 96%,
-        rgba(255, 255, 255, 0.8) );
+        #2CA4D9 0%,
+        #17AFEE 8%,
+        #139CEA 40%,
+        #1290E7 88%,
+        #1889E5 93%,
+        #1889E5 95%,
+        #0D75D6 96%,
+        #0064C0 100% );
     
-    background-size: 93% 100%, 100% 100%;
+    background-size: 85% 100%, 100% 100%;
     background-repeat: no-repeat;
 }
 
@@ -110,7 +112,7 @@ margin-right: 5px; /* Ajout du décalage de 10px à droite */
     width: 175px;
     background-color: #fff;
     border: none;
-    cursor: pointer;
+
     border-radius: 5px;
     background-color: rgba(255, 255, 255, 0.8);
     float: right;
@@ -447,7 +449,7 @@ background-color: rgba(255, 255, 255, 1);
   }
 
 
-  #TOPSTY {
+#TOPSTY {
 
 
     position: absolute;
@@ -461,26 +463,27 @@ background-color: rgba(255, 255, 255, 1);
     font-family: "Trebuchet MS";
     background: linear-gradient(
         180deg,
-        rgba(255, 255, 255, 0.8) 0%,
-        rgba(255, 255, 255, 0.4) 8%,
-        rgba(255, 255, 255, 0) 40%,
-        rgba(255, 255, 255, 0.1) 88%,
-        rgba(50, 50, 50, 0.3) 93%,
-        rgba(50, 50, 50, 0.6) 95%,
-        rgba(50, 50, 50, 0.8) 96%,
-        rgba(0, 0, 0, 0.9) 100%
+        rgba(9, 151, 255, 1) 0%,
+        rgba(0, 83, 238, 1) 8%,
+        rgba(0, 80, 238, 1) 40%,
+        rgba(0, 102, 255, 1) 88%,
+        rgba(0, 102, 255, 1) 93%,
+        rgba(0, 91, 255, 1) 95%,
+        rgba(0, 61, 215, 1) 96%,
+        rgba(0, 61, 215, 1) 100%
     );
     padding: 3px 5px 3px 3px;
     border-top: 1px solid #0831d9;
     border-left: 1px solid #0831d9;
     border-right: 1px solid #001ea0;
     border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
+    border-top-right-radius: 7px;
     font-size: 13px;
     text-shadow: 1px 1px #0f1089;
     height: 23px;
 
   }
+
   #window4 {    border-top-left-radius: 8px;
     border-top-right-radius: 8px;}
 
@@ -997,29 +1000,29 @@ border-radius: 15px;
  #newwind {
 
   top: 110px;
-
+left:20px;
 }
 
 
     #newwind2{
 top: 160px;
-
+left:20px;
 }
       #newwind3{
         top: 210px;
-
+left:20px;
 }
 #newwind4 {
 
 top: 260px;
-
+left:20px;
  
 }
 #newwind5 {
 
 top: 310px;
 
- 
+ left:20px;
 }
 
     #generate-btn{
@@ -1437,3 +1440,7 @@ font-family: var(--sans-serif);
   /* Autres propriétés de style si nécessaire */
 }
 
+#Bureau {
+
+display: none;
+}

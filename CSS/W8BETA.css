@@ -498,14 +498,17 @@ font: var(--font);
   box-shadow: 2px 2px 10px 1px var(--window-border-color), inset 0 0 0 1px #fffa;
   border: var(--window-border) var(--window-border-color);
   border-radius: var(--window-border-radius);
-
+    font-size: 18px;
 }
 .taskbutt:hover {
 
 background-color: rgba(50, 200, 200, 0.6);
 }
 
+#Bureau {
 
+display: none;
+}
 
   #TOPSTY {
 
@@ -1570,6 +1573,6 @@ background-color: rgba(0, 150, 200, 0.6);
 }
 
 .background {
-  background-image: url('../Images/W7bg.png');
+  background-image: url('../Images/8b.png');
   /* Autres propriétés de style si nécessaire */
 }
