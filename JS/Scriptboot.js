@@ -50,8 +50,35 @@ setTimeout(function() {
  
         window.location.href = "../Boot/7boot.html";
 
-    }
 
+
+    }
+        function changerFichierCSS8B() {
+        var styleSheet = document.getElementById("styleSheet");
+        styleSheet.href = "../CSS/W8 BETA.css"; // Remplacez "NouveauFichier.css" par le nom de votre nouveau fichier CSS
+        var bouton = document.getElementById("download");
+
+
+
+        localStorage.setItem('Theme', "../CSS/W8 BETA.css");
+        localStorage.setItem('Boot', "FichierCSS8");
+
+        window.location.href = "../Boot/367boot.html";
+
+ 
+    }        
+    function changerFichierCSS8() {
+        var styleSheet = document.getElementById("styleSheet");
+        styleSheet.href = "../CSS/W8.css"; // Remplacez "NouveauFichier.css" par le nom de votre nouveau fichier CSS
+        var bouton = document.getElementById("download");
+
+
+
+        localStorage.setItem('Theme', "../CSS/W8.css");
+        localStorage.setItem('Boot', "FichierCSS8");
+window.location.href = "../Boot/367boot.html";
+ 
+    }
 
         document.addEventListener("DOMContentLoaded", function() {
              //Vérifier si la valeur "Boot" est présente dans le stockage local
@@ -65,6 +92,12 @@ setTimeout(function() {
             }
             if (bootValue && bootValue === "FichierCSS7") {
                     window.location.href = "7boot.html";
+            }
+                        if (bootValue && bootValue === "FichierCSS8B") {
+                    window.location.href = "367boot.html";
+            }
+            if (bootValue && bootValue === "FichierCSS8") {
+                    window.location.href = "367boot.html";
             }
         });
 

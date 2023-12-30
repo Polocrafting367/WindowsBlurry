@@ -227,6 +227,7 @@ font: var(--font);
     transition: background 0.3s ease-in-out;
       background:transparent;
       filter: saturate(0);
+
 }
 
 #start-btn::before {

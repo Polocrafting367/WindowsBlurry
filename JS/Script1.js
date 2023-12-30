@@ -64,7 +64,7 @@
 
 
         localStorage.setItem('Theme', "../CSS/W8.css");
-        localStorage.setItem('Boot', "FichierCSS8B");
+        localStorage.setItem('Boot', "FichierCSS8");
 
  
 
@@ -87,14 +87,14 @@
          var styleSheet = document.getElementById("styleSheet");
         styleSheet.href = "../CSS/W7.css";
         }
-                    if (bootValue && bootValue === "FichierCSS8B") {
+        if (bootValue && bootValue === "FichierCSS8B") {
          var styleSheet = document.getElementById("styleSheet");
         styleSheet.href = "../CSS/W8BETA.css";
             
             
 
             }
-                        if (bootValue && bootValue === "FichierCSS8") {
+        if (bootValue && bootValue === "FichierCSS8") {
          var styleSheet = document.getElementById("styleSheet");
         styleSheet.href = "../CSS/W8.css";
         }
@@ -154,5 +154,5 @@ function Bureau() {
   }
 
 
-    
+
 }

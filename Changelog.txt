@@ -6,8 +6,8 @@ function MAFENETRE() {
 
 Le false à la fin permet d'afficher ou non le bouton actualiuser en haut de la fen, pratique pendant le dev
 
-
-
+        30/12/23 : Création theme windows 8
+        29/12/23 : Création theme windows 8 BETA
         28/12/23 : Adaptation du theme WXP pour le changement de couleurs (test)
         24/12/23 : Actualisation des fenêtre qui le veulent pour s'adapter au theme
         23/12/23 : Obtimisation général + Nouvelle fenêtre adapative de m'essage d'érreur
