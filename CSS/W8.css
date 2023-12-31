@@ -1,152 +1,42 @@
 :root {
-  /* --font: 9pt "Segoe UI", "SegoeUI", "Noto Sans", sans-serif; */
-  --surface: #f0f0f0; 
-   --button-highlight: #fff; 
-  --button-face: #f2f2f2; 
-  --button-face-hover: #eaf6fd; 
-   --button-face-active: #c4e5f6; 
-   --button-face-disabled: #f4f4f4; 
-   --button-shade-light: #ebebeb; 
-   --button-shade-light-default: #c3dcea; 
-   --button-shade-light-hovered: #bee6fd; 
-  --button-shade-light-active: #98d1ef;
-   --button-shade-dark: #cfcfcf; 
-  --button-shadow: inset 0 0 0 1px #fffc;
-   --button-shadow-active: inset 1px 1px 0 #0003, inset -1px 1px 0 #0001; 
+
   --button-border: 2px solid;
-   --button-border-color: #8e8f8f; 
-  --button-border-color-default: #5586a3;
+  --button-border-color: #8e8f8f;
+
   --button-border-color-hovered: #3c7fb1;
   --button-border-color-active: #6d91ab;
-  --button-border-color-disabled: #aeb2b5;
-   --button-text-color-disabled: #838383; 
-  --button-gradient: linear-gradient(
-    to bottom,
-    var(
-  --button-face) 45%,
-    var(--button-shade-light) 45%,
+  
 
-  );
-  --button-gradient-hovered: linear-gradient(
-    to bottom,
-    var(
-  --button-face-hover) 45%,
 
-  );
-   --button-gradient-active: linear-gradient(
-    to bottom,
-    #e5f4fc,
-    var(
-  --button-face-active) 30% 50%,
+  
+  --control-background-close: radial-gradient(
+   rgba(255, 150, 150, 0.75),    rgba(255, 150, 150, 0.75) 
+    );
 
-  ); 
+ 
+  --control-background-close-hovered: linear-gradient(    rgba(255, 200, 200, 0.75),    rgba(255, 200, 200, 0.75)  );
 
-  --element-spacing: 8px;
-  /* --grouped-element-spacing: 6px; */
-  --border-radius: 0px;
-  --border-width: 1px;
-  --window-spacing: 6px;
-  /* --window-border: 1px solid; */
-  /* --window-border-radius: 6px; */
-  --window-border-color: rgba(0, 0, 0, 0.7);
-  /* --window-background-color: #4580c4; */
-  /* --window-background-glass-stripes: linear-gradient(
-      135deg,
-      #fff5 70px,
-      transparent 100px
-    ),
-    linear-gradient(225deg, #fff5 70px, transparent 100px),
-    linear-gradient(
-        54deg,
-        
-          #0002 0 4%,
-        #6661 6% 6%,
-        #0002 8% 10%,
-        
-          #0002 15% 16%,
-        #aaa1 17% 18%,
-        #0002 23% 24%,
-        
-          #bbb2 25% 26%,
-        #0002 31% 33%,
-        
-          #0002 34% 34.5%,
-        #bbb2 36% 40%,
-        
-          #0002 41% 41.5%,
-        #bbb2 44% 45%,
-        
-          #bbb2 46% 47%,
-        #0002 48% 49%,
-        #0002 50% 50.5%,
-        
-          #0002 56% 56.5%,
-        #bbb2 57% 63%,
-        #0002 67% 69%,
-        
-          #bbb2 69.5% 70%,
-        #0002 73.5% 74%,
-        
-          #bbb2 74.5% 79%,
-        #0002 80% 84%,
-        
-          #aaa2 85% 86%,
-        #0002 87%,
-        #bbb1 90%
-      )
-      left center/100vw 100vh no-repeat fixed; */
-  /* --window-background: linear-gradient(
-      to right,
-      #ffffff66,
-      #0000001a,
-      #ffffff33
-    ),
-    var(
-  --window-background-color); */
-  /* --control-border-color: rgba(0, 0, 0, 0.3); */
-  /* --control-border-radius: 6px; */
-  --control-inset-shadow: inset 0 0 0 1px #fffa;
+ 
+  --control-background-close-active: linear-gradient(    rgba(200, 100, 100, 0.75),    rgba(200, 100, 100, 0.75)  );
+
+
   --control-background: linear-gradient(
-    rgba(255, 150, 150, 0.75),
-    rgba(255, 150, 150, 0.75)
+  rgba(50, 200, 200, 0),     rgba(50, 200, 200, 0)
+
 
   );
 
-  /* Colors for minimize, maximize, and restore buttons when hovered */
-  --control-background-hovered: radial-gradient(
-      circle at bottom,
-      #2aceda,
-      transparent 65%
-    ),
-    linear-gradient(#b6d9ee 50%, #1a6ca1 50%);
+    --control-background-hovered: radial-gradient(
+  rgba(0, 0, 0, 0.5),    rgba(0, 0, 0, 0.5)
+    );
+
 
   /* Colors for minimize, maximize, and restore buttons when clicked */
   --control-background-active: radial-gradient(
-      circle at bottom,
-      #0bfdfa,
-      transparent 65%
-    ),
-    linear-gradient(#86a7bc 50%, #092747 50%);
-
-  /* Colors for the close button at normal state */
-  --control-background-close: radial-gradient(
-      circle at -60% 50%,
-      #0007 5% 10%,
-      #0000 50%
+  rgba(100, 100, 100, 0.2),    rgba(100, 100, 100, 0.2)
     );
 
-  /* Colors for the close button when hovered */
-  --control-background-close-hovered: linear-gradient(    rgba(255, 150, 150, 0.75),    rgba(255, 150, 150, 0.75)  );
 
-  /* Colors for the close button when clicked */
-  --control-background-close-active: radial-gradient(
-      circle at 50% 170%,
-      #dcc03f 10% 20%,
-      #0000 60%
-    ),
-    radial-gradient(circle at -60% 50%, #000 5% 10%, #0000 50%),
-    radial-gradient(circle at 160% 50%, #000 5% 10%, #0000 50%),
-    linear-gradient(#d1a894, #b67562 25% 50%, #7d0d01 50%);
 }
 
 
@@ -190,15 +80,15 @@ body {
     position: fixed;
     border-radius: 0px;
     height: 40px;
-    background-color: rgba(255, 255, 255, 0.3);
+    background-color: rgba(255, 200, 50, 0.8);
     z-index: 999;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(3px);
-background: var(--window-background-glass-stripes);
+background: linear-gradient( 180deg, rgba(255, 200, 50, 0.8) 0%,  rgba(255, 200, 50, 0.8)  100% );
+
 font: var(--font);
-  box-shadow: 2px 2px 10px 1px var(--window-border-color), inset 0 0 0 1px #fffa;
-  border: var(--window-border) var(--window-border-color);
-  border-radius: var(--window-border-radius);
+
+
+
 }
 
 .info {
@@ -474,21 +364,27 @@ background-color: rgba(50, 200, 200, 0.6);
 
   #TOPSTY {
 
-font: var(--font);
-  box-shadow: 2px 2px 10px 1px var(--window-border-color), inset 0 0 0 1px #fffa;
-  border: var(--window-border) var(--window-border-color);
-  border-radius: var(--window-border-radius);
+/* font: var(--font); */
 
-  z-index: 0;
+/* box-shadow: 2px 2px 10px 1px var(--window-border-color), inset 0 0 0 1px #fffa; */
 
-      background: var(--window-background-glass-stripes);
+/* border: var(--window-border) var(--window-border-color); */
 
-    backdrop-filter: blur(3px);
-    color: #000;
-    text-shadow: 0 0 10px #fff, 0 0 10px #fff, 0 0 10px #fff, 0 0 10px #fff,
-      0 0 10px #fff, 0 0 10px #fff, 0 0 10px #fff, 0 0 10px #fff;
+/* border-radius: 0px; */
 
-  }
+z-index: 0;
+
+/* background: var(--window-background-glass-stripes); */
+
+/* backdrop-filter: blur(3px); */
+
+/* color: #000; */
+
+background: linear-gradient( 180deg, rgba(255, 200, 50, 1) 0%,  rgba(255, 200, 50, 1)  100% );
+
+/* text-shadow: 0 0 10px #fff, 0 0 10px #fff, 0 0 10px #fff, 0 0 10px #fff,
+      0 0 10px #fff, 0 0 10px #fff, 0 0 10px #fff, 0 0 10px #fff; */
+}
 
 #Calculatrice {
     position: absolute;
@@ -579,7 +475,7 @@ font: var(--font);
     top: 25px;
     left: 50px;
     width: 400px;
-    height: 320px;
+    height: 140px;
 
 
   }
@@ -590,15 +486,11 @@ font: var(--font);
     top: 0;
     left: 0;
     width: calc(100% + 3px);
-
-    height: 320px;
-
-background-color: rgba(0, 50, 255, 0.5);
-
-
+    height:calc(100% + 0px);
+    /* background-color: rgba(255, 150, 50, 1); */
     cursor: move;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
+    /* border-top-left-radius: 10px; */
+    /* border-top-right-radius: 10px; */
   }
 
 
@@ -646,8 +538,7 @@ will-change: transform;
 background-color: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
     cursor: move;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
+
 
         height: calc(100vh/1.6);
   }
@@ -699,6 +590,9 @@ align-items: center;
 justify-content: space-between;
 box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 z-index: 999999999;
+
+background: linear-gradient( 180deg, rgba(255, 200, 50, 1) 0%,  rgba(255, 200, 50, 1)  100% );
+
 }
 
 .top-bar input[type="text"] {
@@ -734,6 +628,8 @@ font: var(--font);
   box-shadow: 2px 2px 10px 1px var(--window-border-color), inset 0 0 0 1px #fffa;
   border: var(--window-border) var(--window-border-color);
   border-radius: var(--window-border-radius);
+
+  background: linear-gradient( 180deg, rgba(200, 150, 0, 1) 0%,  rgba(200, 150, 0, 1)  100% );
 }
 
 
@@ -807,7 +703,7 @@ box-shadow: 0 0 0px 0px #e68e75, var(--control-inset-shadow);
   height: 22px;
   right: 58px;
 
-
+filter: invert(100%);
 
 
             background: url(../Images/reduit.png) center center/10px 5px no-repeat,
@@ -838,7 +734,7 @@ box-shadow: 0 0 0px 0px #e68e75, var(--control-inset-shadow);
   height: 22px;
   right: 100px;
 
-
+filter: invert(100%);
 
 
             background: url(../Images/reload.png) center center/10px 10px no-repeat,
@@ -870,7 +766,7 @@ left: 30px;
 
 height: 40px;
 width: 86%;
-
+display:none;
 }
 
 #opp {
@@ -880,7 +776,7 @@ left: 30px;
 
 height: 40px;
 width: 86%;
-
+display:none;
 }
 
 
@@ -888,7 +784,7 @@ width: 86%;
 #changer-arriere-plan{
 position: absolute;
 
-top: 125px;
+top: 20px;
 left: 30px;
 width: 86%;
 
@@ -900,17 +796,17 @@ width: 86%;
 #button-color{
 position: absolute;
 
-top: 175px;
+top: 60px;
 left: 30px;
 width: 86%;
-
+display:none;
 }
 
 #dark{
 position: absolute;
 
 
-top: 225px;
+top: 60px;
 left: 30px;
 
 
@@ -919,7 +815,7 @@ left: 30px;
 #light{
 position: absolute;
 
-top: 225px;
+top: 60px;
 left: 95px;
 
 
@@ -928,7 +824,7 @@ left: 95px;
 #theme3{
 position: absolute;
 
-top: 225px;
+top: 60px;
 left: 160px;
 
 
@@ -936,7 +832,7 @@ left: 160px;
 #theme4{
 position: absolute;
 
-top: 225px;
+top: 60px;
 left: 225px;
 
 
@@ -944,7 +840,7 @@ left: 225px;
 #theme5{
 position: absolute;
 
-top: 225px;
+top: 60px;
 left: 295px;
 
 

@@ -1,123 +1,115 @@
 :root {
   /* --font: 9pt "Segoe UI", "SegoeUI", "Noto Sans", sans-serif; */
-  --surface: #f0f0f0;
-
-  --button-highlight: #fff;
-  --button-face: #f2f2f2;
-  --button-face-hover: #eaf6fd;
-  --button-face-active: #c4e5f6;
-  --button-face-disabled: #f4f4f4;
-  --button-shade-light: #ebebeb;
-  --button-shade-light-default: #c3dcea;
-  --button-shade-light-hovered: #bee6fd;
+  --surface: #f0f0f0; 
+   --button-highlight: #fff; 
+  --button-face: #f2f2f2; 
+  --button-face-hover: #eaf6fd; 
+   --button-face-active: #c4e5f6; 
+   --button-face-disabled: #f4f4f4; 
+   --button-shade-light: #ebebeb; 
+   --button-shade-light-default: #c3dcea; 
+   --button-shade-light-hovered: #bee6fd; 
   --button-shade-light-active: #98d1ef;
-  --button-shade-dark: #cfcfcf;
+   --button-shade-dark: #cfcfcf; 
   --button-shadow: inset 0 0 0 1px #fffc;
-  --button-shadow-active: inset 1px 1px 0 #0003, inset -1px 1px 0 #0001;
-  --button-border: 1px solid;
-  --button-border-color: #8e8f8f;
+   --button-shadow-active: inset 1px 1px 0 #0003, inset -1px 1px 0 #0001; 
+  --button-border: 2px solid;
+   --button-border-color: #8e8f8f; 
   --button-border-color-default: #5586a3;
   --button-border-color-hovered: #3c7fb1;
   --button-border-color-active: #6d91ab;
   --button-border-color-disabled: #aeb2b5;
-  --button-text-color-disabled: #838383;
+   --button-text-color-disabled: #838383; 
   --button-gradient: linear-gradient(
     to bottom,
-    var(--button-face) 45%,
+    var(
+  --button-face) 45%,
     var(--button-shade-light) 45%,
-    var(--button-shade-dark)
+
   );
   --button-gradient-hovered: linear-gradient(
     to bottom,
-    var(--button-face-hover) 45%,
-    var(--button-shade-light-hovered) 45%,
-    #a7d9f5
+    var(
+  --button-face-hover) 45%,
+
   );
-  --button-gradient-active: linear-gradient(
+   --button-gradient-active: linear-gradient(
     to bottom,
     #e5f4fc,
-    var(--button-face-active) 30% 50%,
-    var(--button-shade-light-active) 50%,
-    #68b3db
-  );
+    var(
+  --button-face-active) 30% 50%,
+
+  ); 
 
   --element-spacing: 8px;
-  --grouped-element-spacing: 6px;
-
-  --border-radius: 3px;
+  /* --grouped-element-spacing: 6px; */
+  --border-radius: 0px;
   --border-width: 1px;
-
-
-    --window-spacing: 6px;
-  --window-border: 1px solid;
-  --window-border-radius: 6px;
+  --window-spacing: 6px;
+  /* --window-border: 1px solid; */
+  /* --window-border-radius: 6px; */
   --window-border-color: rgba(0, 0, 0, 0.7);
-  --window-background-color: #4580c4;
-  --window-background-glass-stripes: linear-gradient(
+  /* --window-background-color: #4580c4; */
+  /* --window-background-glass-stripes: linear-gradient(
       135deg,
       #fff5 70px,
       transparent 100px
-
     ),
     linear-gradient(225deg, #fff5 70px, transparent 100px),
     linear-gradient(
         54deg,
-        /* ------------------------------- 1st stripe ------------------------------- */
+        
           #0002 0 4%,
         #6661 6% 6%,
         #0002 8% 10%,
-        /* ------------------------------- 2nd stripe ------------------------------- */
+        
           #0002 15% 16%,
         #aaa1 17% 18%,
         #0002 23% 24%,
-        /* ------------------------------- 3rd stripe ------------------------------- */
+        
           #bbb2 25% 26%,
         #0002 31% 33%,
-        /* ------------------------------- 4th stripe ------------------------------- */
+        
           #0002 34% 34.5%,
         #bbb2 36% 40%,
-        /* ------------------------------- 5th stripe ------------------------------- */
+        
           #0002 41% 41.5%,
         #bbb2 44% 45%,
-        /* ------------------------------- 6th stripe ------------------------------- */
+        
           #bbb2 46% 47%,
         #0002 48% 49%,
         #0002 50% 50.5%,
-        /* ------------------------------- 7th stripe ------------------------------- */
+        
           #0002 56% 56.5%,
         #bbb2 57% 63%,
         #0002 67% 69%,
-        /* ------------------------------- 8th stripe ------------------------------- */
+        
           #bbb2 69.5% 70%,
         #0002 73.5% 74%,
-        /* ------------------------------- 9th stripe ------------------------------- */
+        
           #bbb2 74.5% 79%,
         #0002 80% 84%,
-        /* ------------------------------- 10th stripe ------------------------------- */
+        
           #aaa2 85% 86%,
         #0002 87%,
         #bbb1 90%
       )
-      left center/100vw 100vh no-repeat fixed;
-      
-
-  --window-background: linear-gradient(
+      left center/100vw 100vh no-repeat fixed; */
+  /* --window-background: linear-gradient(
       to right,
       #ffffff66,
       #0000001a,
       #ffffff33
     ),
-    var(--window-background-color);
-
-  --control-border-color: rgba(0, 0, 0, 0.3);
-  --control-border-radius: 6px;
+    var(
+  --window-background-color); */
+  /* --control-border-color: rgba(0, 0, 0, 0.3); */
+  /* --control-border-radius: 6px; */
   --control-inset-shadow: inset 0 0 0 1px #fffa;
   --control-background: linear-gradient(
-    rgba(255, 255, 255, 0.5),
-    rgba(255, 255, 255, 0.3) 45%,
-    rgba(0, 0, 0, 0.1) 50%,
-    rgba(0, 0, 0, 0.1) 75%,
-    rgba(255, 255, 255, 0.5)
+    rgba(255, 150, 150, 0.75),
+    rgba(255, 150, 150, 0.75)
+
   );
 
   /* Colors for minimize, maximize, and restore buttons when hovered */
@@ -141,19 +133,10 @@
       circle at -60% 50%,
       #0007 5% 10%,
       #0000 50%
-    ),
-    radial-gradient(circle at 160% 50%, #0007 5% 10%, #0000 50%),
-    linear-gradient(#e0a197e5, #cf796a 25% 50%, #d54f36 50%);
+    );
 
   /* Colors for the close button when hovered */
-  --control-background-close-hovered: radial-gradient(
-      circle at 50% 170%,
-      #f4e676 10% 20%,
-      #0000 60%
-    ),
-    radial-gradient(circle at -60% 50%, #000a 5% 10%, #0000 50%),
-    radial-gradient(circle at 160% 50%, #000a 5% 10%, #0000 50%),
-    linear-gradient(#fb9d8b, #ee6d56 25% 50%, #d42809 50%);
+  --control-background-close-hovered: linear-gradient(    rgba(255, 150, 150, 0.75),    rgba(255, 150, 150, 0.75)  );
 
   /* Colors for the close button when clicked */
   --control-background-close-active: radial-gradient(
@@ -165,6 +148,7 @@
     radial-gradient(circle at 160% 50%, #000 5% 10%, #0000 50%),
     linear-gradient(#d1a894, #b67562 25% 50%, #7d0d01 50%);
 }
+
 
 
 html, body {
@@ -181,6 +165,15 @@ body {
     background-position: center;
     overflow: hidden;
 }
+
+
+   
+   object {
+      border: none;
+      height: 100%;
+      width:100%;
+    }
+
 
 
    
@@ -226,12 +219,15 @@ font: var(--font);
     position: relative;
     height: 54px;
     width: 54px;
-    margin-left: 10px;
-    margin-top: -10px;
+    margin-left: 0px;
+    margin-top: -7Px;
     font-size: 0px;
     border-radius: 54px;
     overflow: hidden;
     transition: background 0.3s ease-in-out;
+      background:transparent;
+      filter: saturate(0);
+
 }
 
 #start-btn::before {
@@ -241,8 +237,8 @@ font: var(--font);
     left: 0;
     right: 0;
     bottom: 0;
-    background: url('../Images/367LOGO.png') no-repeat center center;
-    background-size: 60%;
+   
+    background-size: 90%;
     filter: blur(10px);
     opacity: 0;
     z-index: 0;
@@ -251,18 +247,20 @@ font: var(--font);
 
 #logostart {
     position: relative;
-    height: 25px;
-    width: 25px;
+    height: 32PX;
+    width: 32px;
     z-index: 1;
     transition: filter 0.3s ease-in-out;
+
+
 }
 
-#start-btn:hover #logostart {
-    filter: brightness(1.1);
+#start-btn:hover  {
+    filter: saturate(1);
 }
 
-#start-btn:active #logostart {
-    filter: brightness(1);
+#start-btn:active  {
+    filter: saturate(0.5);
 }
 
 #start-btn:hover::before {
@@ -274,38 +272,9 @@ font: var(--font);
     filter: blur(0px); /* Ajustez la valeur selon vos besoins */
 }
 
-#start-btn {
-    background: linear-gradient(
-        180deg,
-        #CCD7DF 0%,
-        #2E6285 49%,
-        #00365D 51%,
-        #086499 80%,
-        #02E7FE 100%
-    );
-}
 
-#start-btn:hover {
-    background: linear-gradient(
-        180deg,
-        #DBDDDC 0%,
-        #7AABBA 49%,
-        #087798 51%,
-        #30939E 80%,
-        #4FE8CD 100%
-    );
-}
 
-#start-btn:active {
-    background: linear-gradient(
-        180deg,
-        #DBDDDC 0%,
-        #7AABBA 49%,
-        #087798 51%,
-        #09B6D6 80%,
-        #42E4CC 100%
-    );
-}
+
 
 
 
@@ -586,10 +555,7 @@ font: var(--font);
 
 
   }
-#Bureau {
 
-display: none;
-}
 
 #yout {
     position: absolute;
@@ -637,13 +603,14 @@ background-color: rgba(0, 50, 255, 0.5);
 
 
      #titrefn {
-position: absolute;
+
 
 font-size: 17px;
-top:5px;
-left:10px;
+
 font-family: arial;
 pointer-events: none;
+  text-align: center;
+      transform: translate(0, 5px);
 }
 
 #textt {
@@ -711,21 +678,19 @@ z-index: 3;
 
 .menu {
 
-   background: var(--window-background-glass-stripes);
-backdrop-filter: blur(3px);
-font: var(--font);
-  box-shadow: 2px 2px 10px 1px var(--window-border-color), inset 0 0 0 1px #fffa;
-  border: var(--window-border) var(--window-border-color);
-  border-radius: var(--window-border-radius);
 
-width: 400px;
-height: 425px;
+backdrop-filter: blur(300px);
+font: var(--font);
+
+
+width: 100%;
+height: 100%;
 position: fixed;
 transform: translate(-225px, -75px);
 border-top-right-radius: 5px;
 border-top-left-radius: 5px;
 
-bottom: -34px;
+bottom: -75px;
 left: 225px;
 
 display: flex;
@@ -733,7 +698,7 @@ flex-direction: column;
 align-items: center;
 justify-content: space-between;
 box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-z-index: 800;
+z-index: 999999999;
 }
 
 .top-bar input[type="text"] {
@@ -755,7 +720,7 @@ color: #CCC;
 }
 
 .bottom-bar {
-  bottom: 0;
+  top: 0;
   width: 100%;
   height: 50px;
   display: flex;
@@ -1094,39 +1059,70 @@ left: 295px;
   }
 }
 
+#Bureau {
+
+  padding-bottom: 30px; /* Ajustez la valeur en fonction de la hauteur de votre image */
+   background-image: url('../Images/R.JPEG');
+  background-size: contain; /* ou cover en fonction de vos besoins */
+  text-align: center;
+  color: #000; /* Couleur du texte */
+  font-size: 16px; /* Taille du texte */
+
+  cursor: pointer;
+    height: 100px;
+width: 100px;
+  top: 410px;
+  left:150px;
+}
 
  #newwind {
 
   top: 110px;
   left:50px;
+  height: 100px;
+width: 100px;
+
 
 }
 
 
     #newwind2{
-top: 160px;
+top: 210px;
 left:50px;
+height: 100px;
+width: 100px;
 }
       #newwind3{
-        top: 210px;
+        top: 360px;
 left:50px;
+height: 100px;
+width: 100px;
+
 }
 #newwind4 {
 
-top: 260px;
+top: 460px;
 left:50px;
- 
+height: 100px;
+width: 100px;
+
+
 }
 #newwind5 {
 
 top: 310px;
-left:50px;
+left:150px;
+height: 100px;
+width: 100px;s
+
  
 }
     #generate-btn{
 
 top: 50px;
 width: 95%;
+
+
 
 }
 
@@ -1158,9 +1154,10 @@ font-size: 18px;
 
 #par{
 position: absolute;
-bottom: 60px;
-left: 63%;
-width: 34%;
+top: 460px;
+left:310px;
+width: 100px;
+height: 100px;
 font-size: 18px;
 }
 #btn-rapide:hover {
@@ -1170,9 +1167,10 @@ font-size: 18px;
 
 #supp{
 position: absolute;
-bottom: 120px;
-left: 63%;
-width: 34%;
+top: 310px;
+left: 310;
+width: 100px;
+height: 100px;
 font-size: 18px;
 }
 .content {
@@ -1568,6 +1566,6 @@ background-color: rgba(0, 150, 200, 0.6);
 }
 
 .background {
-  background-image: url('../Images/W7bg.png');
+  background-image: url('../Images/R.JPEG');
   /* Autres propriétés de style si nécessaire */
 }
