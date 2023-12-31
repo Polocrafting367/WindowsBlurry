@@ -1,6 +1,6 @@
 setTimeout(function() {
-    window.location.href = "Bureau.html";
-}, 5000);
+    window.location.href = "W81011367.html";
+}, 3000);
 
 function startAnimation() {
     var lool = document.getElementById('lool');

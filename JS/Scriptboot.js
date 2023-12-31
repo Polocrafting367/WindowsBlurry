@@ -63,7 +63,7 @@ setTimeout(function() {
         localStorage.setItem('Theme', "../CSS/W8 BETA.css");
         localStorage.setItem('Boot', "FichierCSS8");
 
-        window.location.href = "../Boot/367boot.html";
+        window.location.href = "../Boot/7boot.html";
 
  
     }        
@@ -76,7 +76,7 @@ setTimeout(function() {
 
         localStorage.setItem('Theme', "../CSS/W8.css");
         localStorage.setItem('Boot', "FichierCSS8");
-window.location.href = "../Boot/367boot.html";
+window.location.href = "../Boot/boot810.html";
  
     }
 
