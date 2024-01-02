@@ -72,7 +72,7 @@ body {
     </div>
 
     <div id="butt">
-        <button id="btnAnnuler" class="BTSY"></button>
+
         <button id="bt2" onclick="Supp()" class="BTSY"></button>
 
 
@@ -81,13 +81,10 @@ body {
     </div>
 
     <script>
-         document.getElementById("btnAnnuler").addEventListener("click", function () {
-            // Appeler la fonction pour fermer la fenêtre depuis l'iframe
-            localStorage.setItem('CloseFEN', "CLOSEOK");
-        });
+
         // Mise à jour de l'élément avec l'ID "Message"
         document.getElementById("MessageTXT").innerHTML = localStorage.getItem('MessageINFO');
-        document.getElementById("btnAnnuler").innerHTML = localStorage.getItem('B1');
+
         document.getElementById("bt2").innerHTML = localStorage.getItem('B2');
 
 
