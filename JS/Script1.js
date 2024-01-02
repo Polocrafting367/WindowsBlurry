@@ -151,6 +151,7 @@ function Bureau() {
 
   if (menu) {
     menu.style.display = "none";
+
   }
 
 
