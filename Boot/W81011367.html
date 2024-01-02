@@ -1,172 +1,411 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Windows 11 Lock Screen</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Écran de Verrouillage</title>
 </head>
 <body>
-    <div class="lock-screen" id="lock-screen">
-        <div class="background-image" id="background-image">
-        	            <div class="top-bar" id="top-bar">
-                <div class="clock">12:34 PM</div>
-            </div>
-        </div>
-        <div class="lock-screen-content">
-
-            <div class="user-profile">
-                <div class="user-avatar"></div>
-                <div class="user-info">
-                    <div class="user-name">User Name</div>
-                    <div class="password-input">
-                        <input type="password" placeholder="Password">
-                    </div>
-                </div>
-            </div>
-        </div>
+  <div id="lockscreen-container">
+    <div id="sliding-panel">
+      <div id="clock"></div>
     </div>
-
+    <div id="login-panel">
+      <div id="login-header">
+        <div id="profile-info"  style="visibility: hidden;">
+          <img src="../Images/channels4_profile.jpg" alt="User Icon" class="profile-image">
+          <div id="profile-text">
+            <p class="profile-name">Polocrafting</p>
+          </div>
+        </div>
+      </div>
+      <div id="login-form" style="visibility: hidden;">
+        <input type="password" placeholder="Mot de passe">
+        <button onclick="login()">Connexion</button>
+      </div>
+    </div>
+<div id="loading-panel" style="display: none;">
+  <div class="loader">
+    <div class="circle"></div>
+    <div class="circle"></div>
+    <div class="circle"></div>
+    <div class="circle"></div>
+    <div class="circle"></div>
+  </div>
+  <text class="text">Bienvenue</text>
+</div>
+  </div>
 </body>
 </html>
 
-
-<style> 
-body {
+<style>
+  
+  body {
     margin: 0;
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    overflow: hidden; /* Pour cacher le débordement de l'image */
-    position: relative;
-}
-
-body::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 200%; /* Agrandir l'image de fond à 102% */
-    height: 200%; /* Agrandir l'image de fond à 102% */
-    background: url('https://urlz.fr/p5R5') no-repeat center center fixed;
+    padding: 0;
+    background: url('https://s1.1zoom.me/b5050/214/Lake_Mountains_Scenery_441215_1920x1200.jpg') no-repeat center center fixed;
     background-size: cover;
-    filter: blur(5px);  /* Flou de l'arrière-plan */
-    z-index: -1; /* Place le pseudo-élément en arrière-plan */
-}
-
-.lock-screen {
-    position: relative;
-    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     height: 100vh;
     overflow: hidden;
-}
+ user-select: none;
+  }
 
-.background-image {
-    background: url('https://urlz.fr/p5R5') no-repeat center center fixed;
-    background-size: cover;
+.text {
+    /* top: 50%; */
     position: absolute;
-    width: 100%;
-    height: 100%;
-    transition: transform 0.3s ease-out;
-    cursor: grab;
-    filter: blur(0);  /* Annule le flou sur l'image elle-même */
-}
-
-.lock-screen-content {
-    padding: 20px;
-}
-
-.top-bar {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    user-select: none;
-    position: absolute;
-    width: 100%;
-}
-
-.top-bar:active {
-    cursor: grabbing;
-}
-
-.clock {
-    font-size: 200px;
+    /* left: 50%; */
+    top: 50%;
+    left: 50%;
     color: white;
-    font-family: arial;
+    font-size: 20px;
+    font-family: 'Arial', sans-serif;
 }
 
-.user-profile {
+#sliding-panel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  transition: transform 0.5s ease-in-out;
+    background: url('https://s1.1zoom.me/b5050/214/Lake_Mountains_Scenery_441215_1920x1200.jpg') no-repeat center center fixed;
+}
+
+#clock {
+  color: #fff;
+  font-size: 120px;
+  margin-top: 20px;
+  font-family: 'Arial Black', sans-serif; /* Use single quotes if the font name has spaces */
+}
+
+#login-panel {
+  text-align: center;
+  margin-top: auto;
+}
+
+   #login-header {
+    color: #fff;
     display: flex;
     align-items: center;
-    margin-top: 20px;
+    justify-content: space-between; /* Adjust spacing between elements */
+    margin-bottom: 20px;
+  }
+
+  #profile-info {
+
+    align-items: center;
+  }
+
+  .profile-image {
+ position: absolute;
+ max-width: 120px;
+ left: 50%;
+ transform: translateX(-200px) translateY(10px);
+
+ }
+
+  #profile-text {
+    margin-left: 10px;
+    position: absolute;
+    max-width: 120px;
+    left: 50%;
+    transform: translateX(-70px) translateY(0px);
+  }
+
+  .profile-name {
+    color: white;
+    margin-right: 10px;
+  }
+
+  #login-form {
+    /* background: rgba(255, 255, 255, 0.3); */ /* Adjust background transparency */
+    padding: 20px;
+    border-radius: 10px;
+    /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transform: translateX(50px) translateY(10px);
+  }
+#login-form img {
+  width: 24px;
+  height: 24px;
+  margin-bottom: 10px;
 }
 
-.user-avatar {
-    width: 80px;
-    height: 80px;
-    background-color: #fff;
+#login-form input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+#login-form button {
+  width: 100%;
+  padding: 10px;
+  background: #0078D4;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#login-form a {
+  display: block;
+  color: #0078D4;
+  text-decoration: none;
+  margin-top: 10px;
+}
+/* Ajoutez ces styles pour rendre l'image déplaçable */
+#sliding-panel img {
+  width: 100%;
+  height: auto;
+  cursor: move;
+  user-select: none;
+}
+
+  #login-panel {
+
+/* Set initial opacity to 0 for the fade-in effect */
+    transition: visibility 0s, opacity 0.5s ease-in-out; /* Apply transition to opacity */
+  }
+
+  #loading-panel .loader {
+    position: absolute;
+    top: 48%;
+    left: 50%;
+    width: 50px;
+    height: 50px;
+    /* transform: scale(0.8); */
+    transform: translateX(-50px) translateY(02px) scale(0.7);
+  }
+
+  #loading-panel .loader .circle {
+    position: absolute;
+    width: 38px;
+    height: 38px;
+    opacity: 0;
+    transform: rotate(225deg);
+    animation-iteration-count: infinite;
+    animation-name: bootAnim;
+    animation-duration: 4.8s;
+  }
+
+  #loading-panel .loader .circle:after {
+    content: '';
+    position: absolute;
+    width: 3px;
+    height: 3px;
     border-radius: 50%;
-    margin-right: 20px;
-}
+    background: #fff;
+    border: 1px white solid;
+    box-shadow: 0 0 1px #0078d7;
+  }
 
-.user-info {
-    text-align: left;
-}
+  #loading-panel .loader .circle:nth-child(2) {
+    animation-delay: 240ms;
+  }
 
-.user-name {
-    font-size: 18px;
-    margin-bottom: 10px;
-}
+  #loading-panel .loader .circle:nth-child(3) {
+    animation-delay: 480ms;
+  }
 
-.password-input input {
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-    border: none;
-    border-radius: 5px;
-    margin-top: 5px;
-}
+  #loading-panel .loader .circle:nth-child(4) {
+    animation-delay: 720ms;
+  }
+
+  #loading-panel .loader .circle:nth-child(5) {
+    animation-delay: 960ms;
+  }
+
+  @keyframes bootAnim {
+    0% {
+      transform: rotate(225deg);
+      opacity: 1;
+      animation-timing-function: ease-out;
+    }
+    7% {
+      transform: rotate(345deg);
+      animation-timing-function: linear;
+    }
+    30% {
+      transform: rotate(455deg);
+      animation-timing-function: ease-in-out;
+    }
+    39% {
+      transform: rotate(690deg);
+      animation-timing-function: linear;
+    }
+    70% {
+      transform: rotate(815deg);
+      opacity: 1;
+      animation-timing-function: ease-out;
+    }
+    75% {
+      transform: rotate(945deg);
+      animation-timing-function: ease-out;
+    }
+    76% {
+      transform: rotate(945deg);
+      opacity: 0;
+    }
+    100% {
+      transform: rotate(945deg);
+      opacity: 0;
+    }
+  }
+
+
 
 
 </style>
-
 <script>
+document.addEventListener('DOMContentLoaded', () => {
+    let isDragging = false;
+    let initialY;
+
+    const slidingPanel = document.getElementById('sliding-panel');
+    const backgroundImage = document.body;
+    const clockElement = document.getElementById('clock');
+    const loginPanel = document.getElementById('login-panel');
+const profileinfo = document.getElementById('profile-info');
+const loginform = document.getElementById('login-form');
 
 
-let isDragging = false;
-let initialY;
+    backgroundImage.addEventListener('mousedown', (e) => {
+        const rect = slidingPanel.getBoundingClientRect();
 
-const lockScreen = document.getElementById('lock-screen');
-const backgroundImage = document.getElementById('background-image');
+        // Calculate the initial Y position relative to the center of the image
+        initialY = e.clientY - rect.top;
 
-backgroundImage.addEventListener('mousedown', (e) => {
-    isDragging = true;
-    initialY = e.clientY - backgroundImage.getBoundingClientRect().top;
-});
+        // If the click is below the image, do not start dragging
+        if (e.clientY > rect.top + rect.height) {
+            return;
+        }
 
-document.addEventListener('mousemove', (e) => {
-    if (isDragging) {
-        const newY = e.clientY - initialY;
+        isDragging = true;
+    });
 
-        backgroundImage.style.top = `${newY}px`;
+    document.addEventListener('mousemove', (e) => {
+        if (isDragging) {
+            const newY = e.clientY - initialY;
+
+            // Limit movement only upwards
+            slidingPanel.style.top = `${Math.min(0, newY)}px`;
+
+            // Update backdrop filter blur intensity based on panel's position
+            const blurIntensity = Math.min(10, Math.abs(newY) / 50);
+            backgroundImage.style.backdropFilter = `blur(${blurIntensity}px)`;
+
+            // Update login panel visibility and opacity
+            if (newY <= -(0.75 * window.innerHeight)) {
+                loginPanel.style.visibility = 'visible';
+                loginPanel.style.opacity = '1';
+                profileinfo.style.visibility = 'visible';
+                loginform.style.visibility = 'visible';
+
+            } else {
+                loginPanel.style.visibility = 'hidden';
+                loginPanel.style.opacity = '0';
+                profileinfo.style.visibility = 'hidden';
+                loginform.style.visibility = 'hidden';
+
+            }
+        }
+    });
+
+    document.addEventListener('mouseup', () => {
+        isDragging = false;
+
+        // If the image has been moved above a certain threshold, hide it
+        const imagePosition = parseFloat(slidingPanel.style.top.replace('px', ''));
+        if (imagePosition <= -(0.75 * window.innerHeight)) {
+            slidingPanel.style.display = 'none';
+        } else {
+            slidingPanel.style.top = '0';
+            backgroundImage.style.backdropFilter = 'blur(0)';
+            loginPanel.style.visibility = 'hidden';
+            loginPanel.style.opacity = '0';
+        }
+    });
+
+    // Update the clock every second
+    updateClock();
+
+    // Update the clock every second
+    setInterval(updateClock, 1000);
+
+    function updateClock() {
+        const now = new Date();
+        const hours = now.getHours().toString().padStart(2, '0');
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+
+        clockElement.textContent = `${hours}:${minutes}`;
     }
-});
 
-document.addEventListener('mouseup', () => {
-    isDragging = false;
 
-    // Si l'image a été déplacée au-dessus de 25% de la hauteur de l'écran, la masquer
-    const imagePosition = parseFloat(backgroundImage.style.top.replace('px', ''));
-    if (imagePosition <= -0.75 * window.innerHeight) {
-        backgroundImage.style.display = 'none';
-    } else {
-        backgroundImage.style.top = '0';
+    window.login = function() {
+        // Show loading panel
+        const loadingPanel = document.getElementById('loading-panel');
+        loadingPanel.style.display = 'flex';  // Use flex to center content vertically
+        loadingPanel.style.flexDirection = 'column';  // Align content vertically
+
+        // Hide login panel after a brief delay
+        setTimeout(() => {
+            const loginPanel = document.getElementById('login-panel');
+            loginPanel.style.display = 'none';
+
+            // Redirect to another page after 2 seconds
+            setTimeout(() => {
+                window.location.href = '../Boot/Bureau.html';
+            }, 1500);
+
+        }, 0); // Adjust the delay as needed
+    };
+
+    var bootValue = localStorage.getItem('Boot');
+
+    // Vérifier la valeur de 'Boot' et appliquer les modifications d'image
+    if (bootValue && bootValue === 'FichierCSS367') {
+      // Modifier l'image du sliding-panel
+
+      slidingPanel.style.backgroundImage = "url('../Images/31246-andreazappia-abovetheclouds.jpg')";
+            slidingPanel.style.backgroundRepeat = "no-repeat";
+      slidingPanel.style.backgroundPosition = "center center";
+      slidingPanel.style.backgroundAttachment = "fixed";
+      slidingPanel.style.backgroundSize = "cover";
+
+      // Modifier l'image du body
+      document.body.style.backgroundImage = "url('../Images/31246-andreazappia-abovetheclouds.jpg')";
+         document.body.style.backgroundRepeat = "no-repeat";
+      document.body.style.backgroundPosition = "center center";
+      document.body.style.backgroundAttachment = "fixed";
+      document.body.style.backgroundSize = "cover";
     }
+    if (bootValue && bootValue === 'FichierCSS8') {
+      // Modifier l'image du sliding-panel
+
+      slidingPanel.style.backgroundImage = "url('../Images/W8lock.png')";
+                  slidingPanel.style.backgroundRepeat = "no-repeat";
+      slidingPanel.style.backgroundPosition = "center center";
+      slidingPanel.style.backgroundAttachment = "fixed";
+      slidingPanel.style.backgroundSize = "cover";
+
+      // Modifier l'image du body
+      document.body.style.backgroundImage = "url('../Images/W8lockun.png')";
+         document.body.style.backgroundRepeat = "no-repeat";
+      document.body.style.backgroundPosition = "center center";
+      document.body.style.backgroundAttachment = "fixed";
+      document.body.style.backgroundSize = "cover";
+    }
+
+
 });
-
-
-
 </script>
-
