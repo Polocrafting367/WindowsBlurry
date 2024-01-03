@@ -1,163 +1,42 @@
 :root {
-  /* --font: 9pt "Segoe UI", "SegoeUI", "Noto Sans", sans-serif; */
-   --surface: #f0f0f0; 
-   --button-highlight: #fff; 
-  --button-face: #f2f2f2; 
-  --button-face-hover: #eaf6fd; 
-   --button-face-active: #c4e5f6; 
-   --button-face-disabled: #f4f4f4; 
-   --button-shade-light: #ebebeb; 
-   --button-shade-light-default: #c3dcea; 
-   --button-shade-light-hovered: #bee6fd; 
-  --button-shade-light-active: #98d1ef;
-   --button-shade-dark: #cfcfcf; 
-  --button-shadow: inset 0 0 0 1px #fffc;
-   --button-shadow-active: inset 1px 1px 0 #0003, inset -1px 1px 0 #0001; 
+
   --button-border: 2px solid;
-   --button-border-color: #8e8f8f; 
-  --button-border-color-default: #5586a3;
+  --button-border-color: #8e8f8f;
+
   --button-border-color-hovered: #3c7fb1;
   --button-border-color-active: #6d91ab;
-  --button-border-color-disabled: #aeb2b5;
-   --button-text-color-disabled: #838383; 
-  --button-gradient: linear-gradient(
-    to bottom,
-    var(
-  --button-face) 45%,
-    var(--button-shade-light) 45%,
+  
 
-  );
-  --button-gradient-hovered: linear-gradient(
-    to bottom,
-    var(
-  --button-face-hover) 45%,
 
-  );
-   --button-gradient-active: linear-gradient(
-    to bottom,
-    #e5f4fc,
-    var(
-  --button-face-active) 30% 50%,
+  
+  --control-background-close: radial-gradient(
+   rgba(255, 150, 150, 0.75),    rgba(255, 150, 150, 0.75) 
+    );
 
-  ); 
+ 
+  --control-background-close-hovered: linear-gradient(    rgba(255, 200, 200, 0.75),    rgba(255, 200, 200, 0.75)  );
 
-  --element-spacing: 8px;
-  /* --grouped-element-spacing: 6px; */
-  --border-radius: 0px;
-  --border-width: 1px;
-  --window-spacing: 6px;
-  /* --window-border: 1px solid; */
-  /* --window-border-radius: 6px; */
-  --window-border-color: rgba(0, 0, 0, 0.7);
-  /* --window-background-color: #4580c4; */
-  --window-background-glass-stripes: linear-gradient(
-      135deg,
-      #fff5 70px,
-      transparent 100px
-    ),
-    linear-gradient(225deg, #fff5 70px, transparent 100px),
-    linear-gradient(
-        54deg,
-        
-          #0002 0 4%,
-        #6661 6% 6%,
-        #0002 8% 10%,
-        
-          #0002 15% 16%,
-        #aaa1 17% 18%,
-        #0002 23% 24%,
-        
-          #bbb2 25% 26%,
-        #0002 31% 33%,
-        
-          #0002 34% 34.5%,
-        #bbb2 36% 40%,
-        
-          #0002 41% 41.5%,
-        #bbb2 44% 45%,
-        
-          #bbb2 46% 47%,
-        #0002 48% 49%,
-        #0002 50% 50.5%,
-        
-          #0002 56% 56.5%,
-        #bbb2 57% 63%,
-        #0002 67% 69%,
-        
-          #bbb2 69.5% 70%,
-        #0002 73.5% 74%,
-        
-          #bbb2 74.5% 79%,
-        #0002 80% 84%,
-        
-          #aaa2 85% 86%,
-        #0002 87%,
-        #bbb1 90%
-      )
-      left center/100vw 100vh no-repeat fixed;
-  /* --window-background: linear-gradient(
-      to right,
-      #ffffff66,
-      #0000001a,
-      #ffffff33
-    ),
-    var(
-  --window-background-color); */
-  /* --control-border-color: rgba(0, 0, 0, 0.3); */
-  /* --control-border-radius: 6px; */
-  --control-inset-shadow: inset 0 0 0 1px #fffa;
+ 
+  --control-background-close-active: linear-gradient(    rgba(200, 100, 100, 0.75),    rgba(200, 100, 100, 0.75)  );
+
+
   --control-background: linear-gradient(
-    rgba(255, 255, 255, 0.5),
-    rgba(255, 255, 255, 0.3) 45%,
-    rgba(0, 0, 0, 0.1) 50%,
-    rgba(0, 0, 0, 0.1) 75%,
-    rgba(255, 255, 255, 0.5)
+  rgba(50, 200, 200, 0),     rgba(50, 200, 200, 0)
+
+
   );
 
-  /* Colors for minimize, maximize, and restore buttons when hovered */
-  --control-background-hovered: radial-gradient(
-      circle at bottom,
-      #2aceda,
-      transparent 65%
-    ),
-    linear-gradient(#b6d9ee 50%, #1a6ca1 50%);
+    --control-background-hovered: radial-gradient(
+  rgba(0, 0, 0, 0.5),    rgba(0, 0, 0, 0.5)
+    );
+
 
   /* Colors for minimize, maximize, and restore buttons when clicked */
   --control-background-active: radial-gradient(
-      circle at bottom,
-      #0bfdfa,
-      transparent 65%
-    ),
-    linear-gradient(#86a7bc 50%, #092747 50%);
+  rgba(100, 100, 100, 0.2),    rgba(100, 100, 100, 0.2)
+    );
 
-  /* Colors for the close button at normal state */
-  --control-background-close: radial-gradient(
-      circle at -60% 50%,
-      #0007 5% 10%,
-      #0000 50%
-    ),
-    radial-gradient(circle at 160% 50%, #0007 5% 10%, #0000 50%),
-    linear-gradient(#e0a197e5, #cf796a 25% 50%, #d54f36 50%);
 
-  /* Colors for the close button when hovered */
-  --control-background-close-hovered: radial-gradient(
-      circle at 50% 170%,
-      #f4e676 10% 20%,
-      #0000 60%
-    ),
-    radial-gradient(circle at -60% 50%, #000a 5% 10%, #0000 50%),
-    radial-gradient(circle at 160% 50%, #000a 5% 10%, #0000 50%),
-    linear-gradient(#fb9d8b, #ee6d56 25% 50%, #d42809 50%);
-
-  /* Colors for the close button when clicked */
-  --control-background-close-active: radial-gradient(
-      circle at 50% 170%,
-      #dcc03f 10% 20%,
-      #0000 60%
-    ),
-    radial-gradient(circle at -60% 50%, #000 5% 10%, #0000 50%),
-    radial-gradient(circle at 160% 50%, #000 5% 10%, #0000 50%),
-    linear-gradient(#d1a894, #b67562 25% 50%, #7d0d01 50%);
 }
 
 
@@ -201,15 +80,15 @@ body {
     position: fixed;
     border-radius: 0px;
     height: 40px;
-    background-color: rgba(255, 255, 255, 0.3);
+    background-color: rgba(255, 200, 50, 0.8);
     z-index: 999;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(3px);
-background: var(--window-background-glass-stripes);
+background: linear-gradient( 180deg, rgba(255, 200, 50, 0.8) 0%,  rgba(255, 200, 50, 0.8)  100% );
+
 font: var(--font);
-  box-shadow: 2px 2px 10px 1px var(--window-border-color), inset 0 0 0 1px #fffa;
-  border: var(--window-border) var(--window-border-color);
-  border-radius: var(--window-border-radius);
+
+
+
 }
 
 .info {
@@ -230,12 +109,15 @@ font: var(--font);
     position: relative;
     height: 54px;
     width: 54px;
-    margin-left: 10px;
-    margin-top: -10px;
+    margin-left: 0px;
+    margin-top: -7Px;
     font-size: 0px;
     border-radius: 54px;
     overflow: hidden;
     transition: background 0.3s ease-in-out;
+      background:transparent;
+      filter: saturate(0);
+
 }
 
 #start-btn::before {
@@ -245,8 +127,8 @@ font: var(--font);
     left: 0;
     right: 0;
     bottom: 0;
-    background: url('../Images/367LOGO.png') no-repeat center center;
-    background-size: 60%;
+   
+    background-size: 90%;
     filter: blur(10px);
     opacity: 0;
     z-index: 0;
@@ -255,18 +137,20 @@ font: var(--font);
 
 #logostart {
     position: relative;
-    height: 25px;
-    width: 25px;
+    height: 32PX;
+    width: 32px;
     z-index: 1;
     transition: filter 0.3s ease-in-out;
+
+
 }
 
-#start-btn:hover #logostart {
-    filter: brightness(1.1);
+#start-btn:hover  {
+    filter: saturate(1);
 }
 
-#start-btn:active #logostart {
-    filter: brightness(1);
+#start-btn:active  {
+    filter: saturate(0.5);
 }
 
 #start-btn:hover::before {
@@ -278,38 +162,9 @@ font: var(--font);
     filter: blur(0px); /* Ajustez la valeur selon vos besoins */
 }
 
-#start-btn {
-    background: linear-gradient(
-        180deg,
-        #CCD7DF 0%,
-        #2E6285 49%,
-        #00365D 51%,
-        #086499 80%,
-        #02E7FE 100%
-    );
-}
 
-#start-btn:hover {
-    background: linear-gradient(
-        180deg,
-        #DBDDDC 0%,
-        #7AABBA 49%,
-        #087798 51%,
-        #30939E 80%,
-        #4FE8CD 100%
-    );
-}
 
-#start-btn:active {
-    background: linear-gradient(
-        180deg,
-        #DBDDDC 0%,
-        #7AABBA 49%,
-        #087798 51%,
-        #09B6D6 80%,
-        #42E4CC 100%
-    );
-}
+
 
 
 
@@ -505,40 +360,44 @@ font: var(--font);
 background-color: rgba(50, 200, 200, 0.6);
 }
 
-#Bureau {
 
-display: none;
-}
 
   #TOPSTY {
 
-font: var(--font);
-  box-shadow: 2px 2px 10px 1px var(--window-border-color), inset 0 0 0 1px #fffa;
-  border: var(--window-border) var(--window-border-color);
-  border-radius: var(--window-border-radius);
+/* font: var(--font); */
 
-  z-index: 0;
+/* box-shadow: 2px 2px 10px 1px var(--window-border-color), inset 0 0 0 1px #fffa; */
 
-      background: var(--window-background-glass-stripes);
+/* border: var(--window-border) var(--window-border-color); */
 
-    backdrop-filter: blur(3px);
-    color: #000;
-    text-shadow: 0 0 10px #fff, 0 0 10px #fff, 0 0 10px #fff, 0 0 10px #fff,
-      0 0 10px #fff, 0 0 10px #fff, 0 0 10px #fff, 0 0 10px #fff;
+/* border-radius: 0px; */
 
-  }
+z-index: 0;
+        box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 10px;
+
+
+/* background: var(--window-background-glass-stripes); */
+
+/* backdrop-filter: blur(3px); */
+
+/* color: #000; */
+
+background: linear-gradient( 180deg, rgba(255, 200, 50, 1) 0%,  rgba(255, 200, 50, 1)  100% );
+
+/* text-shadow: 0 0 10px #fff, 0 0 10px #fff, 0 0 10px #fff, 0 0 10px #fff,
+      0 0 10px #fff, 0 0 10px #fff, 0 0 10px #fff, 0 0 10px #fff; */
+}
 
 #Calculatrice {
     position: absolute;
-    top: 50px;
-    left: 200px;
-    width: 350px;
-    height: 345px;
-    
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     z-index: 1;
-
-  }
+   transform: none !important;
+}
 
 
 #BlocNote {
@@ -593,6 +452,33 @@ font: var(--font);
 
 
   }
+       #calculatrice .window-header {
+
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+
+
+     cursor: move;
+
+    height: 0%;
+
+    
+    
+
+
+
+  }
+  #calculatrice {
+
+    
+    
+  background: rgba(50, 50, 50, 1);
+
+
+  }
 
 
 #yout {
@@ -617,7 +503,7 @@ font: var(--font);
     top: 25px;
     left: 50px;
     width: 400px;
-    height: 320px;
+    height: 140px;
 
 
   }
@@ -628,15 +514,11 @@ font: var(--font);
     top: 0;
     left: 0;
     width: calc(100% + 3px);
-
-    height: 320px;
-
-background-color: rgba(0, 50, 255, 0.5);
-
-
+    height:calc(100% + 0px);
+    /* background-color: rgba(255, 150, 50, 1); */
     cursor: move;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
+    /* border-top-left-radius: 10px; */
+    /* border-top-right-radius: 10px; */
   }
 
 
@@ -650,6 +532,8 @@ pointer-events: none;
   text-align: center;
       transform: translate(0, 5px);
 }
+
+
 
 #textt {
 position: absolute;
@@ -666,7 +550,7 @@ position: absolute;
 top: 25px;
 left: 50px;
 width: calc(100vw / 2);
-height: calc(100vh/1.7);
+height: calc(58.8235vh);
 background-color: rgba(255, 255, 255, 0.0);
 box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 z-index: 1;
@@ -684,8 +568,7 @@ will-change: transform;
 background-color: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
     cursor: move;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
+
 
         height: calc(100vh/1.6);
   }
@@ -716,21 +599,19 @@ z-index: 3;
 
 .menu {
 
-   background: var(--window-background-glass-stripes);
-backdrop-filter: blur(3px);
-font: var(--font);
-  box-shadow: 2px 2px 10px 1px var(--window-border-color), inset 0 0 0 1px #fffa;
-  border: var(--window-border) var(--window-border-color);
-  border-radius: var(--window-border-radius);
 
-width: 400px;
-height: 425px;
+backdrop-filter: blur(300px);
+font: var(--font);
+
+
+width: 100%;
+height: 100%;
 position: fixed;
 transform: translate(-225px, -75px);
 border-top-right-radius: 5px;
 border-top-left-radius: 5px;
 
-bottom: -34px;
+bottom: -75px;
 left: 225px;
 
 display: flex;
@@ -738,7 +619,10 @@ flex-direction: column;
 align-items: center;
 justify-content: space-between;
 box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-z-index: 800;
+z-index: 999999999;
+
+background: linear-gradient( 180deg, rgba(255, 200, 50, 1) 0%,  rgba(255, 200, 50, 1)  100% );
+
 }
 
 .top-bar input[type="text"] {
@@ -760,7 +644,7 @@ color: #CCC;
 }
 
 .bottom-bar {
-  bottom: 0;
+  top: 0;
   width: 100%;
   height: 50px;
   display: flex;
@@ -774,6 +658,8 @@ font: var(--font);
   box-shadow: 2px 2px 10px 1px var(--window-border-color), inset 0 0 0 1px #fffa;
   border: var(--window-border) var(--window-border-color);
   border-radius: var(--window-border-radius);
+
+  background: linear-gradient( 180deg, rgba(200, 150, 0, 1) 0%,  rgba(200, 150, 0, 1)  100% );
 }
 
 
@@ -847,7 +733,7 @@ box-shadow: 0 0 0px 0px #e68e75, var(--control-inset-shadow);
   height: 22px;
   right: 58px;
 
-
+filter: invert(100%);
 
 
             background: url(../Images/reduit.png) center center/10px 5px no-repeat,
@@ -878,7 +764,7 @@ box-shadow: 0 0 0px 0px #e68e75, var(--control-inset-shadow);
   height: 22px;
   right: 100px;
 
-
+filter: invert(100%);
 
 
             background: url(../Images/reload.png) center center/10px 10px no-repeat,
@@ -910,7 +796,7 @@ left: 30px;
 
 height: 40px;
 width: 86%;
-
+display:none;
 }
 
 #opp {
@@ -920,7 +806,7 @@ left: 30px;
 
 height: 40px;
 width: 86%;
-
+display:none;
 }
 
 
@@ -928,7 +814,7 @@ width: 86%;
 #changer-arriere-plan{
 position: absolute;
 
-top: 125px;
+top: 20px;
 left: 30px;
 width: 86%;
 
@@ -940,17 +826,17 @@ width: 86%;
 #button-color{
 position: absolute;
 
-top: 175px;
+top: 60px;
 left: 30px;
 width: 86%;
-
+display:none;
 }
 
 #dark{
 position: absolute;
 
 
-top: 225px;
+top: 60px;
 left: 30px;
 
 
@@ -959,7 +845,7 @@ left: 30px;
 #light{
 position: absolute;
 
-top: 225px;
+top: 60px;
 left: 95px;
 
 
@@ -968,7 +854,7 @@ left: 95px;
 #theme3{
 position: absolute;
 
-top: 225px;
+top: 60px;
 left: 160px;
 
 
@@ -976,7 +862,7 @@ left: 160px;
 #theme4{
 position: absolute;
 
-top: 225px;
+top: 60px;
 left: 225px;
 
 
@@ -984,7 +870,7 @@ left: 225px;
 #theme5{
 position: absolute;
 
-top: 225px;
+top: 60px;
 left: 295px;
 
 
@@ -1099,39 +985,70 @@ left: 295px;
   }
 }
 
+#Bureau {
+
+  padding-bottom: 30px; /* Ajustez la valeur en fonction de la hauteur de votre image */
+   background-image: url('../Images/W8desk.jpg');
+  background-size: contain; /* ou cover en fonction de vos besoins */
+  text-align: center;
+  color: #000; /* Couleur du texte */
+  font-size: 16px; /* Taille du texte */
+
+  cursor: pointer;
+    height: 100px;
+width: 100px;
+  top: 410px;
+  left:150px;
+}
 
  #newwind {
 
   top: 110px;
   left:50px;
+  height: 100px;
+width: 100px;
+
 
 }
 
 
     #newwind2{
-top: 160px;
+top: 210px;
 left:50px;
+height: 100px;
+width: 100px;
 }
       #newwind3{
-        top: 210px;
+        top: 360px;
 left:50px;
+height: 100px;
+width: 100px;
+
 }
 #newwind4 {
 
-top: 260px;
+top: 460px;
 left:50px;
- 
+height: 100px;
+width: 100px;
+
+
 }
 #newwind5 {
 
 top: 310px;
-left:50px;
+left:150px;
+height: 100px;
+width: 100px;
+
  
 }
     #generate-btn{
 
 top: 50px;
 width: 95%;
+
+
 
 }
 
@@ -1163,9 +1080,10 @@ font-size: 18px;
 
 #par{
 position: absolute;
-bottom: 60px;
-left: 63%;
-width: 34%;
+top: 460px;
+left:310px;
+width: 100px;
+height: 100px;
 font-size: 18px;
 }
 #btn-rapide:hover {
@@ -1175,9 +1093,10 @@ font-size: 18px;
 
 #supp{
 position: absolute;
-bottom: 120px;
-left: 63%;
-width: 34%;
+top: 310px;
+left: 310;
+width: 100px;
+height: 100px;
 font-size: 18px;
 }
 .content {
@@ -1419,9 +1338,29 @@ transform: translateY(0);
 
 .calculator {
     overflow: hidden;
-    max-width: 400px;
+    height: calc(100% - 45px);
     width: 100%;
 }
+
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1%;
+    padding: 5px;
+    height: calc(100% - 45px);
+
+}
+
+.Calc {
+    font-size: 1.5em;
+    padding: 3%;
+    height: 100%; /* Ajustez la hauteur à 100% */
+    width: 100%; /* Ajustez la largeur à 100% */
+    cursor: pointer;
+    background-color: rgba(150, 150, 150, 0.6);
+    color: white;
+}
+
 
  #Message {
     position: absolute;
@@ -1467,39 +1406,13 @@ transform: translateY(0);
     padding: 10px;
     text-align: right;
 
-
-    background-color: rgba(0, 200, 50, 0.2);
+color: white;
+    background-color: rgba(75, 75, 75, 1);
       box-shadow: 2px 2px 10px 1px var(--window-border-color), inset 0 0 0 1px #fffa;
   border: var(--window-border) var(--window-border-color);
   border-radius: var(--window-border-radius);
 }
 
-.buttons {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    padding: 10px;
-}
-
-.Calc {
-    font-size: 1.5em;
-    padding: 10px;
-    
-   
-    cursor: pointer;
-  
-
-
-
-font: var(--font);
-  box-shadow: 2px 2px 10px 1px var(--window-border-color), inset 0 0 0 1px #fffa;
-  border: var(--window-border) var(--window-border-color);
-  border-radius: var(--window-border-radius);
-  background-color: rgba(50, 200, 255, 0.6);
-  color:black;
-    text-shadow: 0 0 10px #fff, 0 0 10px #fff, 0 0 10px #fff, 0 0 10px #fff,
-      0 0 10px #fff, 0 0 10px #fff, 0 0 10px #fff, 0 0 10px #fff;
-}
 
 .Calc:hover {
 
@@ -1515,16 +1428,16 @@ background-color: rgba(0, 150, 200, 0.6);
 
 .operator {
 
-  background-color: rgba(255, 150, 0, 0.6);
+  background-color: rgba(10, 225, 25, 0.6);
 }
 .operator:hover {
 
-        background-color: rgba(255, 200, 25, 0.6);
+        background-color: rgba(50, 255, 100, 0.6);
 }
 
 .operator:active {
 
-        background-color: rgba(200, 50, 0, 0.6);
+        background-color: rgba(0, 150, 50, 0.6);
 }
 .Calc.double-height {
     grid-row: span 2;
@@ -1573,6 +1486,6 @@ background-color: rgba(0, 150, 200, 0.6);
 }
 
 .background {
-  background-image: url('../Images/8b.png');
+  background-image: url('../Images/W8desk.jpg');
   /* Autres propriétés de style si nécessaire */
 }

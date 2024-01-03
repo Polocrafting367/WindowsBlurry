@@ -40,38 +40,63 @@
 }
 
 
-
 html, body {
     margin: 0;
     padding: 0;
     height: 100%;
     user-select: none;
+
 }
 
 body {
-
     position: relative;
     background-size: cover;
     background-position: center;
     overflow: hidden;
+
+
+}
+   object {
+      border: none;
+      height: 100%;
+      width:100%;
+    }
+
+.bggc{background: transparent;}
+ #Message {
+    position: absolute;
+    top: 50px;
+    left: 100px;
+    width: 500px;
+
+    height: 125px;
+    
+
+}
+#Bureau {
+
+display: none;
+}
+ #MessageTXT {
+    position: absolute;
+    top: 10px;
+    left: 80px;
+    width:400px;
+font-family: arial;
+    height: 125px;
+    color: white;
+    z-index: -1;
+    color:;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    will-change: transform; /* Cela peut ne pas être nécessaire dans ce contexte */
 }
 
-
-   
-   object {
-      border: none;
-      height: 100%;
-      width:100%;
-    }
-
-
-
-   
-   object {
-      border: none;
-      height: 100%;
-      width:100%;
-    }
+#imgINFO{   
+    position: absolute;
+    top: 10px;
+    left: 10px;         
+    margin-right: 10px; /* Espacement entre l'image et les boutons à droite */}
 
 .rectangle {
     bottom: 0px;
@@ -83,7 +108,7 @@ body {
     background-color: rgba(255, 200, 50, 0.8);
     z-index: 999;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-background: linear-gradient( 180deg, rgba(255, 200, 50, 0.8) 0%,  rgba(255, 200, 50, 0.8)  100% );
+background: white;
 
 font: var(--font);
 
@@ -91,19 +116,527 @@ font: var(--font);
 
 }
 
+#taskbarre {
+    position: absolute;
+    bottom: 0px;
+    left: 330px; /* Ajout du "px" après la valeur de la propriété left */
+    z-index: 1000;
+    height: 40px;
+    padding: 0px;
+    font-size: 0px;
+    width: calc(100% - 420px);
+
+
+
+    display: flex; /* Utilisation de flexbox pour aligner les éléments horizontalement */
+    align-items: center; /* Centrer les éléments verticalement */
+}
+
+
+.taskbutt {
+  height: 40px;
+  width: 100px;
+  margin-right: 10px; /* Ajout du décalage de 10px à droite */
+  background: var(--window-background-glass-stripes);
+  font: var(--font);
+  box-shadow: 2px 2px 10px 1px var(--window-border-color), inset 0 0 0 1px #fffa;
+  border: var(--window-border) var(--window-border-color);
+  border-radius: var(--window-border-radius);
+    font-size: 18px;
+}
+.taskbutt:hover {
+
+background-color: rgba(50, 200, 200, 0.6);
+}
+
+#btnAnnuler {
+
+
+
+    font-size: 18px;
+    width: 75px;
+    background-color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 15px;
+    background-color: rgba(255, 255, 255, 1);
+margin-right: 30px; /* Ajout du décalage de 10px à droite */
+}
+#btnAnnuler:hover {
+
+background-color: rgba(50, 200, 200, 0.6);
+}
+#bt2 {
+
+
+
+    font-size: 18px;
+    width: 100px;
+    background-color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 15px;
+    background-color: rgba(255, 255, 255, 1);
+margin-right: 10px; /* Ajout du décalage de 10px à droite */
+}
+#bt2:hover {
+
+background-color: rgba(50, 200, 200, 0.6);
+}
+
+#imgINFO {
+  background-image: url('../Images/tention.png');
+    background-size: 100% 60px;
+}
+
 .info {
     bottom: 60px;
     right: 60px;
     width: 350px;
     position: absolute;
-
-  background-color: #FFA; /* couleur du ballon */
-  padding: 15px;
-  border-radius: 15px;
-
-  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.5);
+    border-radius: 20px;
+    height: 320px;
+    background-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    font-family: arial;
+    font-size: 20px;
+    color: white;
+    padding: 20px;
 }
 
+.button {
+
+
+    background-color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 15px;
+
+}
+
+.phone {
+    position: absolute;
+    top: 50px;
+    left: 50%;
+    z-index: 1000;
+    height: 60px;
+    padding: 10px;
+    font-size: 18px;
+    width: 200px;
+    background-color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 15px;
+    transform: translateX(-100px);
+    background-color: rgba(255, 255, 255, 1);
+}
+
+#Donwload {
+    position: absolute;
+    bottom: 0px;
+    left: 100px; /* Ajout du "px" après la valeur de la propriété left */
+    z-index: 1000;
+    height: 40px;
+    padding: 0px;
+    font-size: 0px;
+    width: 110px;
+
+
+
+background: var(--window-background-glass-stripes);
+font: var(--font);
+  box-shadow: 2px 2px 10px 1px var(--window-border-color), inset 0 0 0 1px #fffa;
+  border: var(--window-border) var(--window-border-color);
+  border-radius: var(--window-border-radius);
+}
+
+
+
+#Donwload:hover {
+    background-color: rgba(50, 200, 200, 0.6);
+}
+#Donwload:active {
+    background-color: rgba(0, 150, 150, 0.6);
+}
+.button:hover {
+    background-color: rgba(200, 200, 200, 0.6);
+}
+
+.phone:hover {
+    background-color: rgba(200, 200, 200, 0.6);
+}
+
+#POWER {    
+background-image: url(../Images/7351.png);
+
+background-color: rgba(10, 10, 10, 0.8)
+}
+#POWER:hover {
+
+    background-color: rgba(100, 100, 100, 0.6);
+
+}
+#guitt {
+    position: absolute;
+    bottom: 0px;
+    left: 220px; /* Ajout du "px" après la valeur de la propriété left */
+    z-index: 1000;
+    height: 40px;
+    padding: 0px;
+    font-size: 0px;
+    width: 100px;
+
+
+background: var(--window-background-glass-stripes);
+font: var(--font);
+  box-shadow: 2px 2px 10px 1px var(--window-border-color), inset 0 0 0 1px #fffa;
+  border: var(--window-border) var(--window-border-color);
+  border-radius: var(--window-border-radius);
+
+}
+
+
+
+#guitt:hover {
+    background-color: rgba(50, 200, 200, 0.6);
+}
+
+
+  #Calculatrice {
+    position: absolute;
+    top: 50px;
+    left: 200px;
+    width: 350px;
+    height: 390px;
+    
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    z-index: 1;
+
+  }
+
+  
+#BlocNote {
+    position: absolute;
+    top: 75px;
+    left:5%;
+    width: 700px;
+    height: 400px;
+
+
+
+  }
+  .window{background: white;}
+
+  
+#yout {
+    position: absolute;
+    top: 75px;
+    left: 100px;
+    width: 700px;
+    height: 525px;
+    background-color: rgba(255, 255, 255, 1) !important;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    z-index: 1;
+
+      will-change: transform;
+
+  }
+
+
+  .yout-header {
+
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 30px;
+background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    cursor: move;
+
+
+  }
+
+  .yout-content {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    position: absolute;
+    top: 30px;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 30px);
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+
+  }
+
+.window1 {
+    position: absolute;
+    top: 75px;
+    left: 300px;
+    width: 700px;
+    height: 400px;
+    background-color: rgba(255, 255, 255, 0.0);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    z-index: 1;
+
+      will-change: transform;
+
+  }
+
+
+  .window-header {
+
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    cursor: move;
+
+
+  }
+
+  .window-content {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    position: absolute;
+    top: 30px;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 30px);
+
+  }
+
+ .window2 {
+    position: absolute;
+    top: 50px;
+    left: 200px;
+    width: 400px;
+    height: 400px;
+    background-color: rgba(255, 255, 255, 0.0);
+
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    z-index: 1;
+
+      will-change: transform;
+
+  }
+
+
+  .window2-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 30px;
+background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    cursor: move;
+
+  }
+
+  .window2-content {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    position: absolute;
+    top: 30px;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 30px);
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(50px);
+
+  }
+     
+
+.windowsett {
+    position: absolute;
+    top: 25px;
+    left: 50px;
+    width: 400px;
+    height: 320px;
+    background-color: rgba(255, 255, 255,1.0) !important;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    z-index: 1;
+
+      will-change: transform;
+
+  }
+
+
+  .windowsett-top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    backdrop-filter: blur(10px);
+    cursor: move;
+    border-radius: 10px;
+  }
+
+  .windowsett-content {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    position: absolute;
+    top: 30px;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 30px);
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(50px);
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+  }
+     #titrefn {
+position: absolute;
+color:black;
+font-size: 17px;
+top:5px;
+left:10px;
+font-family: arial;
+pointer-events: none;
+}
+
+#textt {
+position: absolute;
+color:white;
+font-size: 17px;
+top:25px;
+left:5%;
+font-family: arial;
+pointer-events: none;
+}
+
+.bggene {
+position: absolute;
+top: 25px;
+left: 50px;
+width: calc(100vw / 2);
+height: calc(100vh/1.7);
+background-color: rgba(255, 255, 255, 1) ! important;
+box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+z-index: 1;
+
+will-change: transform;
+}
+
+
+  .bggene-top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: calc(100% + 30px);
+background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    cursor: move;
+    border-radius: 10px;
+
+  }
+
+  .bggene-content {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    position: absolute;
+    top: 30px;
+
+    width: 100%;
+    height: 100%;
+
+    backdrop-filter: blur(50px);
+background: white;
+  }
+     
+
+
+.window-selected {
+z-index: 3;
+}
+
+
+   
+
+
+
+.menu {
+
+
+width: 500px;
+height: 600px;
+position: fixed;
+transform: translate(-225px, -75px);
+
+bottom: -34px;
+left: 225px;
+
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: space-between;
+box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+z-index: 800;
+}
+
+
+.top-bar input[type="text"] {
+left: 30px;
+top: 30px;
+padding: 18px;
+position: absolute;
+color :white;
+border: none;
+border-radius: 10px;
+background-color:rgba(0, 0, 0, 0.3);
+width: 86%;
+font-size : 17px;
+
+}
+.top-bar input::placeholder {
+color: #CCC;
+}
+
+.bottom-bar {
+background-color: rgba(255, 255, 255, 0.5);
+bottom: 0;
+width: 100%;
+height: 90px;
+display: flex;
+align-items: center;
+justify-content: space-between;
+box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  position: absolute;
+
+
+border-bottom-right-radius: 10px;
+border-bottom-left-radius: 10px;
+
+}
+
+
+
+.profil img {
+margin-left: 20px;
+width: 40px;
+height: 40px;
+border-radius: 50%;
+box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+background-color: rgba(0, 0, 0, 0.5);
+
+}
+
+.status-icon img {
+
+width: 30px;
+height: 30px;
+border-radius: 50%;
+box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+background-color: rgba(0, 0, 0, 0.5);
+margin-right: 20px;
+}
 
 #start-btn {
     position: relative;
@@ -163,627 +696,92 @@ font: var(--font);
 }
 
 
-
-
-
-
-
-
-
-
-.button-image {
-   /* filter: invert(100%);  Inversion des couleurs uniquement pour l'image */
-}
-
-
-.buttonbb {
-
-    -webkit-font-smoothing: antialiased;
-
-    box-sizing: border-box;
-    border: 1px solid #003c74;
-    background: linear-gradient(180deg, #4993E6 0%, #3475DB 8%, #488EF6 40%, #3980F4 88%, #2C62D4 93%, #2351BE 95%, #1D4DBE 96%, #1D4DBE 100%);
-    border-radius: 3px;
-    box-shadow: 0px 5px 5px rgba(0,0,0,0.3); /* Ombre noire à l'extérieur */
-    color: white;
-    &:not(:disabled) {
-        &:hover,
-        &.hover {
-            box-shadow: none;
-            background: linear-gradient(180deg, #4993E6 0%, #4993E6 2%, #4993E6 5%, #55A3FF 25%, #55A0FF 80%, #4593FF 95%, #1D45A4 96%, #1941A5 100%);
-
-        }
-
-        &:active {
-            box-shadow: none;
-            background: linear-gradient(180deg, #4993E6 0%, #246BD5 2%, #15449E 5%, #1950B8 25%, #1A50B8 80%, #174AB3 95%, #1142B4 96%, #1941A5 100%);
-
-        }
-    }
-
-    &:focus,
-    &.focused {
-        box-shadow: none;
-        background: linear-gradient(180deg, #4993E6 0%, #4993E6 2%, #4993E6 5%, #55A3FF 25%, #55A0FF 80%, #4593FF 95%, #1D45A4 96%, #1941A5 100%);
-
-    }
-
-    &::-moz-focus-inner {
-        border: 0;
-    }
-}
-
-
-
-
-
-
-
-.phone {
-    position: absolute;
-    top: 50px;
-    left: 50%;
-    z-index: 1000;
-    height: 60px;
-    padding: 10px;
-    font-size: 18px;
-    width: 200px;
-    background-color: #fff;
-    border: none;
-    cursor: pointer;
-    border-radius: 15px;
-    transform: translateX(-100px);
-    background-color: rgba(255, 255, 255, 1);
-}
-
-#Donwload {
-    position: absolute;
-    bottom: 0px;
-    left: 100px; /* Ajout du "px" après la valeur de la propriété left */
-    z-index: 1000;
-    height: 40px;
-    padding: 0px;
-    font-size: 0px;
-    width: 110px;
-
-
-
-background: var(--window-background-glass-stripes);
-font: var(--font);
-  box-shadow: 2px 2px 10px 1px var(--window-border-color), inset 0 0 0 1px #fffa;
-  border: var(--window-border) var(--window-border-color);
-  border-radius: var(--window-border-radius);
-}
-
-.button:hover {
-
-    background-color: rgba(200, 200, 200, 0.6);
-}
-
-.phone:hover {
-    background-color: rgba(200, 200, 200, 0.6);
-}
-
-#Donwload:hover {
-    background-color: rgba(50, 200, 200, 0.6);
-}
-#Donwload:active {
-    background-color: rgba(0, 150, 150, 0.6);
-}
-
-#power:hover {
-
-    background-image: url(../Images/off%20hovver.png);
-}
-
-#power {
-    background-image: url(../Images/off%20norm.png);
-}
-#power:active {
-
-    background-image: url(../Images/off%20clic.png);
-}
-
-
-
-
-#guitt:hover {
-    background-color: rgba(50, 200, 200, 0.6);
-}
-
-#guitt:active {
-    background-color: rgba(0, 150, 150, 0.6);
-}
-
-button {
-border:   0px;
-}
-
-button:hover {
-
-}
-
-#guitt {
-    position: absolute;
-    bottom: 0px;
-    left: 220px; /* Ajout du "px" après la valeur de la propriété left */
-    z-index: 1000;
-    height: 40px;
-    padding: 0px;
-    font-size: 0px;
-    width: 100px;
-
-
-background: var(--window-background-glass-stripes);
-font: var(--font);
-  box-shadow: 2px 2px 10px 1px var(--window-border-color), inset 0 0 0 1px #fffa;
-  border: var(--window-border) var(--window-border-color);
-  border-radius: var(--window-border-radius);
-
-}
-
-
-
-#guitt:hover {
-    background-color: rgba(50, 200, 200, 0.6);
-}
-
-#taskbarre {
-    position: absolute;
-    bottom: 0px;
-    left: 330px; /* Ajout du "px" après la valeur de la propriété left */
-    z-index: 1000;
-    height: 40px;
-    padding: 0px;
-    font-size: 0px;
-    width: calc(100% - 420px);
-
-
-
-    display: flex; /* Utilisation de flexbox pour aligner les éléments horizontalement */
-    align-items: center; /* Centrer les éléments verticalement */
-}
-
-.taskbutt {
-  height: 40px;
-  width: 100px;
-  margin-right: 10px; /* Ajout du décalage de 10px à droite */
-  background: var(--window-background-glass-stripes);
-  font: var(--font);
-  box-shadow: 2px 2px 10px 1px var(--window-border-color), inset 0 0 0 1px #fffa;
-  border: var(--window-border) var(--window-border-color);
-  border-radius: var(--window-border-radius);
-    font-size: 18px;
-}
-.taskbutt:hover {
-
-background-color: rgba(50, 200, 200, 0.6);
-}
-
-
-
-  #TOPSTY {
-
-/* font: var(--font); */
-
-/* box-shadow: 2px 2px 10px 1px var(--window-border-color), inset 0 0 0 1px #fffa; */
-
-/* border: var(--window-border) var(--window-border-color); */
-
-/* border-radius: 0px; */
-
-z-index: 0;
-        box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 10px;
-
-
-/* background: var(--window-background-glass-stripes); */
-
-/* backdrop-filter: blur(3px); */
-
-/* color: #000; */
-
-background: linear-gradient( 180deg, rgba(255, 200, 50, 1) 0%,  rgba(255, 200, 50, 1)  100% );
-
-/* text-shadow: 0 0 10px #fff, 0 0 10px #fff, 0 0 10px #fff, 0 0 10px #fff,
-      0 0 10px #fff, 0 0 10px #fff, 0 0 10px #fff, 0 0 10px #fff; */
-}
-
-#Calculatrice {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    z-index: 1;
-   transform: none !important;
-}
-
-
-#BlocNote {
-    position: absolute;
-    top: 75px;
-    left:5%;
-    width: 700px;
-    height: 400px;
-
-
-
-  }
-
-  .window-content {
-
-    position: absolute;
-    top: 30px;
-    left: 0;
-    background-color: white;
-
-    width: 98.5%;
-    height: calc(99.6% - 30px);
-    margin: 0 6px 6px;
-
-    height: calc(100% - 37px);
-
-
-  }
-
-#window-content-Calculatrice {
-  background-color: transparent;
-  
-}
-
-
-    .window-header {
-
-
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-
-
-     cursor: move;
-
-    height: 100%;
-
-    
-    
-  
-
-
-  }
-       #calculatrice .window-header {
-
-
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-
-
-     cursor: move;
-
-    height: 0%;
-
-    
-    
-
-
-
-  }
-  #calculatrice {
-
-    
-    
-  background: rgba(50, 50, 50, 1);
-
-
-  }
-
-
-#yout {
-    position: absolute;
-    top: 75px;
-    left: 100px;
-    width: 700px;
-    height: 525px;
-
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-
-    z-index: 1;
-
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-      will-change: transform;
-
-  }
-
-.windowsett {
-    position: absolute;
-    top: 25px;
-    left: 50px;
-    width: 400px;
-    height: 140px;
-
-
-  }
-
-
-  .windowsett-top {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: calc(100% + 3px);
-    height:calc(100% + 0px);
-    /* background-color: rgba(255, 150, 50, 1); */
-    cursor: move;
-    /* border-top-left-radius: 10px; */
-    /* border-top-right-radius: 10px; */
-  }
-
-
-     #titrefn {
-
-
-font-size: 17px;
-
-font-family: arial;
-pointer-events: none;
-  text-align: center;
-      transform: translate(0, 5px);
-}
-
-
-
-#textt {
-position: absolute;
-color:white;
-font-size: 17px;
-top:25px;
-left:5%;
-font-family: arial;
-pointer-events: none;
-}
-
-.bggene {
-position: absolute;
-top: 25px;
-left: 50px;
-width: calc(100vw / 2);
-height: calc(58.8235vh);
-background-color: rgba(255, 255, 255, 0.0);
-box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-z-index: 1;
-border-radius: 10px;
-will-change: transform;
-}
-
-
-  .bggene-top {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-
-background-color: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    cursor: move;
-
-
-        height: calc(100vh/1.6);
-  }
-
-  .bggene-content {
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    position: absolute;
-    top: 30px;
-    background-color: white;
-    width: 98%;
-    height: 100%;
- border: 1px solid black;
-    height: calc(100% - 6px);
-    transform: translate(6px);
-
-  }
-     
-
-
-.window-selected {
-z-index: 3;
-}
-
-
-   
-
-
-
-.menu {
-
-
-backdrop-filter: blur(300px);
-font: var(--font);
-
-
-width: 100%;
-height: 100%;
-position: fixed;
-transform: translate(-225px, -75px);
-border-top-right-radius: 5px;
-border-top-left-radius: 5px;
-
-bottom: -75px;
-left: 225px;
-
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: space-between;
-box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-z-index: 999999999;
-
-background: linear-gradient( 180deg, rgba(255, 200, 50, 1) 0%,  rgba(255, 200, 50, 1)  100% );
-
-}
-
-.top-bar input[type="text"] {
-left: 30px;
-top: 30px;
-padding: 18px;
-position: absolute;
-color :white;
-border: none;
-border-radius: 10px;
-
-width:100px;
-font-size : 17px;
-background-color: rgba(255, 255, 255, 1);
-
-}
-.top-bar input::placeholder {
-color: #CCC;
-}
-
-.bottom-bar {
-  top: 0;
-  width: 100%;
-  height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  position: absolute;
-   background: var(--window-background-glass-stripes);
-backdrop-filter: blur(3px);
-font: var(--font);
-  box-shadow: 2px 2px 10px 1px var(--window-border-color), inset 0 0 0 1px #fffa;
-  border: var(--window-border) var(--window-border-color);
-  border-radius: var(--window-border-radius);
-
-  background: linear-gradient( 180deg, rgba(200, 150, 0, 1) 0%,  rgba(200, 150, 0, 1)  100% );
-}
-
-
-.profil img {
-    position: absolute;
-    margin-left: 300px;
-    width: 60px;
-    height: 60px;
-
-    border: 0px solid white; /* Ajout de la bordure blanche */
-    background-image: url("../Images/Profile.png"); /* Ajout du point-virgule ici */
-    background-size:105% 105%;
-
-    background-position: center; /* Centre l'image horizontalement */
-    bottom: 380px;
-    padding: 10px;
-
-}
-
-
-.status-icon img {
-
-width: 30px;
-height: 30px;
-border-radius: 10%;
-box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-background-color: rgba(0, 0, 0, 0.5);
-margin-right: 20px;
-}
-
-
-
-
 .close {
-  position: absolute;
-  top: 1px;
+    width: 60px;
+    height: 30px;
+    left: 100%;
+    transform: translateX(-100%);
+    position: relative;
+    border: none;
+    font-size: 15px;
+    font-weight: bold; /* Correction de la propriété "font-style" à "font-weight" */
+    color: white;
 
-  width: 55px;
-  height: 22px;
-  right: 3px;
-
-
-           content: "";
-            background: url(../Images/close.png) center center/10px 10px no-repeat,
-            var(--control-background), var(--control-background-close);
-            
-
-            border-bottom-right-radius: var(--control-border-radius);
-box-shadow: 0 0 0px 0px #e68e75, var(--control-inset-shadow);
-
-  }
+    background: url(../Images/close-button.png) center center/12px 12px no-repeat; /* Centrage de l'image avec taille spécifiée */
+    filter: invert(100%);
+}
 
 .close:hover {
-            background: url(../Images/close.png) center center/10px 10px no-repeat,
-            var(--control-background), var(--control-background-close-hovered);
-            box-shadow: 0 0 7px 3px #e68e75, var(--control-inset-shadow);
-            transition: box-shadow 0.3s linear;
-}
-.close:active {
-            background: url(../Images/close.png) center center/10px 10px no-repeat,
-            var(--control-background), var(--control-background-close-active);
-
-}
-
+ background-color: rgba(0,255,255,0.7);}
+.close:active  {
+ background-color: rgba(0,150,150,0.7);}
 .reduit {
 
   position: absolute;
-  top: 1px;
-
-  width: 35px;
-  height: 22px;
-  right: 58px;
 
 filter: invert(100%);
+  width: 35px;
+  height: 30px;
+  right: 58px;
 
+    border: none;
+    font-size: 15px;
+    font-weight: bold; /* Correction de la propriété "font-style" à "font-weight" */
+    color: white;
 
-            background: url(../Images/reduit.png) center center/10px 5px no-repeat,
-            var(--control-background);
-            border-bottom-left-radius: var(--control-border-radius);
-            box-shadow: var(--control-inset-shadow);
+    background: url(../Images/reduit.png) center center/12px 2px no-repeat; /* Centrage de l'image avec taille spécifiée */
 
   }
 
 .reduit:hover {
-            background: url(../Images/reduit.png) center center/10px 5px no-repeat,
-             var(--control-background-hovered);
-            box-shadow: 0 0 7px 3px #5dc4f0, var(--control-inset-shadow);
-            transition: box-shadow 0.3s linear;
+ background-color: rgba(100,100,100,0.7);
 }
 .reduit:active {
-            background: url(../Images/reduit.png) center center/10px 5px no-repeat,
-              var(--control-background-active);
+ background-color: rgba(50,50,50,0.7);
 
+}
+
+.line {
+  position: absolute;
+  top: 50%;
+  left: 36%;
+  width: 25%;
+  height: 1px;
+  background-color: white;
+  transform: rotate(45deg);
+  transform-origin: center;
+
+}
+.line:nth-child(2) {
+  transform: rotate(-45deg);
 }
 
 .actualiser {
 
   position: absolute;
-  top: 1px;
+  top: 0px;
 
   width: 35px;
-  height: 22px;
+  height:30px;
   right: 100px;
 
-filter: invert(100%);
 
 
-            background: url(../Images/reload.png) center center/10px 10px no-repeat,
-            var(--control-background);
-            border-bottom-left-radius: var(--control-border-radius);
-             border-bottom-right-radius: var(--control-border-radius);
-            box-shadow: var(--control-inset-shadow);
+    border: none;
+    font-size: 15px;
+    font-weight: bold; /* Correction de la propriété "font-style" à "font-weight" */
+    color: white;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+          background: url(../Images/reload.png) center center/12px 12px no-repeat;
 
   }
 
 .actualiser:hover {
-            background: url(../Images/reload.png) center center/10px 10px no-repeat,
-             var(--control-background-hovered);
-            box-shadow: 0 0 7px 3px #5dc4f0, var(--control-inset-shadow);
-            transition: box-shadow 0.3s linear;
+           background-color: rgba(100,100,100,0.7);
 }
 .actualiser:active {
-            background: url(../Images/reload.png) center center/10px 10px no-repeat,
-              var(--control-background-active);
+background-color: rgba(50,50,50,0.7);
 
 }
 
@@ -796,7 +794,7 @@ left: 30px;
 
 height: 40px;
 width: 86%;
-display:none;
+
 }
 
 #opp {
@@ -806,7 +804,7 @@ left: 30px;
 
 height: 40px;
 width: 86%;
-display:none;
+
 }
 
 
@@ -814,7 +812,7 @@ display:none;
 #changer-arriere-plan{
 position: absolute;
 
-top: 20px;
+top: 125px;
 left: 30px;
 width: 86%;
 
@@ -826,17 +824,17 @@ width: 86%;
 #button-color{
 position: absolute;
 
-top: 60px;
+top: 175px;
 left: 30px;
 width: 86%;
-display:none;
+
 }
 
 #dark{
 position: absolute;
 
 
-top: 60px;
+top: 225px;
 left: 30px;
 
 
@@ -845,7 +843,7 @@ left: 30px;
 #light{
 position: absolute;
 
-top: 60px;
+top: 225px;
 left: 95px;
 
 
@@ -854,7 +852,7 @@ left: 95px;
 #theme3{
 position: absolute;
 
-top: 60px;
+top: 225px;
 left: 160px;
 
 
@@ -862,7 +860,7 @@ left: 160px;
 #theme4{
 position: absolute;
 
-top: 60px;
+top: 225px;
 left: 225px;
 
 
@@ -870,10 +868,51 @@ left: 225px;
 #theme5{
 position: absolute;
 
-top: 60px;
+top: 225px;
 left: 295px;
 
 
+}
+
+
+ #newwind {
+
+  top: 110px;
+  left:50px;
+
+}
+
+
+    #newwind2{
+top: 160px;
+left:50px;
+}
+      #newwind3{
+        top: 210px;
+left:50px;
+}
+#newwind4 {
+
+top: 260px;
+left:50px;
+ 
+}
+#newwind5 {
+
+top: 310px;
+left:50px;
+ 
+}
+    #generate-btn{
+
+top: 50px;
+width: 95%;
+
+}
+
+#generate-btn:hover {
+  background-color: rgba(0, 0, 0, 0);
+          border-radius: 5px;
 }
 .BTSY {
   position: absolute;
@@ -1001,68 +1040,13 @@ width: 100px;
   left:150px;
 }
 
- #newwind {
-
-  top: 110px;
-  left:50px;
-  height: 100px;
-width: 100px;
-
-
+    #POWERbu{
+background-color: rgba(0, 0, 0, 0);
+border: none;
 }
 
 
-    #newwind2{
-top: 210px;
-left:50px;
-height: 100px;
-width: 100px;
-}
-      #newwind3{
-        top: 360px;
-left:50px;
-height: 100px;
-width: 100px;
 
-}
-#newwind4 {
-
-top: 460px;
-left:50px;
-height: 100px;
-width: 100px;
-
-
-}
-#newwind5 {
-
-top: 310px;
-left:150px;
-height: 100px;
-width: 100px;s
-
- 
-}
-    #generate-btn{
-
-top: 50px;
-width: 95%;
-
-
-
-}
-
-#generate-btn:hover {
-  background-color: rgba(0, 0, 0, 0);
-          border-radius: 5px;
-}
-#POWERbu {
-    background-color: transparent;
-        box-shadow: 0px rgba(0,0,0,0);
-    border: none;
-    padding: 0;
-
-}
 
 
     #btn-rapide{
@@ -1109,12 +1093,9 @@ font-size: 20px;
 
 
 
-#rech {
-  display:none;
-}
+
 
 textarea {
-
 border: none;
 font-size: 20px;
 height: 300px;
@@ -1179,13 +1160,13 @@ input[type=text] {
   margin: 0;
   position: absolute;
   right:20px;
-  top:5px;
+  top:3px;
   color:white;
 }
 #date {
         position: absolute;
-display:none;
-  top:30%;
+
+  top:50%;
 }
 
 #heure2, #date2 {
@@ -1193,16 +1174,25 @@ display:none;
   font-weight: bold;
   margin: 0;
   position: absolute;
-bottom:28%;
+bottom:120px;
 left: 60px;
   color:white;
 }
 #date2 {
         position: absolute;
 
-  bottom:18%;
+  bottom:60px;
 }
 
+#note ,#calc {
+
+
+
+background-color: transparent;
+
+      border-bottom-right-radius: 10px;
+border-bottom-left-radius: 10px;
+}
 #video-container {
 filter: none;
 opacity: 1;
@@ -1252,8 +1242,8 @@ border-bottom-left-radius: 0;
 }
 
         .fullscreen-image {
-            background-image: url('../Images/installer-xp-cd-19.jpg');
-  position: fixed;
+          background-image: url('../Images/Welcom.gif');
+    position: fixed;
   top: 0;
   left: 0;
   width: 100vw; /* Utilisation de vw (viewport width) pour la largeur */
@@ -1270,7 +1260,7 @@ width: 100%;
 height: 100%;
 background-color: black;
 position: absolute;
-
+background-image: url("../Images/31246-andreazappia-abovetheclouds.jpg");
 bottom: 0;
    
     background-size: cover;
@@ -1279,37 +1269,17 @@ overflow: hidden;
 cursor: grab;
 cursor: -webkit-grab;
 
-    animation: backgroundAnimation 2s forwards;
 
 }
-
-@keyframes backgroundAnimation {
-
-    0%, 100% {
-        bgbackground-image: url("../Images/W7bg.png") ;
-    }
-}
-
-
-
 .ombre {
 
     background-color: #f0f0f0;
     box-shadow: 0 0 160px rgba(0, 0, 0, 1); /* Ajoute une ombre avec un flou de 10px */
 }
 
-#image-container {    
-
-
-  padding:  5px;
-    background: var(--window-background-glass-stripes);
-      box-shadow: 2px 2px 10px 1px var(--window-border-color), inset 0 0 0 1px #fffa;
-  border: var(--window-border) var(--window-border-color);
-  border-radius: var(--window-border-radius);}
-
 .image-animation {
 position: absolute;
-bottom: 120px;
+bottom: 30px;
 left: 0;
 right: 0;
 margin: auto;
@@ -1336,10 +1306,12 @@ transform: translateY(0);
 
 
 
+
 .calculator {
     overflow: hidden;
-    height: calc(100% - 45px);
+    height: 100%;
     width: 100%;
+    background-color: rgba(75, 75, 75, 1);
 }
 
 .buttons {
@@ -1347,8 +1319,8 @@ transform: translateY(0);
     grid-template-columns: repeat(4, 1fr);
     gap: 1%;
     padding: 5px;
-    height: calc(100% - 45px);
-
+    height:calc(100% - 70px);
+        border: none;
 }
 
 .Calc {
@@ -1361,43 +1333,9 @@ transform: translateY(0);
     color: white;
 }
 
-
- #Message {
-    position: absolute;
-    top: 50px;
-    left: 100px;
-    width: 450px;
-
-    height: 125px;
-    
-
+.operator {
+    background-color: rgba(255, 150, 0, 0.5);
 }
- #MessageTXT {
-    position: absolute;
-    top: 10px;
-    left: 80px;
-    width:400px;
-
-    height: 125px;
-    
-    z-index: -1;
-
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    will-change: transform; /* Cela peut ne pas être nécessaire dans ce contexte */
-}
-
-#imgINFO {
-  background-image: url('../Images/ICON98_2.ico');
-    background-size: 100% 60px;
-}
-
-#imgINFO{   
-    position: absolute;
-    top: 10px;
-    left: 10px;         
-    margin-right: 10px; /* Espacement entre l'image et les boutons à droite */}
-
 
 
 .display {
@@ -1448,6 +1386,11 @@ background-color: rgba(0, 150, 200, 0.6);
 }
 
 
+#iframe {
+    background-color: #f0f0f0; /* Replace with your desired background color or image */
+}
+
+
 .black-image {
   background-image: url('../Images/Black.png');
   position: fixed;
@@ -1461,7 +1404,7 @@ background-color: rgba(0, 150, 200, 0.6);
 
 }
 .changer-image {
-  background-image: url('../Images/XPboot.gif');
+  background-image: url('../Images/restrarting-window_02.gif');
   position: fixed;
   top: 0;
   left: 0;
@@ -1470,11 +1413,11 @@ background-color: rgba(0, 150, 200, 0.6);
   background-size: cover; /* Ajuste la taille de l'image pour couvrir entièrement le conteneur */
   background-position: center; /* Centre l'image dans le conteneur */
   z-index: 9998;
+
 }
 
-
 .glow-image {
-  background-image: url('../Images/installer-xp-cd-19.jpg');
+  background-image: url('../Images/Welcom.gif');
   position: fixed;
   top: 0;
   left: 0;
@@ -1486,6 +1429,18 @@ background-color: rgba(0, 150, 200, 0.6);
 }
 
 .background {
-  background-image: url('../Images/W8desk.jpg');
+  background-image: url('../Images/zyta.png');
   /* Autres propriétés de style si nécessaire */
+}
+
+  #TOPSTY {
+
+
+z-index: 0;
+        box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 10px;
+
+    height: 30px;
+
+
+    border-radius: 0px;
 }

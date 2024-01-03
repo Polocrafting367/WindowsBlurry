@@ -396,6 +396,14 @@ font: var(--font);
   border-radius: var(--window-border-radius);
 }
 
+
+
+#Donwload:hover {
+    background-color: rgba(50, 200, 200, 0.6);
+}
+#Donwload:active {
+    background-color: rgba(0, 150, 150, 0.6);
+}
 .button:hover {
 
     background-color: rgba(200, 200, 200, 0.6);
@@ -404,14 +412,6 @@ font: var(--font);
 .phone:hover {
     background-color: rgba(200, 200, 200, 0.6);
 }
-
-#Donwload:hover {
-    background-color: rgba(50, 200, 200, 0.6);
-}
-#Donwload:active {
-    background-color: rgba(0, 150, 150, 0.6);
-}
-
 #power:hover {
 
     background-image: url(../Images/off%20hovver.png);
@@ -526,7 +526,7 @@ font: var(--font);
     top: 50px;
     left: 200px;
     width: 350px;
-    height: 345px;
+    height: 355px;
     
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     z-index: 1;
