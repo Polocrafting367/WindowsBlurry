@@ -1,61 +1,48 @@
+const startBtn = document.getElementById("start-btn");
+const menu = document.getElementById("menu");
+let menuIsVisible = false;
+const fen = document.getElementById("window1");
+const fen2 = document.getElementById("window3");
+const can = document.getElementById("defaultCanvas0");
+const sett = document.getElementById("window4");
+const bgclose = document.getElementById("window5");
+const ani = document.getElementById("charge");
+const génér = document.getElementById("generate-btn");
+const saveim = document.getElementById("saveim");
+const rectangle = document.getElementById("rectangle");
+const off = document.getElementById("off");
+const ba = document.getElementById("Donwload");
+const bb = document.getElementById("guitt");
 
-  const startBtn = document.getElementById("start-btn");
-  const menu = document.getElementById("menu");
-  let menuIsVisible = false;
-  const fen = document.getElementById("window1");
-   const fen2 = document.getElementById("window3");
-   const can = document.getElementById("defaultCanvas0");
- const sett = document.getElementById("window4");
-  const bgclose = document.getElementById("window5");
-   const ani = document.getElementById("charge");
-    const génér = document.getElementById("generate-btn");
-    const saveim = document.getElementById("saveim");
-        const rectangle = document.getElementById("rectangle");
-        const off = document.getElementById("off");
-                const ba = document.getElementById("Donwload");
-        const bb = document.getElementById("guitt");
-
-
-
-  startBtn.addEventListener("click", () => {
-      if (menu.style.display === "none")  {
-      menu.style.display = "block";
-      menuIsVisible = false;
+startBtn.addEventListener("click", () => {
+    if (menu.style.display === "none") {
+        menu.style.display = "block";
+        menuIsVisible = false;
     } else {
-      menu.style.display = "none";
-      menuIsVisible = true;
+        menu.style.display = "none";
+        menuIsVisible = true;
     }
-  });
+});
 
+menu.style.display = "none";
+menuIsVisible = false;
 
-
-
-      menu.style.display = "none";
-      menuIsVisible = false;
-
-
-
-
-
-   menu.style.display = "none";
-    menuIsVisible = false;
-
-  ani.style.display = "none";
-    aniIsVisible = false;
-
+ani.style.display = "none";
+aniIsVisible = false;
 
 // Declare variables outside functions
 let nouveauBoutonsett;
 let nouveauBoutonbg;
 
 function closesett() {
-  sett.style.display = "none";
-  settIsVisible = false;
-  // Remove the button
-  if (nouveauBoutonsett) {
-    nouveauBoutonsett.remove();
-  }
+    sett.style.display = "none";
+    settIsVisible = false;
+    // Remove the button
+    if (nouveauBoutonsett) {
+        nouveauBoutonsett.remove();
+    }
 }
+
 
 function asett() {
   sett.style.display = "block";
@@ -113,10 +100,6 @@ function aBG() {
 
 // Add an event listener for the button to trigger the asett function
 
-
-
-
-
 const window2Element = document.querySelector('.windowsett');
 const window2HeaderElement = window2Element.querySelector('.windowsett-top');
 makeWindowDraggable(window2Element, window2HeaderElement);
@@ -129,11 +112,10 @@ makeWindowDraggable(bggeneWindowElement, bggeneWindowHeaderElement);
 
 
 
- // Créer une fonction qui augmente le z-index d'une fenêtre
 function raiseWindow(window) {
   // Récupérer le z-index le plus élevé des autres fenêtres
   let highestZIndex = 0;
-  const windowsz = document.querySelectorAll('.window, .window1,.window2,.window3,.window4, .windowsett,.bggene,.yout,.Message');
+  const windowsz = document.querySelectorAll('.window, .window1, .window2, .window3, .window4, .windowsett, .bggene, .yout, .Message');
   for (let w of windowsz) {
     if (w !== window) {
       let zIndex = parseInt(w.style.zIndex);
@@ -145,42 +127,33 @@ function raiseWindow(window) {
   // Attribuer un z-index supérieur à la fenêtre sélectionnée
   window.style.zIndex = highestZIndex + 1;
 }
-
-
-
-// Récupérer toutes les fenêtres avec la classe "window"
-const windowsz = document.querySelectorAll('.window, .window1,.window2,.window3,.window4, .windowsett,.bggene,.yout,.Message');
-// Parcourir la liste des fenêtres
-for (let w of windowsz) {
-  // Ajouter un événement de souris "mousedown" pour chaque fenêtre
-  w.addEventListener('mousedown', () => {
-    // Appeler la fonction pour augmenter le z-index de la fenêtre
-    raiseWindow(w);
-    menu.style.display = "none";
-    menuIsVisible = false;
-  });
-}
-
 function makeWindowDraggable(windowElement, windowHeaderElement) {
   let isDragging = false;
-  let currentX;
-  let currentY;
   let initialX;
   let initialY;
   let xOffset = 0;
   let yOffset = 0;
 
-  document.addEventListener("mousedown", dragStart);
+  windowHeaderElement.addEventListener("mousedown", dragStart);
+  windowHeaderElement.addEventListener("touchstart", dragStart, { passive: false });
+
   document.addEventListener("mouseup", dragEnd);
+  document.addEventListener("touchend", dragEnd, { passive: false });
+
   document.addEventListener("mousemove", drag);
+  document.addEventListener("touchmove", drag, { passive: false });
 
   function dragStart(e) {
-    initialX = e.clientX - xOffset;
-    initialY = e.clientY - yOffset;
-
     if (e.target === windowHeaderElement) {
       isDragging = true;
-      raiseWindow(windowElement); // Appeler la fonction pour augmenter le z-index de la fenêtre au clic
+      raiseWindow(windowElement);
+      if (e.type === "touchstart") {
+        initialX = e.touches[0].clientX - xOffset;
+        initialY = e.touches[0].clientY - yOffset;
+      } else {
+        initialX = e.clientX - xOffset;
+        initialY = e.clientY - yOffset;
+      }
     }
   }
 
@@ -192,21 +165,25 @@ function makeWindowDraggable(windowElement, windowHeaderElement) {
     if (isDragging) {
       e.preventDefault();
 
-      currentX = e.clientX - initialX;
-      currentY = e.clientY - initialY;
+      if (e.type === "touchmove") {
+        xOffset = e.touches[0].clientX - initialX;
+        yOffset = e.touches[0].clientY - initialY;
+      } else {
+        xOffset = e.clientX - initialX;
+        yOffset = e.clientY - initialY;
+      }
 
-      xOffset = currentX;
-      yOffset = currentY;
-
-      setTranslate(currentX, currentY, windowElement);
+      setTranslate(xOffset, yOffset, windowElement);
     }
   }
 
-  // Fonction pour définir la translation de la fenêtre
   function setTranslate(xPos, yPos, el) {
     el.style.transform = `translate(${xPos}px, ${yPos}px)`;
   }
 }
+
+
+
 
 
 // Parcourir la liste des fenêtres
@@ -218,11 +195,10 @@ for (let window of windows) {
 
 
 function loadContentWithObject(url, targetElement) {
-  var objectElement = document.createElement('object');
-  objectElement.data = url;
-  targetElement.appendChild(objectElement);
+    var objectElement = document.createElement('object');
+    objectElement.data = url;
+    targetElement.appendChild(objectElement);
 }
-
 
 function BlocNote() {
   NouvelleFenetre("BlocNote", "Bloc Notes", "../App/NotePad.html", menu, menuIsVisible, false);
@@ -233,7 +209,7 @@ function Calculatrice() {
 }
 
 function Yout() {
-  NouvelleFenetre("Yout", "Personnaliser", "../App/yout.html", menu, menuIsVisible, true);
+  NouvelleFenetre("Yout", "VM", "../index.html", menu, menuIsVisible, true);
 }
 
 function LOGO() {
@@ -325,9 +301,10 @@ function handleStorageChange(event) {
     raiseWindow(windowClone);
   });
 
-  windowClone.querySelector(".close").addEventListener("click", function () {
+windowClone.querySelector(".close").addEventListener("click", function () {
     FermerFenetre(windowClone, newButton);
-  });
+});
+
 
   var actualiserButton = windowClone.querySelector(".actualiser");
   if (actualiserButton) {

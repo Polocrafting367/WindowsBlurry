@@ -82,7 +82,7 @@
 #clock {
   color: #fff;
   font-size: 120px;
-  margin-top: 20px;
+  margin-top: 200px;
   font-family: 'Arial Black', sans-serif; /* Use single quotes if the font name has spaces */
 }
 
@@ -266,6 +266,11 @@
 
 
 </style>
+
+
+
+
+<!-- Ajoutez ces événements tactiles à votre script -->
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     let isDragging = false;
@@ -275,56 +280,56 @@ document.addEventListener('DOMContentLoaded', () => {
     const backgroundImage = document.body;
     const clockElement = document.getElementById('clock');
     const loginPanel = document.getElementById('login-panel');
-const profileinfo = document.getElementById('profile-info');
-const loginform = document.getElementById('login-form');
+    const profileinfo = document.getElementById('profile-info');
+    const loginform = document.getElementById('login-form');
 
+    // Événements souris
+    backgroundImage.addEventListener('mousedown', startDragging);
+    document.addEventListener('mousemove', dragImage);
+    document.addEventListener('mouseup', stopDragging);
 
-    backgroundImage.addEventListener('mousedown', (e) => {
+    // Événements tactiles
+    backgroundImage.addEventListener('touchstart', startDragging);
+    document.addEventListener('touchmove', dragImage);
+    document.addEventListener('touchend', stopDragging);
+
+    function startDragging(e) {
         const rect = slidingPanel.getBoundingClientRect();
+        initialY = e.clientY || e.touches[0].clientY - rect.top;
 
-        // Calculate the initial Y position relative to the center of the image
-        initialY = e.clientY - rect.top;
-
-        // If the click is below the image, do not start dragging
-        if (e.clientY > rect.top + rect.height) {
+        if ((e.clientY && e.clientY > rect.top + rect.height) || (e.touches && e.touches[0].clientY > rect.top + rect.height)) {
             return;
         }
 
         isDragging = true;
-    });
+    }
 
-    document.addEventListener('mousemove', (e) => {
+    function dragImage(e) {
         if (isDragging) {
-            const newY = e.clientY - initialY;
+            const newY = (e.clientY || e.touches[0].clientY) - initialY;
 
-            // Limit movement only upwards
             slidingPanel.style.top = `${Math.min(0, newY)}px`;
 
-            // Update backdrop filter blur intensity based on panel's position
             const blurIntensity = Math.min(10, Math.abs(newY) / 50);
             backgroundImage.style.backdropFilter = `blur(${blurIntensity}px)`;
 
-            // Update login panel visibility and opacity
             if (newY <= -(0.75 * window.innerHeight)) {
                 loginPanel.style.visibility = 'visible';
                 loginPanel.style.opacity = '1';
                 profileinfo.style.visibility = 'visible';
                 loginform.style.visibility = 'visible';
-
             } else {
                 loginPanel.style.visibility = 'hidden';
                 loginPanel.style.opacity = '0';
                 profileinfo.style.visibility = 'hidden';
                 loginform.style.visibility = 'hidden';
-
             }
         }
-    });
+    }
 
-    document.addEventListener('mouseup', () => {
+    function stopDragging() {
         isDragging = false;
 
-        // If the image has been moved above a certain threshold, hide it
         const imagePosition = parseFloat(slidingPanel.style.top.replace('px', ''));
         if (imagePosition <= -(0.75 * window.innerHeight)) {
             slidingPanel.style.display = 'none';
@@ -334,7 +339,7 @@ const loginform = document.getElementById('login-form');
             loginPanel.style.visibility = 'hidden';
             loginPanel.style.opacity = '0';
         }
-    });
+    }
 
     // Update the clock every second
     updateClock();
@@ -349,7 +354,6 @@ const loginform = document.getElementById('login-form');
 
         clockElement.textContent = `${hours}:${minutes}`;
     }
-
 
     window.login = function() {
         // Show loading panel
@@ -374,38 +378,35 @@ const loginform = document.getElementById('login-form');
 
     // Vérifier la valeur de 'Boot' et appliquer les modifications d'image
     if (bootValue && bootValue === 'FichierCSS367') {
-      // Modifier l'image du sliding-panel
+        // Modifier l'image du sliding-panel
+        slidingPanel.style.backgroundImage = "url('../Images/31246-andreazappia-abovetheclouds.jpg')";
+        slidingPanel.style.backgroundRepeat = "no-repeat";
+        slidingPanel.style.backgroundPosition = "center center";
+        slidingPanel.style.backgroundAttachment = "fixed";
+        slidingPanel.style.backgroundSize = "cover";
 
-      slidingPanel.style.backgroundImage = "url('../Images/31246-andreazappia-abovetheclouds.jpg')";
-            slidingPanel.style.backgroundRepeat = "no-repeat";
-      slidingPanel.style.backgroundPosition = "center center";
-      slidingPanel.style.backgroundAttachment = "fixed";
-      slidingPanel.style.backgroundSize = "cover";
-
-      // Modifier l'image du body
-      document.body.style.backgroundImage = "url('../Images/31246-andreazappia-abovetheclouds.jpg')";
-         document.body.style.backgroundRepeat = "no-repeat";
-      document.body.style.backgroundPosition = "center center";
-      document.body.style.backgroundAttachment = "fixed";
-      document.body.style.backgroundSize = "cover";
+        // Modifier l'image du body
+        document.body.style.backgroundImage = "url('../Images/31246-andreazappia-abovetheclouds.jpg')";
+        document.body.style.backgroundRepeat = "no-repeat";
+        document.body.style.backgroundPosition = "center center";
+        document.body.style.backgroundAttachment = "fixed";
+        document.body.style.backgroundSize = "cover";
     }
+
     if (bootValue && bootValue === 'FichierCSS8') {
-      // Modifier l'image du sliding-panel
+        // Modifier l'image du sliding-panel
+        slidingPanel.style.backgroundImage = "url('../Images/W8lock.png')";
+        slidingPanel.style.backgroundRepeat = "no-repeat";
+        slidingPanel.style.backgroundPosition = "center center";
+        slidingPanel.style.backgroundAttachment = "fixed";
+        slidingPanel.style.backgroundSize = "cover";
 
-      slidingPanel.style.backgroundImage = "url('../Images/W8lock.png')";
-                  slidingPanel.style.backgroundRepeat = "no-repeat";
-      slidingPanel.style.backgroundPosition = "center center";
-      slidingPanel.style.backgroundAttachment = "fixed";
-      slidingPanel.style.backgroundSize = "cover";
-
-      // Modifier l'image du body
-      document.body.style.backgroundImage = "url('../Images/W8lockun.png')";
-         document.body.style.backgroundRepeat = "no-repeat";
-      document.body.style.backgroundPosition = "center center";
-      document.body.style.backgroundAttachment = "fixed";
-      document.body.style.backgroundSize = "cover";
+        // Modifier l'image du body
+        document.body.style.backgroundImage = "url('../Images/W8lockun.png')";
+        document.body.style.backgroundRepeat = "no-repeat";
+        document.body.style.backgroundPosition = "center center";
+        document.body.style.backgroundAttachment = "fixed";
+        document.body.style.backgroundSize = "cover";
     }
-
-
 });
 </script>
