@@ -209,7 +209,7 @@ function Calculatrice() {
 }
 
 function Yout() {
-  NouvelleFenetre("Yout", "VM", "../index.html", menu, menuIsVisible, true);
+  NouvelleFenetre("Yout", "VM", "../Boot/Bureau.html", menu, menuIsVisible, true);
 }
 
 function LOGO() {
