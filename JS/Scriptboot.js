@@ -94,7 +94,7 @@ window.location.href = "../Boot/boot810.html";
                     window.location.href = "7boot.html";
             }
                         if (bootValue && bootValue === "FichierCSS8B") {
-                    window.location.href = "367boot.html";
+                    window.location.href = "boot810.html";
             }
             if (bootValue && bootValue === "FichierCSS8") {
                     window.location.href = "boot810.html";

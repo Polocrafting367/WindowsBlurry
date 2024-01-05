@@ -1,6 +1,19 @@
 setTimeout(function() {
+
+
+    var bootValue = localStorage.getItem('Boot');
+
+    if (bootValue && bootValue === 'FichierCSS7') {
+     window.location.href = "lockXP78B.html";
+    }
+
+    else{
     window.location.href = "W81011367.html";
-}, 3000);
+    }
+
+    
+
+}, 3500);
 
 function startAnimation() {
     var lool = document.getElementById('lool');
@@ -23,3 +36,7 @@ function startAnimation() {
 
 // Call the startAnimation function
 startAnimation();
+
+
+
+

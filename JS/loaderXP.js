@@ -7,5 +7,5 @@ let int = setInterval(() => {
 
 
 setTimeout(function() {
-window.location.href = "W81011367.html";
+window.location.href = "lockXP.html";
 }, 3200);

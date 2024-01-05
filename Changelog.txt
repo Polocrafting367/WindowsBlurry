@@ -6,7 +6,7 @@ function MAFENETRE() {
 
 Le false à la fin permet d'afficher ou non le bouton actualiuser en haut de la fen, pratique pendant le dev
     
-
+        05/01/24 : Mise a jours des lock screen (style pas fini !)
         04/01/24 : compatibilité avec le tactil (enfin)
         03/01/24 : Crée W10 theme
         02/01/24 : Ajout d'un lockscreen adaptatif pour W367 W8 et pour le futur W10 (apliquer à tous cas celui de WXP et 7 pas prêts)

@@ -1,13 +1,287 @@
 <!DOCTYPE html>
-	<style>body{background-color:black;}</style>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Écran de Verrouillage</title>
 </head>
-
 <body>
-    <div>welcome</div>
-    <button>Dévérouiller</button>
+  <div id="lockscreen-container">
+
+    <div id="login-panel">
+      <div id="login-header">
+        <div id="profile-info"  >
+          <img src="../Images/channels4_profile.jpg" alt="User Icon" class="profile-image">
+          <div id="profile-text">
+            <p class="profile-name">Polocrafting (AUCUN MDP)</p>
+          </div>
+        </div>
+      </div>
+      <div id="login-form" >
+        <input type="password" placeholder="Mot de passe">
+        <button onclick="login()">Connexion</button>
+      </div>
+    </div>
+    <div id="loading-panel" style="display: none;">
+      <div class="loader">
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+      </div>
+      <text class="text">Bienvenue</text>
+    </div>
+  </div>
 </body>
 </html>
+
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    background: url('https://s1.1zoom.me/b5050/214/Lake_Mountains_Scenery_441215_1920x1200.jpg') no-repeat center center fixed;
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    overflow: hidden;
+    user-select: none;
+  }
+
+  #sliding-panel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    transition: transform 0.5s ease-in-out;
+    background: url('https://s1.1zoom.me/b5050/214/Lake_Mountains_Scenery_441215_1920x1200.jpg') no-repeat center center fixed;
+  }
+
+  #clock {
+    color: #fff;
+    font-size: 120px;
+    margin-top: 200px;
+    font-family: 'Arial Black', sans-serif;
+  }
+
+  #login-panel {
+    text-align: center;
+    margin-top: auto;
+  }
+
+  #login-header {
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  #profile-info {
+    align-items: center;
+  }
+
+
+
+  #profile-text {
+    margin-left: 10px;
+    position: absolute;
+    max-width: 120px;
+    left: 50%;
+    transform: translateX(-70px) translateY(0px);
+  }
+
+  .profile-name {
+    color: white;
+    margin-right: 10px;
+  }
+
+  #login-form {
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transform: translateX(50px) translateY(10px);
+  }
+
+  #login-form img {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 10px;
+  }
+
+  #login-form input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+
+  #login-form button {
+    width: 100%;
+    padding: 10px;
+    background: #0078D4;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  #login-form a {
+    display: block;
+    color: #0078D4;
+    text-decoration: none;
+    margin-top: 10px;
+  }
+
+  #loading-panel .loader {
+    position: absolute;
+    top: 48%;
+    left: 50%;
+    width: 50px;
+    height: 50px;
+    transform: translateX(-50px) translateY(02px) scale(0.7);
+  }
+
+  #loading-panel .loader .circle {
+    position: absolute;
+    width: 38px;
+    height: 38px;
+    opacity: 0;
+    transform: rotate(225deg);
+    animation-iteration-count: infinite;
+    animation-name: bootAnim;
+    animation-duration: 4.8s;
+  }
+
+  #loading-panel .loader .circle:after {
+    content: '';
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: #fff;
+    border: 1px white solid;
+    box-shadow: 0 0 1px #0078d7;
+  }
+
+  #loading-panel .loader .circle:nth-child(2) {
+    animation-delay: 240ms;
+  }
+
+  #loading-panel .loader .circle:nth-child(3) {
+    animation-delay: 480ms;
+  }
+
+  #loading-panel .loader .circle:nth-child(4) {
+    animation-delay: 720ms;
+  }
+
+  #loading-panel .loader .circle:nth-child(5) {
+    animation-delay: 960ms;
+  }
+
+  @keyframes bootAnim {
+    0% {
+      transform: rotate(225deg);
+      opacity: 1;
+      animation-timing-function: ease-out;
+    }
+    7% {
+      transform: rotate(345deg);
+      animation-timing-function: linear;
+    }
+    30% {
+      transform: rotate(455deg);
+      animation-timing-function: ease-in-out;
+    }
+    39% {
+      transform: rotate(690deg);
+      animation-timing-function: linear;
+    }
+    70% {
+      transform: rotate(815deg);
+      opacity: 1;
+      animation-timing-function: ease-out;
+    }
+    75% {
+      transform: rotate(945deg);
+      animation-timing-function: ease-out;
+    }
+    76% {
+      transform: rotate(945deg);
+      opacity: 0;
+    }
+    100% {
+      transform: rotate(945deg);
+      opacity: 0;
+    }
+  }
+
+  body[data-boot='FichierCSSXP'] {
+    background-image: url('../Images/welcome-long.png') !important;
+  }
+
+  body[data-boot='FichierCSS7'] {
+    background-image: url('../Images/IMAGE5034_1.jpg') !important;
+  }
+
+  body[data-boot='FichierCSS7'] .profile-image {
+    position: absolute;
+    margin-left: 85px;
+    margin-bottom: 130px;
+    width: 120px;
+    height: 120px;
+    border: 0px solid white;
+    background-image: url("../Images/Profile.png");
+    background-size: 102% 102%;
+    background-position: center;
+    bottom: 380px;
+    padding: 20px;
+  }
+  body[data-boot='FichierCSSXP'] .profile-image {
+    position: absolute;
+    margin-left: 85px;
+    margin-bottom: 130px;
+    width: 120px;
+    height: 120px;
+    border: 2px solid white;
+    border-radius:3px;
+    bottom: 380px;
+
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    window.login = function() {
+      const loadingPanel = document.getElementById('loading-panel');
+      loadingPanel.style.display = 'flex';
+      loadingPanel.style.flexDirection = 'column';
+
+      setTimeout(() => {
+        const loginPanel = document.getElementById('login-panel');
+        loginPanel.style.display = 'none';
+
+        setTimeout(() => {
+          window.location.href = '../Boot/Bureau.html';
+        }, 1500);
+
+      }, 0);
+    };
+
+    var bootValue = localStorage.getItem('Boot');
+
+    if (bootValue) {
+      document.body.setAttribute('data-boot', bootValue);
+    }
+  });
+</script>

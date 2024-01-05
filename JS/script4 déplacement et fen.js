@@ -209,7 +209,7 @@ function Calculatrice() {
 }
 
 function Yout() {
-  NouvelleFenetre("Yout", "VM", "../Boot/Bureau.html", menu, menuIsVisible, true);
+  NouvelleFenetre("Yout", "Paint", "https://jspaint.app/#local:e109f30c3fa6c", menu, menuIsVisible, true);
 }
 
 function LOGO() {

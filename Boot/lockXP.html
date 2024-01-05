@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page d'accueil</title>
+    <style>
+        body {
+            background: url("../Images/welcome-long.png") no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+                user-select: none;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 50%;
+            position: relative;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            background-color: white;
+            height: 100%;
+        }
+
+        .logo {
+            text-align: right;
+            transform: translateX(-130px);
+        }
+
+        .logo img {
+            width: 140px;
+            margin-bottom: 15px;
+        }
+
+.user {
+    text-align: left;
+    display: flex;
+    align-items: center;
+    position: fixed;
+    left: calc(50% + 50px);
+    cursor: pointer;
+    border: 2px solid transparent; /* Ajout d'une bordure transparente par défaut */
+    padding: 5px; /* Ajout d'un espace intérieur pour améliorer l'apparence */
+    transition: border 0.3s; /* Ajout d'une transition pour un effet fluide */
+
+}
+
+.user:hover {
+    border: 2px solid white; /* Changement de la couleur de la bordure lors du survol */
+}
+
+.user:active {
+    border: 2px solid #3151B5; /* Changement de la couleur de la bordure lors du clic */
+}
+
+
+
+        .user img {
+            width: 70px;
+            border: 2px solid white;
+            border-radius: 5px;
+            margin-right: 15px;
+        }
+
+#loadingText {
+    font-size: 60px;
+    font-family: 'Arial Black', sans-serif; /* Utilisation de 'Arial Black' avec apostrophes */
+    font-style: italic;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(10%, -50%);
+    text-shadow: 2px 5px #3151B5;
+}
+
+
+
+  
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="../Images/W36p.png" alt="Windows XP Logo">
+            <p>Pour continuer, cliquez sur votre nom d'utilisateur</p>
+        </div>
+        <div class="user" onclick="selectProfile()">
+            <img src="../Images/channels4_profile.jpg" alt="User Icon">
+            <p>Polocrafting</p>
+        </div>
+    </div>
+
+    <div id="loadingText" style="display: none;">Bienvenue</div>
+
+    <script>
+        function selectProfile() {
+            document.querySelector('.container').style.opacity = '0';
+            document.getElementById('loadingText').style.display = 'block';
+
+            setTimeout(function() {
+                window.location.href = '../Boot/Bureau.html';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
