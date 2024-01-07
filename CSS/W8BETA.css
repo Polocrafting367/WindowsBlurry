@@ -271,17 +271,19 @@ font: var(--font);
     background-color: rgba(0, 150, 150, 0.6);
 }
 
-#power:hover {
+#POWER {    
+background-image: url(../Images/7351.png);
 
-    background-image: url(../Images/off%20hovver.png);
+background-color: rgba(10, 10, 10, 0.2)
 }
+#POWER:hover {
 
-#power {
-    background-image: url(../Images/off%20norm.png);
+    background-color: rgba(0, 150, 150, 0.6);
+
 }
 #power:active {
 
-    background-image: url(../Images/off%20clic.png);
+     background-color: rgba(100, 100, 100, 0.5);
 }
 
 
