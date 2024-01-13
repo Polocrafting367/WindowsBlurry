@@ -201,20 +201,25 @@ function loadContentWithObject(url, targetElement) {
 }
 
 function BlocNote() {
-  NouvelleFenetre("BlocNote", "Bloc Notes", "../App/NotePad.html", menu, menuIsVisible, false);
+ NouvelleFenetre("BlocNote", "Bloc Notes", "../App/NotePad.html", menu, menuIsVisible, false);
+
 }
 
 function Calculatrice() {
-  NouvelleFenetre("Calculatrice", "Calculatrice", "../App/Calc.html", menu, menuIsVisible, false);
+ NouvelleFenetre("Calculatrice", "Calculatrice", "../App/Calc.html", menu, menuIsVisible, false);
+
 }
 
 function Yout() {
-  NouvelleFenetre("Yout", "Paint", "https://jspaint.app/#local:e109f30c3fa6c", menu, menuIsVisible, true);
+NouvelleFenetre("Yout", "Paint", "../App/yout.html", menu, menuIsVisible, true);
+
 }
 
 function LOGO() {
-  NouvelleFenetre("Yout", "Crédits", "../App/Logo.html", menu, menuIsVisible, false);
+  NouvelleFenetre("LOGO", "Crédits", "../App/Logo.html", menu, menuIsVisible, false);
+
 }
+
 
 function Supp() {
   localStorage.setItem('MessageINFO', "Êtes-vous sûr de vouloir supprimer, cela redémarrera l'ordinateur sans sauvegarde des données ?");
@@ -236,6 +241,11 @@ function NouvelleFenetre(id, title, contentUrl, menu, menuIsVisible, Actualisati
   windowClone.id = id;
 
   raiseWindow(windowClone);
+
+
+
+
+  makeWindowDraggable(windowClone, windowClone.querySelector('.window-header'));
 
   var header = windowClone.querySelector(".window-content");
   header.id = "window-content-" + id;
@@ -323,3 +333,73 @@ windowClone.querySelector(".close").addEventListener("click", function () {
     }
   }
 }
+
+
+
+
+
+
+
+
+  const windowResizeElement = document.querySelector('.window');
+  const windowHeaderElement = windowResizeElement.querySelector('.window-header');
+  makeWindowResizable(windowResizeElement, windowHeaderElement);
+
+  function makeWindowResizable(windowElement, windowHeaderElement) {
+    let isResizing = false;
+    let initialWidth;
+    let initialHeight;
+
+    windowHeaderElement.addEventListener("mousedown", resizeStart);
+    windowHeaderElement.addEventListener("touchstart", resizeStart, { passive: false });
+
+    document.addEventListener("mouseup", resizeEnd);
+    document.addEventListener("touchend", resizeEnd, { passive: false });
+
+    document.addEventListener("mousemove", resize);
+    document.addEventListener("touchmove", resize, { passive: false });
+
+    function resizeStart(e) {
+      if (e.target === windowHeaderElement) {
+        isResizing = true;
+        if (e.type === "touchstart") {
+          initialWidth = windowElement.clientWidth - e.touches[0].clientX;
+          initialHeight = windowElement.clientHeight - e.touches[0].clientY;
+        } else {
+          initialWidth = windowElement.clientWidth - e.clientX;
+          initialHeight = windowElement.clientHeight - e.clientY;
+        }
+      }
+    }
+
+    function resizeEnd() {
+      isResizing = false;
+    }
+
+function resize(e) {
+  if (isResizing) {
+    e.preventDefault();
+
+    let newWidth, newHeight;
+
+    if (e.type === "touchmove") {
+      newWidth = e.touches[0].clientX + initialWidth;
+      newHeight = e.touches[0].clientY + initialHeight;
+    } else {
+      newWidth = e.clientX + initialWidth;
+      newHeight = e.clientY + initialHeight;
+    }
+
+    // Limiter la largeur minimale et maximale
+    newWidth = Math.max(150, Math.min(newWidth, window.innerWidth));
+
+    // Limiter la hauteur minimale et maximale
+    newHeight = Math.max(40, Math.min(newHeight, window.innerHeight));
+
+    windowElement.style.width = newWidth + "px";
+    windowElement.style.height = newHeight + "px";
+  }
+}
+
+
+  }

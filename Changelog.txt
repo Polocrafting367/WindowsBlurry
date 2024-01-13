@@ -5,7 +5,9 @@ function MAFENETRE() {
 }
 
 Le false à la fin permet d'afficher ou non le bouton actualiuser en haut de la fen, pratique pendant le dev
-    
+   
+
+        13/01/24 : Ajout fenêtre redimentionnable et modification Paint et NotePad
         05/01/24 : Mise a jours des lock screen (style pas fini !)
         04/01/24 : compatibilité avec le tactil (enfin)
         03/01/24 : Crée W10 theme

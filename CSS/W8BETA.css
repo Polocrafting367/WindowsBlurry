@@ -1,3 +1,14 @@
+
+  .window {
+    resize: both;
+    overflow: hidden;
+  }
+
+  .window-header {
+    cursor: move;
+  }
+
+
 :root {
 
   --button-border: 2px solid;
@@ -490,7 +501,23 @@ background: linear-gradient( 180deg, rgba(255, 200, 50, 1) 0%,  rgba(255, 200, 5
     width: 700px;
     height: 525px;
 
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 1);
+
+    z-index: 1;
+
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+      will-change: transform;
+
+  }
+  #logo {
+    position: absolute;
+    top: 75px;
+    left: 100px;
+    width: 700px;
+    height: 525px;
+
+    box-shadow: 0 0 10px rgba(0, 0, 0, 1);
 
     z-index: 1;
 

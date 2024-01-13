@@ -1,66 +1,286 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="Fr">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mon Bloc-Notes</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-    }
-    #editor {
-      width: 80%;
-      margin: 20px auto;
-      padding: 10px;
-      border: 1px solid #ccc;
-      min-height: 200px;
-      font-size: 16px;
-    }
-    #options {
-      text-align: center;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Editor</title>
 </head>
+
 <body>
+    <header>
+        <div class="toolbar" id="toolbar">
+            <!-- Boutons pour basculer entre les onglets -->
+            <button id="butt" onclick="toggleFileTab()">Fichier</button>
+            <button id="butt" onclick="toggleOptionsTab()">Acceuil</button>
 
-  <div id="options">
-    <label for="fontSize">Taille de police:</label>
-    <select id="fontSize" onchange="changeFontSize()">
-      <option value="12">12px</option>
-      <option value="16">16px</option>
-      <option value="20">20px</option>
-      <option value="24">24px</option>
-    </select>
+            <!-- Onglet "Fichier" -->
+            <div class="file-tab">
+                         <button onclick="saveText()">Save</button>
+                <input type="file" id="fileInput" accept=".txt" onchange="openFile()">
 
-    <button onclick="saveText()">Enregistrer</button>
-  </div>
+            </div>
 
-  <div id="editor" contenteditable="true" oninput="updateLocalStorage()">
-    <!-- Le contenu du bloc-notes sera affiché ici -->
-  </div>
+            <!-- Onglet "Options" -->
+            <div class="options-tab" style="display:none;">
 
-  <script>
-    // Charger le contenu depuis le stockage local
-    document.getElementById('editor').innerHTML = localStorage.getItem('editorContent') || '';
+                
 
-    // Fonction pour mettre à jour le stockage local à chaque modification
-    function updateLocalStorage() {
-      var content = document.getElementById('editor').innerHTML;
-      localStorage.setItem('editorContent', content);
+       
+
+
+
+
+                <input type="number" id="fontSize" min="10" max="50" value="16">
+
+
+
+
+                <select id="fontFamily">
+                    <option value="Arial">Arial</option>
+                    <option value="Helvetica">Helvetica</option>
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Courier New">Courier New</option>
+                    <option value="Verdana">Verdana</option>
+                </select>
+                <label for="fontColor">Font Color:</label>
+                <input type="color" id="fontColor" value="#000000">
+
+
+
+         
+         <select id="textAlign">
+    <option value="left">Left</option>
+    <option value="center">Center</option>
+    <option value="right">Right</option>
+</select>
+
+                <!-- Ajoutez ici les éléments pour les options visuelles -->
+                <label for="background">Background Color:</label>
+                <input type="color" id="background" value="#ffffff">
+
+                <label for="lineHeight">Line Height:</label>
+                <input type="number" id="lineHeight" min="1" max="2" step="0.1" value="1.5">
+            </div>
+        </div>
+    </header>
+
+    <div class="editor-container">
+        <textarea id="editor" placeholder="Type your text here..."></textarea>
+    </div>
+
+    <style>
+      #butt {height: 30px;}
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            background-color: #f0f0f0;
+        }
+
+   header {
+        background-color: #333; /* Couleur de fond de l'en-tête */
+        color: #fff; /* Couleur du texte de l'en-tête */
+        padding: 10px; /* Espacement interne de l'en-tête */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Ombre pour l'en-tête */
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
 
-    // Fonction pour changer la taille de la police
-    function changeFontSize() {
-      var fontSize = document.getElementById('fontSize').value;
-      document.getElementById('editor').style.fontSize = fontSize + 'px';
+    h1 {
+        margin: 0;
+        color: #fff; /* Couleur du texte du titre si vous avez un titre dans l'en-tête */
     }
 
-    // Fonction pour enregistrer le contenu dans un fichier (simulé ici avec une alerte)
-    function saveText() {
-      var content = document.getElementById('editor').innerHTML;
-
+    .toolbar {
+        display: flex;
+        gap: 10px;
     }
-  </script>
+
+.file-tab,
+.options-tab {
+    margin-top: 50px;
+}
+
+
+        .editor-container {
+            flex-grow: 1;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            overflow-y: auto;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100%;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+            .toolbar button {
+        padding: 8px 12px;
+        background-color: #4CAF50;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .toolbar button:hover {
+        background-color: #45a049;
+    }
+    </style>
+
+    <script>
+function setTextAlign(align) {
+    const editor = document.getElementById('editor');
+    editor.style.textAlign = align;
+}
+
+              function toggleFileTab() {
+            const fileTab = document.querySelector('.file-tab');
+            const optionsTab = document.querySelector('.options-tab');
+
+            fileTab.style.display = 'flex';
+            optionsTab.style.display = 'none';
+        }
+
+        function toggleOptionsTab() {
+            const fileTab = document.querySelector('.file-tab');
+            const optionsTab = document.querySelector('.options-tab');
+
+            fileTab.style.display = 'none';
+            optionsTab.style.display = 'flex';
+        }
+function toggleTabs() {
+    const fileTab = document.querySelector('.file-tab');
+    const optionsTab = document.querySelector('.options-tab');
+
+    if (fileTab.style.display === 'none') {
+        fileTab.style.display = 'flex';
+        optionsTab.style.display = 'none';
+    } else {
+        fileTab.style.display = 'none';
+        optionsTab.style.display = 'flex';
+    }
+}
+
+// Appel à toggleOptionsTab pour ouvrir l'onglet "Options" par défaut
+toggleOptionsTab();
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const editor = document.getElementById('editor');
+        const fontSizeInput = document.getElementById('fontSize');
+        const fontColorInput = document.getElementById('fontColor');
+        const fontFamilySelect = document.getElementById('fontFamily');
+        const textAlignSelect = document.getElementById('textAlign');
+        const fileInput = document.getElementById('fileInput');
+        const backgroundInput = document.getElementById('background');
+        const lineHeightInput = document.getElementById('lineHeight');
+
+        fontSizeInput.addEventListener('input', function () {
+            editor.style.fontSize = `${fontSizeInput.value}px`;
+        });
+
+        fontColorInput.addEventListener('input', function () {
+            editor.style.color = fontColorInput.value;
+        });
+
+        fontFamilySelect.addEventListener('change', function () {
+            editor.style.fontFamily = fontFamilySelect.value;
+        });
+
+        textAlignSelect.addEventListener('change', function () {
+            editor.style.textAlign = textAlignSelect.value;
+        });
+
+        backgroundInput.addEventListener('input', function () {
+            editor.style.backgroundColor = backgroundInput.value;
+        });
+
+        lineHeightInput.addEventListener('input', function () {
+            editor.style.lineHeight = lineHeightInput.value;
+        });
+
+        function saveText() {
+            const formattingInfo = {
+                fontSize: `${fontSizeInput.value}px`,
+                fontColor: fontColorInput.value,
+                fontFamily: fontFamilySelect.value,
+                textAlign: textAlignSelect.value,
+                background: backgroundInput.value,
+                lineHeight: `${lineHeightInput.value}`
+            };
+
+            const textToSave = `${JSON.stringify(formattingInfo)}\n\n${editor.value}`;
+            const blob = new Blob([textToSave], { type: 'text/plain' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'text.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        function openFile() {
+            const file = fileInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const fileContent = e.target.result;
+                    const [formattingInfo, content] = fileContent.split('\n\n', 2);
+                    const options = JSON.parse(formattingInfo);
+
+                    fontSizeInput.value = parseFloat(options.fontSize.match(/\d+/)[0]);
+                    fontColorInput.value = options.fontColor;
+                    fontFamilySelect.value = options.fontFamily;
+                    textAlignSelect.value = options.textAlign;
+                    backgroundInput.value = options.background;
+                    lineHeightInput.value = parseFloat(options.lineHeight);
+
+                    updateEditorStyles();
+                    editor.value = content;
+                };
+                reader.readAsText(file);
+            }
+        }
+
+        function updateEditorStyles() {
+            editor.style.fontSize = `${fontSizeInput.value}px`;
+            editor.style.color = fontColorInput.value;
+            editor.style.fontFamily = fontFamilySelect.value;
+            editor.style.textAlign = textAlignSelect.value;
+            editor.style.backgroundColor = backgroundInput.value;
+            editor.style.lineHeight = lineHeightInput.value;
+        }
+
+        function toggleTabs() {
+            const fileTab = document.querySelector('.file-tab');
+            const optionsTab = document.querySelector('.options-tab');
+
+            if (fileTab.style.display === 'none') {
+                fileTab.style.display = 'flex';
+                optionsTab.style.display = 'none';
+            } else {
+                fileTab.style.display = 'none';
+                optionsTab.style.display = 'flex';
+            }
+        }
+
+        window.saveText = saveText;
+        window.openFile = openFile;
+        window.updateEditorStyles = updateEditorStyles;
+        window.toggleTabs = toggleTabs;
+
+        // Mettre à jour les styles au chargement initial
+        updateEditorStyles();
+    });
+</script>
 
 </body>
+
 </html>
