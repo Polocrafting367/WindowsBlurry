@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="fr" translate="no">
+<head translate="no">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interventions</title>
+    <!-- Vos balises meta et liens vers des fichiers externes ici -->
+</head>
+<body>
+    <div class="container">
+        <h1>Liste des lieux</h1>
+        <ul id="lieux-list" class="lieux-list"></ul>
+    </div>
+
+
+
+
+</body>
+</html>
+<style>
+    body {
+    font-family: 'Arial', sans-serif;
+    background-color: #1e1e1e; /* Fond sombre pour le corps de la page */
+    color: #fff; /* Texte en blanc */
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 600px;
+    margin: 20px auto;
+    background-color: #333; /* Fond sombre pour le conteneur principal */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+h1 {
+    color: #fff; /* Texte en blanc */
+}
+
+.lieux-list {
+    list-style: none;
+    padding: 0;
+}
+
+.lieux-list li {
+    background-color: #555; /* Fond sombre pour chaque élément de lieu */
+    margin: 10px 0;
+    padding: 15px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.lieux-list li button {
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    padding: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+.lieux-list li button:hover {
+    background-color: #2980b9;
+}
+
+.lieux-list li .modal-content {
+    background-color: #333; /* Fond sombre pour le contenu de la modal */
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+.lieux-list li textarea {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 8px;
+    border-radius: 4px;
+}
+
+/* Ajout d'un style pour le mode sombre lorsqu'un lieu est cliqué */
+.lieux-list li.active {
+    background-color: #2c3e50; /* Fond sombre pour l'élément de lieu actif */
+}
+    #chrono .seconds {
+        color: gray;
+    }
+</style>
+
+
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function() {
+    chargerLieux();
+});
+
+function chargerLieux() {
+    fetch('lieux.json')
+        .then(response => response.json())
+        .then(data => {
+            const lieuxList = document.getElementById('lieux-list');
+            lieuxList.innerHTML = '';
+
+            data.forEach(nomLieu => {
+                const lieuItem = document.createElement('li');
+                lieuItem.innerHTML = `<div class="place-card" onclick="ouvrirModal('${nomLieu}')">${nomLieu}</div>`;
+                lieuxList.appendChild(lieuItem);
+            });
+        })
+        .catch(error => console.error('Erreur de chargement des lieux', error));
+}
+function ouvrirModal(nomLieu) {
+    // Find the corresponding list item
+    const listItem = event.target.closest('li');
+
+    // Create a new modal content
+    const modalContent = document.createElement('div');
+    modalContent.classList.add('modal-content');
+
+    const placeDetails = document.createElement('div');
+    placeDetails.id = 'place-details';
+
+    const chronoStatus = document.createElement('div');
+    chronoStatus.id = 'chrono-status';
+
+    const chrono = document.createElement('div');
+    chrono.id = 'chrono';
+    chrono.textContent = '00:00:00';
+
+    const zoneTexte = document.createElement('textarea');
+    zoneTexte.id = 'zone-texte';
+    zoneTexte.placeholder = 'Saisissez quelque chose...';
+
+    const annulerButton = document.createElement('button');
+    annulerButton.textContent = 'Annuler';
+    annulerButton.onclick = annuler;
+
+    const pauseButton = document.createElement('button');
+    pauseButton.textContent = 'Pause';
+    pauseButton.onclick = pause;
+
+    const enregistrerButton = document.createElement('button');
+    enregistrerButton.textContent = 'Enregistrer';
+    enregistrerButton.onclick = enregistrer;
+
+    // Append elements to placeDetails
+    placeDetails.appendChild(chronoStatus);
+    placeDetails.appendChild(chrono);
+    placeDetails.appendChild(zoneTexte);
+    placeDetails.appendChild(annulerButton);
+    placeDetails.appendChild(pauseButton);
+    placeDetails.appendChild(enregistrerButton);
+
+    // Append elements to modalContent
+    modalContent.appendChild(placeDetails);
+
+    // Append modalContent to the list item
+    listItem.innerHTML = '';  // Clear previous content
+    listItem.appendChild(modalContent);
+
+    // Clear previous content
+    zoneTexte.value = '';
+
+    // Create a basic timer
+ let hours = 0;
+    let minutes = 0;
+    let seconds = 0;
+    let timerInterval;
+
+    // Update the timer display every second
+    timerInterval = setInterval(() => {
+        seconds++;
+        if (seconds === 60) {
+            minutes++;
+            seconds = 0;
+        }
+        if (minutes === 60) {
+            hours++;
+            minutes = 0;
+        }
+
+        chrono.innerHTML = `${formatTime(hours)}:${formatTime(minutes)}:<span class="seconds">${formatTime(seconds)}</span>`;
+    }, 1000);
+
+    // Update the timer status
+    chronoStatus.textContent = 'En cours';
+    chronoStatus.style.color = 'green';
+
+    // Function to format time as '00'
+    function formatTime(time) {
+        return time < 10 ? '0' + time : time;
+    }
+
+    // Store the interval ID in a data attribute
+    modalContent.setAttribute('data-timer-interval', timerInterval);
+}
+
+function pause() {
+    const modalContent = event.target.closest('.modal-content');
+    const chronoStatus = modalContent.querySelector('#chrono-status');
+
+    // Pause the timer
+    const timerInterval = modalContent.getAttribute('data-timer-interval');
+    clearInterval(timerInterval);
+
+    // Update the timer status
+    chronoStatus.textContent = 'En pause';
+    chronoStatus.style.color = 'yellow';
+}
+
+function fermerModal() {
+    const modalContent = event.target.closest('.modal-content');
+
+    // Clear the interval when closing the modal
+    const timerInterval = modalContent.getAttribute('data-timer-interval');
+    clearInterval(timerInterval);
+
+    // Remove the modal content from its parent
+    modalContent.parentNode.removeChild(modalContent);
+}
+
+function annuler() {
+    // TODO: Add logic for canceling the action
+}
+
+function reprendre() {
+    // TODO: Add logic for resuming the action
+}
+
+function enregistrer() {
+    const modalContent = event.target.closest('.modal-content');
+    const chronoStatus = modalContent.querySelector('#chrono-status');
+
+    // Stop the timer
+    const timerInterval = modalContent.getAttribute('data-timer-interval');
+    clearInterval(timerInterval);
+
+    // Update the timer status
+    chronoStatus.textContent = 'Fini';
+    chronoStatus.style.color = 'red';
+
+    // TODO: Add logic for saving the action
+}
+
+
+</script>
