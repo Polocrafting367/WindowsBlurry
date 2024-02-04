@@ -10,6 +10,7 @@
     <div class="container">
         <h1>Liste des lieux</h1>
         <ul id="lieux-list" class="lieux-list"></ul>
+        <button onclick="ajouterLieu()">Ajouter lieu</button>
     </div>
 
 
@@ -95,6 +96,12 @@ h1 {
 <script>
 
 document.addEventListener("DOMContentLoaded", function() {
+        // Prompt the user for credentials
+    const username = prompt("Enter your username:");
+
+
+    // Check if the provided credentials are valid
+   authenticateUser(username);
     chargerLieux();
 });
 
@@ -245,6 +252,83 @@ function enregistrer() {
 
     // TODO: Add logic for saving the action
 }
+function ajouterLieu() {
+    const identifiant = "paul";
+    const psw = "367";
 
+    // Fetch the existing locations from the JSON file
+    fetch('lieux.json')
+        .then(response => response.json())
+        .then(data => {
+            // Check if the location with the specified identifier already exists
+            const existingLocation = data.find(location => location.identifiant === identifiant);
+            if (existingLocation) {
+                alert("Location with the same identifier already exists!");
+                return;
+            }
+
+            // Add the new location
+            const newLocation = {
+                identifiant: identifiant,
+                psw: psw
+            };
+
+            data.push(newLocation);
+
+            // Update the JSON file with the new data using the PUT method
+            fetch('lieux.json', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(() => {
+                // Reload the list of locations
+                chargerLieux();
+            })
+            .catch(error => console.error('Erreur lors de l\'ajout du lieu', error));
+        })
+        .catch(error => console.error('Erreur de chargement des lieux', error));
+}
+
+function authenticateUser(username) {
+    // Fetch the list of users from the JSON file
+    fetch('users.json')
+        .then(response => response.json())
+        .then(users => {
+            // Check if the provided username matches any user
+            const authenticatedUser = users.find(user => user.username === username);
+
+            if (authenticatedUser) {
+                // If authenticated, display the elements for the user
+                displayUserElements(username);
+            } else {
+                // If not authenticated, you can handle it accordingly (e.g., show an error message)
+                alert("Invalid username. Please try again.");
+            }
+        })
+        .catch(error => console.error('Error loading users', error));
+}
+
+function displayUserElements(username) {
+    // Fetch and display the elements for the authenticated user
+    fetch('lieux.json')
+        .then(response => response.json())
+        .then(data => {
+            const lieuxList = document.getElementById('lieux-list');
+            lieuxList.innerHTML = '';
+
+            data.forEach(nomLieu => {
+                const lieuItem = document.createElement('li');
+                lieuItem.innerHTML = `<div class="place-card" onclick="ouvrirModal('${nomLieu}')">${nomLieu}</div>`;
+                lieuxList.appendChild(lieuItem);
+            });
+
+            // You may want to add additional logic here based on the authenticated user
+        })
+        .catch(error => console.error('Error loading elements', error));
+}
 
 </script>
