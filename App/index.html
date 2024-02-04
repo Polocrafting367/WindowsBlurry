@@ -99,9 +99,8 @@ document.addEventListener("DOMContentLoaded", function() {
         // Prompt the user for credentials
     const username = prompt("Enter your username:");
 
-
-    // Check if the provided credentials are valid
-   authenticateUser(username);
+    // Check if the provided username is valid
+    authenticateUser(username);
     chargerLieux();
 });
 
@@ -294,41 +293,17 @@ function ajouterLieu() {
 }
 
 function authenticateUser(username) {
-    // Fetch the list of users from the JSON file
+    // Fetch the list of usernames from the JSON file
     fetch('users.json')
         .then(response => response.json())
-        .then(users => {
-            // Check if the provided username matches any user
-            const authenticatedUser = users.find(user => user.username === username);
-
-            if (authenticatedUser) {
-                // If authenticated, display the elements for the user
-                displayUserElements(username);
-            } else {
-                // If not authenticated, you can handle it accordingly (e.g., show an error message)
-                alert("Invalid username. Please try again.");
+        .then(usernames => {
+            // Check if the provided username is in the list
+            if (!usernames.includes(username)) {
+                // If not found, show an error message
+                alert("Error: Username not found. Please try again.");
             }
         })
-        .catch(error => console.error('Error loading users', error));
-}
-
-function displayUserElements(username) {
-    // Fetch and display the elements for the authenticated user
-    fetch('lieux.json')
-        .then(response => response.json())
-        .then(data => {
-            const lieuxList = document.getElementById('lieux-list');
-            lieuxList.innerHTML = '';
-
-            data.forEach(nomLieu => {
-                const lieuItem = document.createElement('li');
-                lieuItem.innerHTML = `<div class="place-card" onclick="ouvrirModal('${nomLieu}')">${nomLieu}</div>`;
-                lieuxList.appendChild(lieuItem);
-            });
-
-            // You may want to add additional logic here based on the authenticated user
-        })
-        .catch(error => console.error('Error loading elements', error));
+        .catch(error => console.error('Error loading usernames', error));
 }
 
 </script>
