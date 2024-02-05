@@ -16,9 +16,11 @@
     <!-- Contenu de l'onglet "Créer" -->
     <div class="container">
         <h1>Choix du Lieu, Machine</h1>
-        <button id="toggleButton" onclick="toggleChronosState()">Chronos Actif</button>
+<div id="rech">
+    <button id="toggleButton" onclick="toggleChronosState()">Chronos Actif</button>
+    <input type="text" id="searchInput" placeholder="Rechercher un lieu..." oninput="searchLieu()">
+</div>
 
-        <input type="text" id="searchInput" placeholder="Rechercher un lieu..." oninput="searchLieu()">
         <ul id="lieux-list" class="lieux-list"></ul>
     </div>
 </div>

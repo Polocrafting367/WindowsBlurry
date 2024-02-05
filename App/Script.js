@@ -668,3 +668,20 @@ function toggleChronosState() {
     isChronosActif = !isChronosActif;
 }
 
+function adjustSearchInputWidth() {
+    const toggleButton = document.getElementById('toggleButton');
+    const searchInput = document.getElementById('searchInput');
+
+    // Obtenir la largeur du bouton
+    const buttonWidth = toggleButton.offsetWidth;
+
+    // Ajuster la marge gauche et la largeur du searchInput en fonction de la largeur du bouton
+    searchInput.style.marginLeft = `${buttonWidth + 5}px`; // Ajouter 5px d'espacement
+    searchInput.style.width = `calc(100% - ${buttonWidth + 10}px)`; // Ajouter 8px pour l'espacement et les bordures
+}
+
+// Appeler la fonction pour ajuster la largeur initiale
+adjustSearchInputWidth();
+
+// Ajouter également un écouteur d'événement sur le redimensionnement de la fenêtre (si nécessaire)
+window.addEventListener('resize', adjustSearchInputWidth);
