@@ -7,17 +7,71 @@
     <!-- Vos balises meta et liens vers des fichiers externes ici -->
 </head>
 <body>
-    <div class="container">
-        <h1>Liste des lieux</h1>
-        <ul id="lieux-list" class="lieux-list"></ul>
+<div class="tab">
+    <div id="creerButton" class="tab-button" onclick="openTab('creer')">Créer</div>
+    <div id="interventionsButton" class="tab-button" onclick="openTab('interventions')">Interventions</div>
+</div>
+
+
+
+<div id="creerTab" class="tabcontent">
+        <!-- Contenu de l'onglet "Créer" -->
+        <div class="container">
+            <h1>Liste des lieux</h1>
+            <ul id="lieux-list" class="lieux-list"></ul>
+        </div>
+
     </div>
+ 
 
+<div id="interventionsTab" class="tabcontent">
+    <!-- Contenu de l'onglet "Interventions" -->
+    <div class="container">
+                <div class="buttons-container">
+            <button onclick="exportToTxt()">Exporter les interventions</button>
+            <button onclick="deleteCookies()">Supprimer les cookies</button>
+        </div>
+        <div id="enregistrements"></div>
+        <!-- Ajout des nouveaux boutons -->
 
+    </div>
+</div>
 
 
 </body>
 </html>
 <style>
+    .tab {
+        display: flex;
+        background-color: #1e1e1e;
+        color: #fff;
+
+    }
+
+    .tab-button {
+        cursor: pointer;
+        padding: 10px;
+        flex: 1;
+        box-sizing: border-box;
+        text-align: center;
+        background-color: ##333;
+        color: #fff;
+            border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    }
+
+    /* Style pour le bouton actif */
+/* Style pour le bouton actif */
+.tab-button.active {
+    background-color: #333;
+    color: #FFF;
+}
+
+
+    /* Style pour le contenu des onglets */
+    .tabcontent {
+        display: none;
+    }
     body {
     font-family: 'Arial', sans-serif;
     background-color: #1e1e1e; /* Fond sombre pour le corps de la page */
@@ -28,10 +82,11 @@
 
 .container {
      max-width: 100%; /* Modification pour occuper la largeur totale sur les petits écrans */
-    margin: 10px auto;
+
     background-color: #333; /* Fond sombre pour le conteneur principal */
     padding: 20px;
-    border-radius: 8px;
+border-bottom-right-radius: 20px; /* Rayon pour l'angle inférieur droit */
+    border-bottom-left-radius: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
@@ -68,10 +123,11 @@ h1 {
 
 .lieux-list li .modal-content {
     background-color: #333; /* Fond sombre pour le contenu de la modal */
-    margin: 5% auto;
+    margin: 0.5% auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 80%;
+    width: 90%;
+    border-radius: 8px;
   }
 }
 
@@ -95,8 +151,42 @@ h1 {
     .container {
         max-width: 100%;
         /* ... autres styles ... */
+
+
     }
 }
+#enregistrements {
+     margin-top: 20px; /* Utilisez padding-top pour spécifier le remplissage en haut */
+}
+
+.place-details {
+    display: flex;
+    flex-direction: column; /* Afficher les éléments en colonne */
+}
+
+/* Ajouter cette règle pour chaque bouton dans placeDetails */
+.place-details button {
+    margin-top: 10px; /* Ajouter un espace entre les boutons */
+}
+.buttons-container {
+    margin-top: 20px; /* Espacement par rapport au contenu précédent */
+}
+
+.buttons-container button {
+    padding: 10px;
+    margin-right: 10px;
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.buttons-container button:hover {
+    background-color: #2980b9;
+}
+
+
 </style>
 
 
@@ -109,9 +199,50 @@ let timers = {};
     return time < 10 ? '0' + time : time;
 }
 document.addEventListener("DOMContentLoaded", function () {
-    // Prompt the user for credentials
     chargerLieux();
+    afficherEnregistrements();
+    setDefaultTab(); // Appel de la fonction pour ouvrir l'onglet par défaut
 });
+
+
+function afficherEnregistrements() {
+    const enregistrementsDiv = document.getElementById('enregistrements');
+    const enregistrements = localStorage.getItem('enregistrements');
+
+    if (enregistrements) {
+        enregistrementsDiv.innerHTML = enregistrements;
+    }
+}
+function setDefaultTab() {
+    // Ouvrir l'onglet "Créer" par défaut
+    openTab('creer');
+}
+
+function openTab(tabName) {
+    var i, tabcontent, tabbuttons;
+
+    // Cacher tous les onglets
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+
+    // Retirer la classe "active" de tous les boutons
+    tabbuttons = document.getElementsByClassName("tab-button");
+    for (i = 0; i < tabbuttons.length; i++) {
+        tabbuttons[i].classList.remove("active");
+    }
+
+    // Afficher l'onglet sélectionné
+    document.getElementById(tabName + "Tab").style.display = "block";
+
+    // Ajouter la classe "active" au bouton correspondant
+    document.getElementById(tabName + "Button").classList.add("active");
+}
+
+
+
+
 
 function chargerLieux() {
     fetch('lieux.json')
@@ -122,12 +253,15 @@ function chargerLieux() {
 
             data.forEach(nomLieu => {
                 const lieuItem = document.createElement('li');
-                lieuItem.innerHTML = `<div class="place-card" onclick="ouvrirModal('${nomLieu}')">${nomLieu}</div>`;
+                lieuItem.innerHTML = `<div class="place-card" onclick="ouvrirModal('${nomLieu}')">
+                                        <span class="pastille" id="pastille-${nomLieu}"></span>${nomLieu}
+                                     </div>`;
                 lieuxList.appendChild(lieuItem);
             });
         })
         .catch(error => console.error('Erreur de chargement des lieux', error));
 }
+
 
 function ouvrirModal(nomLieu) {
 
@@ -158,18 +292,22 @@ annulerButton.textContent = 'Annuler';
 annulerButton.onclick = annuler;
 
 
-    const pauseButton = document.createElement('button');
-    pauseButton.textContent = 'Pause';
-    pauseButton.onclick = function () {
-        togglePause(pauseButton, nomLieu);
-    };
+ const pauseButton = document.createElement('button');
+pauseButton.textContent = 'Pause';
+pauseButton.style.backgroundColor = 'yellow';
+pauseButton.style.color = 'black';
+pauseButton.onclick = function () {
+    togglePause(pauseButton, nomLieu);
+};
 
-    const enregistrerButton = document.createElement('button');
-    enregistrerButton.textContent = 'Enregistrer';
+const enregistrerButton = document.createElement('button');
+enregistrerButton.textContent = 'Enregistrer';
+enregistrerButton.style.backgroundColor = 'red';
+enregistrerButton.style.color = 'black';  // La couleur du texte
+enregistrerButton.onclick = function () {
+    toggleSave(pauseButton, nomLieu);  // Correction du nom du bouton
+};
 
-    enregistrerButton.onclick = function () {
-        toggleSave(pauseButton, nomLieu);
-    };
     // Append elements to placeDetails
     placeDetails.appendChild(chronoStatus);
     placeDetails.appendChild(chrono);
@@ -249,6 +387,8 @@ function togglePause(button, nomLieu) {
         timer.chronoStatus.style.color = 'yellow';
         // Change the button text to "Reprendre"
         button.textContent = 'Reprendre';
+                button.style.backgroundColor = 'green';
+        button.style.color = 'White';
     } else {
         // Resume the timer
         if (!timer.seconds) timer.seconds = 0;
@@ -281,35 +421,70 @@ function togglePause(button, nomLieu) {
         timer.chronoStatus.style.color = 'green';
         // Change the button text back to "Pause"
         button.textContent = 'Pause';
+        button.style.backgroundColor = 'yellow';
+        button.style.color = 'Black';
     }
 }
 
 function toggleSave(button, nomLieu) {
     const modalContent = event.target.closest('.modal-content');
 
+
     // Stop the timer
-
     const timer = timers[nomLieu];
+    timer.isPaused = !timer.isPaused;
+    clearInterval(timer.timerInterval);
 
+    // Update the timer status
+    const chronoStatus = modalContent.querySelector('.chrono-status');
+    chronoStatus.textContent = 'Fini';
+    chronoStatus.style.color = 'red';
 
-        clearInterval(timer.timerInterval);
+    // Retrieve the text from the textarea
+    const zoneTexte = modalContent.querySelector('#zone-texte');
+    const texteEnregistre = zoneTexte.value;
 
-        // Update the timer status
-        const chronoStatus = modalContent.querySelector('#chrono-status');
-        timer.chronoStatus.textContent = 'Fini';
-        timer.chronoStatus.style.color = 'red';
+    // Check if the textarea is not empty
+    if (texteEnregistre.trim() !== "") {
+        // Get the current date
+        const currentDate = new Date();
+        const formattedDate = `${currentDate.getDate()}/${currentDate.getMonth() + 1}/${currentDate.getFullYear()}`;
 
-        // TODO: Ajouter la logique pour enregistrer l'action
+        // Ask for confirmation before clearing the textarea
+        const confirmation = window.confirm(`Voulez-vous vraiment enregistrer le texte du ${formattedDate} ?\nCela effacera le contenu actuel.`);
 
-        // Exemple : récupérer le texte de la zone de texte
-        const zoneTexte = modalContent.querySelector('#zone-texte');
-        const texteEnregistre = zoneTexte.value;
+        if (confirmation) {
+            // Display the pastille and recorded information
 
-        // Exemple de log pour montrer que le texte a été enregistré
-        console.log(`Action enregistrée pour ${nomLieu}: ${texteEnregistre}`);
-    
+    const enregistrementsDiv = document.getElementById('enregistrements');
+    const tempsEnregistre = timer.chrono.textContent;
+    const currentDate = new Date();
+    const formattedDate = `${currentDate.getDate()}/${currentDate.getMonth() + 1}/${currentDate.getFullYear()}`;
+    const enregistrementTexte = `${formattedDate} - ${tempsEnregistre} - ${nomLieu} - ${texteEnregistre}`;
+    enregistrementsDiv.innerHTML += `<p>${enregistrementTexte}</p>`;
+
+    // Save the information to localStorage
+    sauvegarderEnregistrement(enregistrementTexte);
+
+    fermerModal(modalContent);
+        }
+    } else {
+        // Show a message if the textarea is empty
+        alert("Le contenu est vide. Veuillez entrer du texte avant d'enregistrer.");
+    }
+
+    // Reset the button styles
+    button.textContent = 'Reprendre';
+    button.style.backgroundColor = 'green';
+    button.style.color = 'white';
 }
 
+function sauvegarderEnregistrement(enregistrement) {
+    const enregistrementsDiv = document.getElementById('enregistrements');
+    const enregistrements = localStorage.getItem('enregistrements') || "";
+    const nouvelEnregistrement = `${enregistrements}${enregistrement}<br>`;
+    localStorage.setItem('enregistrements', nouvelEnregistrement);
+}
 
 
 function annuler() {
@@ -334,13 +509,54 @@ function fermerModal(modalContent) {
 
 
 
-function reprendre() {
-    // TODO: Add logic for resuming the action
+
+
+function exportToTxt() {
+    const enregistrementsDiv = document.getElementById('enregistrements');
+    const enregistrementsData = enregistrementsDiv.innerText;
+
+    // Créer un objet Date pour obtenir la date d'aujourd'hui
+    const currentDate = new Date();
+    const formattedDate = `${currentDate.getDate()}-${currentDate.getMonth() + 1}-${currentDate.getFullYear()}`;
+
+    // Générer le contenu du fichier texte avec la date et les enregistrements
+    const fileContent = `Export du ${formattedDate}\n\n${enregistrementsData}`;
+
+    // Créer un objet Blob pour le contenu du fichier
+    const blob = new Blob([fileContent], { type: 'text/plain' });
+
+    // Créer un objet URL pour le Blob
+    const url = URL.createObjectURL(blob);
+
+    // Créer un élément de lien pour déclencher le téléchargement
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `export_${formattedDate}.txt`;
+
+    // Ajouter le lien à la page et déclencher le téléchargement
+    document.body.appendChild(link);
+    link.click();
+
+    // Retirer le lien de la page une fois le téléchargement terminé
+    document.body.removeChild(link);
 }
 
 
 
+function deleteCookies() {
+    // Demander une confirmation avant de supprimer tous les enregistrements
+    const confirmation = window.confirm("Êtes-vous sûr de vouloir supprimer tous les enregistrements ?");
 
+    if (confirmation) {
+        // Supprimer tous les enregistrements dans localStorage
+        localStorage.removeItem('enregistrements');
+
+        // Rafraîchir ou mettre à jour l'affichage des enregistrements
+        afficherEnregistrements();
+
+        alert("Tous les enregistrements ont été supprimés");
+    }
+}
 
 
 </script>
