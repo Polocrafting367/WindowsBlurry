@@ -18,7 +18,7 @@
         <!-- Contenu de l'onglet "Créer" -->
         <div class="container">
             <h1>Choix du Lieux, Machine</h1>
-
+ <button id="Actif" onclick="afficherChronos()">Afficher les crhonos</button>
     <input type="text" id="searchInput" placeholder="Rechercher un lieu..." oninput="searchLieu()">
 
 
@@ -46,6 +46,15 @@
 </body>
 </html>
 <style>
+#Actif{
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    padding: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 5px;
+}
     .tab {
         display: flex;
         background-color: #1e1e1e;
@@ -326,10 +335,15 @@ function chargerLieux() {
 
 function ouvrirModal(nomLieu) {
 
+
     // Find the corresponding list item
     const listItem = event.target.closest('li');
+    const placeCard = listItem.querySelector('.place-card');
+    const pastilleSpan = placeCard.querySelector('.pastille');
 
-   // Create a new modal content
+    // Ajoutez " - actif" à l'ancien texte
+    pastilleSpan.textContent = pastilleSpan.textContent + 'Actif - ';
+
     const modalContent = document.createElement('div');
     modalContent.classList.add('modal-content');
 
@@ -528,6 +542,8 @@ function toggleSave(button, nomLieu) {
     sauvegarderEnregistrement(enregistrementTexte);
 
     fermerModal(modalContent);
+
+
         }
     } else {
         // Show a message if the textarea is empty
@@ -660,4 +676,33 @@ function searchLieu() {
             
             return confirmationMessage;
         });
+
+
+
+function afficherChronos() {
+    const lieuxList = document.getElementById('lieux-list');
+    const lieuxItems = lieuxList.getElementsByTagName('li');
+
+    // Mettre à jour la valeur de la zone de recherche avec "Actif"
+    const searchInput = document.getElementById('searchInput');
+    searchInput.value = 'actif';
+
+    // Parcourir la liste des lieux
+    for (let i = 0; i < lieuxItems.length; i++) {
+        const lieuName = lieuxItems[i].innerText.toLowerCase();
+
+        // Vérifier si le lieu contient "Actif" dans son nom
+        if (lieuName.includes('actif')) {
+            // Afficher l'élément
+            lieuxItems[i].style.display = 'block';
+            lieuxItems[i].classList.add('active');
+        } else {
+            // Cacher les éléments qui ne contiennent pas "Actif"
+            lieuxItems[i].style.display = 'none';
+            lieuxItems[i].classList.remove('active');
+        }
+    }
+}
+
+
 </script>
