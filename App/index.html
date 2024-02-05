@@ -17,7 +17,7 @@
 <div id="creerTab" class="tabcontent">
         <!-- Contenu de l'onglet "Créer" -->
         <div class="container">
-            <h1>Liste des lieux</h1>
+            <h1>Choix du Lieux, Machine</h1>
 
     <input type="text" id="searchInput" placeholder="Rechercher un lieu..." oninput="searchLieu()">
 
@@ -101,8 +101,16 @@ h1 {
 
 .lieux-list {
     list-style: none;
-    padding: 0;
+    padding: 10px;
+    max-height: calc(90vh - 150px);
+    overflow: auto;
+    box-shadow: 0px 0px 20px rgba(100, 100, 100, 0.5); /* Ajoute une ombre légère */
+    background:  rgba(0, 0, 0, 0.3); /* Éclaircit légèrement le fond */
+    border-radius: 10px
 }
+
+
+
 
 .lieux-list li {
     background-color: #555; /* Fond sombre pour chaque élément de lieu */
@@ -159,8 +167,21 @@ h1 {
     }
 }
 #enregistrements {
-     margin-top: 20px; /* Utilisez padding-top pour spécifier le remplissage en haut */
+    margin-top: 20px;
+    max-height: calc(100vh - 150px);
+    overflow: auto;
+    box-shadow: 0px 0px 20px rgba(100, 100, 100, 0.5);
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    padding: 10px;
+    line-height: 1.5; /* Espace entre les lignes */
 }
+
+#enregistrements p {
+    margin: 5px 0; /* Force une marge de 5px en haut et en bas de chaque paragraphe */
+    font-size: 18px; /* Modifiez la taille du texte selon vos besoins */
+}
+
 #searchInput {
     background-color: #CCC;
     border-radius: 8px;
@@ -229,6 +250,8 @@ h1 {
 
 let timers = {};
 
+
+
         function formatTime(time) {
     return time < 10 ? '0' + time : time;
 }
@@ -279,7 +302,10 @@ function openTab(tabName) {
 
 
 function chargerLieux() {
-    fetch('lieux.json')
+    const randomParam = Math.random(); // Ajouter un paramètre aléatoire
+    const url = `lieux.json?random=${randomParam}`;
+
+    fetch(url)
         .then(response => response.json())
         .then(data => {
             const lieuxList = document.getElementById('lieux-list');
@@ -295,6 +321,7 @@ function chargerLieux() {
         })
         .catch(error => console.error('Erreur de chargement des lieux', error));
 }
+
 
 
 function ouvrirModal(nomLieu) {
@@ -586,12 +613,11 @@ function deleteCookies() {
         localStorage.removeItem('enregistrements');
 
         // Rafraîchir ou mettre à jour l'affichage des enregistrements
-        afficherEnregistrements();
+        location.reload();
 
         alert("Tous les enregistrements ont été supprimés");
     }
 }
-
 
 
 function searchLieu() {
@@ -605,8 +631,10 @@ function searchLieu() {
     for (let i = 0; i < lieuxItems.length; i++) {
         const lieuName = lieuxItems[i].innerText.toLowerCase();
 
-        // Vérifier si le terme de recherche est inclus dans le nom du lieu
-        if (lieuName.includes(searchTerm)) {
+        // Utiliser une expression régulière pour chercher le terme de recherche n'importe où dans le texte
+        const regex = new RegExp(searchTerm, 'i');
+        
+        if (lieuName.match(regex)) {
             // Afficher l'élément trouvé
             lieuxItems[i].style.display = 'block';
             lieuxItems[i].classList.add('active');
@@ -619,23 +647,7 @@ function searchLieu() {
 }
 
 
-function chargerLieux() {
-    fetch('lieux.json')
-        .then(response => response.json())
-        .then(data => {
-            const lieuxList = document.getElementById('lieux-list');
-            lieuxList.innerHTML = '';
 
-            data.forEach(nomLieu => {
-                const lieuItem = document.createElement('li');
-                lieuItem.innerHTML = `<div class="place-card" onclick="ouvrirModal('${nomLieu}')">
-                                        <span class="pastille" id="pastille-${nomLieu}"></span>${nomLieu}
-                                     </div>`;
-                lieuxList.appendChild(lieuItem);
-            });
-        })
-        .catch(error => console.error('Erreur de chargement des lieux', error));
-}
 
 
 
