@@ -1,13 +1,5 @@
 
-#Actif{
-    background-color: #3498db;
-    color: #fff;
-    border: none;
-    padding: 8px;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-right: 5px;
-}
+
     .tab {
         display: flex;
         background-color: #1e1e1e;
@@ -156,14 +148,26 @@ h1 {
 
 }
 
+
+#toggleButton {
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    padding: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
 #searchInput {
     background-color: #CCC;
     border-radius: 8px;
     color: black;
-   max-width: 100%; /* Utilisation de width pour définir la largeur */
-width: calc(100% - 105px);
+    width: calc(100% - 130px); /* Déduit la marge droite du bouton + 3px pour l'espacement */
     height: 33px;
+    margin-left: 8px; /* Marge pour aligner avec le bouton */
 }
+
 
 .place-details {
     display: flex;

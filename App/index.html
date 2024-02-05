@@ -1,10 +1,7 @@
 <html lang="fr" translate="no">
 <head translate="no">
  <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
     <title>Interventions</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -19,7 +16,8 @@
     <!-- Contenu de l'onglet "Créer" -->
     <div class="container">
         <h1>Choix du Lieu, Machine</h1>
-        <button id="Actif" onclick="afficherChronos()">Chronos Actif</button>
+        <button id="toggleButton" onclick="toggleChronosState()">Chronos Actif</button>
+
         <input type="text" id="searchInput" placeholder="Rechercher un lieu..." oninput="searchLieu()">
         <ul id="lieux-list" class="lieux-list"></ul>
     </div>
@@ -31,7 +29,7 @@
         <div class="buttons-container">
             <h1>Interventions</h1>
             <button onclick="exportToTxt()">Exporter les interventions</button>
-            <button onclick="deleteCookies()">Supprimer les cookies</button>
+            <button id="dell" onclick="deleteCookies()">Supprimer les interventions</button>
         </div>
         <div id="enregistrements"></div>
     </div>

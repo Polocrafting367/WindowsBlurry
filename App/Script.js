@@ -620,29 +620,51 @@ function searchLieu() {
         });
 
 
+let isChronosActif = true; // Variable pour suivre l'état actuel
 
-function afficherChronos() {
+function toggleChronosState() {
     const lieuxList = document.getElementById('lieux-list');
     const lieuxItems = lieuxList.getElementsByTagName('li');
-
-    // Mettre à jour la valeur de la zone de recherche avec "Actif"
     const searchInput = document.getElementById('searchInput');
-    searchInput.value = 'actif';
 
-    // Parcourir la liste des lieux
-    for (let i = 0; i < lieuxItems.length; i++) {
-        const lieuName = lieuxItems[i].innerText.toLowerCase();
+    if (isChronosActif) {
+        // Mettre à jour la valeur de la zone de recherche avec "Actif"
+        searchInput.value = 'actif';
 
-        // Vérifier si le lieu contient "Actif" dans son nom
-        if (lieuName.includes('actif')) {
-            // Afficher l'élément
+        // Parcourir la liste des lieux
+        for (let i = 0; i < lieuxItems.length; i++) {
+            const lieuName = lieuxItems[i].innerText.toLowerCase();
+
+            // Vérifier si le lieu contient "Actif" dans son nom
+            if (lieuName.includes('actif')) {
+                // Afficher l'élément
+                lieuxItems[i].style.display = 'block';
+                lieuxItems[i].classList.add('active');
+            } else {
+                // Cacher les éléments qui ne contiennent pas "Actif"
+                lieuxItems[i].style.display = 'none';
+                lieuxItems[i].classList.remove('active');
+            }
+        }
+
+        // Mettre à jour le texte du bouton
+        document.getElementById('toggleButton').innerText = 'Retour';
+
+    } else {
+        // Réinitialiser la recherche
+        searchInput.value = '';
+
+        // Afficher tous les éléments
+        for (let i = 0; i < lieuxItems.length; i++) {
             lieuxItems[i].style.display = 'block';
-            lieuxItems[i].classList.add('active');
-        } else {
-            // Cacher les éléments qui ne contiennent pas "Actif"
-            lieuxItems[i].style.display = 'none';
             lieuxItems[i].classList.remove('active');
         }
+
+        // Mettre à jour le texte du bouton
+        document.getElementById('toggleButton').innerText = 'Chronos Actif';
     }
+
+    // Inverser l'état
+    isChronosActif = !isChronosActif;
 }
 
