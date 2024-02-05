@@ -10,7 +10,6 @@
     <div class="container">
         <h1>Liste des lieux</h1>
         <ul id="lieux-list" class="lieux-list"></ul>
-        <button onclick="ajouterLieu()">Ajouter lieu</button>
     </div>
 
 
@@ -28,8 +27,8 @@
 }
 
 .container {
-    max-width: 600px;
-    margin: 20px auto;
+     max-width: 100%; /* Modification pour occuper la largeur totale sur les petits écrans */
+    margin: 10px auto;
     background-color: #333; /* Fond sombre pour le conteneur principal */
     padding: 20px;
     border-radius: 8px;
@@ -73,6 +72,7 @@ h1 {
     padding: 20px;
     border: 1px solid #888;
     width: 80%;
+  }
 }
 
 .lieux-list li textarea {
@@ -89,18 +89,27 @@ h1 {
     #chrono .seconds {
         color: gray;
     }
+
+    @media screen and (max-width: 600px) {
+    /* Styles spécifiques aux petits écrans */
+    .container {
+        max-width: 100%;
+        /* ... autres styles ... */
+    }
+}
 </style>
 
 
 
 <script>
 
-document.addEventListener("DOMContentLoaded", function() {
-        // Prompt the user for credentials
-    const username = prompt("Enter your username:");
+let timers = {};
 
-    // Check if the provided username is valid
-    authenticateUser(username);
+        function formatTime(time) {
+    return time < 10 ? '0' + time : time;
+}
+document.addEventListener("DOMContentLoaded", function () {
+    // Prompt the user for credentials
     chargerLieux();
 });
 
@@ -119,19 +128,22 @@ function chargerLieux() {
         })
         .catch(error => console.error('Erreur de chargement des lieux', error));
 }
+
 function ouvrirModal(nomLieu) {
+
     // Find the corresponding list item
     const listItem = event.target.closest('li');
 
-    // Create a new modal content
+   // Create a new modal content
     const modalContent = document.createElement('div');
     modalContent.classList.add('modal-content');
 
     const placeDetails = document.createElement('div');
-    placeDetails.id = 'place-details';
+    placeDetails.classList.add('place-details');  // Ajouter une classe unique
 
     const chronoStatus = document.createElement('div');
-    chronoStatus.id = 'chrono-status';
+    chronoStatus.classList.add('chrono-status');  // Ajouter une classe unique
+
 
     const chrono = document.createElement('div');
     chrono.id = 'chrono';
@@ -141,18 +153,23 @@ function ouvrirModal(nomLieu) {
     zoneTexte.id = 'zone-texte';
     zoneTexte.placeholder = 'Saisissez quelque chose...';
 
-    const annulerButton = document.createElement('button');
-    annulerButton.textContent = 'Annuler';
-    annulerButton.onclick = annuler;
+const annulerButton = document.createElement('button');
+annulerButton.textContent = 'Annuler';
+annulerButton.onclick = annuler;
+
 
     const pauseButton = document.createElement('button');
     pauseButton.textContent = 'Pause';
-    pauseButton.onclick = pause;
+    pauseButton.onclick = function () {
+        togglePause(pauseButton, nomLieu);
+    };
 
     const enregistrerButton = document.createElement('button');
     enregistrerButton.textContent = 'Enregistrer';
-    enregistrerButton.onclick = enregistrer;
 
+    enregistrerButton.onclick = function () {
+        toggleSave(pauseButton, nomLieu);
+    };
     // Append elements to placeDetails
     placeDetails.appendChild(chronoStatus);
     placeDetails.appendChild(chrono);
@@ -164,32 +181,41 @@ function ouvrirModal(nomLieu) {
     // Append elements to modalContent
     modalContent.appendChild(placeDetails);
 
-    // Append modalContent to the list item
-    listItem.innerHTML = '';  // Clear previous content
+
     listItem.appendChild(modalContent);
 
     // Clear previous content
     zoneTexte.value = '';
 
     // Create a basic timer
- let hours = 0;
+  let hours = 0;
     let minutes = 0;
     let seconds = 0;
     let timerInterval;
 
-    // Update the timer display every second
-    timerInterval = setInterval(() => {
-        seconds++;
-        if (seconds === 60) {
-            minutes++;
-            seconds = 0;
-        }
-        if (minutes === 60) {
-            hours++;
-            minutes = 0;
-        }
+    timers[nomLieu] = {
+        timerInterval: timerInterval,
+        isPaused: false,
+        hours: 0,
+        minutes: 0,
+        seconds: 0
+    };
 
-        chrono.innerHTML = `${formatTime(hours)}:${formatTime(minutes)}:<span class="seconds">${formatTime(seconds)}</span>`;
+    // Update the timer display every second
+ timerInterval = setInterval(() => {
+        if (!timers[nomLieu].isPaused) {
+            seconds++;
+            if (seconds === 60) {
+                minutes++;
+                seconds = 0;
+            }
+            if (minutes === 60) {
+                hours++;
+                minutes = 0;
+            }
+
+            chrono.textContent = formatTime(hours) + ':' + formatTime(minutes) + ':' + formatTime(seconds);
+        }
     }, 1000);
 
     // Update the timer status
@@ -197,113 +223,124 @@ function ouvrirModal(nomLieu) {
     chronoStatus.style.color = 'green';
 
     // Function to format time as '00'
-    function formatTime(time) {
-        return time < 10 ? '0' + time : time;
+
+    // Store the interval ID and pause state in a data attribute
+    timers[nomLieu] = {
+        timerInterval: timerInterval,
+        isPaused: false,
+        chronoStatus: chronoStatus,
+        chrono: chrono
+    };
+
+}
+
+
+
+function togglePause(button, nomLieu) {
+    const timer = timers[nomLieu];
+
+    timer.isPaused = !timer.isPaused;
+
+    if (timer.isPaused) {
+        // Pause the timer
+        clearInterval(timer.timerInterval);
+        // Update the timer status
+        timer.chronoStatus.textContent = 'En pause';
+        timer.chronoStatus.style.color = 'yellow';
+        // Change the button text to "Reprendre"
+        button.textContent = 'Reprendre';
+    } else {
+        // Resume the timer
+        if (!timer.seconds) timer.seconds = 0;
+        if (!timer.minutes) timer.minutes = 0;
+        if (!timer.hours) timer.hours = 0;
+
+        let startSeconds = timer.seconds;
+        let startMinutes = timer.minutes;
+        let startHours = timer.hours;
+
+        timer.timerInterval = setInterval(() => {
+            if (!timer.isPaused) {
+                timer.seconds++;
+                if (timer.seconds === 60) {
+                    timer.minutes++;
+                    timer.seconds = 0;
+                }
+                if (timer.minutes === 60) {
+                    timer.hours++;
+                    timer.minutes = 0;
+                }
+
+                // Utiliser la fonction formatTime ici
+                timer.chrono.textContent = formatTime(timer.hours) + ':' + formatTime(timer.minutes) + ':' + formatTime(timer.seconds);
+            }
+        }, 1000);
+
+        // Update the timer status
+        timer.chronoStatus.textContent = 'En cours';
+        timer.chronoStatus.style.color = 'green';
+        // Change the button text back to "Pause"
+        button.textContent = 'Pause';
     }
-
-    // Store the interval ID in a data attribute
-    modalContent.setAttribute('data-timer-interval', timerInterval);
 }
 
-function pause() {
+function toggleSave(button, nomLieu) {
     const modalContent = event.target.closest('.modal-content');
-    const chronoStatus = modalContent.querySelector('#chrono-status');
 
-    // Pause the timer
-    const timerInterval = modalContent.getAttribute('data-timer-interval');
-    clearInterval(timerInterval);
+    // Stop the timer
 
-    // Update the timer status
-    chronoStatus.textContent = 'En pause';
-    chronoStatus.style.color = 'yellow';
+    const timer = timers[nomLieu];
+
+
+        clearInterval(timer.timerInterval);
+
+        // Update the timer status
+        const chronoStatus = modalContent.querySelector('#chrono-status');
+        timer.chronoStatus.textContent = 'Fini';
+        timer.chronoStatus.style.color = 'red';
+
+        // TODO: Ajouter la logique pour enregistrer l'action
+
+        // Exemple : récupérer le texte de la zone de texte
+        const zoneTexte = modalContent.querySelector('#zone-texte');
+        const texteEnregistre = zoneTexte.value;
+
+        // Exemple de log pour montrer que le texte a été enregistré
+        console.log(`Action enregistrée pour ${nomLieu}: ${texteEnregistre}`);
+    
 }
 
-function fermerModal() {
-    const modalContent = event.target.closest('.modal-content');
 
+
+function annuler() {
+    // Afficher la confirmation
+    const confirmation = window.confirm('Êtes-vous sûr de vouloir annuler ?');
+
+    // Si l'utilisateur clique sur "OK" dans la confirmation, fermer la modal
+    if (confirmation) {
+        const modalContent = event.target.closest('.modal-content');
+        fermerModal(modalContent);
+    }
+    // Sinon, ne rien faire
+}
+
+function fermerModal(modalContent) {
     // Clear the interval when closing the modal
-    const timerInterval = modalContent.getAttribute('data-timer-interval');
-    clearInterval(timerInterval);
+    const nomLieu = modalContent.getAttribute('data-nom-lieu');
 
     // Remove the modal content from its parent
     modalContent.parentNode.removeChild(modalContent);
 }
 
-function annuler() {
-    // TODO: Add logic for canceling the action
-}
+
 
 function reprendre() {
     // TODO: Add logic for resuming the action
 }
 
-function enregistrer() {
-    const modalContent = event.target.closest('.modal-content');
-    const chronoStatus = modalContent.querySelector('#chrono-status');
 
-    // Stop the timer
-    const timerInterval = modalContent.getAttribute('data-timer-interval');
-    clearInterval(timerInterval);
 
-    // Update the timer status
-    chronoStatus.textContent = 'Fini';
-    chronoStatus.style.color = 'red';
 
-    // TODO: Add logic for saving the action
-}
-function ajouterLieu() {
-    const identifiant = "paul";
-    const psw = "367";
 
-    // Fetch the existing locations from the JSON file
-    fetch('lieux.json')
-        .then(response => response.json())
-        .then(data => {
-            // Check if the location with the specified identifier already exists
-            const existingLocation = data.find(location => location.identifiant === identifiant);
-            if (existingLocation) {
-                alert("Location with the same identifier already exists!");
-                return;
-            }
-
-            // Add the new location
-            const newLocation = {
-                identifiant: identifiant,
-                psw: psw
-            };
-
-            data.push(newLocation);
-
-            // Update the JSON file with the new data using the PUT method
-            fetch('lieux.json', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            })
-            .then(response => response.json())
-            .then(() => {
-                // Reload the list of locations
-                chargerLieux();
-            })
-            .catch(error => console.error('Erreur lors de l\'ajout du lieu', error));
-        })
-        .catch(error => console.error('Erreur de chargement des lieux', error));
-}
-
-function authenticateUser(username) {
-    // Fetch the list of usernames from the JSON file
-    fetch('users.json')
-        .then(response => response.json())
-        .then(usernames => {
-            // Check if the provided username is in the list
-            if (!usernames.includes(username)) {
-                // If not found, show an error message
-                alert("Error: Username not found. Please try again.");
-            }
-        })
-        .catch(error => console.error('Error loading usernames', error));
-}
 
 </script>
