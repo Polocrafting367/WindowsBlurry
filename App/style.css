@@ -1,0 +1,320 @@
+
+#Actif{
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    padding: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 5px;
+}
+    .tab {
+        display: flex;
+        background-color: #1e1e1e;
+        color: #fff;
+
+    }
+
+    .tab-button {
+        cursor: pointer;
+        padding: 10px;
+        flex: 1;
+        box-sizing: border-box;
+        text-align: center;
+        background-color: #111;
+        color: #fff;
+            border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    }
+
+    /* Style pour le bouton actif */
+/* Style pour le bouton actif */
+.tab-button.active {
+    background-color: #333;
+    color: #FFF;
+}
+
+
+    /* Style pour le contenu des onglets */
+    .tabcontent {
+        display: none;
+    }
+    body {
+    font-family: 'Arial', sans-serif;
+    background-color: #1e1e1e; /* Fond sombre pour le corps de la page */
+    color: #fff; /* Texte en blanc */
+
+    padding: 0;
+
+}
+
+.container {
+    max-width: 100%;
+    height: calc(100vh - 55px); /* 100% de la hauteur de la vue moins la hauteur de la bannière */
+    overflow: hidden;
+    background-color: #333;
+    padding: 20px;
+    border-bottom-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    box-sizing: border-box;
+}
+
+h1 {
+    color: #fff;
+}
+
+.lieux-list {
+    list-style: none;
+    padding: 10px;
+    height: calc(100% - 150px); /* Ajustez en fonction du padding de .container et de la hauteur de la bannière */
+    overflow: auto;
+    box-shadow: 0px 0px 20px rgba(100, 100, 100, 0.5);
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+}
+
+
+.lieux-list li {
+    background-color: #555; /* Fond sombre pour chaque élément de lieu */
+    margin: 10px 0;
+    padding: 15px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.lieux-list li button {
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    padding: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+.lieux-list li button:hover {
+    background-color: #2980b9;
+}
+
+.lieux-list li .modal-content {
+    background-color: rgba(0,0,0,0.5); /* Fond sombre pour le contenu de la modal */
+    margin: 0.5% auto;
+    padding: 20px;
+    border: 0px solid #888;
+    border-radius: 8px;
+  }
+}
+
+.lieux-list li textarea {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 8px;
+    border-radius: 4px;
+}
+
+/* Ajout d'un style pour le mode sombre lorsqu'un lieu est cliqué */
+
+#chrono {
+    font-size: 30px;
+    display: inline-block; /* Assurez-vous que le bloc ne prend que la largeur nécessaire */
+    text-align: center; /* Centrer horizontalement le texte à l'intérieur du bloc */
+    margin: 0; /* Supprimer les marges par défaut qui pourraient affecter le centrage */
+}
+.chrono-status {
+
+
+        font-size: 20px;
+    display: inline-block; /* Assurez-vous que le bloc ne prend que la largeur nécessaire */
+    text-align: center; /* Centrer horizontalement le texte à l'intérieur du bloc */
+    margin: 0;
+}
+
+    @media screen and (max-width: 600px) {
+    /* Styles spécifiques aux petits écrans */
+    .container {
+        max-width: 100%;
+        /* ... autres styles ... */
+
+
+    }
+}
+#enregistrements {
+    margin-top: 20px;
+    max-height: calc(100vh - 150px);
+    overflow: auto;
+    box-shadow: 0px 0px 20px rgba(100, 100, 100, 0.5);
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    padding: 10px;
+    line-height: 1.5; /* Espace entre les lignes */
+}
+
+#enregistrements p {
+    margin: 5px 0; /* Force une marge de 5px en haut et en bas de chaque paragraphe */
+    font-size: 18px; /* Modifiez la taille du texte selon vos besoins */
+}
+
+#searchInput {
+    background-color: #CCC;
+    border-radius: 8px;
+    color: black;
+   max-width: 100%; /* Utilisation de width pour définir la largeur */
+width: calc(100% - 146px);
+    height: 33px;
+}
+
+.place-details {
+    display: flex;
+    flex-direction: column; /* Afficher les éléments en colonne */
+}
+
+/* Ajouter cette règle pour chaque bouton dans placeDetails */
+.place-details button {
+    margin-top: 10px; /* Ajouter un espace entre les boutons */
+}
+.buttons-container {
+    margin-top: 20px; /* Espacement par rapport au contenu précédent */
+}
+
+.buttons-container button {
+    padding: 10px;
+    margin-right: 10px;
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.buttons-container button:hover {
+    background-color: #2980b9;
+}
+.search-container {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.search-container input {
+    padding: 8px;
+}
+
+.search-container button {
+    padding: 8px;
+    cursor: pointer;
+}
+
+.lieux-list li {
+    display: block; /* Assurez-vous que tous les éléments sont visibles par défaut */
+
+    margin: 10px 0;
+    padding: 15px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.lieux-list li.active-chrono {
+    background: linear-gradient(90deg, rgba(150,80,5,1) 0%, rgba(200,150,0,1) 50%, rgba(150,80,5,1) 100%);
+    background-size: 200% 200%;
+    animation: gradientMove 3s infinite;
+    border: 3px solid rgba(200,150,0,1);
+    border-radius: 8px;
+}
+
+.lieux-list li.active-chrono.paused {
+    background: linear-gradient(90deg, rgba(0,25,150,1) 0%, rgba(0,100,255,1) 50%, rgba(0,25,150,1) 100%);
+    border: 3px solid rgba(0,150,255,1);
+}
+
+/* Ajoutez des styles spécifiques pour le bouton de pause en mode "paused" */
+/* Ajoutez ces styles dans votre fichier CSS ou directement dans votre script JS */
+.modal-button {
+    display: inline-block;
+    margin-right: 10px; /* Espace entre les boutons (ajustez selon vos besoins) */
+}
+
+/* Styles spécifiques à la section Paramètres */
+
+#parametresTab h1 {
+    color: #fff;
+}
+
+#parametresTab h2 {
+    color: #fff;
+    margin-top: 20px;
+}
+
+#parametresTab input,
+
+#parametresTab button,
+#parametresTab select {
+    margin-top: 10px;
+    padding: 8px;
+    border-radius: 4px;
+}
+
+#dell {background-color: red !important;
+color: black !important;}
+#parametresTab #nouveauLieu {
+
+
+    width: 100%
+}
+#parametresTab button {
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
+
+#parametresTab button:hover {
+    background-color: #2980b9;
+}
+
+
+
+#parametresTab ul li {
+    background-color: #555;
+    margin: 10px 0;
+    padding: 15px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+#parametresTab ul li button {
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    padding: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+#parametresTab ul li button:hover {
+    background-color: #2980b9;
+}
+
+#parametresTab select {
+    max-width: 100%;
+    width: calc(100% - 16px);
+    height: 33px;
+}
+
+ h2 {
+    margin-top: 20px;
+    font-size: 20px;
+}
+
+
+
+/* Ajoutez ces styles à votre fichier CSS ou dans votre balise style */
+.container hr {
+    border: none; /* Supprimer la bordure par défaut */
+    height: 1px; /* Définir la hauteur de la ligne */
+    background-color: #777; /* Couleur de la ligne */
+    margin: 20px 0; /* Marge autour de la ligne */
+}
