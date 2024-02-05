@@ -16,7 +16,7 @@
     <!-- Contenu de l'onglet "Créer" -->
     <div class="container">
         <h1>Choix du Lieu, Machine</h1>
-        <button id="Actif" onclick="afficherChronos()">Afficher les chronos</button>
+        <button id="Actif" onclick="afficherChronos()">Chronos Actif</button>
         <input type="text" id="searchInput" placeholder="Rechercher un lieu..." oninput="searchLieu()">
         <ul id="lieux-list" class="lieux-list"></ul>
     </div>
@@ -40,14 +40,14 @@
         <!-- Ajoutez le contenu des paramètres ici -->
         <h1>Paramètres</h1>
 
-        <h2>Ajouter un lieu personnalisé <p> (uniquement sur cet appareil)</h2>
+        <h2>Ajouter un lieu personnalisé <p> (uniquement pour cet appareil)</h2>
         <input type="text" id="nouveauLieu" placeholder="Nouveau lieu">
         <button onclick="ajouterLieu()">Ajouter lieu</button>
 
         <!-- Ajouter un séparateur horizontal -->
         <hr>
 
-        <h2>Liste des lieux</h2>
+        <h2>Supprimer un lieu</h2>
         <ul id="lieux-list">
             <!-- La liste des lieux sera affichée ici -->
         </ul>
