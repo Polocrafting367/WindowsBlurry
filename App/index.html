@@ -18,6 +18,11 @@
         <!-- Contenu de l'onglet "Créer" -->
         <div class="container">
             <h1>Liste des lieux</h1>
+
+    <input type="text" id="searchInput" placeholder="Rechercher un lieu..." oninput="searchLieu()">
+
+
+
             <ul id="lieux-list" class="lieux-list"></ul>
         </div>
 
@@ -76,7 +81,7 @@
     font-family: 'Arial', sans-serif;
     background-color: #1e1e1e; /* Fond sombre pour le corps de la page */
     color: #fff; /* Texte en blanc */
-    margin: 0;
+
     padding: 0;
 }
 
@@ -139,9 +144,7 @@ h1 {
 }
 
 /* Ajout d'un style pour le mode sombre lorsqu'un lieu est cliqué */
-.lieux-list li.active {
-    background-color: #2c3e50; /* Fond sombre pour l'élément de lieu actif */
-}
+
     #chrono .seconds {
         color: gray;
     }
@@ -157,6 +160,14 @@ h1 {
 }
 #enregistrements {
      margin-top: 20px; /* Utilisez padding-top pour spécifier le remplissage en haut */
+}
+#searchInput {
+    background-color: #CCC;
+    border-radius: 8px;
+    color: black;
+   max-width: 100%; /* Utilisation de width pour définir la largeur */
+
+    height: 30px;
 }
 
 .place-details {
@@ -180,12 +191,35 @@ h1 {
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
 }
 
 .buttons-container button:hover {
     background-color: #2980b9;
 }
+.search-container {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
 
+.search-container input {
+    padding: 8px;
+}
+
+.search-container button {
+    padding: 8px;
+    cursor: pointer;
+}
+
+.lieux-list li {
+    display: block; /* Assurez-vous que tous les éléments sont visibles par défaut */
+
+    margin: 10px 0;
+    padding: 15px;
+    border-radius: 8px;
+    cursor: pointer;
+}
 
 </style>
 
@@ -557,6 +591,52 @@ function deleteCookies() {
         alert("Tous les enregistrements ont été supprimés");
     }
 }
+
+
+
+function searchLieu() {
+    const searchInput = document.getElementById('searchInput');
+    const searchTerm = searchInput.value.toLowerCase();
+
+    const lieuxList = document.getElementById('lieux-list');
+    const lieuxItems = lieuxList.getElementsByTagName('li');
+
+    // Parcourir la liste des lieux
+    for (let i = 0; i < lieuxItems.length; i++) {
+        const lieuName = lieuxItems[i].innerText.toLowerCase();
+
+        // Vérifier si le terme de recherche est inclus dans le nom du lieu
+        if (lieuName.includes(searchTerm)) {
+            // Afficher l'élément trouvé
+            lieuxItems[i].style.display = 'block';
+            lieuxItems[i].classList.add('active');
+        } else {
+            // Cacher les éléments qui ne correspondent pas
+            lieuxItems[i].style.display = 'none';
+            lieuxItems[i].classList.remove('active');
+        }
+    }
+}
+
+
+function chargerLieux() {
+    fetch('lieux.json')
+        .then(response => response.json())
+        .then(data => {
+            const lieuxList = document.getElementById('lieux-list');
+            lieuxList.innerHTML = '';
+
+            data.forEach(nomLieu => {
+                const lieuItem = document.createElement('li');
+                lieuItem.innerHTML = `<div class="place-card" onclick="ouvrirModal('${nomLieu}')">
+                                        <span class="pastille" id="pastille-${nomLieu}"></span>${nomLieu}
+                                     </div>`;
+                lieuxList.appendChild(lieuItem);
+            });
+        })
+        .catch(error => console.error('Erreur de chargement des lieux', error));
+}
+
 
 
 </script>
