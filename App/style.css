@@ -147,12 +147,13 @@ h1 {
     background: rgba(0, 0, 0, 0.3);
     border-radius: 10px;
     padding: 10px;
-    line-height: 1.5; /* Espace entre les lignes */
+    line-height: 2; /* Espace entre les lignes */
 }
 
 #enregistrements p {
     margin: 5px 0; /* Force une marge de 5px en haut et en bas de chaque paragraphe */
     font-size: 18px; /* Modifiez la taille du texte selon vos besoins */
+
 }
 
 #searchInput {
