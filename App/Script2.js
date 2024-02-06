@@ -257,7 +257,7 @@ function toggleSave(button, nomLieu) {
             pastilleSpan.textContent = pastilleSpan.textContent.replace('Actif - ', '');
             listItem.classList.remove('active-chrono');
             fermerModal(modalContent);
-
+listItem.classList.remove('STOP');
                 lieuxState[nomLieu] = {
         isRunning: false,
         // ... autres propriétés que vous souhaitez suivre ...
@@ -295,7 +295,8 @@ chronoWorker.postMessage('stop');
         const placeCard = listItem.querySelector('.place-card');
         const pastilleSpan = placeCard.querySelector('.pastille');
         pastilleSpan.textContent = pastilleSpan.textContent.replace('Actif - ', '');
-
+listItem.classList.remove('STOP');
+listItem.classList.remove('paused');
         fermerModal(modalContent);
 listItem.classList.remove('active-chrono');
         lieuxState[nomLieu] = {

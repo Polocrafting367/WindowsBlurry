@@ -64,7 +64,7 @@ h1 {
 .lieux-list {
     list-style: none;
     padding: 10px;
-    height: calc(100% - 175px); /* Ajustez en fonction du padding de .container et de la hauteur de la bannière */
+    height: calc(100% - 250px); /* Ajustez en fonction du padding de .container et de la hauteur de la bannière */
     overflow: auto;
     box-shadow: 0px 0px 20px rgba(100, 100, 100, 0.5);
     background: rgba(0, 0, 0, 0.3);
