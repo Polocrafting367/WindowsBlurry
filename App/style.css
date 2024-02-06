@@ -1,5 +1,5 @@
 .tab {
-   /*display: flex;*/
+   display: flex;
    background-color: #1e1e1e;
    color: #fff;
 }
@@ -14,6 +14,9 @@
    color: #fff;
    border-top-left-radius: 20px;
    border-top-right-radius: 20px;
+   overflow: hidden;
+   white-space: nowrap;
+   text-overflow: ellipsis; /* Ajoutez cette ligne pour afficher "..." si le texte dépasse la taille du bouton */
 }
 
 /* Style pour le bouton actif */
@@ -42,7 +45,7 @@
     height: calc(100vh - 55px); /* 100% de la hauteur de la vue moins la hauteur de la bannière */
     overflow: hidden;
     background-color: #333;
-    padding: 20px;
+    padding: 10px;
     border-bottom-right-radius: 20px;
     border-bottom-left-radius: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
@@ -51,12 +54,17 @@
 
 h1 {
     color: #fff;
+
+    margin-block-start: 0em;
+    margin-block-end: 0.6em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
 }
 
 .lieux-list {
     list-style: none;
     padding: 10px;
-    height: calc(100% - 150px); /* Ajustez en fonction du padding de .container et de la hauteur de la bannière */
+    height: calc(100% - 175px); /* Ajustez en fonction du padding de .container et de la hauteur de la bannière */
     overflow: auto;
     box-shadow: 0px 0px 20px rgba(100, 100, 100, 0.5);
     background: rgba(0, 0, 0, 0.3);
@@ -156,9 +164,10 @@ h1 {
     color: #fff;
     border: none;
     padding: 8px;
-    border-radius: 4px;
+    border-radius: 8px;
     cursor: pointer;
     margin-right: 5px;
+        height: 30px;
 }
 
 #searchInput {
@@ -166,7 +175,8 @@ h1 {
     background-color: #CCC;
     border-radius: 8px;
     color: black;
-    height: 33px;
+    height: 30px;
+    border: none;
 }
 
 
@@ -240,6 +250,10 @@ h1 {
     background: linear-gradient(90deg, rgba(0,25,150,1) 0%, rgba(0,100,255,1) 50%, rgba(0,25,150,1) 100%);
     border: 3px solid rgba(0,150,255,1);
 }
+.lieux-list li.active-chrono.STOP {
+    background: linear-gradient(90deg, rgba(150,25,25,1) 0%, rgba(255,10,10,1) 50%, rgba(150,25,25,1) 100%);
+    border: 3px solid rgba(255,25,0,1);
+}
 
 /* Ajoutez des styles spécifiques pour le bouton de pause en mode "paused" */
 /* Ajoutez ces styles dans votre fichier CSS ou directement dans votre script JS */
@@ -268,12 +282,14 @@ h1 {
     border-radius: 4px;
 }
 
-#dell {background-color: red !important;
-color: black !important;}
+#dell {
+    background-color: red !important;
+color: black !important;
+}
 #parametresTab #nouveauLieu {
 
 
-    width: 100%
+    width: calc(100% - 20px)
 }
 #parametresTab button {
     background-color: #3498db;
@@ -313,8 +329,8 @@ color: black !important;}
 
 #parametresTab select {
     max-width: 100%;
-    width: calc(100% - 16px);
-    height: 33px;
+    width: calc(100% );
+    height: 40px;
 }
 
  h2 {
