@@ -1,29 +1,57 @@
-let chronoWorker = new Worker('chrono-worker.js');
 
 
 function ouvrirModal(event, nomLieu) {
+    let pauseButton;
+    let elapsedTime = { hours: 0, minutes: 0, seconds: 0 };
+    let initialTime;
+    let chrono;
 
-chronoWorker.postMessage('start');
+    // Assurez-vous que timers est un tableau
+    if (!Array.isArray(timers)) {
+        timers = [];
+    }
 
+    timer = timers.find(t => t.nomLieu === nomLieu);
+
+    if (!timer) {
+        timer = {
+            nomLieu: nomLieu,
+            timerInterval: null,
+            isPaused: false,
+            hours: 0,
+            minutes: 0,
+            seconds: 0
+        };
+        timers.push(timer);
+    }
+
+ initialTime = new Date();
     // Vérifiez si un chrono est déjà en cours pour ce lieu
     if (lieuxState[nomLieu] && lieuxState[nomLieu].isRunning) {
         alert('Un chrono est déjà en cours pour ce lieu.');
         return;
     }
 
+
     lieuxState[nomLieu] = {
         isRunning: true,
         // ... autres propriétés que vous souhaitez suivre ...
     };
 
+
+  const startDate = new Date();
+    localStorage.setItem(`startTime_${nomLieu}`, startDate.toISOString());
+console.log("enregistrement",startDate);
+
+
+
 const placeDetails = document.createElement('div');
 placeDetails.classList.add('place-details');  // Ajouter une classe unique
 placeDetails.style.display = 'flex'; // Définir la disposition flex
 
-// Créer une div pour contenir les boutons et les aligner en ligne
-const boutonsDiv = document.createElement('div');
-boutonsDiv.style.display = 'flex'; // Définir la disposition flex pour les boutons
-boutonsDiv.style.marginTop = '10px'; // Ajouter un espace au-dessus des boutons (ajustez selon vos besoins)
+   const boutonsDiv = document.createElement('div');
+    boutonsDiv.style.display = 'flex'; // Définir la disposition flex pour les boutons
+    boutonsDiv.style.marginTop = '10px'; // Ajouter un espace au-dessus des boutons (ajustez selon vos besoins)
 
     // Find the corresponding list item
     const listItem = event.target.closest('li');
@@ -42,11 +70,12 @@ boutonsDiv.style.marginTop = '10px'; // Ajouter un espace au-dessus des boutons 
     const chronoStatus = document.createElement('div');
     chronoStatus.classList.add('chrono-status');  // Ajouter une classe unique
 
+chrono = document.createElement('div');
+chrono.id = 'chrono';
+chrono.textContent = '00:00:00';
 
-    const chrono = document.createElement('div');
-    chrono.id = 'chrono';
-    chrono.textContent = '00:00:00';
 
+  
     const zoneTexte = document.createElement('textarea');
     zoneTexte.id = 'zone-texte';
     zoneTexte.placeholder = 'Saisissez quelque chose...';
@@ -57,15 +86,17 @@ annulerButton.classList.add('modal-button');  // Ajoutez une classe
 annulerButton.onclick = annuler;
 annulerButton.style.width = '100%';  // Ajoutez cette ligne pour définir la largeur à 100%
 
-const pauseButton = document.createElement('button');
-pauseButton.textContent = 'Pause';
-pauseButton.classList.add('modal-button');  // Ajoutez une classe
-pauseButton.style.backgroundColor = 'yellow';
-pauseButton.style.color = 'black';
+ pauseButton = document.createElement('button');
+    pauseButton.textContent = 'Pause';
+    pauseButton.classList.add('modal-button');
+    pauseButton.style.backgroundColor = 'yellow';
+    pauseButton.style.color = 'black';
 pauseButton.onclick = function () {
-    togglePause(pauseButton, nomLieu);
+    togglePause(pauseButton, nomLieu, timer);
 };
-pauseButton.style.width = '100%';  // Ajoutez cette ligne pour définir la largeur à 100%
+    pauseButton.style.width = '100%';
+
+    boutonsDiv.appendChild(pauseButton);
 
 const enregistrerButton = document.createElement('button');
 enregistrerButton.textContent = 'Enregistrer';
@@ -73,7 +104,7 @@ enregistrerButton.classList.add('modal-button');  // Ajoutez une classe
 enregistrerButton.style.backgroundColor = 'red';
 enregistrerButton.style.color = 'black';
 enregistrerButton.onclick = function (event) {
-    toggleSave(pauseButton, nomLieu, event);
+    toggleSave(pauseButton, nomLieu, event, timer);
 };
 
 enregistrerButton.style.width = '100%';  // Ajoutez cette ligne pour définir la largeur à 100%
@@ -81,14 +112,14 @@ enregistrerButton.style.width = '100%';  // Ajoutez cette ligne pour définir la
 
 modalContent.setAttribute('data-nom-lieu', nomLieu);
     // Append elements to placeDetails
-boutonsDiv.appendChild(annulerButton);
-boutonsDiv.appendChild(pauseButton);
-boutonsDiv.appendChild(enregistrerButton);
+ boutonsDiv.appendChild(annulerButton);
+    boutonsDiv.appendChild(pauseButton);
+    boutonsDiv.appendChild(enregistrerButton);
 
-placeDetails.appendChild(chronoStatus);
-placeDetails.appendChild(chrono);
-placeDetails.appendChild(zoneTexte);
-placeDetails.appendChild(boutonsDiv); // Ajouter la div des boutons à placeDetails
+    placeDetails.appendChild(chronoStatus);
+    placeDetails.appendChild(chrono);
+    placeDetails.appendChild(zoneTexte);
+    placeDetails.appendChild(boutonsDiv); // Ajouter la div des boutons à placeDetails
 
 
 
@@ -102,9 +133,10 @@ placeDetails.appendChild(boutonsDiv); // Ajouter la div des boutons à placeDeta
     zoneTexte.value = '';
 listItem.classList.add('active-chrono');
     // Create a basic timer
-  let hours = 0;
+    let hours = 0;
     let minutes = 0;
     let seconds = 0;
+    
     let timerInterval;
 
     timers[nomLieu] = {
@@ -115,22 +147,24 @@ listItem.classList.add('active-chrono');
         seconds: 0
     };
 
-    // Update the timer display every second
- timerInterval = setInterval(() => {
-        if (!timers[nomLieu].isPaused) {
-            seconds++;
-            if (seconds === 60) {
-                minutes++;
-                seconds = 0;
-            }
-            if (minutes === 60) {
-                hours++;
-                minutes = 0;
-            }
 
-            chrono.textContent = formatTime(hours) + ':' + formatTime(minutes) + ':' + formatTime(seconds);
-        }
-    }, 1000);
+    // Update the timer display every second
+     timer.timerInterval = setInterval(() => {
+            if (!timer.isPaused) {
+                timer.seconds++;
+                if (timer.seconds === 60) {
+                    timer.minutes++;
+                    timer.seconds = 0;
+                }
+                if (timer.minutes === 60) {
+                    timer.hours++;
+                    timer.minutes = 0;
+                }
+
+                // Utilisez la variable globale chrono ici
+                chrono.textContent = formatTime(timer.hours) + ':' + formatTime(timer.minutes) + ':' + formatTime(timer.seconds);
+            }
+        }, 1000);
 
     // Update the timer status
     chronoStatus.textContent = 'En cours';
@@ -155,41 +189,55 @@ let timerInterval; // Déclarez timerInterval en tant que variable globale
 
 // ... (le reste de votre code) ...
 
-function togglePause(button, nomLieu) {
-        const timer = timers[nomLieu];
 
-     if (!timer.isPaused && !globalPauseState) {
-        // Enregistrez la durée écoulée avant la pause
-        timer.elapsedTime = {
-            hours: timer.hours,
-            minutes: timer.minutes,
-            seconds: timer.seconds
-        };
+function togglePause(button, nomLieu, timer) {
+    timer = Object.values(timers).find(t => t.nomLieu === nomLieu);
 
-chronoWorker.postMessage('stop');
+    // Assurez-vous que timer et chrono sont définis
+    if (timer && timer.chrono) {
+        if (!timer.isPaused && !globalPauseState) {
+            // Enregistrez le temps initial
+            timer.initialTime = new Date();
 
-        // Pause the timer
-        clearInterval(timerInterval);
+            // Initialisez le temps écoulé à zéro
+            timer.elapsedTime = { hours: 0, minutes: 0, seconds: 0 };
 
-        // Update the timer status
-        timer.chronoStatus.textContent = 'En pause';
-        timer.chronoStatus.style.color = 'yellow';
+            // Pause the timer
+            clearInterval(timer.timerInterval);
 
-        // Change the button text to "Reprendre"
-        button.textContent = 'Reprendre';
-        button.style.backgroundColor = 'green';
-        button.style.color = 'White';
-                const listItem = event.target.closest('li');
-        listItem.classList.add('paused');
-    } else {
+            // Update the timer status
+            timer.chronoStatus.textContent = 'En pause';
+            timer.chronoStatus.style.color = 'yellow';
+
+            // Change the button text to "Reprendre"
+            button.textContent = 'Reprendre';
+            button.style.backgroundColor = 'green';
+            button.style.color = 'White';
+
+            const listItem = button.closest('li');
+            listItem.classList.add('paused');
+        } else {
         // Reprendre le timer avec la durée écoulée avant la pause
-  // Reprendre le timer avec la durée écoulée avant la pause
-        const listItem = event.target.closest('li');
+        timer.initialTime = new Date();
+        timer.initialTime.setHours(timer.initialTime.getHours() - timer.elapsedTime.hours);
+        timer.initialTime.setMinutes(timer.initialTime.getMinutes() - timer.elapsedTime.minutes);
+        timer.initialTime.setSeconds(timer.initialTime.getSeconds() - timer.elapsedTime.seconds);
+
+        // Réinitialisez le temps écoulé à zéro
+        timer.elapsedTime = { hours: 0, minutes: 0, seconds: 0 };
+
+        // Reprendre le timer avec la durée écoulée avant la pause
+        const listItem = button.closest('li');
         listItem.classList.remove('paused');
         listItem.classList.remove('STOP');
-// Update the timer display every second
 
-chronoWorker.postMessage('start');
+        // Update the timer display every second
+
+            if (timer.chrono.textContent) {
+               timer.chronoStatus.textContent = formatTime(timer.hours) + ':' + formatTime(timer.minutes) + ':' + formatTime(timer.seconds);
+
+            }
+
         // Update the timer status
         timer.chronoStatus.textContent = 'En cours';
         timer.chronoStatus.style.color = 'limegreen';
@@ -202,23 +250,39 @@ chronoWorker.postMessage('start');
 
     // Inversez l'état de pause
     timer.isPaused = !timer.isPaused;
+}}
+
+
+function calculateElapsedTime(startTime) {
+    const now = new Date();
+    const elapsedTime = now - startTime;
+
+    const hours = Math.floor(elapsedTime / (60 * 60 * 1000));
+    const minutes = Math.floor((elapsedTime % (60 * 60 * 1000)) / (60 * 1000));
+    const seconds = Math.floor((elapsedTime % (60 * 1000)) / 1000);
+
+    return { hours, minutes, seconds };
 }
 
 
-
-
-function toggleSave(button, nomLieu) {
+function toggleSave(button, nomLieu, event, timer) {
     const modalContent = event.target.closest('.modal-content');
 
     // Mettre en pause le worker du chrono
-    chronoWorker.postMessage('pause');
+
 
     const listItem = event.target.closest('li');
     listItem.classList.add('STOP');
 
     // Stop the timer
-    const timer = timers[nomLieu];
-    timer.isPaused = !timer.isPaused;
+
+    clearInterval(timer.timerInterval);
+
+        elapsedTime = {
+        hours: timer.hours,
+        minutes: timer.minutes,
+        seconds: timer.seconds
+    };
 
     // Update the timer status
     const chronoStatus = modalContent.querySelector('.chrono-status');
@@ -241,7 +305,8 @@ function toggleSave(button, nomLieu) {
         if (confirmation) {
             // Display the pastille and recorded information
             const enregistrementsDiv = document.getElementById('enregistrements');
-            const tempsEnregistre = timer.chrono.textContent;
+            const tempsEnregistre = chrono.textContent;
+
             const currentDate = new Date();
             const formattedDate = `${currentDate.getDate()}/${currentDate.getMonth() + 1}/${currentDate.getFullYear()}`;
             const enregistrementTexte = `${formattedDate} - ${tempsEnregistre} - ${nomLieu} - ${texteEnregistre}`;
@@ -257,11 +322,12 @@ function toggleSave(button, nomLieu) {
             pastilleSpan.textContent = pastilleSpan.textContent.replace('Actif - ', '');
             listItem.classList.remove('active-chrono');
             fermerModal(modalContent);
-listItem.classList.remove('STOP');
-                lieuxState[nomLieu] = {
-        isRunning: false,
-        // ... autres propriétés que vous souhaitez suivre ...
-    };
+            listItem.classList.remove('STOP');
+            lieuxState[nomLieu] = {
+                isRunning: false,
+
+                // ... autres propriétés que vous souhaitez suivre ...
+            };
         }
     } else {
         // Show a message if the textarea is empty
@@ -273,6 +339,7 @@ listItem.classList.remove('STOP');
     button.style.backgroundColor = 'green';
     button.style.color = 'white';
 }
+
 
 function sauvegarderEnregistrement(enregistrement) {
     const enregistrementsDiv = document.getElementById('enregistrements');
@@ -328,7 +395,8 @@ function searchLieu() {
 
     // Parcourir la liste des lieux
     for (let i = 0; i < lieuxItems.length; i++) {
-        const lieuName = lieuxItems[i].innerText.toLowerCase();
+        const lieuName = lieuxItems[i].textContent.toLowerCase();
+
 
         // Utiliser une expression régulière pour chercher le terme de recherche n'importe où dans le texte
         const regex = new RegExp(searchTerm, 'i');

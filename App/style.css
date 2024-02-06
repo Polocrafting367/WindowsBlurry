@@ -75,7 +75,7 @@ h1 {
 .lieux-list li {
     background-color: #555; /* Fond sombre pour chaque élément de lieu */
     margin: 10px 0;
-    padding: 15px;
+    padding: 5px;
     border-radius: 8px;
     cursor: pointer;
 }
@@ -97,7 +97,7 @@ h1 {
 .lieux-list li .modal-content {
     background-color: rgba(0,0,0,0.5); /* Fond sombre pour le contenu de la modal */
     margin: 0.5% auto;
-    padding: 20px;
+    padding: 10px;
     border: 0px solid #888;
     border-radius: 8px;
   }
@@ -223,7 +223,7 @@ h1 {
     display: block; /* Assurez-vous que tous les éléments sont visibles par défaut */
 
     margin: 10px 0;
-    padding: 15px;
+
     border-radius: 8px;
     cursor: pointer;
 }
