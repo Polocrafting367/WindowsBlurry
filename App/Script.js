@@ -31,15 +31,15 @@ function chargerLieux() {
     lieuxList.innerHTML = '';
 
     lieuxEnregistresArray.forEach(nomLieu => {
-        // Vérifier si l'élément n'est pas vide et n'est pas "["
         if (nomLieu.trim() !== '' && nomLieu !== '[]') {
             const lieuItem = document.createElement('li');
-            lieuItem.innerHTML = `<div class="place-card" onclick="ouvrirModal(event, '${nomLieu}')">
+            lieuItem.innerHTML = `<div class="place-card" onclick="ouvrirIframe('${nomLieu}')">
                                     <span class="pastille" id="pastille-${nomLieu}"></span>${nomLieu}
+                                    <div class="iframe-container" id="iframe-container-${nomLieu}"></div>
                                 </div>`;
+
             lieuxList.appendChild(lieuItem);
 
-            // Ajoutez le lieu à la liste déroulante
             const option = document.createElement('option');
             option.value = nomLieu;
             option.textContent = nomLieu;
@@ -47,8 +47,7 @@ function chargerLieux() {
         }
     });
 
-    // Charger les lieux à partir du fichier JSON
-    const randomParam = Math.random(); // Ajouter un paramètre aléatoire
+    const randomParam = Math.random();
     const url = `lieux.json?random=${randomParam}`;
 
     fetch(url)
@@ -56,17 +55,19 @@ function chargerLieux() {
         .then(data => {
             data.forEach(nomLieu => {
                 if (!lieuxEnregistresArray.includes(nomLieu) && nomLieu !== '[') {
-                    // Vérifier si l'élément n'est pas "["
                     const lieuItem = document.createElement('li');
-                    lieuItem.innerHTML = `<div class="place-card" onclick="ouvrirModal(event, '${nomLieu}')">
+                    lieuItem.innerHTML = `<div class="place-card" onclick="ouvrirIframe('${nomLieu}')">
                                             <span class="pastille" id="pastille-${nomLieu}"></span>${nomLieu}
-                                         </div>`;
+                                            <div class="iframe-container" id="iframe-container-${nomLieu}"></div>
+                                        </div>`;
+
                     lieuxList.appendChild(lieuItem);
                 }
             });
         })
         .catch(error => console.error('Erreur de chargement des lieux', error));
 }
+
 
 function supprimerLieu() {
     const lieuxDropdown = document.getElementById('lieuxDropdown');

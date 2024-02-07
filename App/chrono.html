@@ -1,0 +1,280 @@
+
+<li class="active-chrono">
+    <div class="modal-content" >
+        <div class="place-details" style="display: flex;">
+            <div class="chrono-status" style="color: limegreen;">En cours</div>
+            <div id="chrono">00:00:00</div>
+            <textarea id="zone-texte" placeholder="Saisissez quelque chose..."></textarea>
+            <div style="display: flex; margin-top: 10px;">
+                <button class="modal-button" style="width: 100%;" onclick="cancelChrono()">Annuler</button>
+                <button class="modal-button" style="background-color: yellow; color: black; width: 100%;" onclick="pauseResumeChrono()">Pause</button>
+                <button class="modal-button" style="background-color: red; color: black; width: 100%;" onclick="saveRecord()">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+</li>
+
+<script>
+
+// Fonction pour récupérer les paramètres de l'URL
+
+
+// Récupérer la valeur du paramètre "lieu" de l'URL
+var lieu = getURLParameter('lieu');
+
+// Utiliser la variable "lieu" comme nécessaire dans votre code
+console.log("Lieu extrait de l'URL :", lieu);
+
+
+ document.addEventListener('DOMContentLoaded', init);
+
+    function init() {
+        startChrono()
+
+
+        // Vous pouvez ajouter d'autres initialisations ici
+    }
+
+
+function getURLParameter(name) {
+    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+    var results = regex.exec(location.search);
+    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+}
+
+    let isPaused = false;
+    let startTime;
+    let pauseStartTime = 0;
+    let elapsedTime = 0;
+    let interval;
+
+    function startChrono(place) {
+    
+
+        const listItem = document.querySelector('.active-chrono');
+        listItem.classList.remove('paused', 'STOP');
+        document.querySelector('.chrono-status').textContent = 'En cours';
+        isPaused = false;
+        startTime = new Date().getTime() - elapsedTime;
+        interval = setInterval(updateChrono, 1000);
+                    console.log('Le script a démarré.', startTime);
+    }
+
+    function updateChrono() {
+        if (!isPaused) {
+            const currentTime = new Date().getTime();
+            elapsedTime = currentTime - startTime;
+            displayTime(elapsedTime);
+        }
+    }
+
+    let totalPauseDuration = 0;
+
+    // ... (votre code existant)
+
+    function pauseResumeChrono() {
+        const listItem = document.querySelector('.active-chrono');
+        const pauseResumeButton = listItem.querySelector('.modal-button[onclick="pauseResumeChrono()"]');
+
+        if (!isPaused) {
+            isPaused = true;
+            listItem.classList.add('paused');
+document.querySelector('.chrono-status').textContent = 'En pause';
+document.querySelector('.chrono-status').style.color = 'yellow';
+
+            pauseStartTime = new Date().getTime();
+            clearInterval(interval);
+
+            // Modifier le bouton pour afficher "Reprendre"
+            pauseResumeButton.textContent = 'Reprendre';
+            pauseResumeButton.style.backgroundColor = 'green';
+
+            // Afficher un log
+            console.log('Chronomètre en pause. Pause démarrée à :', new Date(pauseStartTime));
+        } else {
+            isPaused = false;
+            listItem.classList.remove('paused');
+            listItem.classList.remove('STOP');
+            document.querySelector('.chrono-status').textContent = 'En cours';
+            document.querySelector('.chrono-status').style.color = 'limegreen';
+            const pauseDuration = new Date().getTime() - pauseStartTime;
+            totalPauseDuration += pauseDuration; // Ajouter la durée de la pause à la durée totale
+            startTime += pauseDuration;
+            interval = setInterval(updateChrono, 1000);
+
+            // Modifier le bouton pour afficher "Pause"
+            pauseResumeButton.textContent = 'Pause';
+            pauseResumeButton.style.backgroundColor = 'yellow';
+
+            // Afficher un log
+            console.log('Reprise du chronomètre. Durée de la pause :', pauseDuration / 1000, 'secondes');
+            console.log('Durée totale des pauses jusqu\'à présent :', totalPauseDuration / 1000, 'secondes');
+        }
+    }
+
+
+
+    function saveRecord() {
+        const zoneTexte = document.getElementById('zone-texte');
+        if (zoneTexte.value.trim() === '') {
+            alert('Veuillez saisir quelque chose avant d\'enregistrer.');
+            
+        }else{
+
+        // Demander confirmation avant d'enregistrer et de supprimer place-card
+        const confirmation = window.confirm('Voulez-vous vraiment enregistrer et supprimer cet enregistrement ?');
+        if (!confirmation) {
+             
+
+        // Supprimer place-card après l'enregistrement
+        const placeCard = listItem.querySelector('.place-card');
+        placeCard.parentElement.remove();
+
+        // Afficher un log
+
+
+        const enregistrement = `${new Date().toLocaleString()} - ${zoneTexte.value.trim()}`;
+        sauvegarderEnregistrement(enregistrement);
+        }
+
+}
+       clearInterval(interval);
+       const listItem = document.querySelector('.active-chrono');
+        const pauseResumeButton = listItem.querySelector('.modal-button[onclick="pauseResumeChrono()"]');
+
+       isPaused = true;
+            listItem.classList.add('STOP');
+            document.querySelector('.chrono-status').textContent = 'Fini';
+            document.querySelector('.chrono-status').style.color = 'red';
+            pauseStartTime = new Date().getTime();
+            clearInterval(interval);
+ pauseResumeButton.textContent = 'Reprendre';
+            pauseResumeButton.style.backgroundColor = 'green';
+     console.log('Chronomètre arrêter. Pause démarrée à :', new Date(pauseStartTime));
+
+        }
+
+    
+
+      function sauvegarderEnregistrement(enregistrement) {
+        const enregistrementsDiv = document.getElementById('enregistrements');
+        const enregistrements = localStorage.getItem('enregistrements') || '';
+        const nouvelEnregistrement = `${enregistrements}${enregistrement}<br>`;
+        localStorage.setItem('enregistrements', nouvelEnregistrement);
+                console.log('Enregistrement effectué. Contenu de la zone de texte :', enregistrement);
+    }
+
+    function cancelChrono() {
+        clearInterval(interval);
+        isPaused = false;
+        elapsedTime = 0;
+        const listItem = document.querySelector('.active-chrono');
+        listItem.remove(); // Supprimer l'élément de la liste
+        // Réinitialiser le formulaire
+        document.getElementById('zone-texte').value = '';
+    }
+
+    function displayTime(milliseconds) {
+        const seconds = Math.floor(milliseconds / 1000);
+        const minutes = Math.floor(seconds / 60);
+        const hours = Math.floor(minutes / 60);
+
+        const formattedTime = `${pad(hours)}:${pad(minutes % 60)}:${pad(seconds % 60)}`;
+        document.getElementById('chrono').textContent = formattedTime;
+    }
+
+    function pad(number) {
+        return number < 10 ? `0${number}` : number;
+    }
+</script>
+
+
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+    font-weight: bold;
+    font-size: 16px; /* Remplacez la valeur par celle que vous souhaitez */
+}
+
+
+#chrono {
+    font-size: 30px;
+    display: inline-block;
+    text-align: center;
+    margin: 0;
+}
+.chrono-status {
+    font-size: 20px;
+    display: inline-block;
+    text-align: center;
+    margin: 0;
+}
+
+    @media screen and (max-width: 600px) {
+    /* Styles spécifiques aux petits écrans */
+    .container {
+        max-width: 100%;
+        /* ... autres styles ... */
+
+
+    }
+}
+
+.modal-button {
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    padding: 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-right: 5px;
+        height: 30px;
+}
+
+
+
+.place-details {
+    display: flex;
+    flex-direction: column; /* Afficher les éléments en colonne */
+}
+
+
+
+@keyframes gradientMove {
+    0% {
+        background-position: 100% 0%;
+    }
+    50% {
+        background-position: 0% 100%;
+    }
+    100% {
+        background-position: 100% 0%;
+    }
+}
+li.active-chrono {
+    list-style: none;
+    background: linear-gradient(90deg, rgba(150,80,5,1) 0%, rgba(200,150,0,1) 50%, rgba(150,80,5,1) 100%);
+    background-size: 200% 200%;
+    animation: gradientMove 3s infinite;
+    border: 3px solid rgba(200,150,0,1);
+    border-radius: 8px;
+
+    padding: 10px; /* Remplacez la valeur par celle que vous souhaitez */
+}
+
+
+ li.active-chrono.paused {
+    background: linear-gradient(90deg, rgba(0,25,150,1) 0%, rgba(0,100,255,1) 50%, rgba(0,25,150,1) 100%);
+    border: 3px solid rgba(0,150,255,1);
+} li.active-chrono.STOP {
+    background: linear-gradient(90deg, rgba(150,25,25,1) 0%, rgba(255,10,10,1) 50%, rgba(150,25,25,1) 100%);
+    border: 3px solid rgba(255,25,0,1);
+}
+
+/* Ajoutez des styles spécifiques pour le bouton de pause en mode "paused" */
+/* Ajoutez ces styles dans votre fichier CSS ou directement dans votre script JS */
+
+</style>

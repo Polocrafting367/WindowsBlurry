@@ -24,6 +24,17 @@
    background-color: #333;
    color: #FFF;
 }
+.place-card {
+    min-height: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.place-card .expand-element {
+    flex: 1;
+}
 
 
 
@@ -227,33 +238,7 @@ h1 {
     border-radius: 8px;
     cursor: pointer;
 }
-@keyframes gradientMove {
-    0% {
-        background-position: 100% 0%;
-    }
-    50% {
-        background-position: 0% 100%;
-    }
-    100% {
-        background-position: 100% 0%;
-    }
-}
-.lieux-list li.active-chrono {
-    background: linear-gradient(90deg, rgba(150,80,5,1) 0%, rgba(200,150,0,1) 50%, rgba(150,80,5,1) 100%);
-    background-size: 200% 200%;
-    animation: gradientMove 3s infinite;
-    border: 3px solid rgba(200,150,0,1);
-    border-radius: 8px;
-}
 
-.lieux-list li.active-chrono.paused {
-    background: linear-gradient(90deg, rgba(0,25,150,1) 0%, rgba(0,100,255,1) 50%, rgba(0,25,150,1) 100%);
-    border: 3px solid rgba(0,150,255,1);
-}
-.lieux-list li.active-chrono.STOP {
-    background: linear-gradient(90deg, rgba(150,25,25,1) 0%, rgba(255,10,10,1) 50%, rgba(150,25,25,1) 100%);
-    border: 3px solid rgba(255,25,0,1);
-}
 
 /* Ajoutez des styles spécifiques pour le bouton de pause en mode "paused" */
 /* Ajoutez ces styles dans votre fichier CSS ou directement dans votre script JS */
@@ -346,4 +331,12 @@ color: black !important;
     height: 1px; /* Définir la hauteur de la ligne */
     background-color: #777; /* Couleur de la ligne */
     margin: 20px 0; /* Marge autour de la ligne */
+}
+
+iframe {
+
+     width: 100%;
+    border: none;
+ height: 170px;
+
 }
