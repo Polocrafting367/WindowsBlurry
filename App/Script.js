@@ -34,7 +34,7 @@ function chargerLieux() {
         if (nomLieu.trim() !== '' && nomLieu !== '[]') {
             const lieuItem = document.createElement('li');
             lieuItem.innerHTML = `<div class="place-card" onclick="ouvrirIframe('${nomLieu}')">
-                                    <span class="pastille" id="pastille-${nomLieu}"></span>${nomLieu}
+                                    <span class="pastille" id="pastille-${nomLieu}">${nomLieu}</span>
                                     <div class="iframe-container" id="iframe-container-${nomLieu}"></div>
                                 </div>`;
 
@@ -57,7 +57,7 @@ function chargerLieux() {
                 if (!lieuxEnregistresArray.includes(nomLieu) && nomLieu !== '[') {
                     const lieuItem = document.createElement('li');
                     lieuItem.innerHTML = `<div class="place-card" onclick="ouvrirIframe('${nomLieu}')">
-                                            <span class="pastille" id="pastille-${nomLieu}"></span>${nomLieu}
+                                            <span class="pastille" id="pastille-${nomLieu}">${nomLieu}</span>
                                             <div class="iframe-container" id="iframe-container-${nomLieu}"></div>
                                         </div>`;
 

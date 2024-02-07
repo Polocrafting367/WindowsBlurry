@@ -1,24 +1,48 @@
 function ouvrirIframe(nomLieu) {
-    const iframe = document.createElement('iframe');
+    // Vérifier si une iframe avec la pastille "Actif - " existe déjà
+    const pastille = document.getElementById(`pastille-${nomLieu}`);
     
+    if (pastille && pastille.innerHTML.trim() === `Actif - ${nomLieu}`) {
+        console.log(`Le chrono pour ${nomLieu} est déjà lancé`);
+        return;
+    }
+    // Créez une nouvelle iframe
+    const iframe = document.createElement('iframe');
+
+    // Définissez le nom de l'iframe en lien avec le lieu
+    iframe.name = `iframe-${nomLieu}`;
+
     // Concaténer le nom du lieu à l'URL
     iframe.src = `chrono.html?lieu=${nomLieu}`;
 
     const iframeContainer = document.getElementById(`iframe-container-${nomLieu}`);
-    
+
+
+
+    if (pastille) {
+        // Ajoutez "Actif - " suivi du nom du lieu au contenu de la pastille
+        pastille.innerHTML = `Actif - ${nomLieu}`;
+        pastille.dataset.active = "true"; // Marquer la pastille comme active
+    }
+ 
     if (iframeContainer) {
         // Effacer le contenu existant
         iframeContainer.innerHTML = '';
 
-        // Donner à l'élément parent la hauteur de 100%
-
         // Ajouter l'iframe à l'élément parent
         iframeContainer.appendChild(iframe);
+
+        // Envoyez un message à toutes les iframes imbriquées
+        var iframesImbriquées = document.querySelectorAll('iframe');
+        for (var i = 0; i < iframesImbriquées.length; i++) {
+            if (iframesImbriquées[i] !== iframe) {
+                iframesImbriquées[i].contentWindow.postMessage('NouvelleIframeCréée', '*');
+            }
+        }
     } else {
         console.error(`Le conteneur iframe-container-${nomLieu} n'a pas été trouvé.`);
     }
 }
-
 
 
 
@@ -52,13 +76,15 @@ afficherEnregistrements();
     console.log('Données de fermeture reçues :', iframeData.data);
 
     // Cibler l'élément iframe-container par le nom contenu dans iframeData.data
-    const iframeContainerName = iframeData.data;
-    const iframeContainer = document.getElementById(`iframe-container-${iframeContainerName}`);
+  var iframeASupprimer = document.querySelector(`iframe[name="iframe-${iframeData.data}"]`);
+  const pastille = document.getElementById(`pastille-${iframeData.data}`);
+  pastille.innerHTML = `${iframeData.data}`;
 
-    // Vérifier si l'élément existe avant de le supprimer
-    if (iframeContainer) {
-        // Supprimer l'élément du DOM
-        iframeContainer.parentNode.parentNode.remove(); // Supprime le parent du parent, c'est-à-dire le <li>
+    if (iframeASupprimer) {
+        // Supprimer l'iframe
+        iframeASupprimer.remove();
+    } else {
+        console.error(`L'iframe avec le nom ${iframeData.data} n'a pas été trouvé.`);
     }
 }
 
@@ -93,7 +119,7 @@ function searchLieu() {
 }
         window.addEventListener('beforeunload', function (event) {
             // Votre logique de sauvegarde ou l'alerte ici
-            var confirmationMessage = "Les crhono ne seront pas sauvegarder. Êtes-vous sûr de vouloir actualiser/quitter la page ?";
+            var confirmationMessage = "Les chrono ne seront pas sauvegarder. Êtes-vous sûr de vouloir actualiser/quitter la page ?";
             
             // Standard pour la plupart des navigateurs
             if (typeof event === 'undefined') {

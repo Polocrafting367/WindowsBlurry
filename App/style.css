@@ -25,13 +25,18 @@
    color: #FFF;
 }
 .place-card {
-    min-height: 30px;
+    min-height: 22px;
     display: flex;
     flex-direction: column;
 
     justify-content: space-between; /* Permettre l'expansion complète des éléments à l'intérieur */
-    width: 100%; /* Ajout de cette propriété pour garantir une largeur de 100% */
+    width: calc(100% - 5px); /* Ajout de cette propriété pour garantir une largeur de 100% */
+
+    margin-top: 5px; 
+    margin-left: 5px;/* Ajoutez la valeur du décalage souhaité en haut */
+
 }
+
 
 .chrono-status {
     font-size: 20px;

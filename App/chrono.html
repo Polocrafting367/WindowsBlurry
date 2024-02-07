@@ -16,7 +16,24 @@
 
 <script>
 
-// Fonction pour récupérer les paramètres de l'URL
+
+
+window.addEventListener('message', function(event) {
+    // Vérifiez que le message provient de la page mère
+    if (event.source !== window.parent) return;
+
+    // Effectuez des actions en fonction du message reçu
+    if (event.data === 'NouvelleIframeCréée') {
+        // Vérifiez si vous n'êtes pas déjà en pause avant d'exécuter pauseResumeChrono
+        if (!isPaused) {
+            // Exécutez la fonction spécifique (maFonction)
+            pauseResumeChrono();
+        } else {
+            console.log("Vous êtes déjà en pause. Ne peut pas exécuter pauseResumeChrono.");
+        }
+    }
+});
+
 
 
 // Récupérer la valeur du paramètre "lieu" de l'URL
@@ -114,71 +131,53 @@ document.querySelector('.chrono-status').style.color = 'yellow';
     }
 
 
-
-    function saveRecord() {
-        const zoneTexte = document.getElementById('zone-texte');
-        if (zoneTexte.value.trim() === '') {
-            alert('Veuillez saisir quelque chose avant d\'enregistrer.');
-                   clearInterval(interval);
-       const listItem = document.querySelector('.active-chrono');
+function saveRecord() {
+            const listItem = document.querySelector('.active-chrono');
         const pauseResumeButton = listItem.querySelector('.modal-button[onclick="pauseResumeChrono()"]');
+     if (isPaused === false) {
+            isPaused = true;
 
-       isPaused = true;
-            listItem.classList.add('STOP');
-            document.querySelector('.chrono-status').textContent = 'Fini';
-            document.querySelector('.chrono-status').style.color = 'red';
             pauseStartTime = new Date().getTime();
             clearInterval(interval);
- pauseResumeButton.textContent = 'Reprendre';
-            pauseResumeButton.style.backgroundColor = 'green';
-     console.log('Chronomètre arrêter. Pause démarrée à :', new Date(pauseStartTime));
-        }else{
+            console.log('Chronomètre arrêté. Pause démarrée à :', new Date(pauseStartTime));
+        }
 
-       clearInterval(interval);
-       const listItem = document.querySelector('.active-chrono');
-        const pauseResumeButton = listItem.querySelector('.modal-button[onclick="pauseResumeChrono()"]');
+        listItem.classList.add('STOP');
 
-       isPaused = true;
-            listItem.classList.add('STOP');
-            document.querySelector('.chrono-status').textContent = 'Fini';
-            document.querySelector('.chrono-status').style.color = 'red';
-            pauseStartTime = new Date().getTime();
-            clearInterval(interval);
- pauseResumeButton.textContent = 'Reprendre';
-            pauseResumeButton.style.backgroundColor = 'green';
-     console.log('Chronomètre arrêter. Pause démarrée à :', new Date(pauseStartTime));
-        // Demander confirmation avant d'enregistrer et de supprimer place-card
+        document.querySelector('.chrono-status').textContent = 'Fini';
+        document.querySelector('.chrono-status').style.color = 'red';
+        pauseResumeButton.textContent = 'Reprendre';
+        pauseResumeButton.style.backgroundColor = 'green';
+
+    const zoneTexte = document.getElementById('zone-texte');
+    if (zoneTexte.value.trim() === '') {
+        alert('Veuillez saisir quelque chose avant d\'enregistrer.');
+                   
+        
+   
+    } else {
+             
         const confirmation = window.confirm('Voulez-vous vraiment enregistrer et supprimer cet enregistrement ?');
-            if (confirmation) {
+        if (confirmation) {
+            const tempsAffiche = document.getElementById('chrono').textContent;
+            const currentDate = new Date();
 
+            // Formater la date en JJ/MM/AAAA
+            const formattedDate = `${pad(currentDate.getDate())}/${pad(currentDate.getMonth() + 1)}/${currentDate.getFullYear()}`;
 
-    
+            // Construire la chaîne d'enregistrement avec la date
+            const enregistrement = `${formattedDate} - ${tempsAffiche} - ${lieu} - ${zoneTexte.value.trim()}`;
 
-        // Afficher un log
+            // Envoyer les données à la page parente
+            sendEventToParent('enregistrement', enregistrement);
 
-        const tempsAffiche = document.getElementById('chrono').textContent;
-const currentDate = new Date();
-
-// Formater la date en JJ/MM/AAAA
-const formattedDate = `${pad(currentDate.getDate())}/${pad(currentDate.getMonth() + 1)}/${currentDate.getFullYear()}`;
-
-// Construire la chaîne d'enregistrement avec la date
-const enregistrement = `${formattedDate} - ${tempsAffiche} - ${lieu} - ${zoneTexte.value.trim()}`;
-
-        // Envoyer les données à la page parente
-        sendEventToParent('enregistrement', enregistrement);
-
- setTimeout(() => {
+            setTimeout(() => {
                 sendEventToParent('fermer', lieu);
- }, 100);
-             }
-
+            }, 100);
         }
+    }
+}
 
-
-        }
-
-    
 
     function cancelChrono() {
 sendEventToParent('fermer', lieu);
