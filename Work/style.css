@@ -32,8 +32,8 @@
     justify-content: space-between; /* Permettre l'expansion complète des éléments à l'intérieur */
     width: calc(100% - 5px); /* Ajout de cette propriété pour garantir une largeur de 100% */
 
-    margin-top: 5px; 
-    margin-left: 5px;/* Ajoutez la valeur du décalage souhaité en haut */
+    margin-top: 8px; 
+    margin-left: 2px;/* Ajoutez la valeur du décalage souhaité en haut */
 
 }
 
@@ -84,7 +84,7 @@ h1 {
 
 .lieux-list {
     list-style: none;
-    padding: 10px;
+    padding: 5px;
     height: calc(100% - 130px); /* Ajustez en fonction du padding de .container et de la hauteur de la bannière */
     overflow: auto;
     box-shadow: 0px 0px 20px rgba(100, 100, 100, 0.5);
@@ -96,7 +96,7 @@ h1 {
 .lieux-list li {
     background-color: #555; /* Fond sombre pour chaque élément de lieu */
     margin: 10px 0;
-    padding: 5px;
+    padding: 2.5px;
     border-radius: 8px;
     cursor: pointer;
 }
@@ -105,7 +105,7 @@ h1 {
     background-color: #3498db;
     color: #fff;
     border: none;
-    padding: 8px;
+    padding: 5px;
     border-radius: 4px;
     cursor: pointer;
     margin-right: 5px;
@@ -118,7 +118,7 @@ h1 {
 .lieux-list li .modal-content {
     background-color: rgba(0,0,0,0.5); /* Fond sombre pour le contenu de la modal */
     margin: 0.5% auto;
-    padding: 10px;
+    padding: 5px;
     border: 0px solid #888;
     border-radius: 8px;
   }
@@ -127,7 +127,7 @@ h1 {
 .lieux-list li textarea {
     width: 100%;
     margin-bottom: 10px;
-    padding: 8px;
+    padding: 5px;
     border-radius: 4px;
 }
 
@@ -238,7 +238,7 @@ h1 {
 .lieux-list li {
     display: block; /* Assurez-vous que tous les éléments sont visibles par défaut */
 
-    margin: 10px 0;
+    margin: 5px 0;
 
     border-radius: 8px;
     cursor: pointer;
@@ -249,7 +249,7 @@ h1 {
 /* Ajoutez ces styles dans votre fichier CSS ou directement dans votre script JS */
 .modal-button {
     display: inline-block;
-    margin-right: 10px; /* Espace entre les boutons (ajustez selon vos besoins) */
+    margin-right: 10px; 
 }
 
 /* Styles spécifiques à la section Paramètres */
@@ -342,6 +342,6 @@ iframe {
 
      width: 100%;
     border: none;
- height: 170px;
+ height: 162px;
 
 }

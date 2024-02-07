@@ -4,6 +4,8 @@ body {
     overflow: hidden;
     font-weight: bold;
     font-size: 16px; /* Remplacez la valeur par celle que vous souhaitez */
+        margin-left: 0px;
+        margin-right: 0px;
 }
 
 
@@ -11,13 +13,13 @@ body {
     font-size: 30px;
     display: inline-block;
     text-align: center;
-    margin: 0;
+    margin: 0px;
 }
 .chrono-status {
-    font-size: 20px;
+    font-size: 25px;
     display: inline-block;
     text-align: center;
-    margin: 0;
+    margin: 0px;
 }
 
     @media screen and (max-width: 600px) {
@@ -66,10 +68,10 @@ li.active-chrono {
     background: linear-gradient(90deg, rgba(150,80,5,1) 0%, rgba(200,150,0,1) 50%, rgba(150,80,5,1) 100%);
     background-size: 200% 200%;
     animation: gradientMove 3s infinite;
-    border: 3px solid rgba(200,150,0,1);
+    border: 3px solid rgba(255,200,0,1);
     border-radius: 8px;
 
-    padding: 10px; /* Remplacez la valeur par celle que vous souhaitez */
+    padding: 5px; /* Remplacez la valeur par celle que vous souhaitez */
 }
 
 
@@ -81,3 +83,22 @@ li.active-chrono {
     border: 3px solid rgba(255,25,0,1);
 }
 
+textarea {
+  resize: none;
+}
+/* Ajoutez ces styles dans votre fichier CSS ou directement dans votre script JS */
+.modal-button {
+    cursor: pointer;
+
+    flex: 1;
+
+
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+#buttons {           
+    display: flex;
+
+}

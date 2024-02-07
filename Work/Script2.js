@@ -3,7 +3,7 @@ function ouvrirIframe(nomLieu) {
     const pastille = document.getElementById(`pastille-${nomLieu}`);
     
     if (pastille && pastille.innerHTML.trim() === `Actif - ${nomLieu}`) {
-        console.log(`Le chrono pour ${nomLieu} est déjà lancé`);
+   
         return;
     }
     // Créez une nouvelle iframe
@@ -70,10 +70,10 @@ localStorage.setItem('enregistrements', nouvelEnregistrement);
 
 afficherEnregistrements();
 
-        console.log('Données d\'enregistrement reçues :', iframeData.data);
+   
    } else if (iframeData.type === 'fermer') {
     // Faire quelque chose avec les données de fermeture
-    console.log('Données de fermeture reçues :', iframeData.data);
+ 
 
     // Cibler l'élément iframe-container par le nom contenu dans iframeData.data
   var iframeASupprimer = document.querySelector(`iframe[name="iframe-${iframeData.data}"]`);

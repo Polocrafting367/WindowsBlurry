@@ -10,7 +10,7 @@ window.addEventListener('message', function(event) {
             // Exécutez la fonction spécifique (maFonction)
             pauseResumeChrono();
         } else {
-            console.log("Vous êtes déjà en pause. Ne peut pas exécuter pauseResumeChrono.");
+
         }
     }
 });
@@ -21,7 +21,7 @@ window.addEventListener('message', function(event) {
 var lieu = getURLParameter('lieu');
 
 // Utiliser la variable "lieu" comme nécessaire dans votre code
-console.log("Lieu extrait de l'URL :", lieu);
+
 
 
  document.addEventListener('DOMContentLoaded', init);
@@ -56,7 +56,7 @@ function getURLParameter(name) {
         isPaused = false;
         startTime = new Date().getTime() - elapsedTime;
         interval = setInterval(updateChrono, 1000);
-                    console.log('Le script a démarré.', startTime);
+               
     }
 
     function updateChrono() {
@@ -89,7 +89,7 @@ document.querySelector('.chrono-status').style.color = 'yellow';
             pauseResumeButton.style.backgroundColor = 'green';
 
             // Afficher un log
-            console.log('Chronomètre en pause. Pause démarrée à :', new Date(pauseStartTime));
+      
         } else {
             isPaused = false;
             listItem.classList.remove('paused');
@@ -106,8 +106,7 @@ document.querySelector('.chrono-status').style.color = 'yellow';
             pauseResumeButton.style.backgroundColor = 'yellow';
 
             // Afficher un log
-            console.log('Reprise du chronomètre. Durée de la pause :', pauseDuration / 1000, 'secondes');
-            console.log('Durée totale des pauses jusqu\'à présent :', totalPauseDuration / 1000, 'secondes');
+  
         }
     }
 
@@ -120,7 +119,7 @@ function saveRecord() {
 
             pauseStartTime = new Date().getTime();
             clearInterval(interval);
-            console.log('Chronomètre arrêté. Pause démarrée à :', new Date(pauseStartTime));
+         
         }
 
         listItem.classList.add('STOP');
@@ -187,3 +186,5 @@ sendEventToParent('fermer', lieu);
     // Envoyer le message à la fenêtre parente
     window.parent.postMessage(message, '*');
 }
+
+

@@ -20,6 +20,7 @@ let globalPauseState = false;
 }
 
 
+
 function chargerLieux() {
     const lieuxList = document.getElementById('lieux-list');
     const lieuxDropdown = document.getElementById('lieuxDropdown');
@@ -30,6 +31,7 @@ function chargerLieux() {
 
     lieuxList.innerHTML = '';
 
+    // Traitement des lieux enregistrés dans le localStorage
     lieuxEnregistresArray.forEach(nomLieu => {
         if (nomLieu.trim() !== '' && nomLieu !== '[]') {
             const lieuItem = document.createElement('li');
@@ -47,25 +49,72 @@ function chargerLieux() {
         }
     });
 
-    const randomParam = Math.random();
-    const url = `lieux.json?random=${randomParam}`;
+    // Traitement des lieux définis dans le tableau
+     const lieuxPredefinisArray = [
+  "Accrochage",
+  "Laveuses",
+  "séchoir élécrtolux",
+  "séchoir résident",
+  "Linge Sale",
+  "Alvéoles Linge Sale",
+  "Slings",
+  "Alvéoles résident",
+  "Sings résident",
+  "Linge Sale résident",
+  "Futurail",
+  "DU.",
+  "CI.",
+  "Redresseur Linge Sale",
+  "Chargeur Linge Sale",
+  "Tunnel 10",
+  "Tunnel 12",
+  "Tunnel Kanne",
+  "séchoir Industriel lavatec",
+  "Filmeuse",
+  "Tunnel de lecture",
+  "étiqueuteuse Filmeuse",
+  "Expedition",
+  "étiqueuteuse Expedition",
+  "Navettes",
+  "Grand Plat GP",
+  "Cercleuse Petit plat GP",
+  "Petit Plat PP",
+  "Cercleuse Petit plat PP",
+  "Maximat",
+  "Metric",
+  "TriA",
+  "TriB",
+  "Cintre Bloqué/Bourrage",
+  "Tunnel de finition",
+  "Tunnel de Désinfection",
+  "Plieuse couverture",
+  "Cercleuse couverture",
+  "Plieuse eponge",
+  "Cercleuse eponge",
+  "Lapaw",
+  "Cercleuse Lapaw",
+  "Poste bipage",
+  "étiqueuteuse bipage",
+  "Direction",
+  "Batiment",
+  "Menage",
+  "Informatique",
+  "responsable",
+  "Autre"
+];
 
-    fetch(url)
-        .then(response => response.json())
-        .then(data => {
-            data.forEach(nomLieu => {
-                if (!lieuxEnregistresArray.includes(nomLieu) && nomLieu !== '[') {
-                    const lieuItem = document.createElement('li');
-                    lieuItem.innerHTML = `<div class="place-card" onclick="ouvrirIframe('${nomLieu}')">
-                                            <span class="pastille" id="pastille-${nomLieu}">${nomLieu}</span>
-                                            <div class="iframe-container" id="iframe-container-${nomLieu}"></div>
-                                        </div>`;
 
-                    lieuxList.appendChild(lieuItem);
-                }
-            });
-        })
-        .catch(error => console.error('Erreur de chargement des lieux', error));
+    lieuxPredefinisArray.forEach(nomLieu => {
+        if (!lieuxEnregistresArray.includes(nomLieu) && nomLieu.trim() !== '' && nomLieu !== '[]') {
+            const lieuItem = document.createElement('li');
+            lieuItem.innerHTML = `<div class="place-card" onclick="ouvrirIframe('${nomLieu}')">
+                                    <span class="pastille" id="pastille-${nomLieu}">${nomLieu}</span>
+                                    <div class="iframe-container" id="iframe-container-${nomLieu}"></div>
+                                </div>`;
+
+            lieuxList.appendChild(lieuItem);
+        }
+    });
 }
 
 
@@ -168,9 +217,10 @@ function ajouterLieuEnHaut(nouveauLieu) {
 
     // Créer un nouvel élément li
     const lieuItem = document.createElement('li');
-    lieuItem.innerHTML = `<div class="place-card" onclick="ouvrirModal(event, '${nouveauLieu}')">
-                            <span class="pastille" id="pastille-${nouveauLieu}"></span>${nouveauLieu}
-                         </div>`;
+            lieuItem.innerHTML = `<div class="place-card" onclick="ouvrirIframe('${nouveauLieu}')">
+                                    <span class="pastille" id="pastille-${nouveauLieu}">${nouveauLieu}</span>
+                                    <div class="iframe-container" id="iframe-container-${nouveauLieu}"></div>
+                                </div>`;
 
     // Insérer l'élément en haut de la liste lieux-list
     lieuxList.prepend(lieuItem);
