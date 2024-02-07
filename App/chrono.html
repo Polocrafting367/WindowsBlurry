@@ -157,14 +157,14 @@ document.querySelector('.chrono-status').style.color = 'yellow';
         // Afficher un log
 
         const tempsAffiche = document.getElementById('chrono').textContent;
-        const enregistrement = `${lieu} - ${tempsAffiche} - ${zoneTexte.value.trim()}`;
+        const enregistrement = `${tempsAffiche} - ${lieu} - ${zoneTexte.value.trim()}`;
 
         // Envoyer les données à la page parente
         sendEventToParent('enregistrement', enregistrement);
 
  setTimeout(() => {
                 sendEventToParent('fermer', lieu);
- }, 500);
+ }, 100);
              }
 
         }
@@ -284,7 +284,7 @@ li.active-chrono {
     background: linear-gradient(90deg, rgba(0,25,150,1) 0%, rgba(0,100,255,1) 50%, rgba(0,25,150,1) 100%);
     border: 3px solid rgba(0,150,255,1);
 } li.active-chrono.STOP {
-    background: linear-gradient(90deg, rgba(150,25,25,1) 0%, rgba(255,10,10,1) 50%, rgba(150,25,25,1) 100%);
+    background: linear-gradient(90deg, rgba(255,10,10,1) 0%, rgba(150,25,25,1) 50%, rgba(255,10,10,1) 100%);
     border: 3px solid rgba(255,25,0,1);
 }
 
