@@ -18,3 +18,94 @@ function ouvrirIframe(nomLieu) {
         console.error(`Le conteneur iframe-container-${nomLieu} n'a pas été trouvé.`);
     }
 }
+
+
+
+
+
+window.addEventListener('message', function(event) {
+    // Vérifier si l'origine du message est autorisée, si nécessaire
+    // if (event.origin !== 'http://exemple.com') return;
+
+    const iframeData = event.data;
+
+    if (iframeData.type === 'enregistrement') {
+                // Les données de l'iframe sont dans event.data
+        
+        // Faites quelque chose avec les données, par exemple, enregistrez-les
+ const enregistrementsDiv = document.getElementById('enregistrements');
+const enregistrements = localStorage.getItem('enregistrements') || '';
+const nouvelEnregistrement = `${enregistrements}${iframeData.data}<br>`; // Accédez à la propriété 'data'
+localStorage.setItem('enregistrements', nouvelEnregistrement);
+
+
+
+
+        enregistrementsDiv.innerHTML = '';
+
+
+afficherEnregistrements();
+
+        console.log('Données d\'enregistrement reçues :', iframeData.data);
+   } else if (iframeData.type === 'fermer') {
+    // Faire quelque chose avec les données de fermeture
+    console.log('Données de fermeture reçues :', iframeData.data);
+
+    // Cibler l'élément iframe-container par le nom contenu dans iframeData.data
+    const iframeContainerName = iframeData.data;
+    const iframeContainer = document.getElementById(`iframe-container-${iframeContainerName}`);
+
+    // Vérifier si l'élément existe avant de le supprimer
+    if (iframeContainer) {
+        // Supprimer l'élément du DOM
+        iframeContainer.parentNode.parentNode.remove(); // Supprime le parent du parent, c'est-à-dire le <li>
+    }
+}
+
+});
+
+
+
+function searchLieu() {
+    const searchInput = document.getElementById('searchInput');
+    const searchTerm = searchInput.value.toLowerCase();
+
+    const lieuxList = document.getElementById('lieux-list');
+    const lieuxItems = lieuxList.getElementsByTagName('li');
+
+    // Parcourir la liste des lieux
+    for (let i = 0; i < lieuxItems.length; i++) {
+        const lieuName = lieuxItems[i].innerText.toLowerCase();
+
+        // Utiliser une expression régulière pour chercher le terme de recherche n'importe où dans le texte
+        const regex = new RegExp(searchTerm, 'i');
+        
+        if (lieuName.match(regex)) {
+            // Afficher l'élément trouvé
+            lieuxItems[i].style.display = 'block';
+            lieuxItems[i].classList.add('active');
+        } else {
+            // Cacher les éléments qui ne correspondent pas
+            lieuxItems[i].style.display = 'none';
+            lieuxItems[i].classList.remove('active');
+        }
+    }
+}
+        window.addEventListener('beforeunload', function (event) {
+            // Votre logique de sauvegarde ou l'alerte ici
+            var confirmationMessage = "Les crhono ne seront pas sauvegarder. Êtes-vous sûr de vouloir actualiser/quitter la page ?";
+            
+            // Standard pour la plupart des navigateurs
+            if (typeof event === 'undefined') {
+                event = window.event;
+            }
+            
+            if (event) {
+                event.returnValue = confirmationMessage;
+            }
+            
+            return confirmationMessage;
+        });
+
+
+let isChronosActif = true; // Variable pour suivre l'état actuel

@@ -119,26 +119,21 @@ document.querySelector('.chrono-status').style.color = 'yellow';
         const zoneTexte = document.getElementById('zone-texte');
         if (zoneTexte.value.trim() === '') {
             alert('Veuillez saisir quelque chose avant d\'enregistrer.');
-            
+                   clearInterval(interval);
+       const listItem = document.querySelector('.active-chrono');
+        const pauseResumeButton = listItem.querySelector('.modal-button[onclick="pauseResumeChrono()"]');
+
+       isPaused = true;
+            listItem.classList.add('STOP');
+            document.querySelector('.chrono-status').textContent = 'Fini';
+            document.querySelector('.chrono-status').style.color = 'red';
+            pauseStartTime = new Date().getTime();
+            clearInterval(interval);
+ pauseResumeButton.textContent = 'Reprendre';
+            pauseResumeButton.style.backgroundColor = 'green';
+     console.log('Chronomètre arrêter. Pause démarrée à :', new Date(pauseStartTime));
         }else{
 
-        // Demander confirmation avant d'enregistrer et de supprimer place-card
-        const confirmation = window.confirm('Voulez-vous vraiment enregistrer et supprimer cet enregistrement ?');
-        if (!confirmation) {
-             
-
-        // Supprimer place-card après l'enregistrement
-        const placeCard = listItem.querySelector('.place-card');
-        placeCard.parentElement.remove();
-
-        // Afficher un log
-
-
-        const enregistrement = `${new Date().toLocaleString()} - ${zoneTexte.value.trim()}`;
-        sauvegarderEnregistrement(enregistrement);
-        }
-
-}
        clearInterval(interval);
        const listItem = document.querySelector('.active-chrono');
         const pauseResumeButton = listItem.querySelector('.modal-button[onclick="pauseResumeChrono()"]');
@@ -152,27 +147,35 @@ document.querySelector('.chrono-status').style.color = 'yellow';
  pauseResumeButton.textContent = 'Reprendre';
             pauseResumeButton.style.backgroundColor = 'green';
      console.log('Chronomètre arrêter. Pause démarrée à :', new Date(pauseStartTime));
+        // Demander confirmation avant d'enregistrer et de supprimer place-card
+        const confirmation = window.confirm('Voulez-vous vraiment enregistrer et supprimer cet enregistrement ?');
+            if (confirmation) {
+
+
+    
+
+        // Afficher un log
+
+        const tempsAffiche = document.getElementById('chrono').textContent;
+        const enregistrement = `${lieu} - ${tempsAffiche} - ${zoneTexte.value.trim()}`;
+
+        // Envoyer les données à la page parente
+        sendEventToParent('enregistrement', enregistrement);
+
+ setTimeout(() => {
+                sendEventToParent('fermer', lieu);
+ }, 500);
+             }
+
+        }
+
 
         }
 
     
 
-      function sauvegarderEnregistrement(enregistrement) {
-        const enregistrementsDiv = document.getElementById('enregistrements');
-        const enregistrements = localStorage.getItem('enregistrements') || '';
-        const nouvelEnregistrement = `${enregistrements}${enregistrement}<br>`;
-        localStorage.setItem('enregistrements', nouvelEnregistrement);
-                console.log('Enregistrement effectué. Contenu de la zone de texte :', enregistrement);
-    }
-
     function cancelChrono() {
-        clearInterval(interval);
-        isPaused = false;
-        elapsedTime = 0;
-        const listItem = document.querySelector('.active-chrono');
-        listItem.remove(); // Supprimer l'élément de la liste
-        // Réinitialiser le formulaire
-        document.getElementById('zone-texte').value = '';
+sendEventToParent('fermer', lieu);
     }
 
     function displayTime(milliseconds) {
@@ -187,6 +190,17 @@ document.querySelector('.chrono-status').style.color = 'yellow';
     function pad(number) {
         return number < 10 ? `0${number}` : number;
     }
+
+
+    function sendEventToParent(eventType, eventData) {
+    const message = {
+        type: eventType,
+        data: eventData
+    };
+
+    // Envoyer le message à la fenêtre parente
+    window.parent.postMessage(message, '*');
+}
 </script>
 
 
