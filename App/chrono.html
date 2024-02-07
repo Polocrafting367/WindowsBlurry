@@ -157,7 +157,13 @@ document.querySelector('.chrono-status').style.color = 'yellow';
         // Afficher un log
 
         const tempsAffiche = document.getElementById('chrono').textContent;
-        const enregistrement = `${tempsAffiche} - ${lieu} - ${zoneTexte.value.trim()}`;
+const currentDate = new Date();
+
+// Formater la date en JJ/MM/AAAA
+const formattedDate = `${pad(currentDate.getDate())}/${pad(currentDate.getMonth() + 1)}/${currentDate.getFullYear()}`;
+
+// Construire la chaîne d'enregistrement avec la date
+const enregistrement = `${formattedDate} - ${tempsAffiche} - ${lieu} - ${zoneTexte.value.trim()}`;
 
         // Envoyer les données à la page parente
         sendEventToParent('enregistrement', enregistrement);
