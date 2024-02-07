@@ -1,0 +1,83 @@
+
+body {
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+    font-weight: bold;
+    font-size: 16px; /* Remplacez la valeur par celle que vous souhaitez */
+}
+
+
+#chrono {
+    font-size: 30px;
+    display: inline-block;
+    text-align: center;
+    margin: 0;
+}
+.chrono-status {
+    font-size: 20px;
+    display: inline-block;
+    text-align: center;
+    margin: 0;
+}
+
+    @media screen and (max-width: 600px) {
+    /* Styles spécifiques aux petits écrans */
+    .container {
+        max-width: 100%;
+        /* ... autres styles ... */
+
+
+    }
+}
+
+.modal-button {
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    padding: 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-right: 5px;
+        height: 30px;
+}
+
+
+
+.place-details {
+    display: flex;
+    flex-direction: column; /* Afficher les éléments en colonne */
+}
+
+
+
+@keyframes gradientMove {
+    0% {
+        background-position: 100% 0%;
+    }
+    50% {
+        background-position: 0% 100%;
+    }
+    100% {
+        background-position: 100% 0%;
+    }
+}
+li.active-chrono {
+    list-style: none;
+    background: linear-gradient(90deg, rgba(150,80,5,1) 0%, rgba(200,150,0,1) 50%, rgba(150,80,5,1) 100%);
+    background-size: 200% 200%;
+    animation: gradientMove 3s infinite;
+    border: 3px solid rgba(200,150,0,1);
+    border-radius: 8px;
+
+    padding: 10px; /* Remplacez la valeur par celle que vous souhaitez */
+}
+
+
+ li.active-chrono.paused {
+    background: linear-gradient(90deg, rgba(0,25,150,1) 0%, rgba(0,100,255,1) 50%, rgba(0,25,150,1) 100%);
+    border: 3px solid rgba(0,150,255,1);
+} li.active-chrono.STOP {
+    background: linear-gradient(90deg, rgba(255,10,10,1) 0%, rgba(150,25,25,1) 50%, rgba(255,10,10,1) 100%);
+    border: 3px solid rgba(255,25,0,1);
+}
+
