@@ -1,4 +1,26 @@
+
+
+
+function chargerIframesDepuisLocalStorage() {
+    // Récupérer la liste des lieux depuis le localStorage
+    const listeEnregistree = JSON.parse(localStorage.getItem('maListe')) || [];
+
+    // Parcourir la liste des lieux et ouvrir une iframe pour chacun
+    for (const lieu of listeEnregistree) {
+
+        ouvrirIframe(lieu);
+
+    }
+}
+
+setTimeout(chargerIframesDepuisLocalStorage, 100);
+
+
 function ouvrirIframe(nomLieu) {
+
+
+
+
     // Vérifier si une iframe avec la pastille "Actif - " existe déjà
     const pastille = document.getElementById(`pastille-${nomLieu}`);
     
@@ -16,6 +38,9 @@ function ouvrirIframe(nomLieu) {
     iframe.src = `chrono.html?lieu=${nomLieu}`;
 
     const iframeContainer = document.getElementById(`iframe-container-${nomLieu}`);
+
+
+Restolieu(nomLieu);
 
 
 
@@ -37,6 +62,7 @@ function ouvrirIframe(nomLieu) {
         for (var i = 0; i < iframesImbriquées.length; i++) {
             if (iframesImbriquées[i] !== iframe) {
                 iframesImbriquées[i].contentWindow.postMessage('NouvelleIframeCréée', '*');
+
             }
         }
     } else {
@@ -79,6 +105,8 @@ afficherEnregistrements();
   var iframeASupprimer = document.querySelector(`iframe[name="iframe-${iframeData.data}"]`);
   const pastille = document.getElementById(`pastille-${iframeData.data}`);
   pastille.innerHTML = `${iframeData.data}`;
+
+  supprimerRestolieu(iframeData.data)
 
     if (iframeASupprimer) {
         // Supprimer l'iframe
@@ -135,3 +163,41 @@ function searchLieu() {
 
 
 let isChronosActif = true; // Variable pour suivre l'état actuel
+
+
+function Restolieu(nomLieu) {
+    // Récupérer la liste actuelle depuis le localStorage
+    let listeEnregistree = JSON.parse(localStorage.getItem('maListe')) || [];
+
+    // Vérifier si le lieu existe déjà dans la liste
+    if (!listeEnregistree.includes(nomLieu)) {
+        // Ajouter le nouveau lieu à la liste
+        listeEnregistree.push(nomLieu);
+
+        // Enregistrer la liste mise à jour dans le localStorage
+        localStorage.setItem('maListe', JSON.stringify(listeEnregistree));
+
+    } else {
+
+    }
+}
+
+function supprimerRestolieu(lieuASupprimer) {
+    // Vérifier si iframeData.data est un tableau
+
+    let listeEnregistree = JSON.parse(localStorage.getItem('maListe')) || [];
+
+    // Vérifier si le lieu existe dans la liste
+    let index = listeEnregistree.indexOf(lieuASupprimer);
+    if (index !== -1) {
+        // Supprimer le lieu de la liste
+        listeEnregistree.splice(index, 1);
+
+        // Enregistrer la liste mise à jour dans le localStorage
+        localStorage.setItem('maListe', JSON.stringify(listeEnregistree));
+
+
+    } else {
+
+    }
+}

@@ -80,7 +80,7 @@ function chargerLieux() {
   "Cercleuse Petit plat GP",
   "Petit Plat PP",
   "Cercleuse Petit plat PP",
-  "Maximat",
+  "Maximat VT",
   "Metric",
   "TriA",
   "TriB",
@@ -95,6 +95,9 @@ function chargerLieux() {
   "Cercleuse Lapaw",
   "Poste bipage",
   "étiqueuteuse bipage",
+  "Compresseurs",
+  "Local eau",
+  "Chaudière",
   "Direction",
   "Batiment",
   "Menage",
@@ -262,12 +265,22 @@ function supprimerTousLesCookies() {
 
         // Supprimez le cookie 'enregistrements'
         localStorage.removeItem('enregistrements');
+        localStorage.removeItem('maListe');
 
+
+        const iframesImbriquées = document.querySelectorAll('iframe');
+        for (let i = 0; i < iframesImbriquées.length; i++) {
+            iframesImbriquées[i].contentWindow.postMessage('SupprimerCookie', '*');
+        }
+
+
+        
+        alert("Tous les cookies ont été supprimés");
         // Rafraîchissez la page ou mettez à jour l'affichage des enregistrements
         location.reload();
 
         // Affichez un message après la suppression des cookies
-        alert("Tous les cookies ont été supprimés");
+
     }
 }
 

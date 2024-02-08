@@ -1,19 +1,25 @@
 
 window.addEventListener('message', function(event) {
+
     // Vérifiez que le message provient de la page mère
     if (event.source !== window.parent) return;
 
     // Effectuez des actions en fonction du message reçu
-    if (event.data === 'NouvelleIframeCréée') {
+    //if (event.data === 'NouvelleIframeCréée') {
+
         // Vérifiez si vous n'êtes pas déjà en pause avant d'exécuter pauseResumeChrono
         if (!isPaused) {
             // Exécutez la fonction spécifique (maFonction)
             pauseResumeChrono();
-        } else {
+        } 
 
-        }
+          if (event.data === 'SupprimerCookie') {
+        // Supprimez le cookie spécifique à cette iframe
+        localStorage.removeItem(lieu); // Remplacez 'lieu' par le nom du cookie de l'iframe
     }
-});
+    }
+);
+
 
 
 
@@ -27,7 +33,8 @@ var lieu = getURLParameter('lieu');
  document.addEventListener('DOMContentLoaded', init);
 
     function init() {
-        startChrono()
+        restoreChronoData();
+
 
 
         // Vous pouvez ajouter d'autres initialisations ici
@@ -41,33 +48,115 @@ function getURLParameter(name) {
     return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
 }
 
-    let isPaused = false;
-    let startTime;
-    let pauseStartTime = 0;
-    let elapsedTime = 0;
-    let interval;
 
-    function startChrono(place) {
-    
+
+function restoreChronoData() {
+
+    // Récupérer les données du localStorage
+    const savedData = localStorage.getItem(lieu);
+
+
+    if (savedData) {
+        // Parser les données JSON
+        const chronoData = JSON.parse(savedData);
+
+        // Restaurer les variables
+        isPaused = chronoData.isPaused;
+        startTime = chronoData.startTime;
+        pauseStartTime = chronoData.pauseStartTime;
+        totalPauseDuration = chronoData.totalPauseDuration;
+        elapsedTime = chronoData.elapsedTime;
+
+        // Afficher un message de restauration dans la console
+        const zoneTexte = document.getElementById('zone-texte');
+        if (chronoData.texteZone) {
+            zoneTexte.value = chronoData.texteZone;
+        }
+
+
+        const listItem = document.querySelector('.active-chrono');
+        listItem.classList.remove('paused', 'STOP');
+        const pauseResumeButton = listItem.querySelector('.modal-button[onclick="pauseResumeChrono()"]');
+
+
+            if (isPaused) {        
+            const pauseDuration = new Date().getTime() - pauseStartTime;
+            totalPauseDuration += pauseDuration; // Ajouter la durée de la pause à la durée totale
+            startTime += pauseDuration;
+            pauseStartTime = new Date().getTime();
+            clearInterval(interval);
+            listItem.classList.add('paused');
+            pauseResumeButton.textContent = 'Reprendre';
+            pauseResumeButton.style.backgroundColor = 'green';
+            document.querySelector('.chrono-status').textContent = 'En pause';
+            document.querySelector('.chrono-status').style.color = 'yellow';
+
+
+}
+
+        const currentTime = new Date().getTime();
+        elapsedTime = currentTime - startTime ;
+        displayTime(elapsedTime);
+        interval = setInterval(updateChrono, 1000);
+
+
+
+
+    } else {
+        elapsedTime = 0;
+        isPaused = false;
+                startTime = new Date().getTime() - elapsedTime;
+        pauseStartTime = 0;
+        totalPauseDuration = 0;
+
+ let interval;
+
+
 
         const listItem = document.querySelector('.active-chrono');
         listItem.classList.remove('paused', 'STOP');
         document.querySelector('.chrono-status').textContent = 'En cours';
-        isPaused = false;
-        startTime = new Date().getTime() - elapsedTime;
+
+
         interval = setInterval(updateChrono, 1000);
+
+
+
+            const chronoData = {
+        isPaused: isPaused,
+        startTime: startTime,
+        pauseStartTime: pauseStartTime,
+        totalPauseDuration: totalPauseDuration,
+        elapsedTime: elapsedTime
+  
+    };
+
+    localStorage.setItem(lieu, JSON.stringify(chronoData));
+
+
                
     }
+
+
+}
+
 
     function updateChrono() {
         if (!isPaused) {
             const currentTime = new Date().getTime();
             elapsedTime = currentTime - startTime;
             displayTime(elapsedTime);
+
+
+
         }
+        
     }
 
-    let totalPauseDuration = 0;
+
+interval = setInterval(updateChrono, 1000);
+
+
 
     // ... (votre code existant)
 
@@ -78,15 +167,30 @@ function getURLParameter(name) {
         if (!isPaused) {
             isPaused = true;
             listItem.classList.add('paused');
-document.querySelector('.chrono-status').textContent = 'En pause';
-document.querySelector('.chrono-status').style.color = 'yellow';
+
 
             pauseStartTime = new Date().getTime();
             clearInterval(interval);
 
+            const chronoData = {
+        isPaused: isPaused,
+        startTime: startTime,
+        pauseStartTime: pauseStartTime,
+        totalPauseDuration: totalPauseDuration,
+        elapsedTime: elapsedTime
+ 
+    };
+
+    localStorage.setItem(lieu, JSON.stringify(chronoData));
+
+     
+
+
             // Modifier le bouton pour afficher "Reprendre"
             pauseResumeButton.textContent = 'Reprendre';
             pauseResumeButton.style.backgroundColor = 'green';
+            document.querySelector('.chrono-status').textContent = 'En pause';
+            document.querySelector('.chrono-status').style.color = 'yellow';
 
             // Afficher un log
       
@@ -105,6 +209,19 @@ document.querySelector('.chrono-status').style.color = 'yellow';
             pauseResumeButton.textContent = 'Pause';
             pauseResumeButton.style.backgroundColor = 'yellow';
 
+
+
+            const chronoData = {
+        isPaused: isPaused,
+        startTime: startTime,
+        pauseStartTime: pauseStartTime,
+        totalPauseDuration: totalPauseDuration,
+        elapsedTime: elapsedTime
+
+    };
+
+    localStorage.setItem(lieu, JSON.stringify(chronoData));
+
             // Afficher un log
   
         }
@@ -122,10 +239,24 @@ function saveRecord() {
          
         }
 
+
+            const chronoData = {
+        isPaused: isPaused,
+        startTime: startTime,
+        pauseStartTime: pauseStartTime,
+        totalPauseDuration: totalPauseDuration,
+        elapsedTime: elapsedTime
+
+    };
+
+    localStorage.setItem(lieu, JSON.stringify(chronoData));
+
+
+
         listItem.classList.add('STOP');
 
         document.querySelector('.chrono-status').textContent = 'Fini';
-        document.querySelector('.chrono-status').style.color = 'red';
+        document.querySelector('.chrono-status').style.color = 'white';
         pauseResumeButton.textContent = 'Reprendre';
         pauseResumeButton.style.backgroundColor = 'green';
 
@@ -153,6 +284,7 @@ function saveRecord() {
 
             setTimeout(() => {
                 sendEventToParent('fermer', lieu);
+                localStorage.removeItem(lieu);
             }, 100);
         }
     }
@@ -161,6 +293,7 @@ function saveRecord() {
 
     function cancelChrono() {
 sendEventToParent('fermer', lieu);
+localStorage.removeItem(lieu);
     }
 
     function displayTime(milliseconds) {
@@ -188,3 +321,23 @@ sendEventToParent('fermer', lieu);
 }
 
 
+
+const zoneTexte = document.getElementById('zone-texte');
+
+// Ajoutez un gestionnaire d'événements pour l'événement 'input'
+zoneTexte.addEventListener('input', function() {
+    // Mettez à jour la propriété texteZone dans l'objet chronoData
+                const chronoData = {
+        isPaused: isPaused,
+        startTime: startTime,
+        pauseStartTime: pauseStartTime,
+        totalPauseDuration: totalPauseDuration,
+        elapsedTime: elapsedTime
+
+    };
+    chronoData.texteZone = zoneTexte.value;
+
+    // Mettez à jour les données dans le localStorage
+    localStorage.setItem(lieu, JSON.stringify(chronoData));
+
+});
