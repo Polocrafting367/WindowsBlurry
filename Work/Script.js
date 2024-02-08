@@ -256,7 +256,7 @@ function mettreAJourListeDeroulante(lieuxEnregistres) {
 function supprimerTousLesCookies() {
     // Demandez une confirmation avant de supprimer tous les cookies
    const confirmation = window.confirm(
-  "Êtes-vous sûr de vouloir supprimer tous les cookies ?\nLes interventions et lieux personnalisés seront supprimés"
+  "Êtes-vous sûr de vouloir supprimer tous les cookies ?\nLes interventions, lieux personnalisés, chronos en court seront supprimés"
 );
 
     if (confirmation) {
@@ -274,7 +274,7 @@ function supprimerTousLesCookies() {
         }
 
 
-        
+
         alert("Tous les cookies ont été supprimés");
         // Rafraîchissez la page ou mettez à jour l'affichage des enregistrements
         location.reload();
@@ -328,9 +328,11 @@ function deleteCookies() {
         localStorage.removeItem('enregistrements');
 
         // Rafraîchir ou mettre à jour l'affichage des enregistrements
-        location.reload();
+
 
         alert("Tous les enregistrements ont été supprimés");
+
+                location.reload();
     }
 }
 
