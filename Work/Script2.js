@@ -145,21 +145,6 @@ function searchLieu() {
         }
     }
 }
-        window.addEventListener('beforeunload', function (event) {
-            // Votre logique de sauvegarde ou l'alerte ici
-            var confirmationMessage = "Les chrono ne seront pas sauvegarder. Êtes-vous sûr de vouloir actualiser/quitter la page ?";
-            
-            // Standard pour la plupart des navigateurs
-            if (typeof event === 'undefined') {
-                event = window.event;
-            }
-            
-            if (event) {
-                event.returnValue = confirmationMessage;
-            }
-            
-            return confirmationMessage;
-        });
 
 
 let isChronosActif = true; // Variable pour suivre l'état actuel
