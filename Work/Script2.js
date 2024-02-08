@@ -16,7 +16,6 @@ function chargerIframesDepuisLocalStorage() {
 setTimeout(chargerIframesDepuisLocalStorage, 100);
 
 
-
 function showNotification(message, nomLieu) {
     const notificationOptions = {
         body: message,
@@ -28,18 +27,23 @@ function showNotification(message, nomLieu) {
         Notification.requestPermission().then(function (permission) {
             if (permission === 'granted') {
                 const notification = new Notification('Chrono en cours', notificationOptions);
-                
+
                 // Ajouter un gestionnaire d'événements pour rediriger vers la page
                 notification.addEventListener('click', function () {
                     // Rediriger vers la page souhaitée
                     window.focus(); // Assure que la fenêtre est au premier plan
-toggleChronosState()
+                    toggleChronosState();
+
                     // Mettre à jour le texte de la zone de texte avec le lieu
                     const searchInput = document.getElementById('searchInput');
-                    searchInput.value = nomLieu;
-
-                    // Appeler la fonction de recherche
-                    searchLieu();
+                    if (searchInput) {
+                        searchInput.value = nomLieu;
+                        // Appeler la fonction de recherche
+                        searchLieu();
+                    } else {
+                        // Gérer le cas où l'élément searchInput n'est pas trouvé
+                        console.error("L'élément searchInput n'a pas été trouvé.");
+                    }
                 });
             }
         });
