@@ -191,7 +191,7 @@ h1 {
     background-color: #CCC;
     border-radius: 8px;
     color: black;
-    height: 30px;
+    height: 28px;
     border: none;
 }
 
@@ -270,11 +270,14 @@ h1 {
     margin-top: 10px;
     padding: 8px;
     border-radius: 4px;
+
 }
 
 #dell {
     background-color: red !important;
-color: black !important;
+    color: black !important;
+    font-weight: bold;
+    color: white !important;
 }
 #parametresTab #nouveauLieu {
 

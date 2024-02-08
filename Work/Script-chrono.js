@@ -52,6 +52,7 @@ function getURLParameter(name) {
 
 function restoreChronoData() {
 
+
     // Récupérer les données du localStorage
     const savedData = localStorage.getItem(lieu);
 

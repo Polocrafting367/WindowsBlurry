@@ -16,9 +16,40 @@ function chargerIframesDepuisLocalStorage() {
 setTimeout(chargerIframesDepuisLocalStorage, 100);
 
 
+
+function showNotification(message, nomLieu) {
+    const notificationOptions = {
+        body: message,
+        icon: 'bloc-notes.png' // Remplacez par le chemin de votre icône
+    };
+
+    // Vérifiez si les notifications sont supportées par le navigateur
+    if ('Notification' in window) {
+        Notification.requestPermission().then(function (permission) {
+            if (permission === 'granted') {
+                const notification = new Notification('Chrono en cours', notificationOptions);
+                
+                // Ajouter un gestionnaire d'événements pour rediriger vers la page
+                notification.addEventListener('click', function () {
+                    // Rediriger vers la page souhaitée
+                    window.focus(); // Assure que la fenêtre est au premier plan
+toggleChronosState()
+                    // Mettre à jour le texte de la zone de texte avec le lieu
+                    const searchInput = document.getElementById('searchInput');
+                    searchInput.value = nomLieu;
+
+                    // Appeler la fonction de recherche
+                    searchLieu();
+                });
+            }
+        });
+    }
+}
+
 function ouvrirIframe(nomLieu) {
 
-
+    const notificationMessage = "Chrono en cours sur : " + nomLieu ;
+    showNotification(notificationMessage, nomLieu);
 
 
     // Vérifier si une iframe avec la pastille "Actif - " existe déjà

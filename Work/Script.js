@@ -283,7 +283,22 @@ function supprimerTousLesCookies() {
 
     }
 }
+function supprimerchronos() {
+    const confirmation = window.confirm("Êtes-vous sûr de vouloir stopper tous les chronos?");
 
+    if (confirmation) {
+        const iframesImbriquées = document.querySelectorAll('iframe');
+
+        for (let i = 0; i < iframesImbriquées.length; i++) {
+            iframesImbriquées[i].contentWindow.postMessage('SupprimerCookie', '*');
+        }
+
+localStorage.removeItem('maListe');
+
+        alert("Tous les chronos ont été stoppés");
+        location.reload();
+    }
+}
 
 
 
