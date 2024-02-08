@@ -291,10 +291,23 @@ function saveRecord() {
 }
 
 
-    function cancelChrono() {
-sendEventToParent('fermer', lieu);
-localStorage.removeItem(lieu);
+function cancelChrono() {
+    // Afficher une boîte de dialogue de confirmation
+    var confirmation = confirm("Voulez vous vraiment fermer le chrono ?");
+
+    // Vérifier la réponse de l'utilisateur
+    if (confirmation) {
+        // Si l'utilisateur clique sur "OK", envoyer l'événement et supprimer l'élément localStorage
+        sendEventToParent('fermer', lieu);
+        localStorage.removeItem(lieu);
+
+        // Afficher un message de validation
+
+    } else {
+        // Si l'utilisateur clique sur "Annuler", ne rien faire
+
     }
+}
 
     function displayTime(milliseconds) {
         const seconds = Math.floor(milliseconds / 1000);
