@@ -361,7 +361,8 @@ button {display: block !important;}
     top: 0; /* Vous pouvez ajuster la valeur de 'top' selon vos besoins pour positionner le bouton verticalement */
 }
 
-.pastille {display: block !important;}
+.pastille {display: block !important;
+width: calc(100% - 40px);}
 
 
 
@@ -369,3 +370,4 @@ button {display: block !important;}
 
 /* Ajoutez des règles pour d'autres niveaux si nécessaire */
 ul {    padding-left: 20px;}
+
