@@ -362,3 +362,10 @@ button {display: block !important;}
 }
 
 .pastille {display: block !important;}
+
+
+
+
+
+/* Ajoutez des règles pour d'autres niveaux si nécessaire */
+ul {    padding-left: 20px;}

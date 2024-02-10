@@ -145,8 +145,12 @@ function searchLieu(arbre) {
     for (let i = 0; i < lieuxItems.length; i++) {
         const lieuItem = lieuxItems[i];
         const lieuName = normalizeString(lieuItem.innerText.toLowerCase());
-        const regex = new RegExp(searchTerm, 'i');
-        const matchesSearch = lieuName.match(regex);
+
+        // Diviser le terme de recherche en mots clés
+        const searchTerms = searchTerm.split(/\s+/);
+
+        // Vérifier si tous les mots clés sont présents dans le nom du lieu
+        const matchesSearch = searchTerms.every(term => lieuName.includes(term));
 
         if (matchesSearch) {
             // Afficher l'élément trouvé

@@ -8,7 +8,7 @@ function chargerLieux() {
 
     lieuxList.innerHTML = '';
 
-    
+
 
     function parcourirArborescence(arbre, parent, niveau = 0) {
         for (const lieu in arbre) {
@@ -17,7 +17,9 @@ function chargerLieux() {
             const displayStyle = (niveau === 0) ? 'block' : 'none';
             lieuItem.innerHTML = `<div class="place-card level-${niveau}" onclick="toggleNiveau(this, ${niveau})">
                                     <span class="pastille" data-texte="${lieu}" style="display:${displayStyle}">${icon} ${lieu}</span>
-                                    <button class="lancer-chrono-btn" onclick="ouvrirIframe('${lieu}')">Lancer chrono</button>
+                                      <button class="lancer-chrono-btn" onclick="ouvrirIframe('${lieu}')" style="width: 60px; height: 23px; ">
+                                          <img src="chrono.png" alt="Icône chrono" style="width: 20px; height: 20px; position: absolute; bottom: 2px; right: 18px;">
+                                      </button>
                                     <div class="iframe-container" id="iframe-container-${lieu}"></div>
                                 </div>`;
 
