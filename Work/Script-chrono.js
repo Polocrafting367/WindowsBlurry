@@ -55,7 +55,7 @@ function restoreChronoData() {
 
     // Récupérer les données du localStorage
     const savedData = localStorage.getItem(lieu);
-
+console.log(lieu)
 
     if (savedData) {
         // Parser les données JSON

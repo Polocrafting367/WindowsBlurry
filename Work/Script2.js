@@ -9,7 +9,30 @@ function chargerIframesDepuisLocalStorage() {
     for (const lieu of listeEnregistree) {
 
         ouvrirIframe(lieu);
+        ouvrirBranchesPourLieu(lieu);
+    }
+}
 
+
+function ouvrirBranchesPourLieu(lieu) {
+    const lieuxList = document.getElementById('lieux-list');
+    const lieuxItems = lieuxList.querySelectorAll('.place-card');
+
+    // Parcourir la liste des lieux pour trouver celui correspondant à l'iframe
+    for (const lieuItem of lieuxItems) {
+        const lieuName = lieuItem.querySelector('.pastille').getAttribute('data-texte');
+
+        if (lieu === lieuName) {
+            // Ouvrir les branches jusqu'à cet élément
+            let parent = lieuItem.parentElement;
+            while (parent && parent !== lieuxList) {
+                if (parent.tagName === 'UL') {
+                    parent.style.display = 'block';
+                }
+                parent = parent.parentElement;
+            }
+            break; // Sortir de la boucle dès qu'on trouve le lieu correspondant
+        }
     }
 }
 
@@ -50,60 +73,7 @@ function showNotification(message, nomLieu) {
     }
 }
 
-function ouvrirIframe(nomLieu) {
 
-    const notificationMessage = "Chrono en cours sur : " + nomLieu ;
-    showNotification(notificationMessage, nomLieu);
-
-
-    // Vérifier si une iframe avec la pastille "Actif - " existe déjà
-    const pastille = document.getElementById(`pastille-${nomLieu}`);
-    
-    if (pastille && pastille.innerHTML.trim() === `Actif - ${nomLieu}`) {
-   
-        return;
-    }
-    // Créez une nouvelle iframe
-    const iframe = document.createElement('iframe');
-
-    // Définissez le nom de l'iframe en lien avec le lieu
-    iframe.name = `iframe-${nomLieu}`;
-
-    // Concaténer le nom du lieu à l'URL
-    iframe.src = `chrono.html?lieu=${nomLieu}`;
-
-    const iframeContainer = document.getElementById(`iframe-container-${nomLieu}`);
-
-
-Restolieu(nomLieu);
-
-
-
-    if (pastille) {
-        // Ajoutez "Actif - " suivi du nom du lieu au contenu de la pastille
-        pastille.innerHTML = `Actif - ${nomLieu}`;
-        pastille.dataset.active = "true"; // Marquer la pastille comme active
-    }
- 
-    if (iframeContainer) {
-        // Effacer le contenu existant
-        iframeContainer.innerHTML = '';
-
-        // Ajouter l'iframe à l'élément parent
-        iframeContainer.appendChild(iframe);
-
-        // Envoyez un message à toutes les iframes imbriquées
-        var iframesImbriquées = document.querySelectorAll('iframe');
-        for (var i = 0; i < iframesImbriquées.length; i++) {
-            if (iframesImbriquées[i] !== iframe) {
-                iframesImbriquées[i].contentWindow.postMessage('NouvelleIframeCréée', '*');
-
-            }
-        }
-    } else {
-        console.error(`Le conteneur iframe-container-${nomLieu} n'a pas été trouvé.`);
-    }
-}
 
 
 
@@ -135,13 +105,13 @@ afficherEnregistrements();
    } else if (iframeData.type === 'fermer') {
     // Faire quelque chose avec les données de fermeture
  
+    var iframeASupprimer = document.querySelector(`iframe[name="iframe-${iframeData.data}"]`);
+    const pastille = document.getElementById(`pastille-${iframeData.data}`);
 
-    // Cibler l'élément iframe-container par le nom contenu dans iframeData.data
-  var iframeASupprimer = document.querySelector(`iframe[name="iframe-${iframeData.data}"]`);
-  const pastille = document.getElementById(`pastille-${iframeData.data}`);
-  pastille.innerHTML = `${iframeData.data}`;
-
-  supprimerRestolieu(iframeData.data)
+    // Vérifier l'existence de la pastille avant de mettre à jour
+   
+        supprimerRestolieu(iframeData.data);
+    
 
     if (iframeASupprimer) {
         // Supprimer l'iframe
@@ -155,31 +125,58 @@ afficherEnregistrements();
 
 
 
-function searchLieu() {
+let searchActive = false; // Variable pour suivre l'état de la recherche
+
+// Importez la bibliothèque "unorm" si elle n'est pas déjà incluse dans votre projet
+// Exemple : <script src="https://unpkg.com/unorm@1.4.1"></script>
+
+function normalizeString(str) {
+    return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
+function searchLieu(arbre) {
     const searchInput = document.getElementById('searchInput');
-    const searchTerm = searchInput.value.toLowerCase();
+    const searchTerm = normalizeString(searchInput.value.toLowerCase());
 
     const lieuxList = document.getElementById('lieux-list');
-    const lieuxItems = lieuxList.getElementsByTagName('li');
+    const lieuxItems = lieuxList.querySelectorAll('li');
 
     // Parcourir la liste des lieux
     for (let i = 0; i < lieuxItems.length; i++) {
-        const lieuName = lieuxItems[i].innerText.toLowerCase();
-
-        // Utiliser une expression régulière pour chercher le terme de recherche n'importe où dans le texte
+        const lieuItem = lieuxItems[i];
+        const lieuName = normalizeString(lieuItem.innerText.toLowerCase());
         const regex = new RegExp(searchTerm, 'i');
-        
-        if (lieuName.match(regex)) {
+        const matchesSearch = lieuName.match(regex);
+
+        if (matchesSearch) {
             // Afficher l'élément trouvé
-            lieuxItems[i].style.display = 'block';
-            lieuxItems[i].classList.add('active');
+            lieuItem.style.display = 'block';
+            lieuItem.classList.add('active');
+
+            // Ouvrir les branches jusqu'à cet élément
+            let parent = lieuItem.parentElement;
+            while (parent && parent !== lieuxList) {
+                if (parent.tagName === 'UL') {
+                    parent.style.display = 'block';
+                }
+                parent = parent.parentElement;
+            }
         } else {
             // Cacher les éléments qui ne correspondent pas
-            lieuxItems[i].style.display = 'none';
-            lieuxItems[i].classList.remove('active');
+            lieuItem.style.display = 'none';
+            lieuItem.classList.remove('active');
         }
     }
+
+    // Refermer toutes les branches si la zone de recherche est vide
+    if (searchTerm === '') {
+        const allBranches = lieuxList.querySelectorAll('ul');
+        allBranches.forEach(branch => {
+            branch.style.display = 'none';
+        });
+    }
 }
+
 
 
 let isChronosActif = true; // Variable pour suivre l'état actuel

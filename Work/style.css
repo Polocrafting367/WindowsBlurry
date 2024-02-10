@@ -94,7 +94,7 @@ h1 {
 
 
 .lieux-list li {
-    background-color: #555; /* Fond sombre pour chaque élément de lieu */
+    background-color: rgba(150,150,150,0.2); /* Fond sombre pour chaque élément de lieu */
     margin: 10px 0;
     padding: 2.5px;
     border-radius: 8px;
@@ -348,3 +348,17 @@ iframe {
  height: 175px;
 
 }
+
+button {display: block !important;}
+
+.place-card {
+    position: relative;
+}
+
+.lancer-chrono-btn {
+    position: absolute;
+    right: 0;
+    top: 0; /* Vous pouvez ajuster la valeur de 'top' selon vos besoins pour positionner le bouton verticalement */
+}
+
+.pastille {display: block !important;}

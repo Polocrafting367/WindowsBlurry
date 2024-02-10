@@ -20,7 +20,10 @@
         <h1>Choix du Lieu, Machine</h1>
 <div id="rech">
     <button id="toggleButton" onclick="toggleChronosState()">Chronos Actif</button>
-    <input type="text" id="searchInput" placeholder="Rechercher un lieu..." oninput="searchLieu()">
+  <input type="text" id="searchInput" placeholder="Rechercher un lieu..." oninput="searchLieu()">
+
+
+
 </div>
 
         <ul id="lieux-list" class="lieux-list"></ul>
@@ -53,9 +56,8 @@
         <hr>
 
         <h2>Supprimer un lieu</h2>
-        <ul id="lieux-list">
-            <!-- La liste des lieux sera affichée ici -->
-        </ul>
+        <ul id="lieux-list"></ul>
+
         
         <select id="lieuxDropdown"></select>
         
@@ -77,11 +79,13 @@
 
 
 </body>
+<script src="unorm.js"></script>
 
+<script src="Lieu.js"></script>
 
 <script src="Script.js"></script>
 <script src="Script2.js"></script>
-
+<script src="ChargerLieu.js"></script>
 </html>
 
 

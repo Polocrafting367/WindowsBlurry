@@ -21,105 +21,6 @@ let globalPauseState = false;
 
 
 
-function chargerLieux() {
-    const lieuxList = document.getElementById('lieux-list');
-    const lieuxDropdown = document.getElementById('lieuxDropdown');
-
-    // Charger les lieux enregistrés dans le localStorage
-    const lieuxEnregistres = localStorage.getItem('lieuxEnregistres') || '';
-    const lieuxEnregistresArray = lieuxEnregistres.split(',');
-
-    lieuxList.innerHTML = '';
-
-    // Traitement des lieux enregistrés dans le localStorage
-    lieuxEnregistresArray.forEach(nomLieu => {
-        if (nomLieu.trim() !== '' && nomLieu !== '[]') {
-            const lieuItem = document.createElement('li');
-            lieuItem.innerHTML = `<div class="place-card" onclick="ouvrirIframe('${nomLieu}')">
-                                    <span class="pastille" id="pastille-${nomLieu}">${nomLieu}</span>
-                                    <div class="iframe-container" id="iframe-container-${nomLieu}"></div>
-                                </div>`;
-
-            lieuxList.appendChild(lieuItem);
-
-            const option = document.createElement('option');
-            option.value = nomLieu;
-            option.textContent = nomLieu;
-            lieuxDropdown.appendChild(option);
-        }
-    });
-
-    // Traitement des lieux définis dans le tableau
-     const lieuxPredefinisArray = [
-  "Accrochage",
-  "Laveuses",
-  "séchoir élécrtolux",
-  "séchoir résident",
-  "Linge Sale",
-  "Alvéoles Linge Sale",
-  "Slings",
-  "Alvéoles résident",
-  "Sings résident",
-  "Linge Sale résident",
-  "Futurail",
-  "DU.",
-  "CI.",
-  "Redresseur Linge Sale",
-  "Chargeur Linge Sale",
-  "Tunnel 10",
-  "Tunnel 12",
-  "Tunnel Kanne",
-  "séchoir Industriel lavatec",
-  "Filmeuse",
-  "Tunnel de lecture",
-  "étiqueuteuse Filmeuse",
-  "Expedition",
-  "étiqueuteuse Expedition",
-  "Navettes",
-  "Grand Plat GP",
-  "Cercleuse Petit plat GP",
-  "Petit Plat PP",
-  "Cercleuse Petit plat PP",
-  "Maximat VT",
-  "Metric",
-  "TriA",
-  "TriB",
-  "Cintre Bloqué/Bourrage",
-  "Tunnel de finition",
-  "Tunnel de Désinfection",
-  "Plieuse couverture",
-  "Cercleuse couverture",
-  "Plieuse eponge",
-  "Cercleuse eponge",
-  "Lapaw",
-  "Cercleuse Lapaw",
-  "Poste bipage",
-  "étiqueuteuse bipage",
-  "Compresseurs",
-  "Local eau",
-  "Chaudière",
-  "Direction",
-  "Batiment",
-  "Menage",
-  "Informatique",
-  "responsable",
-  "Autre"
-];
-
-
-    lieuxPredefinisArray.forEach(nomLieu => {
-        if (!lieuxEnregistresArray.includes(nomLieu) && nomLieu.trim() !== '' && nomLieu !== '[]') {
-            const lieuItem = document.createElement('li');
-            lieuItem.innerHTML = `<div class="place-card" onclick="ouvrirIframe('${nomLieu}')">
-                                    <span class="pastille" id="pastille-${nomLieu}">${nomLieu}</span>
-                                    <div class="iframe-container" id="iframe-container-${nomLieu}"></div>
-                                </div>`;
-
-            lieuxList.appendChild(lieuItem);
-        }
-    });
-}
-
 
 function supprimerLieu() {
     const lieuxDropdown = document.getElementById('lieuxDropdown');
@@ -165,6 +66,8 @@ function afficherEnregistrements() {
         enregistrementsDiv.innerHTML = enregistrements;
     }
 }
+
+
 function setDefaultTab() {
     // Ouvrir l'onglet "Créer" par défaut
     openTab('creer');
