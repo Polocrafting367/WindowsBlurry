@@ -1,13 +1,16 @@
 
 function chargerLieux() {
+
+
+
     const lieuxList = document.getElementById('lieux-list');
-    const lieuxDropdown = document.getElementById('lieuxDropdown');
+
 
     const lieuxEnregistres = localStorage.getItem('lieuxEnregistres') || '';
     const lieuxEnregistresArray = lieuxEnregistres.split(',');
 
-    lieuxList.innerHTML = '';
 
+const chronoTabContainer = document.getElementById('ChronoTab').querySelector('.container');
 
 
     function parcourirArborescence(arbre, parent, niveau = 0) {
@@ -15,20 +18,23 @@ function chargerLieux() {
             const lieuItem = document.createElement('li');
             const icon = (Object.keys(arbre[lieu]).length > 0) ? '▶' : ' '; // Utilisation de "▶" pour indiquer un élément fermé
             const displayStyle = (niveau === 0) ? 'block' : 'none';
-            lieuItem.innerHTML = `<div class="place-card level-${niveau}" onclick="toggleNiveau(this, ${niveau})">
-                                    <span class="pastille" data-texte="${lieu}" style="display:${displayStyle}">${icon} ${lieu}</span>
-                                      <button class="lancer-chrono-btn" onclick="ouvrirIframe('${lieu}')" style="width: 40px; height: 41px; position: absolute; top: -12px; right: -12px;     border-radius: 8px;">
-                                          <img src="chrono.png" alt="Icône chrono" style="width: 20px; height: 20px; position: absolute; bottom: 10px; right: 9px;">
-                                      </button>
-                                    <div class="iframe-container" id="iframe-container-${lieu}"></div>
-                                </div>`;
+
+lieuItem.innerHTML = `
+    <div class="place-card level-${niveau}" onclick="toggleNiveau(this, ${niveau})">
+        <span class="pastille" data-texte="${lieu}" style="display:${displayStyle}">${icon} ${lieu}</span>
+<button id="lancer-chrono-btn-${lieu}" data-lieu="${lieu}" onclick="ouvrirIframe('${lieu}')" style="width: 40px; height: 41px; position: absolute; top: -12px; right: -12px; border-radius: 8px; display: block;">
+            <img src="chrono.png" alt="Icône chrono" style="width: 20px; height: 20px; position: absolute; bottom: 10px; right: 9px;">
+        </button>
+        <div class="iframe-container" id="iframe-container-${lieu}"></div>
+    </div>`;
+
 
             parent.appendChild(lieuItem);
 
             const option = document.createElement('option');
             option.value = lieu;
             option.textContent = lieu;
-            lieuxDropdown.appendChild(option);
+ 
 
             if (Object.keys(arbre[lieu]).length > 0) {
                 const sousLieuxList = document.createElement('ul');
@@ -45,7 +51,6 @@ function chargerLieux() {
     // Traitement des lieux enregistrés dans le localStorage
 
 }
-
 function toggleNiveau(element, niveau) {
     const ulElement = element.nextElementSibling;
     if (ulElement) {
@@ -53,6 +58,12 @@ function toggleNiveau(element, niveau) {
         const iconElement = element.querySelector('.pastille');
         const texteElement = iconElement.getAttribute('data-texte');
         iconElement.innerHTML = (ulElement.style.display === 'none') ? '▶ ' + texteElement : '▼ ' + texteElement;
+
+        // Ajoutez une vérification pour désactiver le bouton si le niveau est non cliquable
+        const boutonLancerChrono = document.getElementById(`lancer-chrono-btn-${texteElement}`);
+        if (boutonLancerChrono && element.classList.contains('non-cliquable')) {
+            boutonLancerChrono.disabled = true;
+        }
 
         if (ulElement.style.display === 'block') {
             const sousNiveaux = ulElement.querySelectorAll('.pastille');
@@ -68,55 +79,160 @@ function toggleNiveau(element, niveau) {
 }
 
 
+let nombreChronosActifs = 0;
 
 function ouvrirIframe(nomLieu) {
-    console.log('Clic sur le bouton pour ouvrir l\'iframe');
+
+    toggleAnimations();
+
+    nombreChronosActifs++;
+    const chronoButton = document.getElementById('ChronoButton');
+    chronoButton.textContent = `${nombreChronosActifs} Chrono${nombreChronosActifs !== 1 ? 's' : ''}`;
+
 
     const notificationMessage = "Chrono en cours sur : " + nomLieu;
     showNotification(notificationMessage, nomLieu);
 
     // Vérifier si une iframe avec la pastille "Actif - " existe déjà
-    const pastille = document.querySelector(`[data-texte="${nomLieu}"]`);
-
-    if (pastille && (pastille.innerHTML.trim() === `Actif - ${nomLieu}` || pastille.innerHTML.trim() === `▼ Actif - ${nomLieu}`)) {
-        return;
-    }
-    // Créer une nouvelle iframe
-    const iframe = document.createElement('iframe');
-
-    // Définir le nom de l'iframe en lien avec le lieu
-    iframe.name = `iframe-${nomLieu}`;
-
-    // Concaténer le nom du lieu à l'URL
-    iframe.src = `chrono.html?lieu=${nomLieu}`;
-
-    const iframeContainer = document.getElementById(`iframe-container-${nomLieu}`);
-
     Restolieu(nomLieu);
 
-    if (pastille) {
-        // Ajouter "Actif - " suivi du nom du lieu au contenu de la pastille
-        pastille.innerHTML = `▼ Actif - <span class="pastille" data-texte="${nomLieu}" style="display:none">${nomLieu}</span>`;
-        pastille.dataset.active = "true"; // Marquer la pastille comme active
+    // Ajouter le titre et l'iframe au conteneur ChronoTab
+    ajouterTitreEtIframe(nomLieu);
+    dejacrée(nomLieu)
+
+    const boutonLancerChrono = document.getElementById(`lancer-chrono-btn-${nomLieu}`);
+if (boutonLancerChrono) {
+    boutonLancerChrono.classList.add('non-cliquable');
+
+    // Changer l'image du bouton
+    const imageChrono = boutonLancerChrono.querySelector('img');
+    if (imageChrono) {
+        imageChrono.src = 'loupe.png'; // Remplacez 'nouvelle_image.png' par le chemin de votre nouvelle image
+        imageChrono.alt = 'Nouvelle icône chrono'; // Remplacez 'Nouvelle icône chrono' par le nouvel texte alternatif
     }
 
-    if (iframeContainer) {
-        // Effacer le contenu existant
-        iframeContainer.innerHTML = '';
+    // Modifier le contenu de l'attribut "onclick" et mettre en surbrillance le chrono actif
+    boutonLancerChrono.setAttribute('onclick', `dejacrée('${nomLieu}')`);
+}
 
-        // Ajouter l'iframe à l'élément parent
-        iframeContainer.appendChild(iframe);
+}
 
-        // Envoyer un message à toutes les iframes imbriquées
-        const iframesImbriquées = document.querySelectorAll('iframe');
-        for (let i = 0; i < iframesImbriquées.length; i++) {
-            if (iframesImbriquées[i] !== iframe) {
-                iframesImbriquées[i].contentWindow.postMessage('NouvelleIframeCréée', '*');
+function dejacrée(nomLieu) {
+    openTab('Chrono');
+
+    // Remplacer les espaces par des traits d'union dans le nom du lieu
+    const nomLieuFormatte = nomLieu.toLowerCase().replace(/\s+/g, '-');
+
+    // Construire l'ID de l'iframe avec le nom formaté
+    const iframeId = `lieu-${nomLieuFormatte}`;
+    const chronoContainer = document.getElementById(iframeId);
+
+    const clignotements = 3;
+    let clignotementCount = 0;
+
+    if (chronoContainer) {
+        // Fonction pour effectuer un clignotement
+        function clignoter() {
+            chronoContainer.style.transition = 'background-color 0s ease';
+            chronoContainer.style.backgroundColor = (clignotementCount % 2 === 0) ? '#6C3' : 'rgba(100,100,100,1)';
+            clignotementCount++;
+
+            // Arrêter le clignotement après le nombre spécifié
+            if (clignotementCount >= clignotements * 2) {
+                clearInterval(clignotementInterval);
+                setTimeout(() => {
+                    // Disparaître après 1 seconde sans animation de fondu
+                    chronoContainer.style.transition = 'none';
+                    chronoContainer.style.backgroundColor = 'rgba(100,100,100,1)';
+                }, 1000);
             }
         }
-    } else {
-        console.error(`Le conteneur iframe-container-${nomLieu} n'a pas été trouvé.`);
+
+        // Clignoter toutes les 500 ms
+        const clignotementInterval = setInterval(clignoter, 250);
+
+        // Animer le scroll pour amener l'élément dans la vue visible même s'il est déjà visible
+        chronoContainer.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center',
+            inline: 'center'
+        });
     }
 }
 
 
+
+
+function ajouterTitreEtIframe(nomLieu) {
+    const chronosContainer = document.getElementById('chronosContainer');
+
+    // Créer un nouveau conteneur div pour le titre et l'iframe
+    const groupeContainer = document.createElement('div');
+    groupeContainer.setAttribute('id', `lieu-${nomLieu.toLowerCase().replace(/\s+/g, '-')}`); // Remplacer les espaces par des traits d'union
+    groupeContainer.setAttribute('class', 'groupe-container'); // Ajouter une classe générale si nécessaire
+
+    // Créer un nouveau conteneur div pour le titre du lieu
+    const titreLieuContainer = document.createElement('div');
+    titreLieuContainer.setAttribute('class', 'titre-lieu');
+    titreLieuContainer.textContent = nomLieu;
+
+    // Créer une nouvelle iframe
+    const iframe = document.createElement('iframe');
+    iframe.id = `iframe-${nomLieu.replace(/\s+/g, '-')}`; // Remplacer les espaces par des traits d'union
+    iframe.src = `chrono.html?lieu=${nomLieu}`;
+
+    // Ajouter le titre et l'iframe au conteneur principal
+    groupeContainer.appendChild(titreLieuContainer);
+    groupeContainer.appendChild(iframe);
+
+    // Ajouter le conteneur au conteneur ChronoTab
+    chronosContainer.appendChild(groupeContainer);
+
+
+
+if (groupeContainer) {
+    // Effacer le contenu existant
+
+
+    // Ajouter l'iframe à l'élément parent
+    groupeContainer.appendChild(iframe);
+
+    // Envoyer un message à toutes les iframes imbriquées
+    const iframesImbriquées = document.querySelectorAll('iframe');
+    for (let i = 0; i < iframesImbriquées.length; i++) {
+        if (iframesImbriquées[i] !== iframe) {
+            iframesImbriquées[i].contentWindow.postMessage('NouvelleIframeCréée', '*');
+        }
+    }
+}
+
+}
+
+
+
+// Fonction pour basculer les animations en fonction de l'attribut 'annim'
+function toggleAnimations() {
+    const chronoButton = document.getElementById('ChronoButton');
+    const annimValue = chronoButton.getAttribute('annim');
+
+    if (annimValue === 'true') {
+        activateAnimations();
+    } else {
+        deactivateAnimations();
+        chronoButton.setAttribute('annim', 'true'); // Mettre annim à true
+    }
+}
+
+
+// Appel initial pour déterminer l'état des animations lors du chargement de la page
+
+function activateAnimations() {
+    const chronoButton = document.getElementById('ChronoButton');
+    chronoButton.classList.add('active');
+}
+
+// Fonction pour désactiver les animations
+function deactivateAnimations() {
+    const chronoButton = document.getElementById('ChronoButton');
+    chronoButton.classList.remove('active');
+}

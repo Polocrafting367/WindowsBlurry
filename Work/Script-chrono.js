@@ -55,7 +55,7 @@ function restoreChronoData() {
 
     // Récupérer les données du localStorage
     const savedData = localStorage.getItem(lieu);
-console.log(lieu)
+
 
     if (savedData) {
         // Parser les données JSON
@@ -68,7 +68,7 @@ console.log(lieu)
         totalPauseDuration = chronoData.totalPauseDuration;
         elapsedTime = chronoData.elapsedTime;
 
-        // Afficher un message de restauration dans la console
+
         const zoneTexte = document.getElementById('zone-texte');
         if (chronoData.texteZone) {
             zoneTexte.value = chronoData.texteZone;
@@ -304,10 +304,7 @@ function cancelChrono() {
 
         // Afficher un message de validation
 
-    } else {
-        // Si l'utilisateur clique sur "Annuler", ne rien faire
-
-    }
+    } 
 }
 
     function displayTime(milliseconds) {

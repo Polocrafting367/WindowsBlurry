@@ -8,6 +8,7 @@
    cursor: pointer;
    padding: 10px;
    flex: 1;
+   height: 40px;
    box-sizing: border-box;
    text-align: center;
    background-color: #111;
@@ -63,7 +64,7 @@
 
 .container {
     max-width: 100%;
-    height: calc(100vh - 50px); /* 100% de la hauteur de la vue moins la hauteur de la bannière */
+    height: calc(100vh - 60px); /* 100% de la hauteur de la vue moins la hauteur de la bannière */
     overflow: hidden;
     background-color: #333;
     padding: 10px;
@@ -164,7 +165,7 @@ h1 {
 
 
 #enregistrements p {
-    margin: 5px 0; /* Force une marge de 5px en haut et en bas de chaque paragraphe */
+
     font-size: 18px; /* Modifiez la taille du texte selon vos besoins */
 
 }
@@ -275,7 +276,13 @@ h1 {
 
 #dell {
     background-color: red !important;
-    color: black !important;
+
+    font-weight: bold;
+    color: white !important;
+}
+#dellHARD {
+    background-color: black !important;
+
     font-weight: bold;
     color: white !important;
 }
@@ -338,18 +345,17 @@ h1 {
     border: none; /* Supprimer la bordure par défaut */
     height: 1px; /* Définir la hauteur de la ligne */
     background-color: #777; /* Couleur de la ligne */
-    margin: 20px 0; /* Marge autour de la ligne */
+    margin: 10px 0; /* Marge autour de la ligne */
 }
 
 iframe {
 
      width: 100%;
     border: none;
- height: 175px;
+ height: 165px;
 
 }
 
-button {display: block !important;}
 
 .place-card {
     position: relative;
@@ -370,4 +376,81 @@ width: calc(100% - 40px);}
 
 /* Ajoutez des règles pour d'autres niveaux si nécessaire */
 ul {    padding-left: 20px;}
+
+
+.titre-lieu {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+
+#ChronoTab {
+    overflow: auto; /* Ajoute une barre de défilement si nécessaire */
+    max-height: 100%; /* Ajustez la hauteur maximale selon vos besoins */
+}
+
+#chronosContainer {
+    overflow: auto; /* Ajoute une barre de défilement si nécessaire */
+    max-height: 100%; /* Ajustez la hauteur maximale selon vos besoins */
+}
+
+
+/* Ajoutez une règle spécifique pour les boutons toujours visibles */
+button {
+    display: block !important; /* Utilisez !important pour s'assurer que cette règle prévaut sur d'autres règles */
+}
+
+/* Ajoutez une règle pour masquer les sous-listes */
+.place-card ul {
+    display: none;
+}
+
+button.non-cliquable {
+    background-color: #6C3 !important;
+    cursor: not-allowed !important;
+    /* Autres styles pour un niveau non cliquable */
+}
+
+
+#ChronoButton {
+    background: #111;
+}
+
+@keyframes backgroundMove {
+    0%, 100% {
+        background-position: 100% 0;
+    }
+    50% {
+        background-position: 0 0;
+    }
+}
+
+#ChronoButton[annim="true"] {
+    background: #111 !important;
+    animation: none !important; /* Annuler les animations */
+}
+
+#ChronoButton {
+    background: linear-gradient(to right, #882200, #FFAA00);
+    background-size: 200% 100%; /* Réglez la taille du dégradé */
+    animation: backgroundMove 3s infinite;
+}
+
+#ChronoButton.active[annim="false"] {
+    background: #333;
+    animation: none; /* Annuler les animations */
+}
+
+
+
+.groupe-container  {
+
+    background-color: rgba(100,100,100,1);
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    border: 0px;
+
+}
 

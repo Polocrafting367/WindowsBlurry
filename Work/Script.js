@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
+    chargerLieuxPersonnalises();
     chargerLieux();
-    afficherEnregistrements();
     setDefaultTab();
 });
 
@@ -20,8 +20,6 @@ let globalPauseState = false;
 }
 
 
-
-
 function supprimerLieu() {
     const lieuxDropdown = document.getElementById('lieuxDropdown');
     const selectedLieu = lieuxDropdown.value;
@@ -35,7 +33,7 @@ function supprimerLieu() {
             const lieuxEnregistres = localStorage.getItem('lieuxEnregistres') || '';
             
             // Convertir la chaîne en tableau en supprimant les espaces vides
-            const lieuxEnregistresArray = lieuxEnregistres.split(',').filter(lieu => lieu.trim() !== '');
+            const lieuxEnregistresArray = lieuxEnregistres.split(',').filter(lieu => lieu.trim() !== '' && lieu !== "[]");
 
             const indexToRemove = lieuxEnregistresArray.indexOf(selectedLieu);
 
@@ -43,11 +41,20 @@ function supprimerLieu() {
                 lieuxEnregistresArray.splice(indexToRemove, 1);
                 localStorage.setItem('lieuxEnregistres', lieuxEnregistresArray.join(','));
 
-                // Rechargez la liste des lieux
-                chargerLieux();
+                // Effacer la liste déroulante actuelle
+                lieuxDropdown.innerHTML = '';
 
-                // Mettez à jour la liste déroulante
-                mettreAJourListeDeroulante(localStorage.getItem('lieuxEnregistres') || '');
+                lieuxEnregistresArray.forEach(nomLieu => {
+                    const option = document.createElement('option');
+                    option.value = nomLieu;
+                    option.textContent = nomLieu;
+                    lieuxDropdown.appendChild(option);
+                });
+
+                // Supprimer l'élément correspondant dans la liste lieux-list
+                const lieuxList = document.getElementById('lieux-list');
+                const lieuItemToRemove = document.querySelector(`[data-texte="${selectedLieu}"]`).parentNode.parentNode;
+                lieuxList.removeChild(lieuItemToRemove);
             }
         }
     }
@@ -58,22 +65,22 @@ function supprimerLieu() {
 
 
 
-function afficherEnregistrements() {
-    const enregistrementsDiv = document.getElementById('enregistrements');
-    const enregistrements = localStorage.getItem('enregistrements');
-
-    if (enregistrements) {
-        enregistrementsDiv.innerHTML = enregistrements;
-    }
-}
-
 
 function setDefaultTab() {
-    // Ouvrir l'onglet "Créer" par défaut
-    openTab('creer');
+
+    openTab('Chrono');
+
 }
 
 function openTab(tabName) {
+
+   const chronoButton = document.getElementById('ChronoButton');
+    const currentAnnimValue = chronoButton.getAttribute('annim');
+    const newAnnimValue = 'false' ;
+    chronoButton.setAttribute('annim', newAnnimValue);
+
+
+
     var i, tabcontent, tabbuttons;
 
     // Cacher tous les onglets
@@ -109,8 +116,9 @@ function ajouterLieu() {
         // Ajouter le nouveau lieu en haut de la liste lieux-list
         ajouterLieuEnHaut(nouveauLieu);
 
+
         // Mettre à jour la liste déroulante
-        mettreAJourListeDeroulante(nouveauxLieux);
+        mettreAJourListeDeroulante(nouveauLieu);
 
     }
 
@@ -121,36 +129,52 @@ function ajouterLieu() {
 function ajouterLieuEnHaut(nouveauLieu) {
     const lieuxList = document.getElementById('lieux-list');
 
-    // Créer un nouvel élément li
-    const lieuItem = document.createElement('li');
-            lieuItem.innerHTML = `<div class="place-card" onclick="ouvrirIframe('${nouveauLieu}')">
-                                    <span class="pastille" id="pastille-${nouveauLieu}">${nouveauLieu}</span>
-                                    <div class="iframe-container" id="iframe-container-${nouveauLieu}"></div>
-                                </div>`;
+    // Exclure les lieux vides
+    if (nouveauLieu.trim() !== '' && nouveauLieu !== "[]") {
+        // Créer un nouvel élément li
+        const lieuItem = document.createElement('li');
+        lieuItem.innerHTML = `
+            <div class="place-card level" >
+                <span class="pastille" data-texte="${nouveauLieu}" style="display:block"> ${nouveauLieu}</span>
+                <button id="lancer-chrono-btn-${nouveauLieu}" data-lieu="${nouveauLieu}" onclick="ouvrirIframe('${nouveauLieu}')" style="width: 40px; height: 41px; position: absolute; top: -12px; right: -12px; border-radius: 8px; display: block;">
+                    <img src="chrono.png" alt="Icône chrono" style="width: 20px; height: 20px; position: absolute; bottom: 10px; right: 9px;">
+                </button>
+                <div class="iframe-container" id="iframe-container-${nouveauLieu}"></div>
+            </div>`;
 
-    // Insérer l'élément en haut de la liste lieux-list
-    lieuxList.prepend(lieuItem);
+        // Insérer l'élément en haut de la liste lieux-list
+        lieuxList.prepend(lieuItem);
+    }
 }
 
 
-function mettreAJourListeDeroulante(lieuxEnregistres) {
+function mettreAJourListeDeroulante(nouveauLieu) {
     const lieuxDropdown = document.getElementById('lieuxDropdown');
 
-    // Effacer la liste déroulante actuelle
-    lieuxDropdown.innerHTML = '';
+    // Vérifier si nouveauLieu est différent de "[]"
+    if (nouveauLieu.trim() !== '' && nouveauLieu !== "[]") {
+        // Ajouter le nouvel élément à la liste déroulante
+        const option = document.createElement('option');
+        option.value = nouveauLieu;
+        option.textContent = nouveauLieu;
+        lieuxDropdown.appendChild(option);
+    }
+}
 
-    // Convertir la chaîne en tableau en supprimant les espaces vides
-    const lieuxEnregistresArray = lieuxEnregistres.split(',').filter(lieu => lieu.trim() !== '');
 
-    lieuxEnregistresArray.forEach(nomLieu => {
-        // Ajouter seulement si le lieu n'est pas "[ ]"
-        if (nomLieu !== "[]") {
-            const option = document.createElement('option');
-            option.value = nomLieu;
-            option.textContent = nomLieu;
-            lieuxDropdown.appendChild(option);
-        }
-    });
+function chargerLieuxPersonnalises() {
+    console.log('Chargement des lieux personnalisés...');
+    
+    const lieuxEnregistres = localStorage.getItem('lieuxEnregistres') || '';
+    const lieuxEnregistresArray = lieuxEnregistres.split(',');
+
+    const lieuxList = document.getElementById('lieux-list');
+
+    for (const lieuEnregistre of lieuxEnregistresArray) {
+        console.log(lieuEnregistre);
+        ajouterLieuEnHaut(lieuEnregistre);
+        mettreAJourListeDeroulante(lieuEnregistre)
+    }
 }
 
 
@@ -171,10 +195,18 @@ function supprimerTousLesCookies() {
         localStorage.removeItem('maListe');
 
 
+const chronosContainer = document.getElementById('chronosContainer');
+parcourirArborescenceEtCreerIframes(arborescence, chronosContainer);
+
         const iframesImbriquées = document.querySelectorAll('iframe');
+
         for (let i = 0; i < iframesImbriquées.length; i++) {
             iframesImbriquées[i].contentWindow.postMessage('SupprimerCookie', '*');
         }
+
+localStorage.removeItem('maListe');
+
+
 
 
 
@@ -187,6 +219,8 @@ function supprimerTousLesCookies() {
     }
 }
 function supprimerchronos() {
+
+
     const confirmation = window.confirm("Êtes-vous sûr de vouloir stopper tous les chronos?");
 
     if (confirmation) {
@@ -204,6 +238,46 @@ localStorage.removeItem('maListe');
 }
 
 
+function supprimerchronosHARD() {
+    const confirmation = window.confirm("Êtes-vous sûr de vouloir stopper tous les chronos?");
+
+   if (confirmation) {
+    
+const chronosContainer = document.getElementById('chronosContainer');
+parcourirArborescenceEtCreerIframes(arborescence, chronosContainer);
+
+        const iframesImbriquées = document.querySelectorAll('iframe');
+
+        for (let i = 0; i < iframesImbriquées.length; i++) {
+            iframesImbriquées[i].contentWindow.postMessage('SupprimerCookie', '*');
+        }
+
+localStorage.removeItem('maListe');
+
+        alert("Tous les chronos ont été stoppés");
+        location.reload();
+
+    }
+}
+
+
+function parcourirArborescenceEtCreerIframes(arbre, parent) {
+    for (const lieu in arbre) {
+        const iframeContainer = document.createElement('div');
+        const iframe = document.createElement('iframe');
+        const nomLieu = lieu.toLowerCase().replace(/\s+/g, '-');
+
+        iframe.id = `iframe-${nomLieu}`;
+        iframe.src = `chrono.html?lieu=${lieu}`;
+
+        iframeContainer.appendChild(iframe);
+        parent.appendChild(iframeContainer);
+
+        if (Object.keys(arbre[lieu]).length > 0) {
+            parcourirArborescenceEtCreerIframes(arbre[lieu], iframeContainer);
+        }
+    }
+}
 
 function exportToTxt() {
     const enregistrementsDiv = document.getElementById('enregistrements');
@@ -253,50 +327,3 @@ function deleteCookies() {
                 location.reload();
     }
 }
-
-function toggleChronosState() {
-    const lieuxList = document.getElementById('lieux-list');
-    const lieuxItems = lieuxList.getElementsByTagName('li');
-    const searchInput = document.getElementById('searchInput');
-
-    if (isChronosActif) {
-        // Mettre à jour la valeur de la zone de recherche avec "Actif"
-        searchInput.value = 'actif';
-
-        // Parcourir la liste des lieux
-        for (let i = 0; i < lieuxItems.length; i++) {
-            const lieuName = lieuxItems[i].innerText.toLowerCase();
-
-            // Vérifier si le lieu contient "Actif" dans son nom
-            if (lieuName.includes('actif')) {
-                // Afficher l'élément
-                lieuxItems[i].style.display = 'block';
-                lieuxItems[i].classList.add('active');
-            } else {
-                // Cacher les éléments qui ne contiennent pas "Actif"
-                lieuxItems[i].style.display = 'none';
-                lieuxItems[i].classList.remove('active');
-            }
-        }
-
-        // Mettre à jour le texte du bouton
-        document.getElementById('toggleButton').innerText = 'Retour';
-
-    } else {
-        // Réinitialiser la recherche
-        searchInput.value = '';
-
-        // Afficher tous les éléments
-        for (let i = 0; i < lieuxItems.length; i++) {
-            lieuxItems[i].style.display = 'block';
-            lieuxItems[i].classList.remove('active');
-        }
-
-        // Mettre à jour le texte du bouton
-        document.getElementById('toggleButton').innerText = 'Chronos Actif';
-    }
-
-    // Inverser l'état
-    isChronosActif = !isChronosActif;
-}
-
