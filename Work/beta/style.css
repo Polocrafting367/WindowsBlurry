@@ -276,7 +276,13 @@ h1 {
 
 #dell {
     background-color: red !important;
-    color: black !important;
+
+    font-weight: bold;
+    color: white !important;
+}
+#dellHARD {
+    background-color: black !important;
+
     font-weight: bold;
     color: white !important;
 }

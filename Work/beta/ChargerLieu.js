@@ -1,12 +1,14 @@
 
 function chargerLieux() {
+
+
+
     const lieuxList = document.getElementById('lieux-list');
-    const lieuxDropdown = document.getElementById('lieuxDropdown');
+
 
     const lieuxEnregistres = localStorage.getItem('lieuxEnregistres') || '';
     const lieuxEnregistresArray = lieuxEnregistres.split(',');
 
-    lieuxList.innerHTML = '';
 
 const chronoTabContainer = document.getElementById('ChronoTab').querySelector('.container');
 
@@ -32,7 +34,7 @@ lieuItem.innerHTML = `
             const option = document.createElement('option');
             option.value = lieu;
             option.textContent = lieu;
-            lieuxDropdown.appendChild(option);
+ 
 
             if (Object.keys(arbre[lieu]).length > 0) {
                 const sousLieuxList = document.createElement('ul');
