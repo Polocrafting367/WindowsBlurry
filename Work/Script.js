@@ -2,11 +2,21 @@ document.addEventListener("DOMContentLoaded", function () {
     chargerLieuxPersonnalises();
     chargerLieux();
     setDefaultTab();
+    afficherEnregistrements();
 });
 
 
 if (!localStorage.getItem('lieuxEnregistres')) {
     localStorage.setItem('lieuxEnregistres', JSON.stringify([]));
+}
+
+function afficherEnregistrements() {
+    const enregistrementsDiv = document.getElementById('enregistrements');
+    const enregistrements = localStorage.getItem('enregistrements');
+
+    if (enregistrements) {
+        enregistrementsDiv.innerHTML = enregistrements;
+    }
 }
 
 
