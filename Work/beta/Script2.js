@@ -91,19 +91,18 @@ window.addEventListener('message', function(event) {
 
     const iframeData = event.data;
 
-    if (iframeData.type === 'enregistrement') {
-                // Les données de l'iframe sont dans event.data
-        
-        // Faites quelque chose avec les données, par exemple, enregistrez-les
- const enregistrementsDiv = document.getElementById('enregistrements');
-const enregistrements = localStorage.getItem('enregistrements') || '';
-const nouvelEnregistrement = `${enregistrements}${iframeData.data}<br>`; // Accédez à la propriété 'data'
-localStorage.setItem('enregistrements', nouvelEnregistrement);
+if (iframeData.type === 'enregistrement') {
+    const enregistrementsDiv = document.getElementById('enregistrements');
+    const enregistrements = localStorage.getItem('enregistrements') || '';
+    
+    // Ajouter le nouvel enregistrement avec le séparateur <hr>
+    const separateur = '<hr>';
+    const nouvelEnregistrement = `${enregistrements ? separateur : ''}${iframeData.data}`;
+    
+    localStorage.setItem('enregistrements', `${enregistrements}${nouvelEnregistrement}`);
 
-
-
-
-        enregistrementsDiv.innerHTML = '';
+    // Mettre à jour le contenu de la div en utilisant les enregistrements avec les séparateurs <hr>
+    enregistrementsDiv.innerHTML = localStorage.getItem('enregistrements');
 
 
 afficherEnregistrements();
