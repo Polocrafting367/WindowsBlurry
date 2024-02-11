@@ -6,10 +6,10 @@ const arborescence = {
                     "tapis": {},
                     "INC ..": {},
                 },
-                "Poste d'accrochage": {},
                 "station déchargement (DU...)": {},
                 "tampon stockage": {},
                 "voie de stockage": {},
+                "Accrochage": {},
                 "Tunnel de désinfection": {}
             },
             
@@ -36,7 +36,7 @@ const arborescence = {
             }
         },
         "lavages": {
-            "Lavage laveuses ": {},
+            "Lavage laveuses": {},
             "Séchoirs manuels": {},
             "Lavage": {
                 "tapis lavage industriel": {},
@@ -152,7 +152,7 @@ const arborescence = {
          "Batiment": {            
             "Sanitaires": {},            
             "Self": {},
-            "Système d'alarme incendie": {}
+            "Alarme incendie": {}
         },
         "Magasin": {            
             "Imprimante étiquette CAB": {},            
@@ -177,7 +177,7 @@ const arborescence = {
             "local Pneumatique": {               
                 "Compresseur (droite côté CTA)": {},
                 "Compresseur (gauche côté nappe résident)": {},
-                "Sécheur d'air": {}
+                "Sécheur d air": {}
         },
             "local TGBT": {},
             "local ventilation": {},

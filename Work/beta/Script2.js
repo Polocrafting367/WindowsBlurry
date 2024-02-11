@@ -1,17 +1,27 @@
 
 
-
 function chargerIframesDepuisLocalStorage() {
     // Récupérer la liste des lieux depuis le localStorage
     const listeEnregistree = JSON.parse(localStorage.getItem('maListe')) || [];
 
     // Parcourir la liste des lieux et ouvrir une iframe pour chacun
     for (const lieu of listeEnregistree) {
-
         ouvrirIframe(lieu);
         ouvrirBranchesPourLieu(lieu);
     }
+
+    // Ouvrir l'onglet "Créer" par défaut si la liste est vide
+    if (listeEnregistree.length === 0) {
+        openTab('creer');
+           const chronoButton = document.getElementById('ChronoButton');
+    const currentAnnimValue = chronoButton.getAttribute('annim');
+    const newAnnimValue = 'true' ;
+    chronoButton.setAttribute('annim', newAnnimValue);
+
+
+    }
 }
+
 
 
 function ouvrirBranchesPourLieu(lieu) {
@@ -102,24 +112,41 @@ localStorage.setItem('enregistrements', nouvelEnregistrement);
 afficherEnregistrements();
 
    
-   } else if (iframeData.type === 'fermer') {
-    // Faire quelque chose avec les données de fermeture
- 
-    var iframeASupprimer = document.querySelector(`iframe[name="iframe-${iframeData.data}"]`);
-    const pastille = document.getElementById(`pastille-${iframeData.data}`);
+   }else if (iframeData.type === 'fermer') {
+        // Recherche de l'iframe à l'intérieur de laquelle l'événement a été déclenché
+const iframeId = `iframe-${iframeData.data.replace(/\s+/g, '-')}`;
+console.log("L'iframe recherchée: " + iframeId);
 
-    // Vérifier l'existence de la pastille avant de mettre à jour
-   
-        supprimerRestolieu(iframeData.data);
-    
+const iframeASupprimer = document.getElementById(iframeId);
+console.log(iframeASupprimer);
 
-    if (iframeASupprimer) {
-        // Supprimer l'iframe
-        iframeASupprimer.remove();
-    } else {
-        console.error(`L'iframe avec le nom ${iframeData.data} n'a pas été trouvé.`);
+
+
+        if (iframeASupprimer) {
+            // Vérifier l'existence de la pastille avant de mettre à jour
+            supprimerRestolieu(iframeData.data);
+
+            const groupeContainer = iframeASupprimer.parentNode;
+
+            if (groupeContainer) {
+                console.log(`Le conteneur parent existe.`);
+
+                // Supprimer le conteneur
+                groupeContainer.remove();
+
+                nombreChronosActifs--;
+                const chronoButton = document.getElementById('ChronoButton');
+                chronoButton.textContent = `${nombreChronosActifs} Chrono Actif${nombreChronosActifs !== 1 ? 's' : ''}`;
+
+                // Supprimer l'iframe
+                iframeASupprimer.remove();
+            } else {
+                console.error(`Le conteneur parent de l'iframe avec le nom ${iframeData.data} n'a pas été trouvé.`);
+            }
+        } else {
+            console.error(`L'iframe avec le nom ${iframeData.data} n'a pas été trouvée.`);
+        }
     }
-}
 
 });
 

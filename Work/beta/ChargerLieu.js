@@ -80,10 +80,13 @@ function toggleNiveau(element, niveau) {
 let nombreChronosActifs = 0;
 
 function ouvrirIframe(nomLieu) {
-
-toggleAnimations();
+    
+    toggleAnimations();
 
     nombreChronosActifs++;
+    const chronoButton = document.getElementById('ChronoButton');
+    chronoButton.textContent = `${nombreChronosActifs} Chrono Actif${nombreChronosActifs !== 1 ? 's' : ''}`;
+
 
     const notificationMessage = "Chrono en cours sur : " + nomLieu;
     showNotification(notificationMessage, nomLieu);
@@ -93,21 +96,47 @@ toggleAnimations();
 
     // Ajouter le titre et l'iframe au conteneur ChronoTab
     ajouterTitreEtIframe(nomLieu);
+    dejacrée(nomLieu)
 
+    const boutonLancerChrono = document.getElementById(`lancer-chrono-btn-${nomLieu}`);
 
-
-
-const niveauNonCliquable = true; // Remplacez par votre condition pour déterminer si le niveau est non cliquable
-const boutonLancerChrono = document.getElementById(`lancer-chrono-btn-${nomLieu}`);
-
-if (boutonLancerChrono && niveauNonCliquable) {
-    boutonLancerChrono.classList.add('non-cliquable');
-    boutonLancerChrono.disabled = true; // Ajoutez l'attribut disabled pour rendre le bouton non cliquable
+    if (boutonLancerChrono) {
+        boutonLancerChrono.classList.add('non-cliquable');
+        
+        // Modifier le contenu de l'attribut "onclick" et mettre en surbrillance le chrono actif
+        boutonLancerChrono.setAttribute('onclick', `dejacrée('${nomLieu}')`);
+    }
 }
 
+function dejacrée(nomLieu) {
+    openTab('Chrono');
 
+    // Remplacer les espaces par des traits d'union dans le nom du lieu
+    const nomLieuFormatte = nomLieu.toLowerCase().replace(/\s+/g, '-');
+
+    // Construire l'ID de l'iframe avec le nom formaté
+    const iframeId = `lieu-${nomLieuFormatte}`;
+    const chronoContainer = document.getElementById(iframeId);
+
+    if (chronoContainer) {
+        // Mettre en surbrillance le chrono actif en changeant le fond du conteneur avec une animation
+        chronoContainer.style.transition = 'background-color 1s ease';
+        chronoContainer.style.backgroundColor = 'rgba(0,200,225,1)';
+
+        // Animer le scroll pour amener l'élément dans la vue visible même s'il est déjà visible
+        chronoContainer.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center', // Ajustez selon vos besoins
+            inline: 'center' // Ajustez selon vos besoins
+        });
+
+        // Disparaître après 1 seconde en fondu
+        setTimeout(() => {
+            chronoContainer.style.transition = 'background-color 1s ease';
+            chronoContainer.style.backgroundColor = 'rgba(100,100,100,1)';
+        }, 1000);
+    }
 }
-
 
 
 
@@ -116,16 +145,17 @@ function ajouterTitreEtIframe(nomLieu) {
 
     // Créer un nouveau conteneur div pour le titre et l'iframe
     const groupeContainer = document.createElement('div');
-    groupeContainer.classList.add('groupe-container');
+    groupeContainer.setAttribute('id', `lieu-${nomLieu.toLowerCase().replace(/\s+/g, '-')}`); // Remplacer les espaces par des traits d'union
+    groupeContainer.setAttribute('class', 'groupe-container'); // Ajouter une classe générale si nécessaire
 
     // Créer un nouveau conteneur div pour le titre du lieu
     const titreLieuContainer = document.createElement('div');
-    titreLieuContainer.classList.add('titre-lieu');
+    titreLieuContainer.setAttribute('class', 'titre-lieu');
     titreLieuContainer.textContent = nomLieu;
 
     // Créer une nouvelle iframe
     const iframe = document.createElement('iframe');
-    iframe.name = `iframe-${nomLieu}`;
+    iframe.id = `iframe-${nomLieu.replace(/\s+/g, '-')}`; // Remplacer les espaces par des traits d'union
     iframe.src = `chrono.html?lieu=${nomLieu}`;
 
     // Ajouter le titre et l'iframe au conteneur principal
@@ -134,15 +164,10 @@ function ajouterTitreEtIframe(nomLieu) {
 
     // Ajouter le conteneur au conteneur ChronoTab
     chronosContainer.appendChild(groupeContainer);
-
-
-   const chronoButton = document.getElementById('ChronoButton');
-
-    if (chronoButton) {
-        chronoButton.textContent = `${nombreChronosActifs} Chrono Actif${nombreChronosActifs !== 1 ? 's' : ''}`;
-    
 }
-}
+
+
+
 // Fonction pour basculer les animations en fonction de l'attribut 'annim'
 function toggleAnimations() {
     const chronoButton = document.getElementById('ChronoButton');

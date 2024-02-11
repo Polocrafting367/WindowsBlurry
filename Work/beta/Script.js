@@ -69,8 +69,9 @@ function afficherEnregistrements() {
 
 
 function setDefaultTab() {
-    // Ouvrir l'onglet "Créer" par défaut
+
     openTab('Chrono');
+    
 }
 
 function openTab(tabName) {
