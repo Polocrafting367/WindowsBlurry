@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<button id="beta" onclick="window.location.href='beta/index.html'">Voir page beta !</button>
 <html lang="fr" translate="no">
 <head translate="no">
     <meta charset="UTF-8">
@@ -11,6 +10,9 @@
 <body>
 <div class="tab">
     <div id="creerButton" class="tab-button" onclick="openTab('creer')">Créer</div>
+<div id="ChronoButton" class="tab-button" onclick="openTab('Chrono')" annim="false">Chronos Actifs</div>
+
+
     <div id="interventionsButton" class="tab-button" onclick="openTab('interventions')">Interventions</div>
     <div id="parametresButton" class="tab-button" onclick="openTab('parametres')">Paramètres</div>
 </div>
@@ -20,7 +22,7 @@
     <div class="container">
         <h1>Choix du Lieu, Machine</h1>
 <div id="rech">
-    <button id="toggleButton" onclick="toggleChronosState()">Chronos Actif</button>
+
   <input type="text" id="searchInput" placeholder="Rechercher un lieu..." oninput="searchLieu()">
 
 
@@ -30,6 +32,17 @@
         <ul id="lieux-list" class="lieux-list"></ul>
     </div>
 </div>
+
+<div id="ChronoTab" class="tabcontent">
+    <!-- Contenu de l'onglet "Chrono" -->
+    <div class="container">
+        <div id="chronosContainer"></div>
+    </div>
+</div>
+
+
+
+
 
 <div id="interventionsTab" class="tabcontent">
     <!-- Contenu de l'onglet "Interventions" -->
