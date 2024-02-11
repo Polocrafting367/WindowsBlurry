@@ -8,6 +8,7 @@
    cursor: pointer;
    padding: 10px;
    flex: 1;
+   height: 40px;
    box-sizing: border-box;
    text-align: center;
    background-color: #111;
@@ -63,7 +64,7 @@
 
 .container {
     max-width: 100%;
-    height: calc(100vh - 50px); /* 100% de la hauteur de la vue moins la hauteur de la bannière */
+    height: calc(100vh - 60px); /* 100% de la hauteur de la vue moins la hauteur de la bannière */
     overflow: hidden;
     background-color: #333;
     padding: 10px;
@@ -345,10 +346,9 @@ iframe {
 
      width: 100%;
     border: none;
- height: 175px;
+ height: 163px;
 
 }
-
 
 
 .place-card {
@@ -400,7 +400,7 @@ button {
 }
 
 button.non-cliquable {
-    background-color: grey !important;
+    background-color: #6C3 !important;
     cursor: not-allowed !important;
     /* Autres styles pour un niveau non cliquable */
 }

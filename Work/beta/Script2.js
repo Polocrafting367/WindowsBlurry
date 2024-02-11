@@ -73,10 +73,7 @@ function showNotification(message, nomLieu) {
                         searchInput.value = nomLieu;
                         // Appeler la fonction de recherche
                         searchLieu();
-                    } else {
-                        // Gérer le cas où l'élément searchInput n'est pas trouvé
-                        console.error("L'élément searchInput n'a pas été trouvé.");
-                    }
+                    } 
                 });
             }
         });
@@ -115,12 +112,25 @@ afficherEnregistrements();
    }else if (iframeData.type === 'fermer') {
         // Recherche de l'iframe à l'intérieur de laquelle l'événement a été déclenché
 const iframeId = `iframe-${iframeData.data.replace(/\s+/g, '-')}`;
-console.log("L'iframe recherchée: " + iframeId);
+
 
 const iframeASupprimer = document.getElementById(iframeId);
-console.log(iframeASupprimer);
 
 
+    const boutonLancerChrono = document.getElementById(`lancer-chrono-btn-${iframeData.data.replace(/\s+/g, '-')}`);
+if (boutonLancerChrono) {
+    boutonLancerChrono.classList.remove('non-cliquable');
+
+    // Changer l'image du bouton
+    const imageChrono = boutonLancerChrono.querySelector('img');
+    if (imageChrono) {
+        imageChrono.src = 'chrono.png'; // Remplacez 'nouvelle_image.png' par le chemin de votre nouvelle image
+        imageChrono.alt = 'Nouvelle icône chrono'; // Remplacez 'Nouvelle icône chrono' par le nouvel texte alternatif
+    }
+
+    // Modifier le contenu de l'attribut "onclick" et mettre en surbrillance le chrono actif
+    boutonLancerChrono.setAttribute('onclick', `ouvrirIframe('${iframeData.data.replace(/\s+/g, '-')}')`);
+}
 
         if (iframeASupprimer) {
             // Vérifier l'existence de la pastille avant de mettre à jour
@@ -129,23 +139,19 @@ console.log(iframeASupprimer);
             const groupeContainer = iframeASupprimer.parentNode;
 
             if (groupeContainer) {
-                console.log(`Le conteneur parent existe.`);
+ 
 
                 // Supprimer le conteneur
                 groupeContainer.remove();
 
                 nombreChronosActifs--;
                 const chronoButton = document.getElementById('ChronoButton');
-                chronoButton.textContent = `${nombreChronosActifs} Chrono Actif${nombreChronosActifs !== 1 ? 's' : ''}`;
+                chronoButton.textContent = `${nombreChronosActifs} Chrono${nombreChronosActifs !== 1 ? 's' : ''}`;
 
                 // Supprimer l'iframe
                 iframeASupprimer.remove();
-            } else {
-                console.error(`Le conteneur parent de l'iframe avec le nom ${iframeData.data} n'a pas été trouvé.`);
-            }
-        } else {
-            console.error(`L'iframe avec le nom ${iframeData.data} n'a pas été trouvée.`);
-        }
+            } 
+        } 
     }
 
 });

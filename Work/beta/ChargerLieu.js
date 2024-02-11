@@ -80,12 +80,12 @@ function toggleNiveau(element, niveau) {
 let nombreChronosActifs = 0;
 
 function ouvrirIframe(nomLieu) {
-    
+
     toggleAnimations();
 
     nombreChronosActifs++;
     const chronoButton = document.getElementById('ChronoButton');
-    chronoButton.textContent = `${nombreChronosActifs} Chrono Actif${nombreChronosActifs !== 1 ? 's' : ''}`;
+    chronoButton.textContent = `${nombreChronosActifs} Chrono${nombreChronosActifs !== 1 ? 's' : ''}`;
 
 
     const notificationMessage = "Chrono en cours sur : " + nomLieu;
@@ -99,13 +99,20 @@ function ouvrirIframe(nomLieu) {
     dejacrée(nomLieu)
 
     const boutonLancerChrono = document.getElementById(`lancer-chrono-btn-${nomLieu}`);
+if (boutonLancerChrono) {
+    boutonLancerChrono.classList.add('non-cliquable');
 
-    if (boutonLancerChrono) {
-        boutonLancerChrono.classList.add('non-cliquable');
-        
-        // Modifier le contenu de l'attribut "onclick" et mettre en surbrillance le chrono actif
-        boutonLancerChrono.setAttribute('onclick', `dejacrée('${nomLieu}')`);
+    // Changer l'image du bouton
+    const imageChrono = boutonLancerChrono.querySelector('img');
+    if (imageChrono) {
+        imageChrono.src = 'loupe.png'; // Remplacez 'nouvelle_image.png' par le chemin de votre nouvelle image
+        imageChrono.alt = 'Nouvelle icône chrono'; // Remplacez 'Nouvelle icône chrono' par le nouvel texte alternatif
     }
+
+    // Modifier le contenu de l'attribut "onclick" et mettre en surbrillance le chrono actif
+    boutonLancerChrono.setAttribute('onclick', `dejacrée('${nomLieu}')`);
+}
+
 }
 
 function dejacrée(nomLieu) {
@@ -118,25 +125,39 @@ function dejacrée(nomLieu) {
     const iframeId = `lieu-${nomLieuFormatte}`;
     const chronoContainer = document.getElementById(iframeId);
 
+    const clignotements = 3;
+    let clignotementCount = 0;
+
     if (chronoContainer) {
-        // Mettre en surbrillance le chrono actif en changeant le fond du conteneur avec une animation
-        chronoContainer.style.transition = 'background-color 1s ease';
-        chronoContainer.style.backgroundColor = 'rgba(0,200,225,1)';
+        // Fonction pour effectuer un clignotement
+        function clignoter() {
+            chronoContainer.style.transition = 'background-color 0s ease';
+            chronoContainer.style.backgroundColor = (clignotementCount % 2 === 0) ? '#6C3' : 'rgba(100,100,100,1)';
+            clignotementCount++;
+
+            // Arrêter le clignotement après le nombre spécifié
+            if (clignotementCount >= clignotements * 2) {
+                clearInterval(clignotementInterval);
+                setTimeout(() => {
+                    // Disparaître après 1 seconde sans animation de fondu
+                    chronoContainer.style.transition = 'none';
+                    chronoContainer.style.backgroundColor = 'rgba(100,100,100,1)';
+                }, 1000);
+            }
+        }
+
+        // Clignoter toutes les 500 ms
+        const clignotementInterval = setInterval(clignoter, 250);
 
         // Animer le scroll pour amener l'élément dans la vue visible même s'il est déjà visible
         chronoContainer.scrollIntoView({
             behavior: 'smooth',
-            block: 'center', // Ajustez selon vos besoins
-            inline: 'center' // Ajustez selon vos besoins
+            block: 'center',
+            inline: 'center'
         });
-
-        // Disparaître après 1 seconde en fondu
-        setTimeout(() => {
-            chronoContainer.style.transition = 'background-color 1s ease';
-            chronoContainer.style.backgroundColor = 'rgba(100,100,100,1)';
-        }, 1000);
     }
 }
+
 
 
 
@@ -164,6 +185,25 @@ function ajouterTitreEtIframe(nomLieu) {
 
     // Ajouter le conteneur au conteneur ChronoTab
     chronosContainer.appendChild(groupeContainer);
+
+
+
+if (groupeContainer) {
+    // Effacer le contenu existant
+
+
+    // Ajouter l'iframe à l'élément parent
+    groupeContainer.appendChild(iframe);
+
+    // Envoyer un message à toutes les iframes imbriquées
+    const iframesImbriquées = document.querySelectorAll('iframe');
+    for (let i = 0; i < iframesImbriquées.length; i++) {
+        if (iframesImbriquées[i] !== iframe) {
+            iframesImbriquées[i].contentWindow.postMessage('NouvelleIframeCréée', '*');
+        }
+    }
+}
+
 }
 
 
