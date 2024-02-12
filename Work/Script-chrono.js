@@ -307,14 +307,38 @@ function cancelChrono() {
     } 
 }
 
-    function displayTime(milliseconds) {
-        const seconds = Math.floor(milliseconds / 1000);
-        const minutes = Math.floor(seconds / 60);
-        const hours = Math.floor(minutes / 60);
+function displayTime(milliseconds) {
+    const seconds = Math.floor(milliseconds / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
 
-        const formattedTime = `${pad(hours)}:${pad(minutes % 60)}:${pad(seconds % 60)}`;
-        document.getElementById('chrono').textContent = formattedTime;
+    const remainingSeconds = seconds % 60;
+    const remainingMinutes = minutes % 60;
+    const remainingHours = hours % 24;
+
+    let formattedTime = '';
+
+    if (days > 0) {
+        formattedTime += `${days}d `;
     }
+    if (remainingHours > 0 || days > 0) {
+        formattedTime += `${pad(remainingHours)}h `;
+    }
+    if (remainingMinutes > 0 || remainingHours > 0 || days > 0) {
+        formattedTime += `${pad(remainingMinutes)}m `;
+    }
+    if (remainingSeconds > 0 || remainingMinutes > 0 || remainingHours > 0 || days > 0) {
+        formattedTime += `${pad(remainingSeconds)}s `;
+    }
+    if (milliseconds < 1000) {
+        formattedTime += `${milliseconds}ms`;
+    }
+
+    document.getElementById('chrono').textContent = formattedTime.trim();
+}
+
+
 
     function pad(number) {
         return number < 10 ? `0${number}` : number;
