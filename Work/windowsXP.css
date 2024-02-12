@@ -5,25 +5,30 @@
 }
 
 .tab-button {
-   cursor: pointer;
+
    padding: 10px;
    flex: 1;
    height: 40px;
-   box-sizing: border-box;
-   text-align: center;
-   background-color: #111;
-   color: #fff;
-   border-top-left-radius: 20px;
-   border-top-right-radius: 20px;
-   overflow: hidden;
-   white-space: nowrap;
-   text-overflow: ellipsis; /* Ajoutez cette ligne pour afficher "..." si le texte dépasse la taille du bouton */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    background: linear-gradient( 180deg, rgba(9, 151, 255, 1) 0%, rgba(0, 83, 238, 1) 8%, rgba(0, 80, 238, 1) 40%, rgba(0, 102, 255, 1) 88%, rgba(0, 102, 255, 1) 93%, rgba(0, 91, 255, 1) 95%, rgba(0, 61, 215, 1) 96%, rgba(0, 61, 215, 1) 100% ), /* Dégradé blanc sur la partie droite */ linear-gradient( 180deg, #2CA4D9 0%, #17AFEE 8%, #139CEA 40%, #1290E7 88%, #1889E5 93%, #1889E5 95%, #0D75D6 96%, #0064C0 100% );
+
 }
 
 /* Style pour le bouton actif */
 .tab-button.active {
-   background-color: #333;
-   color: #FFF;
+
+    font-size: 22px;
+
+    font-weight: bold;
+    font-style: italic;
+    font-font: arial;
+    background: radial-gradient(circle, #49B049 0%, #287728 100%) center/cover no-repeat !important;
+    box-shadow: 0px 5px 10px #95C296 inset;
+
+    text-shadow: 1px 1px 3px #222;
+
+    cursor: pointer;
+    color: white;
 }
 .place-card {
     min-height: 27px;
@@ -57,19 +62,23 @@
     font-family: 'Arial', sans-serif;
     background-color: #1e1e1e; /* Fond sombre pour le corps de la page */
     color: #fff; /* Texte en blanc */
+   background-image: url('../Images/desktop-bg.jpg');
+    background-size: cover; /* Ajuste la taille pour couvrir entièrement le conteneur */
+    background-position: center; /* Centre l'image dans le conteneur */
+    background-repeat: no-repeat; /* Empêche la répétition de l'image */
 
     padding: 0;
 
 }
 
 .container {
+    backdrop-filter: blur(10px);
     max-width: 100%;
     height: calc(100vh - 60px); /* 100% de la hauteur de la vue moins la hauteur de la bannière */
     overflow: hidden;
-    background-color: #333;
+    background-color: RGBA(255,255,255,0.5);
     padding: 10px;
-    border-bottom-right-radius: 20px;
-    border-bottom-left-radius: 20px;
+
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     box-sizing: border-box;
 }
@@ -89,13 +98,13 @@ h1 {
     height: calc(100% - 100px); /* Ajustez en fonction du padding de .container et de la hauteur de la bannière */
     overflow: auto;
     box-shadow: 0px 0px 20px rgba(100, 100, 100, 0.5);
-    background: rgba(0, 0, 0, 0.3);
+
     border-radius: 10px;
 }
 
 
 .lieux-list li {
-    background-color: rgba(150,150,150,0.2); /* Fond sombre pour chaque élément de lieu */
+    background-color: rgba(50,50,50,0.8); /* Fond sombre pour chaque élément de lieu */
     margin: 10px 0;
     padding: 2.5px;
     border-radius: 8px;
@@ -103,7 +112,6 @@ h1 {
 }
 
 .lieux-list li button {
-    background-color: #3498db;
     color: #fff;
     border: none;
     padding: 5px;
@@ -112,9 +120,7 @@ h1 {
     margin-right: 5px;
 }
 
-.lieux-list li button:hover {
-    background-color: #2980b9;
-}
+
 
 .lieux-list li .modal-content {
     background-color: rgba(0,0,0,0.5); /* Fond sombre pour le contenu de la modal */
@@ -274,17 +280,7 @@ h1 {
 
 }
 
-#dell {
-    background-color: red !important;
-
-    font-weight: bold;
-    color: white !important;
-}
-#dellHARD {
-    background-color: black !important;
-
-    font-weight: bold;
-    color: white !important;
+  img  {filter: invert(1);
 }
 #parametresTab #nouveauLieu {
 
@@ -449,3 +445,57 @@ button.non-cliquable {
 
 }
 
+button { 
+  padding: 5px;
+
+border-radius: 15px;
+    display: flex;
+    align-items: center;
+    font-family: var(--sans-serif);
+    -webkit-font-smoothing: antialiased;
+    font-size: 18px;
+    box-sizing: border-box;
+    border: 1px solid #003c74;
+    color: #000 !important; /* Set the text color to black */
+
+    background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 1) 0%,
+        rgba(236, 235, 229, 1) 86%,
+        rgba(216, 208, 196, 1) 100%
+    );
+    box-shadow: none;
+    border-radius: 3px;
+
+    &:not(:disabled) {
+        &:active,
+        &.active {
+            box-shadow: none;
+            background: linear-gradient(
+                180deg,
+                rgba(205, 202, 195, 1) 0%,
+                rgba(227, 227, 219, 1) 8%,
+                rgba(229, 229, 222, 1) 94%,
+                rgba(242, 242, 241, 1) 100%
+            );
+        }
+
+        &:hover {
+            box-shadow: inset -1px 1px #fff0cf, inset 1px 2px #fdd889, inset -2px 2px #fbc761, inset 2px -2px #e5a01a;
+        }
+    }
+
+    &:focus,
+    &.focused {
+        box-shadow: inset -1px 1px #cee7ff, inset 1px 2px #98b8ea, inset -2px 2px #bcd4f6, inset 1px -1px #89ade4,
+            inset 2px -2px #89ade4;
+    }
+
+    &::-moz-focus-inner {
+        border: 0;
+    }
+
+    .icon {
+        margin-left: auto; // Push the icon to the right
+        margin-right: 10px; // Add some spacing between text and icon
+    }}

@@ -1,0 +1,442 @@
+
+:root {
+  /* --font: 9pt "Segoe UI", "SegoeUI", "Noto Sans", sans-serif; */
+  --surface: #f0f0f0;
+
+  --button-highlight: #fff;
+  --button-face: #f2f2f2;
+  --button-face-hover: #eaf6fd;
+  --button-face-active: #c4e5f6;
+  --button-face-disabled: #f4f4f4;
+  --button-shade-light: #ebebeb;
+  --button-shade-light-default: #c3dcea;
+  --button-shade-light-hovered: #bee6fd;
+  --button-shade-light-active: #98d1ef;
+  --button-shade-dark: #cfcfcf;
+  --button-shadow: inset 0 0 0 1px #fffc;
+  --button-shadow-active: inset 1px 1px 0 #0003, inset -1px 1px 0 #0001;
+  --button-border: 1px solid;
+  --button-border-color: #8e8f8f;
+  --button-border-color-default: #5586a3;
+  --button-border-color-hovered: #3c7fb1;
+  --button-border-color-active: #6d91ab;
+  --button-border-color-disabled: #aeb2b5;
+  --button-text-color-disabled: #838383;
+  --button-gradient: linear-gradient(
+    to bottom,
+    var(--button-face) 45%,
+    var(--button-shade-light) 45%,
+    var(--button-shade-dark)
+  );
+  --button-gradient-hovered: linear-gradient(
+    to bottom,
+    var(--button-face-hover) 45%,
+    var(--button-shade-light-hovered) 45%,
+    #a7d9f5
+  );
+  --button-gradient-active: linear-gradient(
+    to bottom,
+    #e5f4fc,
+    var(--button-face-active) 30% 50%,
+    var(--button-shade-light-active) 50%,
+    #68b3db
+  );
+
+  --element-spacing: 8px;
+  --grouped-element-spacing: 6px;
+
+  --border-radius: 3px;
+  --border-width: 1px;
+
+
+    --window-spacing: 6px;
+  --window-border: 1px solid;
+  --window-border-radius: 6px;
+  --window-border-color: rgba(0, 0, 0, 0.7);
+  --window-background-color: #4580c4;
+  --window-background-glass-stripes: linear-gradient(
+      135deg,
+      #fff5 70px,
+      transparent 100px
+
+    ),
+    linear-gradient(225deg, #fff5 70px, transparent 100px),
+    linear-gradient(
+        54deg,
+        /* ------------------------------- 1st stripe ------------------------------- */
+          #0002 0 4%,
+        #6661 6% 6%,
+        #0002 8% 10%,
+        /* ------------------------------- 2nd stripe ------------------------------- */
+          #0002 15% 16%,
+        #aaa1 17% 18%,
+        #0002 23% 24%,
+        /* ------------------------------- 3rd stripe ------------------------------- */
+          #bbb2 25% 26%,
+        #0002 31% 33%,
+        /* ------------------------------- 4th stripe ------------------------------- */
+          #0002 34% 34.5%,
+        #bbb2 36% 40%,
+        /* ------------------------------- 5th stripe ------------------------------- */
+          #0002 41% 41.5%,
+        #bbb2 44% 45%,
+        /* ------------------------------- 6th stripe ------------------------------- */
+          #bbb2 46% 47%,
+        #0002 48% 49%,
+        #0002 50% 50.5%,
+        /* ------------------------------- 7th stripe ------------------------------- */
+          #0002 56% 56.5%,
+        #bbb2 57% 63%,
+        #0002 67% 69%,
+        /* ------------------------------- 8th stripe ------------------------------- */
+          #bbb2 69.5% 70%,
+        #0002 73.5% 74%,
+        /* ------------------------------- 9th stripe ------------------------------- */
+          #bbb2 74.5% 79%,
+        #0002 80% 84%,
+        /* ------------------------------- 10th stripe ------------------------------- */
+          #aaa2 85% 86%,
+        #0002 87%,
+        #bbb1 90%
+      )
+      left center/100vw 100vh no-repeat fixed;
+      
+
+  --window-background: linear-gradient(
+      to right,
+      #ffffff66,
+      #0000001a,
+      #ffffff33
+    ),
+    var(--window-background-color);
+
+  --control-border-color: rgba(0, 0, 0, 0.3);
+  --control-border-radius: 6px;
+  --control-inset-shadow: inset 0 0 0 1px #fffa;
+  --control-background: linear-gradient(
+    rgba(255, 255, 255, 0.5),
+    rgba(255, 255, 255, 0.3) 45%,
+    rgba(0, 0, 0, 0.1) 50%,
+    rgba(0, 0, 0, 0.1) 75%,
+    rgba(255, 255, 255, 0.5)
+  );
+
+  /* Colors for minimize, maximize, and restore buttons when hovered */
+  --control-background-hovered: radial-gradient(
+      circle at bottom,
+      #2aceda,
+      transparent 65%
+    ),
+    linear-gradient(#b6d9ee 50%, #1a6ca1 50%);
+
+  /* Colors for minimize, maximize, and restore buttons when clicked */
+  --control-background-active: radial-gradient(
+      circle at bottom,
+      #0bfdfa,
+      transparent 65%
+    ),
+    linear-gradient(#86a7bc 50%, #092747 50%);
+
+  /* Colors for the close button at normal state */
+  --control-background-close: radial-gradient(
+      circle at -60% 50%,
+      #0007 5% 10%,
+      #0000 50%
+    ),
+    radial-gradient(circle at 160% 50%, #0007 5% 10%, #0000 50%),
+    linear-gradient(#e0a197e5, #cf796a 25% 50%, #d54f36 50%);
+
+  /* Colors for the close button when hovered */
+  --control-background-close-hovered: radial-gradient(
+      circle at 50% 170%,
+      #f4e676 10% 20%,
+      #0000 60%
+    ),
+    radial-gradient(circle at -60% 50%, #000a 5% 10%, #0000 50%),
+    radial-gradient(circle at 160% 50%, #000a 5% 10%, #0000 50%),
+    linear-gradient(#fb9d8b, #ee6d56 25% 50%, #d42809 50%);
+
+  /* Colors for the close button when clicked */
+  --control-background-close-active: radial-gradient(
+      circle at 50% 170%,
+      #dcc03f 10% 20%,
+      #0000 60%
+    ),
+    radial-gradient(circle at -60% 50%, #000 5% 10%, #0000 50%),
+    radial-gradient(circle at 160% 50%, #000 5% 10%, #0000 50%),
+    linear-gradient(#d1a894, #b67562 25% 50%, #7d0d01 50%);
+}
+
+
+.groupe-container {
+
+padding: 5px;
+    background: var(--window-background-glass-stripes);
+    font: var(--font);
+    box-shadow: 2px 2px 10px 1px var(--window-border-color), inset 0 0 0 1px #fffa;
+    border: var(--window-border) var(--window-border-color);
+    border-radius: var(--window-border-radius); 
+background-color: transparent !important;
+  }
+
+  iframe {
+
+     width: calc(100% - 20px);
+    border: none;
+ height: 165px;
+padding: 10px;
+}
+
+.tab {
+   display: flex;
+
+    background: var(--window-background-glass-stripes);
+    font: var(--font);
+    box-shadow: 2px 2px 10px 1px var(--window-border-color), inset 0 0 0 1px #fffa;
+    border: var(--window-border) var(--window-border-color);
+    border-radius: var(--window-border-radius); 
+background-color: transparent !important;
+}
+
+.tab-button {
+
+   padding: 10px;
+   flex: 1;
+   height: 40px;
+   box-sizing: border-box;
+   text-align: center;
+
+    background: var(--window-background-glass-stripes);
+    font: var(--font);
+    box-shadow: 2px 2px 10px 1px var(--window-border-color), inset 0 0 0 1px #fffa;
+    border: var(--window-border) var(--window-border-color);
+    border-radius: var(--window-border-radius); 
+background-color: transparent ;
+}
+
+/* Style pour le bouton actif */
+.tab-button.active {
+   background-color: #A00;
+   color: #FFF;
+}
+
+.place-card {
+    position: relative;
+
+}
+
+.pastille {display: block !important;
+width: calc(100% - 40px);
+height: 30px;
+}
+
+button {
+    display: block !important; /* Utilisez !important pour s'assurer que cette règle prévaut sur d'autres règles */
+}
+#enregistrements p {
+
+    font-size: 18px; /* Modifiez la taille du texte selon vos besoins */
+
+}#parametresTab h1 {
+    color: #fff;
+}
+
+#parametresTab h2 {
+    color: #fff;
+    margin-top: 20px;
+}
+h1 {
+    color: #fff;
+    font-size: 23px;
+    margin-block-start: 0em;
+    margin-block-end: 0.6em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+}#parametresTab h2 {
+    color: #fff;
+    margin-top: 20px;
+} h2 {
+    margin-top: 20px;
+    font-size: 15px;
+}
+    body {
+    font-family: 'Arial', sans-serif;
+    background-color: #1e1e1e; /* Fond sombre pour le corps de la page */
+    color: #fff; /* Texte en blanc */
+background-image: url('../Images/W7bg.png');
+    background-size: cover; /* Ajuste la taille pour couvrir entièrement le conteneur */
+    background-position: center; /* Centre l'image dans le conteneur */
+    background-repeat: no-repeat;
+    padding: 0;
+
+}
+
+
+
+.lieux-list {
+    list-style: none;
+    padding: 5px;
+    height: calc(100% - 100px);
+    overflow: auto;
+}
+
+
+.lieux-list li {
+    background-color: rgba(150,150,150,0.2); /* Fond sombre pour chaque élément de lieu */
+    margin: 10px 0;
+    padding: 2.5px;
+    border-radius: 8px;
+    cursor: pointer;
+
+            background: var(--window-background-glass-stripes);
+    font: var(--font);
+    box-shadow: 2px 2px 10px 1px var(--window-border-color), inset 0 0 0 1px #fffa;
+    border: var(--window-border) var(--window-border-color);
+    border-radius: var(--window-border-radius); 
+background-color: transparent ;
+}
+
+.lieux-list li button {
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    padding: 5px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+.lieux-list li button:hover {
+    background-color: #2980b9;
+}
+
+.lieux-list li .modal-content {
+    background-color: rgba(0,0,0,0.5); /* Fond sombre pour le contenu de la modal */
+    margin: 0.5% auto;
+    padding: 5px;
+    border: 0px solid #888;
+    border-radius: 8px;
+
+
+
+  
+}
+.container hr {
+    border: none; /* Supprimer la bordure par défaut */
+    height: 1px; /* Définir la hauteur de la ligne */
+    background-color: #777; /* Couleur de la ligne */
+    margin: 10px 0; /* Marge autour de la ligne */
+
+
+
+}
+.container{
+
+
+    height: calc(100vh - 60px); /* 100% de la hauteur de la vue moins la hauteur de la bannière */
+    overflow: hidden;
+    background-color: #333;
+    padding: 10px;
+   
+
+  backdrop-filter: blur(10px);
+              background: var(--window-background-glass-stripes);
+    font: var(--font);
+    box-shadow: 2px 2px 10px 1px var(--window-border-color), inset 0 0 0 1px #fffa;
+    border: var(--window-border) var(--window-border-color);
+    border-radius: var(--window-border-radius); 
+background-color: transparent ;
+}
+.lieux-list li textarea {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 5px;
+    border-radius: 4px;
+}
+
+#parametresTab h1 {
+    color: #fff;
+}
+
+#parametresTab h2 {
+    color: #fff;
+    margin-top: 20px;
+}
+
+#parametresTab input,
+
+#parametresTab button,
+#parametresTab select {
+    margin-top: 10px;
+    border-radius: 4px;
+
+}
+
+#dell {
+    background-color: red !important;
+
+    font-weight: bold;
+
+}
+#dellHARD {
+    background-color: black !important;
+
+    font-weight: bold;
+
+}
+#parametresTab #nouveauLieu {
+
+
+    width: calc(100% - 20px)
+}
+#parametresTab button {
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
+
+#parametresTab button:hover {
+    background-color: #2980b9;
+}
+
+button, #searchInput, #nouveauLieu, #lieuxDropdown,#themeSelector {
+  font: var(--font);
+  
+  border: var(--button-border);
+  border-color: var(--button-border-color);
+  border-radius: var(--border-radius);
+  box-shadow: var(--button-shadow);
+  color: #000 !important;
+
+  text-align: center;
+  background: var(--button-gradient);
+
+    width: 100%;
+ 
+
+  /* Button style on hovered */
+  &::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    top: 0;
+    left: 0;
+    border-radius: var(--border-radius);
+    box-shadow: var(--button-shadow);
+    background: var(--button-gradient-hovered);
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: -1;
+  }
+
+
+  }
+
+
+  img  {filter: invert(1);
+}

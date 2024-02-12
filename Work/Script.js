@@ -3,6 +3,14 @@ document.addEventListener("DOMContentLoaded", function () {
     chargerLieux();
     setDefaultTab();
     afficherEnregistrements();
+
+    var savedTheme = localStorage.getItem('theme');
+
+    // Si un thème est sauvegardé, appliquez-le
+    if (savedTheme) {
+        changerTheme(savedTheme);
+        document.getElementById('themeSelector').value = savedTheme;
+    }
 });
 
 
@@ -337,3 +345,14 @@ function deleteCookies() {
                 location.reload();
     }
 }
+
+
+
+    function changerTheme(theme) {
+        // Obtenez l'élément link avec l'id "themeLink"
+        var themeLink = document.getElementById('themeLink');
+localStorage.setItem('theme', theme);
+        // Modifiez l'attribut href pour charger le fichier CSS du thème sélectionné
+        themeLink.href = theme + '.css';
+    }
+
