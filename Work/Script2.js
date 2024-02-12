@@ -116,7 +116,7 @@ const iframeId = `iframe-${iframeData.data.replace(/\s+/g, '-')}`;
 const iframeASupprimer = document.getElementById(iframeId);
 
 
-    const boutonLancerChrono = document.getElementById(`lancer-chrono-btn-${iframeData.data.replace(/\s+/g, '-')}`);
+    const boutonLancerChrono = document.getElementById(`lancer-chrono-btn-${iframeData.data}`);
 if (boutonLancerChrono) {
     boutonLancerChrono.classList.remove('non-cliquable');
 
