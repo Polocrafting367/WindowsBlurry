@@ -320,7 +320,7 @@ function displayTime(milliseconds) {
     let formattedTime = '';
 
     if (days > 0) {
-        formattedTime += `${days}d `;
+        formattedTime += `${days}j `;
     }
     if (remainingHours > 0 || days > 0) {
         formattedTime += `${pad(remainingHours)}h `;
