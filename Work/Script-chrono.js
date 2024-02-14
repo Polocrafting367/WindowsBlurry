@@ -23,8 +23,9 @@ window.addEventListener('message', function(event) {
 
 
 
-// Récupérer la valeur du paramètre "lieu" de l'URL
 var lieu = getURLParameter('lieu');
+var theme = getURLParameter('theme'); // Ajout de cette ligne pour récupérer le paramètre "theme"
+    
 
 // Utiliser la variable "lieu" comme nécessaire dans votre code
 
@@ -48,11 +49,21 @@ function getURLParameter(name) {
     return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
 }
 
+    function changerTheme(st) {
+        // Obtenez l'élément link avec l'id "themeLink"
+        var themeLink = document.getElementById('themeLink');
+
+        // Modifiez l'attribut href pour charger le fichier CSS du thème sélectionné
+        themeLink.href = st + '.css';
+    }
 
 
 function restoreChronoData() {
 
+theme = theme + '-chrono';
 
+
+    changerTheme(theme);
     // Récupérer les données du localStorage
     const savedData = localStorage.getItem(lieu);
 
@@ -279,7 +290,6 @@ function saveRecord() {
 
             // Construire la chaîne d'enregistrement avec la date
             const enregistrement = `${formattedDate} - ${tempsAffiche} - ${lieu} - ${zoneTexte.value.trim()}`;
-
             // Envoyer les données à la page parente
             sendEventToParent('enregistrement', enregistrement);
 

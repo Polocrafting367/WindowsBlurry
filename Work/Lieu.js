@@ -15,19 +15,41 @@ const arborescence = {
             
             "Triés": {
                 "Nappe Industriel": {                
-                    "Alvéoles .. Industriel": {},
-                    "Futurail Industriel": {},
-                    "Aiguillage Industriel": {},
-                    "Tapis Industriel": {},
-                    "Basculeur Sling Vide": {},
-                    "Chargeur De Sac (Sling)": {},
-                    "Redresseur Sling Vide": {},
-                    "Dechargeur Tunnel ..": {}
+                        "Alvéoles .. Industriel": {
+                            "Alvéoles 1 Industriel": {},
+                            "Alvéoles 2 Industriel": {},
+                            "Alvéoles 3 Industriel": {},
+                            "Alvéoles 4 Industriel": {},
+                            "Alvéoles 5 Industriel": {},
+                            "Alvéoles 6 Industriel": {},
+                            "Alvéoles 7 Industriel": {},
+                            "Alvéoles 8 Industriel": {},
+                            "Alvéoles 9 Industriel": {},
+                            "Alvéoles 10 Industriel": {},
+                            "Alvéoles 11 Industriel": {},
+                            "Alvéoles 12 Industriel": {}
+                        },
+                        "Futurail Industriel": {},
+                        "Aiguillage Industriel": {},
+                        "Tapis Industriel": {},
+                        "Basculeur Sling Vide": {},
+                        "Chargeur De Sac (Sling)": {},
+                        "Redresseur Sling Vide": {},
+                        "Dechargeur Tunnel ..": {}
 
                 },
 
                 "Nappe Résident": {                
-                    "Alvéoles .. Résident": {},
+                    "Alvéoles .. Résident": {                            
+                            "Alvéoles 1 Industriel": {},
+                            "Alvéoles 2 Industriel": {},
+                            "Alvéoles 3 Industriel": {},
+                            "Alvéoles 4 Industriel": {},
+                            "Alvéoles 5 Industriel": {},
+                            "Alvéoles 6 Industriel": {},
+                            "Alvéoles 7 Industriel": {},
+                            "Alvéoles 8 Industriel": {}
+                        },
                     "Futurail Résident": {},
                     "Tapis Résident": {}
                 }

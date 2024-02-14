@@ -147,3 +147,17 @@ h1 {
 .groupe-container {
     border-bottom: 2px solid #fff; /* Ajoutez cette ligne pour la bordure blanche en bas */
 }
+
+button[id^="lancer-chrono-btn-"] {
+
+    position: absolute;
+
+    border-radius: 0px !important;
+
+
+}
+button.non-cliquable {
+    background-color: #6C3 !important;
+
+    /* Autres styles pour un niveau non cliquable */
+}

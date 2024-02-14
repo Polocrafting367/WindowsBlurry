@@ -93,8 +93,13 @@ function ouvrirIframe(nomLieu) {
     const notificationMessage = "Chrono en cours sur : " + nomLieu;
     showNotification(notificationMessage, nomLieu);
 
+    
     // Vérifier si une iframe avec la pastille "Actif - " existe déjà
+// Récupérer l'état actuel de "TABUL" depuis le localStorage
+
     Restolieu(nomLieu);
+
+
 
     // Ajouter le titre et l'iframe au conteneur ChronoTab
     ajouterTitreEtIframe(nomLieu);
@@ -118,8 +123,12 @@ if (boutonLancerChrono) {
 }
 
 function dejacrée(nomLieu) {
+const tabulValue = localStorage.getItem('TABUL');
+if (tabulValue === "true") {
+    // Code à exécuter si TABUL est égal à true
+} else {
     openTab('Chrono');
-
+}
     // Remplacer les espaces par des traits d'union dans le nom du lieu
     const nomLieuFormatte = nomLieu.toLowerCase().replace(/\s+/g, '-');
 
@@ -179,7 +188,7 @@ function ajouterTitreEtIframe(nomLieu) {
     // Créer une nouvelle iframe
     const iframe = document.createElement('iframe');
     iframe.id = `iframe-${nomLieu.replace(/\s+/g, '-')}`; // Remplacer les espaces par des traits d'union
-    iframe.src = `chrono.html?lieu=${nomLieu}`;
+    iframe.src = `chrono.html?lieu=${nomLieu}&theme=${localStorage.getItem('theme')}`;
 
     // Ajouter le titre et l'iframe au conteneur principal
     groupeContainer.appendChild(titreLieuContainer);

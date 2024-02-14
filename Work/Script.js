@@ -1,8 +1,14 @@
 document.addEventListener("DOMContentLoaded", function () {
     chargerLieuxPersonnalises();
     chargerLieux();
-    setDefaultTab();
     afficherEnregistrements();
+
+
+let restt= localStorage.getItem('currentTab');
+
+    setTimeout(function () {
+        openTab(restt);
+    }, 100);
 
     var savedTheme = localStorage.getItem('theme');
 
@@ -11,6 +17,15 @@ document.addEventListener("DOMContentLoaded", function () {
         changerTheme(savedTheme);
         document.getElementById('themeSelector').value = savedTheme;
     }
+
+        const tabulValue = localStorage.getItem('TABUL');
+
+    // Vérifier si "TABUL" est défini dans le localStorage
+    if (tabulValue !== null) {
+        // Mettre à jour l'état du switch en fonction de la valeur de "TABUL"
+        const tabulSlider = document.getElementById('tabulSlider');
+        tabulSlider.checked = tabulValue === 'true'; // Convertir la chaîne en booléen
+    }
 });
 
 
@@ -18,15 +33,233 @@ if (!localStorage.getItem('lieuxEnregistres')) {
     localStorage.setItem('lieuxEnregistres', JSON.stringify([]));
 }
 
+
+const newEnregistrement = ajouterInformationsSupplementaires('2024-02-14 - 12:00 PM - Texte 1 - Texte 2');
+
+function ajouterInformationsSupplementaires(data) {
+    const parties = data.split('-').map(partie => partie.trim());
+    const id = generateUniqueId(); // generate a unique id
+    return { id, date: parties[0], temps: parties[1], zoneTexte1: parties[2], zoneTexte2: parties[3] };
+}
+
+function generateUniqueId() {
+    return '_' + Math.random().toString(36).substr(2, 9);
+}
 function afficherEnregistrements() {
     const enregistrementsDiv = document.getElementById('enregistrements');
-    const enregistrements = localStorage.getItem('enregistrements');
+    
+    // Effacer le contenu existant
+    enregistrementsDiv.innerHTML = '';
 
-    if (enregistrements) {
-        enregistrementsDiv.innerHTML = enregistrements;
+    const enregistrementsString = localStorage.getItem('enregistrements');
+
+    try {
+        let enregistrements = JSON.parse(enregistrementsString);
+
+        if (!Array.isArray(enregistrements)) {
+            throw new Error('Les enregistrements ne sont pas un tableau.');
+        }
+
+enregistrements.forEach(enregistrement => {
+    const enregistrementDiv = document.createElement('div');
+    enregistrementDiv.id = enregistrement.id; // Ajouter l'ID à l'enregistrementDiv
+
+    let enregistrementTexte;
+
+    if (enregistrement.texte) {
+        // Ancien format avec la propriété texte
+        const parties = enregistrement.texte.split('-');
+        enregistrementTexte = parties.map(partie => partie.trim()).join(' - ');
+    } else {
+        // Nouveau format avec des propriétés distinctes
+        enregistrementTexte = `${enregistrement.date} - ${enregistrement.temps} - ${enregistrement.zoneTexte1} - ${enregistrement.zoneTexte2}`;
+    }
+
+    enregistrementDiv.textContent = enregistrementTexte;
+
+    // Ajouter une div pour contenir les boutons
+    const boutonsDiv = document.createElement('div');
+    boutonsDiv.style.display = 'flex'; // Utiliser flexbox pour aligner les boutons sur une ligne
+
+    // Ajouter un bouton de modification avec un gestionnaire d'événements
+    const boutonModifier = document.createElement('button');
+    boutonModifier.textContent = 'Modifier';
+    boutonModifier.style.marginRight = '5px'; // Ajouter une marge à droite pour séparer les boutons
+    boutonModifier.addEventListener('click', () => {
+        afficherZonesDeTexte(enregistrement);
+    });
+
+    // Create "Supprimer" button with the id "dell"
+    const boutonSupprimer = document.createElement('button');
+    boutonSupprimer.textContent = 'Supprimer';
+    boutonSupprimer.id = 'dell';
+    boutonSupprimer.style.marginRight = '5px'; // Ajouter une marge à droite pour séparer les boutons
+    boutonSupprimer.addEventListener('click', () => {
+        // Access the id property when deleting the record
+        const confirmation = window.confirm('Êtes-vous sûr de vouloir supprimer cet enregistrement ?');
+        if (confirmation) {
+            const enregistrementDivToDelete = document.getElementById(enregistrement.id);
+            if (enregistrementDivToDelete) {
+                enregistrementDivToDelete.remove();
+            }
+
+            // Supprimer l'enregistrement du tableau
+            const indexASupprimer = enregistrements.findIndex(e => comparerEnregistrements(e, enregistrement));
+
+            if (indexASupprimer !== -1) {
+                enregistrements.splice(indexASupprimer, 1);
+
+                // Réenregistrer le tableau mis à jour dans le stockage local
+                localStorage.setItem('enregistrements', JSON.stringify(enregistrements));
+            } else {
+
+            }
+        }
+    });
+
+    boutonsDiv.appendChild(boutonModifier);
+    boutonsDiv.appendChild(boutonSupprimer);
+
+    enregistrementDiv.appendChild(boutonsDiv);
+    enregistrementsDiv.appendChild(enregistrementDiv);
+
+});
+
+
+    } catch (error) {
     }
 }
 
+function creerFenetreModale(enregistrement) {
+    const modalDiv = document.createElement('div');
+    modalDiv.classList.add('modal');
+
+
+    return modalDiv;
+}
+
+function creerInputAvecLabel(labelText, inputType, valeurInitiale) {
+    const label = document.createElement('label');
+    label.textContent = labelText;
+
+    const input = document.createElement('input');
+    input.type = inputType;
+    input.value = valeurInitiale;
+
+    return { label, input };
+}
+
+function creerBoutonValider(callback) {
+    const boutonValider = document.createElement('button');
+    boutonValider.textContent = 'Valider';
+    boutonValider.addEventListener('click', callback);
+    return boutonValider;
+}
+
+function mettreAJourEnregistrement(enregistrement, date, temps, zoneTexte1, zoneTexte2) {
+  
+
+    // Récupérer le tableau d'enregistrements depuis le stockage local
+    const enregistrementsString = localStorage.getItem('enregistrements');
+    let enregistrements = JSON.parse(enregistrementsString);
+
+    // Vérifier si enregistrements est défini
+    if (!enregistrements) {
+        enregistrements = [];
+    }
+
+    // Mettre à jour l'enregistrement spécifique dans le tableau
+    const indexAUpdater = enregistrements.findIndex(e => comparerEnregistrements(e, enregistrement));
+
+    if (indexAUpdater !== -1) {
+        enregistrements[indexAUpdater].date = date;
+        enregistrements[indexAUpdater].temps = temps;
+        enregistrements[indexAUpdater].zoneTexte1 = zoneTexte1;
+        enregistrements[indexAUpdater].zoneTexte2 = zoneTexte2;
+
+
+        // Réenregistrer le tableau mis à jour dans le stockage local
+        localStorage.setItem('enregistrements', JSON.stringify(enregistrements));
+      
+    } 
+}
+
+function creerBoutonValider(callbackValider, callbackAnnuler) {
+    const boutonValider = document.createElement('button');
+    boutonValider.textContent = 'Valider';
+    boutonValider.addEventListener('click', callbackValider);
+    
+    // Create Cancel button
+    const boutonAnnuler = document.createElement('button');
+    boutonAnnuler.textContent = 'Annuler';
+    boutonAnnuler.addEventListener('click', callbackAnnuler);
+
+    return { boutonValider, boutonAnnuler };
+}
+
+
+
+function mettreAJourAffichage() {
+
+    afficherEnregistrements();
+
+}
+function afficherZonesDeTexte(enregistrement) {
+    // Create the modalDiv variable before using it
+    const modalDiv = creerFenetreModale(enregistrement);
+
+    // Define the callbackAnnuler function to close the modal
+    const callbackAnnuler = () => modalDiv.remove();
+
+    const { label: dateLabel, input: dateInput } = creerInputAvecLabel('Date:', 'text', enregistrement.date);
+    const { label: tempsLabel, input: tempsInput } = creerInputAvecLabel('Temps:', 'text', enregistrement.temps);
+    const { label: zoneTexte1Label, input: zoneTexte1Input } = creerInputAvecLabel('Zone Texte 1:', 'text', enregistrement.zoneTexte1);
+    const { label: zoneTexte2Label, input: zoneTexte2Input } = creerInputAvecLabel('Zone Texte 2:', 'text', enregistrement.zoneTexte2);
+
+    const { boutonValider, boutonAnnuler } = creerBoutonValider(
+        () => {
+            const confirmation = window.confirm('Êtes-vous sûr de vouloir modifier cet enregistrement ?');
+            if (confirmation) {
+                mettreAJourEnregistrement(enregistrement, dateInput.value, tempsInput.value, zoneTexte1Input.value, zoneTexte2Input.value);
+                mettreAJourAffichage();
+                modalDiv.remove();
+            }
+        },
+        () => modalDiv.remove()
+    );
+
+    modalDiv.appendChild(dateLabel);
+    modalDiv.appendChild(dateInput);
+    modalDiv.appendChild(tempsLabel);
+    modalDiv.appendChild(tempsInput);
+    modalDiv.appendChild(zoneTexte1Label);
+    modalDiv.appendChild(zoneTexte1Input);
+    modalDiv.appendChild(zoneTexte2Label);
+    modalDiv.appendChild(zoneTexte2Input);
+    modalDiv.appendChild(boutonValider);
+    modalDiv.appendChild(boutonAnnuler);
+
+    document.body.appendChild(modalDiv);
+}
+
+
+
+function comparerEnregistrements(enregistrement1, enregistrement2) {
+    return (
+        enregistrement1.date === enregistrement2.date &&
+        enregistrement1.temps === enregistrement2.temps &&
+        enregistrement1.zoneTexte1 === enregistrement2.zoneTexte1 &&
+        enregistrement1.zoneTexte2 === enregistrement2.zoneTexte2
+    );
+}
+
+
+function getCurrentTime() {
+    // Implémentez ici la logique pour obtenir le temps actuel
+    // Vous pouvez utiliser la classe Date de JavaScript ou une bibliothèque externe
+    const now = new Date();
+    return `${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()} - ${now.getHours()}h${now.getMinutes()}m${now.getSeconds()}s`;
+}
 
 let timers = {};
 let lieuxState = {};
@@ -84,20 +317,11 @@ function supprimerLieu() {
 
 
 
-function setDefaultTab() {
-
-    openTab('Chrono');
-
-}
-
 function openTab(tabName) {
-
-   const chronoButton = document.getElementById('ChronoButton');
+    const chronoButton = document.getElementById('ChronoButton');
     const currentAnnimValue = chronoButton.getAttribute('annim');
-    const newAnnimValue = 'false' ;
+    const newAnnimValue = 'false';
     chronoButton.setAttribute('annim', newAnnimValue);
-
-
 
     var i, tabcontent, tabbuttons;
 
@@ -118,6 +342,10 @@ function openTab(tabName) {
 
     // Ajouter la classe "active" au bouton correspondant
     document.getElementById(tabName + "Button").classList.add("active");
+
+    // Stocker l'onglet actuel dans le localStorage
+    localStorage.setItem('currentTab', tabName);
+
 }
 
 
@@ -181,7 +409,7 @@ function mettreAJourListeDeroulante(nouveauLieu) {
 
 
 function chargerLieuxPersonnalises() {
-    console.log('Chargement des lieux personnalisés...');
+
     
     const lieuxEnregistres = localStorage.getItem('lieuxEnregistres') || '';
     const lieuxEnregistresArray = lieuxEnregistres.split(',');
@@ -189,7 +417,7 @@ function chargerLieuxPersonnalises() {
     const lieuxList = document.getElementById('lieux-list');
 
     for (const lieuEnregistre of lieuxEnregistresArray) {
-        console.log(lieuEnregistre);
+
         ajouterLieuEnHaut(lieuEnregistre);
         mettreAJourListeDeroulante(lieuEnregistre)
     }
@@ -298,18 +526,14 @@ function parcourirArborescenceEtCreerIframes(arbre, parent) {
 }
 
 function exportToTxt() {
-    const enregistrementsDiv = document.getElementById('enregistrements');
-    const enregistrementsData = enregistrementsDiv.innerText;
+    // Obtenir le contenu brut depuis le stockage local
+    const enregistrementsString = localStorage.getItem('enregistrements');
 
-    // Créer un objet Date pour obtenir la date d'aujourd'hui
-    const currentDate = new Date();
-    const formattedDate = `${currentDate.getDate()}-${currentDate.getMonth() + 1}-${currentDate.getFullYear()}`;
-
-    // Générer le contenu du fichier texte avec la date et les enregistrements
-    const fileContent = `Export du ${formattedDate}\n\n${enregistrementsData}`;
+    // Ajouter un saut de ligne après chaque `},{`
+    const contentWithNewlines = enregistrementsString.split('},{').join('},\n{');
 
     // Créer un objet Blob pour le contenu du fichier
-    const blob = new Blob([fileContent], { type: 'text/plain' });
+    const blob = new Blob([contentWithNewlines], { type: 'text/plain' });
 
     // Créer un objet URL pour le Blob
     const url = URL.createObjectURL(blob);
@@ -317,7 +541,7 @@ function exportToTxt() {
     // Créer un élément de lien pour déclencher le téléchargement
     const link = document.createElement('a');
     link.href = url;
-    link.download = `export_${formattedDate}.txt`;
+    link.download = 'export.txt';
 
     // Ajouter le lien à la page et déclencher le téléchargement
     document.body.appendChild(link);
@@ -326,6 +550,8 @@ function exportToTxt() {
     // Retirer le lien de la page une fois le téléchargement terminé
     document.body.removeChild(link);
 }
+
+
 
 
 
@@ -347,12 +573,27 @@ function deleteCookies() {
 }
 
 
+function changerTheme(theme) {
+    var themeLink = document.getElementById('themeLink');
+    themeLink.href = theme + '.css';
 
-    function changerTheme(theme) {
-        // Obtenez l'élément link avec l'id "themeLink"
-        var themeLink = document.getElementById('themeLink');
-localStorage.setItem('theme', theme);
-        // Modifiez l'attribut href pour charger le fichier CSS du thème sélectionné
-        themeLink.href = theme + '.css';
+    // Vérifiez si le thème a changé par rapport à la valeur actuelle dans le stockage local
+    if (theme !== localStorage.getItem('theme')) {
+        // Mettez à jour le thème dans le stockage local
+        localStorage.setItem('theme', theme);
+        
+        // Rechargez la page pour appliquer le nouveau thème
+        location.reload(true);
     }
+}
 
+
+// Fonction pour basculer l'état du slider et mettre à jour le paramètre "TABUL"
+function toggleTabul() {
+    const tabulSlider = document.getElementById('tabulSlider');
+    const tabulValue = tabulSlider.checked;
+
+
+    localStorage.setItem('TABUL', tabulValue ? 'true' : 'false');
+   
+}

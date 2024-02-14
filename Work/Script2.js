@@ -92,23 +92,28 @@ window.addEventListener('message', function(event) {
     const iframeData = event.data;
 
 if (iframeData.type === 'enregistrement') {
+
+
     const enregistrementsDiv = document.getElementById('enregistrements');
-    const enregistrements = localStorage.getItem('enregistrements') || '';
+    let enregistrements = JSON.parse(localStorage.getItem('enregistrements')) || [];
+
+    // Ajouter le nouvel enregistrement à las liste
+    enregistrements.push(ajouterInformationsSupplementaires(iframeData.data));
+
+    // Mettre à jour le stockage local avec la liste mise à jour
+    localStorage.setItem('enregistrements', JSON.stringify(enregistrements));
+
+    // Mettre à jour le contenu de la div en utilisant les enregistrements
+    afficherEnregistrements();
     
-    // Ajouter le nouvel enregistrement avec le séparateur <hr>
-    const separateur = '<hr>';
-    const nouvelEnregistrement = `${enregistrements ? separateur : ''}${iframeData.data}`;
-    
-    localStorage.setItem('enregistrements', `${enregistrements}${nouvelEnregistrement}`);
-
-    // Mettre à jour le contenu de la div en utilisant les enregistrements avec les séparateurs <hr>
-    enregistrementsDiv.innerHTML = localStorage.getItem('enregistrements');
-
-
-afficherEnregistrements();
-
-   
-   }else if (iframeData.type === 'fermer') {
+    const tabulValue = localStorage.getItem('TABUL');
+if (tabulValue === "true") {
+    // Code à exécuter si TABUL est égal à true
+} else {
+    openTab('interventions');
+} 
+}
+ else if (iframeData.type === 'fermer') {
         // Recherche de l'iframe à l'intérieur de laquelle l'événement a été déclenché
 const iframeId = `iframe-${iframeData.data.replace(/\s+/g, '-')}`;
 
@@ -152,7 +157,6 @@ if (boutonLancerChrono) {
             } 
         } 
     }
-
 });
 
 
@@ -166,22 +170,35 @@ function normalizeString(str) {
     return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 }
 
+
 function searchLieu(arbre) {
+
+
+    const clearButton = document.getElementById('clearButton');
+
     const searchInput = document.getElementById('searchInput');
     const searchTerm = normalizeString(searchInput.value.toLowerCase());
 
     const lieuxList = document.getElementById('lieux-list');
     const lieuxItems = lieuxList.querySelectorAll('li');
 
+clearButton.style.display = searchInput.value.trim() !== '' ? 'block' : 'none';
+
     // Parcourir la liste des lieux
     for (let i = 0; i < lieuxItems.length; i++) {
         const lieuItem = lieuxItems[i];
+        const placeCard = lieuItem.querySelector('.place-card');
+
+        if (placeCard) {
+            const placeCardText = normalizeString(placeCard.innerText.toLowerCase());
+            const matchesSearch = placeCardText.includes(searchTerm);
+
+            // Masquer ou afficher la place-card en fonction de la correspondance
+            placeCard.style.display = matchesSearch ? 'block' : 'none';
+        }
+
         const lieuName = normalizeString(lieuItem.innerText.toLowerCase());
-
-        // Diviser le terme de recherche en mots clés
         const searchTerms = searchTerm.split(/\s+/);
-
-        // Vérifier si tous les mots clés sont présents dans le nom du lieu
         const matchesSearch = searchTerms.every(term => lieuName.includes(term));
 
         if (matchesSearch) {
@@ -211,6 +228,17 @@ function searchLieu(arbre) {
             branch.style.display = 'none';
         });
     }
+}
+
+
+function clearSearchInput() {
+    const searchInput = document.getElementById('searchInput');
+    searchInput.value = '';
+
+    // Cacher le bouton après avoir effacé la zone de texte
+    const clearButton = document.getElementById('clearButton');
+    clearButton.style.display = 'none';
+searchLieu()
 }
 
 

@@ -20,12 +20,10 @@
     <div class="container">
         <h1>Choix du Lieu, Machine</h1>
 <div id="rech">
-
-  <input type="text" id="searchInput" placeholder="Rechercher un lieu..." oninput="searchLieu()">
-
-
-
+    <input type="text" id="searchInput" placeholder="Rechercher un lieu..." oninput="searchLieu()">
+    <button id="clearButton" style="display: none;" onclick="clearSearchInput()">✖</button>
 </div>
+
 
         <ul id="lieux-list" class="lieux-list"></ul>
     </div>
@@ -75,12 +73,16 @@
         
         <button onclick="supprimerLieu()">Supprimer Lieu personnalisé</button>
         <hr>
+        <h2>Activer le paramètre tabulation automatique</h2>
+<label class="switch">
+  <input type="checkbox" id="tabulSlider" onchange="toggleTabul()">
+  <span class="slider round"></span>
+</label>
+ <hr>
         <h2>Choisir un thème</h2>
         <select id="themeSelector" onchange="changerTheme(this.value)">
             <option value="style">Thème par défaut</option>
             <option value="style2">Thème Lite</option>
-            <option value="windowsXP">Windows XP</option>
-            <option value="windows7">Windows 7</option>
             <option value="NoStyle(debug)">NoStyle(debug)</option>
         </select>
         <!-- Ajouter un séparateur horizontal -->
