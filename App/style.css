@@ -19,8 +19,8 @@ body {
 
 #row-buttons-container {
     position: absolute;
-    top:56.5%;
-    left: 10px;
+    top:55%;
+    left: 30px;
     display: flex;
     flex-direction: column;
 

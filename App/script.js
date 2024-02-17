@@ -371,7 +371,7 @@ function updateStyles() {
     const totalSizePercentage = (gridSize * cellPercentage) + ((gridSize - 1) * buttonMarginPercentage);
 
     // Calculer le facteur de conversion pour que la taille totale soit égale à 100%
-    const conversionFactor = 40 / totalSizePercentage;
+    const conversionFactor = 25 / totalSizePercentage;
 
     // Mettre à jour le style des boutons
     const buttonElements = document.querySelectorAll('.row-button');
