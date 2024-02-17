@@ -1,10 +1,26 @@
 <link id="themeLink" rel="stylesheet" href="style-chrono.css">
 <li class="active-chrono">
-    <div class="modal-content" >
+    <div class="modal-content">
         <div class="place-details" style="display: flex;">
             <div class="chrono-status" style="color: limegreen;">En cours</div>
             <div id="chrono">00s</div>
+            <select id="liste-cause-1">
+
+            </select>
+
+            <!-- Liste déroulante 2 liée à la liste 'Cause' -->
+            <select id="liste-cause-2">
+
+            </select>           
+            <!-- Première zone de texte avec résumé -->
             <textarea id="zone-texte" placeholder="Saisissez quelque chose..."></textarea>
+            
+            <!-- Deuxième zone de texte avec pièces -->
+<textarea id="zone-pieces" placeholder="Pièces de sortie..."></textarea>
+
+            <!-- Liste déroulante 1 liée à la liste 'Cause' -->
+
+            
             <div id="buttons" style="display: flex; margin-top: 10px;">
                 <button class="modal-button" style="width: 100%;" onclick="cancelChrono()">Annuler</button>
                 <button class="modal-button" style="background-color: yellow; color: black; width: 100%;" onclick="pauseResumeChrono()">Pause</button>
@@ -13,6 +29,5 @@
         </div>
     </div>
 </li>
-
 
 <script src="Script-chrono.js"></script>

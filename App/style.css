@@ -1,0 +1,78 @@
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #1a1a1a; /* Couleur de fond sombre */
+    color: #fff; /* Couleur du texte */
+}
+#column-buttons-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: flex;
+    flex-direction: row;
+    transform: translate(-50%, 30%);
+}
+
+#row-buttons-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: flex;
+    flex-direction: column;
+    transform: translate(-650%, 17%);
+}
+#game-container,
+#upper-cube-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#cube-container,
+#upper-cube-container {
+    display: grid;
+
+        background-color: #333; /* Couleur de fond des conteneurs, cellules et boutons */
+    border-radius: 10px
+}
+
+
+#game-container{
+    transform: translate(-50%, 15%);
+
+}
+
+
+
+#upper-cube-container {
+    transform: translate(-50%, -110%);
+
+}
+
+.cell,
+.upper-cube-cell {
+    border: 1px solid #FFF;
+    background-color: #333; /* Couleur de fond des conteneurs, cellules et boutons */
+    border-radius: 10px;
+}
+
+
+
+.row-button,
+.column-button {
+    display: block;
+    margin: 0 6.5vw 6.5vw 0; /* Ajout d'un espace en bas de chaque bouton proportionnel à la taille de la vue */
+    padding: 2vw; /* Utilisation d'une unité relative à la largeur de la vue pour le padding */
+    font-size: 0px;
+    cursor: pointer;
+        background-color: #333; /* Couleur de fond des conteneurs, cellules et boutons */
+    border-radius: 10px
+}

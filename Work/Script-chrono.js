@@ -239,67 +239,64 @@ interval = setInterval(updateChrono, 1000);
         }
     }
 
-
 function saveRecord() {
-            const listItem = document.querySelector('.active-chrono');
-        const pauseResumeButton = listItem.querySelector('.modal-button[onclick="pauseResumeChrono()"]');
-     if (isPaused === false) {
-            isPaused = true;
+    const listItem = document.querySelector('.active-chrono');
+    const pauseResumeButton = listItem.querySelector('.modal-button[onclick="pauseResumeChrono()"]');
+    
+    // Vérifier si la chronologie est en pause
+    if (isPaused === false) {
+        isPaused = true;
+        pauseStartTime = new Date().getTime();
+        clearInterval(interval);
+    }
 
-            pauseStartTime = new Date().getTime();
-            clearInterval(interval);
-         
-        }
+    // Récupérer la valeur de la deuxième zone de texte
+    const zonePieces = document.getElementById('zone-pieces').value;
 
-
-            const chronoData = {
+    const chronoData = {
         isPaused: isPaused,
         startTime: startTime,
         pauseStartTime: pauseStartTime,
         totalPauseDuration: totalPauseDuration,
-        elapsedTime: elapsedTime
-
+        elapsedTime: elapsedTime,
+        texteZone: zoneTexte.value,
+        piecesSortie: zonePieces,
+        cause1: document.getElementById('liste-cause-1').value,
+        cause2: document.getElementById('liste-cause-2').value
     };
 
     localStorage.setItem(lieu, JSON.stringify(chronoData));
 
+    // Marquer la chronologie comme STOP
+    listItem.classList.add('STOP');
+    document.querySelector('.chrono-status').textContent = 'Fini';
+    document.querySelector('.chrono-status').style.color = 'white';
+    pauseResumeButton.textContent = 'Reprendre';
+    pauseResumeButton.style.backgroundColor = 'green';
 
-
-        listItem.classList.add('STOP');
-
-        document.querySelector('.chrono-status').textContent = 'Fini';
-        document.querySelector('.chrono-status').style.color = 'white';
-        pauseResumeButton.textContent = 'Reprendre';
-        pauseResumeButton.style.backgroundColor = 'green';
-
-    const zoneTexte = document.getElementById('zone-texte');
+    // Vérifier si la première zone de texte est vide
     if (zoneTexte.value.trim() === '') {
         alert('Veuillez saisir quelque chose avant d\'enregistrer.');
-                   
-        
-   
-    } else {
-             
-        const confirmation = window.confirm('Voulez-vous vraiment enregistrer et supprimer cet enregistrement ?');
-        if (confirmation) {
-            const tempsAffiche = document.getElementById('chrono').textContent;
-            const currentDate = new Date();
+        return;
+    }
 
-            // Formater la date en JJ/MM/AAAA
-            const formattedDate = `${pad(currentDate.getDate())}/${pad(currentDate.getMonth() + 1)}/${currentDate.getFullYear()}`;
+    const confirmation = window.confirm('Voulez-vous vraiment enregistrer et supprimer cet enregistrement ?');
+    if (confirmation) {
+        const tempsAffiche = document.getElementById('chrono').textContent;
+        const currentDate = new Date();
 
-            // Construire la chaîne d'enregistrement avec la date
-            const enregistrement = `${formattedDate} - ${tempsAffiche} - ${lieu} - ${zoneTexte.value.trim()}`;
-            // Envoyer les données à la page parente
-            sendEventToParent('enregistrement', enregistrement);
+        const formattedDate = `${pad(currentDate.getDate())}/${pad(currentDate.getMonth() + 1)}/${currentDate.getFullYear()}`;
+        const enregistrement = `${formattedDate} - ${tempsAffiche} - ${lieu} - ${zoneTexte.value.trim()}`;
 
-            setTimeout(() => {
-                sendEventToParent('fermer', lieu);
-                localStorage.removeItem(lieu);
-            }, 100);
-        }
+        sendEventToParent('enregistrement', enregistrement);
+
+        setTimeout(() => {
+            sendEventToParent('fermer', lieu);
+            localStorage.removeItem(lieu);
+        }, 100);
     }
 }
+
 
 
 function cancelChrono() {
@@ -386,3 +383,5 @@ zoneTexte.addEventListener('input', function() {
     localStorage.setItem(lieu, JSON.stringify(chronoData));
 
 });
+
+
