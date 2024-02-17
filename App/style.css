@@ -19,11 +19,11 @@ body {
 
 #row-buttons-container {
     position: absolute;
-    top: 50%;
-    left: 50%;
+    top:56.5%;
+    left: 10px;
     display: flex;
     flex-direction: column;
-    transform: translate(-650%, 17%);
+
 }
 #game-container,
 #upper-cube-container {
@@ -68,7 +68,7 @@ body {
 
 .row-button,
 .column-button {
-    display: block;
+    display: absolute;
     margin: 0 6.5vw 6.5vw 0; /* Ajout d'un espace en bas de chaque bouton proportionnel à la taille de la vue */
     padding: 2vw; /* Utilisation d'une unité relative à la largeur de la vue pour le padding */
     font-size: 0px;
