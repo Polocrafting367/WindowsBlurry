@@ -43,11 +43,16 @@
 <div id="interventionsTab" class="tabcontent">
     <!-- Contenu de l'onglet "Interventions" -->
     <div class="container">
-        <div class="buttons-container">
-            <h1>Interventions</h1>
-            <button onclick="exportToTxt()">Exporter les interventions</button>
-            <button id="dell" onclick="deleteCookies()">Supprimer les interventions</button>
-        </div>
+            <div class="buttons-container">
+                <h1>Interventions</h1>
+                <div class="button-wrapper">
+                    <button onclick="exportToTxt()">Exporter</button>
+                </div>
+                <div class="button-wrapper">
+                    <button id="dell" onclick="deleteCookies()">Tous supprimer</button>
+                </div>
+            </div>
+
         <div id="enregistrements"></div>
     </div>
 </div>
@@ -55,6 +60,7 @@
 <div id="parametresTab" class="tabcontent">
     <!-- Contenu de l'onglet "Paramètres" -->
     <div class="container">
+        <div class="Paramètres">
         <!-- Ajoutez le contenu des paramètres ici -->
         <h1>Paramètres</h1>
 
@@ -97,7 +103,7 @@
         <h2>Créé par Polocrafting (02/2024)</h2>
     </div>
 </div>
-
+</div>
 
 
 
