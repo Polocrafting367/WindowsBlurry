@@ -81,10 +81,6 @@ function showNotification(message, nomLieu) {
 }
 
 
-
-
-
-
 window.addEventListener('message', function(event) {
     // Vérifier si l'origine du message est autorisée, si nécessaire
     // if (event.origin !== 'http://exemple.com') return;

@@ -148,14 +148,8 @@ function creerInputAvecLabel(labelText, inputType, valeurInitiale) {
     return { label, input };
 }
 
-function creerBoutonValider(callback) {
-    const boutonValider = document.createElement('button');
-    boutonValider.textContent = 'Valider';
-    boutonValider.addEventListener('click', callback);
-    return boutonValider;
-}
 
-function mettreAJourEnregistrement(enregistrement, date, temps, zoneTexte1, zoneTexte2) {
+function mettreAJourEnregistrement(enregistrement, date, temps, zoneTexte1, zoneTexte2, zoneTexte3) {
   
 
     // Récupérer le tableau d'enregistrements depuis le stockage local
@@ -175,6 +169,7 @@ function mettreAJourEnregistrement(enregistrement, date, temps, zoneTexte1, zone
         enregistrements[indexAUpdater].temps = temps;
         enregistrements[indexAUpdater].zoneTexte1 = zoneTexte1;
         enregistrements[indexAUpdater].zoneTexte2 = zoneTexte2;
+        enregistrements[indexAUpdater].zoneTexte3 = zoneTexte3;
 
 
         // Réenregistrer le tableau mis à jour dans le stockage local
@@ -192,8 +187,10 @@ function creerBoutonValider(callbackValider, callbackAnnuler) {
     const boutonAnnuler = document.createElement('button');
     boutonAnnuler.textContent = 'Annuler';
     boutonAnnuler.addEventListener('click', callbackAnnuler);
+    boutonAnnuler.id = 'dell';
 
-    return { boutonValider, boutonAnnuler };
+
+   return { boutonValider, boutonAnnuler };
 }
 
 
@@ -212,14 +209,15 @@ function afficherZonesDeTexte(enregistrement) {
 
     const { label: dateLabel, input: dateInput } = creerInputAvecLabel('Date:', 'text', enregistrement.date);
     const { label: tempsLabel, input: tempsInput } = creerInputAvecLabel('Temps:', 'text', enregistrement.temps);
-    const { label: zoneTexte1Label, input: zoneTexte1Input } = creerInputAvecLabel('Zone Texte 1:', 'text', enregistrement.zoneTexte1);
-    const { label: zoneTexte2Label, input: zoneTexte2Input } = creerInputAvecLabel('Zone Texte 2:', 'text', enregistrement.zoneTexte2);
+    const { label: zoneTexte1Label, input: zoneTexte1Input } = creerInputAvecLabel('Lieu:', 'text', enregistrement.zoneTexte1);
+    const { label: zoneTexte2Label, input: zoneTexte2Input } = creerInputAvecLabel('Résumer:', 'text', enregistrement.zoneTexte2);
+    const { label: zoneTexte3Label, input: zoneTexte3Input } = creerInputAvecLabel('Pièces:', 'text', enregistrement.zoneTexte3);
 
     const { boutonValider, boutonAnnuler } = creerBoutonValider(
         () => {
             const confirmation = window.confirm('Êtes-vous sûr de vouloir modifier cet enregistrement ?');
             if (confirmation) {
-                mettreAJourEnregistrement(enregistrement, dateInput.value, tempsInput.value, zoneTexte1Input.value, zoneTexte2Input.value);
+                mettreAJourEnregistrement(enregistrement, dateInput.value, tempsInput.value, zoneTexte1Input.value, zoneTexte2Input.value, zoneTexte3Input.value);
                 mettreAJourAffichage();
                 modalDiv.remove();
             }
@@ -235,6 +233,8 @@ function afficherZonesDeTexte(enregistrement) {
     modalDiv.appendChild(zoneTexte1Input);
     modalDiv.appendChild(zoneTexte2Label);
     modalDiv.appendChild(zoneTexte2Input);
+        modalDiv.appendChild(zoneTexte3Label);
+    modalDiv.appendChild(zoneTexte3Input);
     modalDiv.appendChild(boutonValider);
     modalDiv.appendChild(boutonAnnuler);
 
@@ -248,7 +248,8 @@ function comparerEnregistrements(enregistrement1, enregistrement2) {
         enregistrement1.date === enregistrement2.date &&
         enregistrement1.temps === enregistrement2.temps &&
         enregistrement1.zoneTexte1 === enregistrement2.zoneTexte1 &&
-        enregistrement1.zoneTexte2 === enregistrement2.zoneTexte2
+        enregistrement1.zoneTexte2 === enregistrement2.zoneTexte2 &&
+        enregistrement1.zoneTexte3 === enregistrement2.zoneTexte3
     );
 }
 

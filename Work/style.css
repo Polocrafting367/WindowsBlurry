@@ -414,7 +414,7 @@ iframe {
 
      width: 100%;
     border: none;
- height:250px;
+ height:210px;
 
 }
 
@@ -589,4 +589,8 @@ input:checked + .slider:before {
 }
 
 button {    border-radius: 4px;
+}
+
+button, #searchInput, #nouveauLieu, #lieuxDropdown, #themeSelector {
+    width: 100%;
 }
