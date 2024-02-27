@@ -52,7 +52,7 @@ setTimeout(chargerIframesDepuisLocalStorage, 100);
 function showNotification(message, nomLieu) {
     const notificationOptions = {
         body: message,
-        icon: 'bloc-notes.png' // Remplacez par le chemin de votre icône
+
     };
 
     // Vérifiez si les notifications sont supportées par le navigateur
