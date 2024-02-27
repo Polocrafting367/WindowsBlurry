@@ -34,12 +34,12 @@ if (!localStorage.getItem('lieuxEnregistres')) {
 }
 
 
-const newEnregistrement = ajouterInformationsSupplementaires('2024-02-14 - 12:00 PM - Texte 1 - Texte 2');
+const newEnregistrement = ajouterInformationsSupplementaires('2024-02-14 - 12:00 PM - Texte 1 - Texte 2 - Texte 3');
 
 function ajouterInformationsSupplementaires(data) {
     const parties = data.split('-').map(partie => partie.trim());
-    const id = generateUniqueId(); // generate a unique id
-    return { id, date: parties[0], temps: parties[1], zoneTexte1: parties[2], zoneTexte2: parties[3] };
+    const id = generateUniqueId();
+    return { id, date: parties[0], temps: parties[1], zoneTexte1: parties[2], zoneTexte2: parties[3], zoneTexte3: parties[4]};
 }
 
 function generateUniqueId() {
@@ -63,6 +63,7 @@ function afficherEnregistrements() {
 enregistrements.forEach(enregistrement => {
     const enregistrementDiv = document.createElement('div');
     enregistrementDiv.id = enregistrement.id; // Ajouter l'ID à l'enregistrementDiv
+    enregistrementDiv.className = "AFregis"; // Ajouter la classe à l'enregistrementDiv
 
     let enregistrementTexte;
 
@@ -72,13 +73,12 @@ enregistrements.forEach(enregistrement => {
         enregistrementTexte = parties.map(partie => partie.trim()).join(' - ');
     } else {
         // Nouveau format avec des propriétés distinctes
-        enregistrementTexte = `${enregistrement.date} - ${enregistrement.temps} - ${enregistrement.zoneTexte1} - ${enregistrement.zoneTexte2}`;
+        enregistrementTexte = `${enregistrement.date} - ${enregistrement.temps} - ${enregistrement.zoneTexte1} - ${enregistrement.zoneTexte2} - ${enregistrement.zoneTexte3}`;
     }
 
     enregistrementDiv.textContent = enregistrementTexte;
 
-    // Ajouter une div pour contenir les boutons
-    const boutonsDiv = document.createElement('div');
+ const boutonsDiv = document.createElement('div');
     boutonsDiv.style.display = 'flex'; // Utiliser flexbox pour aligner les boutons sur une ligne
 
     // Ajouter un bouton de modification avec un gestionnaire d'événements
@@ -122,7 +122,6 @@ enregistrements.forEach(enregistrement => {
 
     enregistrementDiv.appendChild(boutonsDiv);
     enregistrementsDiv.appendChild(enregistrementDiv);
-
 });
 
 

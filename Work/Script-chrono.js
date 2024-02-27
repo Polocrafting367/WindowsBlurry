@@ -85,6 +85,11 @@ theme = theme + '-chrono';
             zoneTexte.value = chronoData.texteZone;
         }
 
+        const zonePieces = document.getElementById('zone-pieces');
+        if (chronoData.piecesSortie) {
+            zonePieces.value = chronoData.piecesSortie;
+        }
+
 
         const listItem = document.querySelector('.active-chrono');
         listItem.classList.remove('paused', 'STOP');
@@ -240,6 +245,7 @@ interval = setInterval(updateChrono, 1000);
     }
 
 function saveRecord() {
+
     const listItem = document.querySelector('.active-chrono');
     const pauseResumeButton = listItem.querySelector('.modal-button[onclick="pauseResumeChrono()"]');
     
@@ -250,8 +256,6 @@ function saveRecord() {
         clearInterval(interval);
     }
 
-    // Récupérer la valeur de la deuxième zone de texte
-    const zonePieces = document.getElementById('zone-pieces').value;
 
     const chronoData = {
         isPaused: isPaused,
@@ -261,8 +265,6 @@ function saveRecord() {
         elapsedTime: elapsedTime,
         texteZone: zoneTexte.value,
         piecesSortie: zonePieces,
-        cause1: document.getElementById('liste-cause-1').value,
-        cause2: document.getElementById('liste-cause-2').value
     };
 
     localStorage.setItem(lieu, JSON.stringify(chronoData));
@@ -286,7 +288,8 @@ function saveRecord() {
         const currentDate = new Date();
 
         const formattedDate = `${pad(currentDate.getDate())}/${pad(currentDate.getMonth() + 1)}/${currentDate.getFullYear()}`;
-        const enregistrement = `${formattedDate} - ${tempsAffiche} - ${lieu} - ${zoneTexte.value.trim()}`;
+        const enregistrement = `${formattedDate} - ${tempsAffiche} - ${lieu} - ${zoneTexte.value.trim()} - ${zonePieces.value.trim()}`;
+        console.log(enregistrement)
 
         sendEventToParent('enregistrement', enregistrement);
 
@@ -363,25 +366,41 @@ function displayTime(milliseconds) {
 }
 
 
-
 const zoneTexte = document.getElementById('zone-texte');
+const zonePieces = document.getElementById('zone-pieces');
+let piecesSortie; // Déclaration de piecesSortie au niveau global
 
-// Ajoutez un gestionnaire d'événements pour l'événement 'input'
+// Ajoutez un gestionnaire d'événements pour l'événement 'input' pour la première zone de texte
 zoneTexte.addEventListener('input', function() {
     // Mettez à jour la propriété texteZone dans l'objet chronoData
-                const chronoData = {
+    const chronoData = {
         isPaused: isPaused,
         startTime: startTime,
         pauseStartTime: pauseStartTime,
         totalPauseDuration: totalPauseDuration,
-        elapsedTime: elapsedTime
-
+        elapsedTime: elapsedTime,
+        texteZone: zoneTexte.value,
+        piecesSortie: piecesSortie
     };
-    chronoData.texteZone = zoneTexte.value;
 
     // Mettez à jour les données dans le localStorage
     localStorage.setItem(lieu, JSON.stringify(chronoData));
-
 });
 
+// Ajoutez un gestionnaire d'événements pour l'événement 'input' pour la deuxième zone de texte
+zonePieces.addEventListener('input', function() {
+    // Mettez à jour la propriété piecesSortie dans l'objet chronoData
+    piecesSortie = zonePieces.value; // Définissez piecesSortie avec la valeur de la deuxième zone de texte
+    const chronoData = {
+        isPaused: isPaused,
+        startTime: startTime,
+        pauseStartTime: pauseStartTime,
+        totalPauseDuration: totalPauseDuration,
+        elapsedTime: elapsedTime,
+        piecesSortie: piecesSortie,
+        texteZone: zoneTexte.value
+    };
 
+    // Mettez à jour les données dans le localStorage
+    localStorage.setItem(lieu, JSON.stringify(chronoData));
+});

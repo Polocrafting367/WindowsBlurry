@@ -373,13 +373,13 @@ function updateStyles() {
     // Calculer le facteur de conversion pour que la taille totale soit égale à 100%
     const conversionFactor = 25 / totalSizePercentage;
 
-    // Mettre à jour le style des boutons
-    const buttonElements = document.querySelectorAll('.row-button');
+ const buttonElements = document.querySelectorAll('.row-button');
     buttonElements.forEach((button) => {
         button.style.margin = `0`;
         button.style.height = `${cellPercentage * conversionFactor}vh`;
     });
-        const buttonElementscolumn = document.querySelectorAll('.column-button');
+
+    const buttonElementscolumn = document.querySelectorAll('.column-button');
     buttonElementscolumn.forEach((button) => {
         button.style.margin = `0`;
         button.style.width = `${cellPercentage * conversionFactor}vh`;
@@ -399,6 +399,30 @@ function updateStyles() {
     // Mettre à jour la grille dans upper-cube-container
     const upperCubeContainer = document.getElementById('upper-cube-container');
     upperCubeContainer.style.gridTemplateColumns = `repeat(${gridSize}, ${cellPercentage * conversionFactor}vh)`;
+
+    // Mettre à jour la position du row-buttons-container par rapport au game-container
+    const gameContainer = document.getElementById('game-container');
+    const rowButtonsContainer = document.getElementById('row-buttons-container');
+    
+    const gameContainerLeft = gameContainer.offsetLeft;
+    const gameContainerTop = gameContainer.offsetTop;
+    const gameContainerWidth = gameContainer.offsetWidth;
+    const gameContainerHeight = gameContainer.offsetHeight;
+    const rowButtonsContainerWidth = rowButtonsContainer.offsetWidth;
+    const rowButtonsContainerHeight = rowButtonsContainer.offsetHeight;
+
+// Calculer le pourcentage de la hauteur du jeu pour la translation verticale (top)
+// Garder le pourcentage de la hauteur du jeu pour la translation verticale (top) inchangé
+const topPercentage = (50 / gameContainerHeight) * 100;
+
+// Calculer le pourcentage de la largeur du jeu pour la translation horizontale (left)
+const leftPercentage = (70 / gameContainerWidth) * 100;
+
+// Appliquer la translation dans le code CSS
+rowButtonsContainer.style.transform = `translate(-${leftPercentage}%, ${topPercentage}%)`;
+
+
+    
 }
 
 
