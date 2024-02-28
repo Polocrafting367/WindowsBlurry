@@ -81,18 +81,25 @@
         
         <button onclick="supprimerLieu()">Supprimer Lieu personnalisé</button>
         <hr>
-        <h2>Activer le paramètre tabulation automatique</h2>
+        <h2>Désactiver la tabulation automatique</h2>
 <label class="switch">
   <input type="checkbox" id="tabulSlider" onchange="toggleTabul()">
   <span class="slider round"></span>
 </label>
  <hr>
         <h2>Choisir un thème</h2>
+    <div>
         <select id="themeSelector" onchange="changerTheme(this.value)">
-            <option value="style">Thème par défaut</option>
+            <option value="style">Thème Sombre</option>
+            <option value="style-neo">Thème Claire</option>
             <option value="style2">Thème Lite</option>
             <option value="NoStyle(debug)">NoStyle(debug)</option>
         </select>
+        <!-- Ajouter un bouton "Supprimer Couleurs" -->
+        <button onclick="supprimerCouleurs()">Supprimer Couleurs</button>
+    </div>
+            <input type="range" id="colorSlider" min="0" max="360" step="1" value="0" onchange="changerCouleur(this.value)">
+
         <!-- Ajouter un séparateur horizontal -->
         <hr>
         <button id="dell" onclick="supprimerchronos()">Stopper et réinitialier tout les chronos</button>

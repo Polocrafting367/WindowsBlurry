@@ -218,3 +218,8 @@ button.non-cliquable {
 
     margin-bottom: 10px; /* Add margin-bottom for spacing */
 }
+
+/* Ajoutez cette classe pour définir la couleur active */
+.active {
+    background-color: #6C3;
+}

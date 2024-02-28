@@ -142,17 +142,23 @@ if (tabulValue === "true") {
     if (chronoContainer) {
         // Fonction pour effectuer un clignotement
         function clignoter() {
-            chronoContainer.style.transition = 'background-color 0s ease';
-            chronoContainer.style.backgroundColor = (clignotementCount % 2 === 0) ? '#6C3' : 'rgba(100,100,100,1)';
+            const isActive = chronoContainer.classList.contains('active');
+
+            if (isActive) {
+                chronoContainer.classList.remove('active');
+            } else {
+                chronoContainer.classList.add('active');
+            }
+
             clignotementCount++;
 
             // Arrêter le clignotement après le nombre spécifié
             if (clignotementCount >= clignotements * 2) {
                 clearInterval(clignotementInterval);
                 setTimeout(() => {
-                    // Disparaître après 1 seconde sans animation de fondu
+                    // Retirer la classe active et réinitialiser le style après 1 seconde sans animation de fondu
+                    chronoContainer.classList.remove('active');
                     chronoContainer.style.transition = 'none';
-                    chronoContainer.style.backgroundColor = 'rgba(100,100,100,1)';
                 }, 1000);
             }
         }
