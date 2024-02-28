@@ -100,17 +100,10 @@ textarea {
 
 #buttons {           
     display: flex;
-
+    border-radius: 8px;
 }
-
-#zone-texte::placeholder,
-#zone-pieces::placeholder {
-    color: #AAA; /* Remplacez cette couleur par celle que vous souhaitez pour le texte du placeholder non saisi */
-}
-
 #zone-texte,
 #zone-pieces {
-    background-color: #2e2e2e;
-    color: white;
+
     border-radius: 8px;
 }
