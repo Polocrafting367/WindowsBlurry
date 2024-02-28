@@ -61,7 +61,6 @@ body {
     /* Fond sombre pour le corps de la page */
     color: #333;
     /* Texte en noir */
-    padding: 0;
 }
 
 .container {
@@ -92,16 +91,16 @@ h1 {
     height: calc(100% - 100px);
     /* Ajustez en fonction du padding de .container et de la hauteur de la bannière */
     overflow: auto;
-    box-shadow: 0px 0px 20px rgba(100, 100, 100, 0.5);
-    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0px 0px 20px rgba(100, 100, 100, 0.8);
+    background: rgba(255, 255, 255, 0.5);
     border-radius: 10px;
 }
 
 .lieux-list li {
-    background-color: rgba(200, 200, 200, 0.3);
+    background-color: rgba(255, 255, 255, 0.4);
     /* Fond clair pour chaque élément de lieu */
     margin: 10px 0;
-    padding: 10px;
+    padding: 2.5px;
     border-radius: 8px;
     cursor: pointer;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);

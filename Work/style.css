@@ -516,7 +516,7 @@ button.non-cliquable {
 
 .groupe-container  {
 
-    background-color: rgba(100,100,100,1);
+    background-color: rgba(50,50,50,0.4);
     margin: 10px 0;
     padding: 10px;
     border-radius: 8px;
