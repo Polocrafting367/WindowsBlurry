@@ -239,6 +239,11 @@ function afficherZonesDeTexte(enregistrement) {
     modalDiv.appendChild(boutonAnnuler);
 
     document.body.appendChild(modalDiv);
+
+            var angleCouleur = localStorage.getItem('angleCouleur');;
+if (angleCouleur !== null) {
+    changerCouleur(angleCouleur);
+}
 }
 
 

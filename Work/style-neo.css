@@ -304,7 +304,13 @@ h1 {
     border-radius: 8px;
     cursor: pointer;
 }
+.modal input{
+    border-radius: 8px;
+height: 25px;
 
+    font-size: 15px;
+
+}
 
 /* Ajoutez des styles spécifiques pour le bouton de pause en mode "paused" */
 /* Ajoutez ces styles dans votre fichier CSS ou directement dans votre script JS */

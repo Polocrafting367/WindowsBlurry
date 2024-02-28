@@ -200,14 +200,22 @@ h1 {
     left: 50%; /* Ajustez la position horizontale selon vos besoins */
      transform: translate(-50%, -50%);
     padding: 20px;
-    background-color: #fff;
+    background-color: #333;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     z-index: 1000;
-    color: black;
+    color: white;
     display: flex;
     flex-direction: column;
 }
 
+.modal input{
+    border-radius: 8px;
+height: 25px;
+    background-color: #555;
+    color: white;
+    font-size: 15px;
+
+}
 /* Ajout de styles pour les boutons */
 .modal button {
     margin: 5px; /* Espacement entre les boutons */
