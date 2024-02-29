@@ -81,6 +81,7 @@ function toggleNiveau(element, niveau) {
 let nombreChronosActifs = 0;
 
 function ouvrirIframe(nomLieu, temps, Text1, Text2) {
+    console.log(nomLieu)
 
     toggleAnimations();
 

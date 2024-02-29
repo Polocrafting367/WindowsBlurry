@@ -280,6 +280,8 @@ function mettreAJourEnregistrement(enregistrement, date, temps, zoneTexte1, zone
         localStorage.setItem('enregistrements', JSON.stringify(enregistrements));
       
     } 
+
+
 }
 
 function creerBoutonValider(callbackValider, callbackAnnuler) {
@@ -302,7 +304,11 @@ function creerBoutonValider(callbackValider, callbackAnnuler) {
 function mettreAJourAffichage() {
 
     afficherEnregistrements();
-
+    
+    var angleCouleur = localStorage.getItem('angleCouleur');;
+    if (angleCouleur !== null) {
+        changerCouleur(angleCouleur);
+    }
 }
 function afficherZonesDeTexte(enregistrement) {
     // Create the modalDiv variable before using it

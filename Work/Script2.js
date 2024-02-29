@@ -74,8 +74,11 @@ if (iframeData.type === 'enregistrement') {
 if (tabulValue === "true") {
     // Code à exécuter si TABUL est égal à true
 } else {
+setTimeout(function () {
     openTab('interventions');
-    afficherEnregistrements();
+}, 100);
+
+
 } 
 }
  else if (iframeData.type === 'fermer') {
