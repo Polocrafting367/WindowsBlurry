@@ -1,3 +1,10 @@
+var isPaused;
+var startTime;
+var pauseStartTime;
+var totalPauseDuration;
+var elapsedTime;
+var interval; // Déclarer interval au niveau global
+
 
 window.addEventListener('message', function(event) {
 
@@ -16,6 +23,7 @@ window.addEventListener('message', function(event) {
           if (event.data === 'SupprimerCookie') {
         // Supprimez le cookie spécifique à cette iframe
         localStorage.removeItem(lieu); // Remplacez 'lieu' par le nom du cookie de l'iframe
+
     }
     }
 );
@@ -25,21 +33,89 @@ window.addEventListener('message', function(event) {
 
 var lieu = getURLParameter('lieu');
 var theme = getURLParameter('theme'); // Ajout de cette ligne pour récupérer le paramètre "theme"
-    
+    const temps = getURLParameter('temps');
+
 
 // Utiliser la variable "lieu" comme nécessaire dans votre code
 
 
 
  document.addEventListener('DOMContentLoaded', init);
+function init() {
+    // Récupérer le temps de l'URL
+    const temps = getURLParameter('temps');
+    console.log(temps)
+    const Text1 = getURLParameter('Text1');
+    const Text2 = getURLParameter('Text2');
+    // Si un temps est présent dans l'URL
+    if (temps) {
+        // Convertir le temps en millisecondes
+        const tempsEnMillisecondes = convertirTempsEnMillisecondes(temps);
+        console.log(tempsEnMillisecondes)
 
-    function init() {
-        restoreChronoData();
+        // Calculer la différence entre le temps actuel et le temps extrait
+        const differenceTemps = new Date().getTime() - tempsEnMillisecondes;
+        console.log(differenceTemps)
+        // Mettre à jour la variable `startTime` avec le résultat du calcul
 
+        elapsedTime = 0;
+        isPaused = false;
+        startTime = differenceTemps;
+        pauseStartTime = 0;
+        totalPauseDuration = 0;
 
+        zoneTexte.value = Text1;
+        zonePieces.value = Text2;
 
-        // Vous pouvez ajouter d'autres initialisations ici
+        const chronoData = {
+            isPaused: isPaused,
+            startTime: startTime,
+            pauseStartTime: pauseStartTime,
+            totalPauseDuration: totalPauseDuration,
+            elapsedTime: elapsedTime,
+            texteZone: zoneTexte.value,  // Store the value, not the element
+            piecesSortie: zonePieces.value,  // Store the value, not the element
+        };
+
+        localStorage.setItem(lieu, JSON.stringify(chronoData));
+
+        restoreChronoData(differenceTemps);
+
+    } else {
+        // Restaurer les données du chrono sans ajustement de temps
+        restoreChronoData(0);
     }
+}
+
+
+function convertirTempsEnMillisecondes(temps) {
+    const regex = /(\d+)([hms])/g;
+    let match;
+    let tempsEnMillisecondes = 0;
+
+    while ((match = regex.exec(temps)) !== null) {
+        const valeur = parseInt(match[1], 10);
+        const unite = match[2];
+
+        switch (unite) {
+            case 'h':
+                tempsEnMillisecondes += valeur * 60 * 60 * 1000;
+                break;
+            case 'm':
+                tempsEnMillisecondes += valeur * 60 * 1000;
+                break;
+            case 's':
+                tempsEnMillisecondes += valeur * 1000;
+                break;
+            default:
+                // Ignorer les unités inconnues
+                break;
+        }
+    }
+
+    return tempsEnMillisecondes;
+
+}
 
 
 function getURLParameter(name) {
@@ -48,7 +124,6 @@ function getURLParameter(name) {
     var results = regex.exec(location.search);
     return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
 }
-
     function changerTheme(st) {
         // Obtenez l'élément link avec l'id "themeLink"
         var themeLink = document.getElementById('themeLink');
@@ -58,7 +133,7 @@ function getURLParameter(name) {
     }
 
 
-function restoreChronoData() {
+function restoreChronoData(differenceTemps)  {
 
 theme = theme + '-chrono';
 
@@ -68,10 +143,13 @@ theme = theme + '-chrono';
     const savedData = localStorage.getItem(lieu);
 
 
-    if (savedData) {
+    if (savedData || differenceTemps) {
         // Parser les données JSON
         const chronoData = JSON.parse(savedData);
 
+        
+
+if (chronoData ) {
         // Restaurer les variables
         isPaused = chronoData.isPaused;
         startTime = chronoData.startTime;
@@ -79,8 +157,7 @@ theme = theme + '-chrono';
         totalPauseDuration = chronoData.totalPauseDuration;
         elapsedTime = chronoData.elapsedTime;
 
-
-        const zoneTexte = document.getElementById('zone-texte');
+                const zoneTexte = document.getElementById('zone-texte');
         if (chronoData.texteZone) {
             zoneTexte.value = chronoData.texteZone;
         }
@@ -89,6 +166,9 @@ theme = theme + '-chrono';
         if (chronoData.piecesSortie) {
             zonePieces.value = chronoData.piecesSortie;
         }
+}
+
+
 
 
         const listItem = document.querySelector('.active-chrono');

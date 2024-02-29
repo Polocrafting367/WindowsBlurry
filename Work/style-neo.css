@@ -3,7 +3,16 @@
    background-color: #1e1e1e;
    color: #fff;
 }
-
+/* Add this style to your stylesheet */
+.disabled-button {
+    background-color: lightgrey !important;
+    color: grey ;
+    cursor: not-allowed;
+}
+.green-button {
+    background-color: green !important;
+    color: white;
+}
 .tab-button {
    cursor: pointer;
    padding: 10px;

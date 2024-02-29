@@ -45,6 +45,8 @@ function ajouterInformationsSupplementaires(data) {
 function generateUniqueId() {
     return '_' + Math.random().toString(36).substr(2, 9);
 }
+
+
 function afficherEnregistrements() {
     const enregistrementsDiv = document.getElementById('enregistrements');
     
@@ -60,74 +62,113 @@ function afficherEnregistrements() {
             throw new Error('Les enregistrements ne sont pas un tableau.');
         }
 
-enregistrements.forEach(enregistrement => {
-    const enregistrementDiv = document.createElement('div');
-    enregistrementDiv.id = enregistrement.id; // Ajouter l'ID à l'enregistrementDiv
-    enregistrementDiv.className = "AFregis"; // Ajouter la classe à l'enregistrementDiv
+        const listeEnregistree = JSON.parse(localStorage.getItem('maListe')) || [];
 
-    let enregistrementTexte;
+        enregistrements.forEach(enregistrement => {
+            const enregistrementDiv = document.createElement('div');
+            enregistrementDiv.id = enregistrement.id; // Ajouter l'ID à l'enregistrementDiv
+            enregistrementDiv.className = "AFregis"; // Ajouter la classe à l'enregistrementDiv
 
-    if (enregistrement.texte) {
-        // Ancien format avec la propriété texte
-        const parties = enregistrement.texte.split('-');
-        enregistrementTexte = parties.map(partie => partie.trim()).join(' - ');
-    } else {
-        // Nouveau format avec des propriétés distinctes
-        enregistrementTexte = `${enregistrement.date} - ${enregistrement.temps} - ${enregistrement.zoneTexte1} - ${enregistrement.zoneTexte2} - ${enregistrement.zoneTexte3}`;
-    }
+            let enregistrementTexte;
 
-    enregistrementDiv.textContent = enregistrementTexte;
-
- const boutonsDiv = document.createElement('div');
-    boutonsDiv.style.display = 'flex'; // Utiliser flexbox pour aligner les boutons sur une ligne
-
-    // Ajouter un bouton de modification avec un gestionnaire d'événements
-    const boutonModifier = document.createElement('button');
-    boutonModifier.textContent = 'Modifier';
-    boutonModifier.style.marginRight = '5px'; // Ajouter une marge à droite pour séparer les boutons
-    boutonModifier.addEventListener('click', () => {
-        afficherZonesDeTexte(enregistrement);
-    });
-
-    // Create "Supprimer" button with the id "dell"
-    const boutonSupprimer = document.createElement('button');
-    boutonSupprimer.textContent = 'Supprimer';
-    boutonSupprimer.id = 'dell';
-    boutonSupprimer.style.marginRight = '5px'; // Ajouter une marge à droite pour séparer les boutons
-    boutonSupprimer.addEventListener('click', () => {
-        // Access the id property when deleting the record
-        const confirmation = window.confirm('Êtes-vous sûr de vouloir supprimer cet enregistrement ?');
-        if (confirmation) {
-            const enregistrementDivToDelete = document.getElementById(enregistrement.id);
-            if (enregistrementDivToDelete) {
-                enregistrementDivToDelete.remove();
-            }
-
-            // Supprimer l'enregistrement du tableau
-            const indexASupprimer = enregistrements.findIndex(e => comparerEnregistrements(e, enregistrement));
-
-            if (indexASupprimer !== -1) {
-                enregistrements.splice(indexASupprimer, 1);
-
-                // Réenregistrer le tableau mis à jour dans le stockage local
-                localStorage.setItem('enregistrements', JSON.stringify(enregistrements));
+            if (enregistrement.texte) {
+                // Ancien format avec la propriété texte
+                const parties = enregistrement.texte.split('-');
+                enregistrementTexte = parties.map(partie => partie.trim()).join(' - ');
             } else {
-
+                // Nouveau format avec des propriétés distinctes
+                enregistrementTexte = `${enregistrement.date} - ${enregistrement.temps} - ${enregistrement.zoneTexte1} - ${enregistrement.zoneTexte2} - ${enregistrement.zoneTexte3}`;
             }
-        }
-    });
 
-    boutonsDiv.appendChild(boutonModifier);
-    boutonsDiv.appendChild(boutonSupprimer);
+            enregistrementDiv.textContent = enregistrementTexte;
 
-    enregistrementDiv.appendChild(boutonsDiv);
-    enregistrementsDiv.appendChild(enregistrementDiv);
-});
+            const boutonsDiv = document.createElement('div');
+            boutonsDiv.style.display = 'flex'; // Utiliser flexbox pour aligner les boutons sur une ligne
 
+            // Ajouter un bouton de modification avec un gestionnaire d'événements
+            const boutonModifier = document.createElement('button');
+            boutonModifier.textContent = 'Modifier';
+            boutonModifier.style.marginRight = '5px'; // Ajouter une marge à droite pour séparer les boutons
+            boutonModifier.addEventListener('click', () => {
+                afficherZonesDeTexte(enregistrement);
+            });
+
+            // Create "Restaurer" button with the id "restore"
+ const boutonRestaurer = document.createElement('button');
+boutonRestaurer.textContent = 'Restaurer';
+boutonRestaurer.id = 'restore';
+boutonRestaurer.style.marginRight = '5px'; // Ajouter une marge à droite pour séparer les boutons
+
+            // Check if the location is in the listeEnregistree
+            const isLocationInListe = listeEnregistree.includes(enregistrement.zoneTexte1);
+
+if (isLocationInListe) {
+    boutonRestaurer.disabled = true; // Disable the button
+    boutonRestaurer.classList.add('disabled-button'); // Add the disabled style
+} else {
+boutonRestaurer.disabled = false;    
+boutonRestaurer.classList.add('green-button'); // Add the green-button style
+}
+
+            boutonRestaurer.addEventListener('click', () => {
+                const enregistrementDivToDelete = document.getElementById(enregistrement.id);
+                if (enregistrementDivToDelete) {
+                    enregistrementDivToDelete.remove();
+                }
+
+                const indexASupprimer = enregistrements.findIndex(e => comparerEnregistrements(e, enregistrement));
+
+                if (indexASupprimer !== -1) {
+                    enregistrements.splice(indexASupprimer, 1);
+                    localStorage.setItem('enregistrements', JSON.stringify(enregistrements));
+                } 
+                relancer(enregistrement.zoneTexte1, enregistrement.temps, enregistrement.zoneTexte2, enregistrement.zoneTexte3);
+            });
+
+            // Create "Supprimer" button with the id "dell"
+            const boutonSupprimer = document.createElement('button');
+            boutonSupprimer.textContent = 'Supprimer';
+            boutonSupprimer.id = 'dell';
+            boutonSupprimer.style.marginRight = '5px'; // Ajouter une marge à droite pour séparer les boutons
+            boutonSupprimer.addEventListener('click', () => {
+                const confirmation = window.confirm('Êtes-vous sûr de vouloir supprimer cet enregistrement ?');
+                if (confirmation) {
+                    const enregistrementDivToDelete = document.getElementById(enregistrement.id);
+                    if (enregistrementDivToDelete) {
+                        enregistrementDivToDelete.remove();
+                    }
+
+                    const indexASupprimer = enregistrements.findIndex(e => comparerEnregistrements(e, enregistrement));
+
+                    if (indexASupprimer !== -1) {
+                        enregistrements.splice(indexASupprimer, 1);
+                        localStorage.setItem('enregistrements', JSON.stringify(enregistrements));
+                    }
+                }
+            });
+
+            boutonsDiv.appendChild(boutonModifier);
+            boutonsDiv.appendChild(boutonRestaurer);
+            boutonsDiv.appendChild(boutonSupprimer);
+
+            enregistrementDiv.appendChild(boutonsDiv);
+            enregistrementsDiv.appendChild(enregistrementDiv);
+        });
 
     } catch (error) {
+        console.error(error);
     }
 }
+
+
+function relancer(nomLieu, temps, Text1, Text2) {
+
+
+    // Ensuite, vous pouvez exécuter votre logique pour ouvrir l'iframe
+    ouvrirIframe(nomLieu, temps, Text1, Text2);
+}
+
+
 
 function creerFenetreModale(enregistrement) {
     const modalDiv = document.createElement('div');
@@ -319,9 +360,6 @@ function supprimerLieu() {
 
 
 
-
-
-
 function openTab(tabName) {
     const chronoButton = document.getElementById('ChronoButton');
     const currentAnnimValue = chronoButton.getAttribute('annim');
@@ -351,11 +389,15 @@ function openTab(tabName) {
     // Stocker l'onglet actuel dans le localStorage
     localStorage.setItem('currentTab', tabName);
 
-        var angleCouleur = localStorage.getItem('angleCouleur');;
-if (angleCouleur !== null) {
-    changerCouleur(angleCouleur);
-}
+    // Appeler afficherEnregistrements si le tabName est "interventions"
+    if (tabName === "interventions") {
+        afficherEnregistrements();
+    }
 
+    var angleCouleur = localStorage.getItem('angleCouleur');;
+    if (angleCouleur !== null) {
+        changerCouleur(angleCouleur);
+    }
 }
 
 
@@ -666,3 +708,6 @@ function toggleTabul() {
     localStorage.setItem('TABUL', tabulValue ? 'true' : 'false');
    
 }
+
+
+

@@ -9,7 +9,6 @@ function chargerLieux() {
     const lieuxEnregistres = localStorage.getItem('lieuxEnregistres') || '';
     const lieuxEnregistresArray = lieuxEnregistres.split(',');
 
-
 const chronoTabContainer = document.getElementById('ChronoTab').querySelector('.container');
 
 
@@ -81,7 +80,7 @@ function toggleNiveau(element, niveau) {
 
 let nombreChronosActifs = 0;
 
-function ouvrirIframe(nomLieu) {
+function ouvrirIframe(nomLieu, temps, Text1, Text2) {
 
     toggleAnimations();
 
@@ -102,7 +101,7 @@ function ouvrirIframe(nomLieu) {
 
 
     // Ajouter le titre et l'iframe au conteneur ChronoTab
-    ajouterTitreEtIframe(nomLieu);
+    ajouterTitreEtIframe(nomLieu, temps, Text1, Text2);
     dejacrée(nomLieu)
 
     const boutonLancerChrono = document.getElementById(`lancer-chrono-btn-${nomLieu}`);
@@ -178,7 +177,7 @@ if (tabulValue === "true") {
 
 
 
-function ajouterTitreEtIframe(nomLieu) {
+function ajouterTitreEtIframe(nomLieu, temps, Text1, Text2) {
     const chronosContainer = document.getElementById('chronosContainer');
 
     // Créer un nouveau conteneur div pour le titre et l'iframe
@@ -194,7 +193,16 @@ function ajouterTitreEtIframe(nomLieu) {
     // Créer une nouvelle iframe
     const iframe = document.createElement('iframe');
     iframe.id = `iframe-${nomLieu.replace(/\s+/g, '-')}`; // Remplacer les espaces par des traits d'union
-    iframe.src = `chrono.html?lieu=${nomLieu}&theme=${localStorage.getItem('theme')}`;
+    
+    // Construire l'URL en ajoutant le lieu et le thème
+    let url = `chrono.html?lieu=${nomLieu}&theme=${localStorage.getItem('theme')}`;
+
+    // Ajouter le temps à l'URL si la variable temps existe
+    if (temps) {
+        url += `&temps=${temps}&Text1=${Text1}&Text2=${Text2}`;
+    }
+
+    iframe.src = url;
 
     // Ajouter le titre et l'iframe au conteneur principal
     groupeContainer.appendChild(titreLieuContainer);
@@ -203,24 +211,20 @@ function ajouterTitreEtIframe(nomLieu) {
     // Ajouter le conteneur au conteneur ChronoTab
     chronosContainer.appendChild(groupeContainer);
 
+    if (groupeContainer) {
+        // Effacer le contenu existant
 
+        // Ajouter l'iframe à l'élément parent
+        groupeContainer.appendChild(iframe);
 
-if (groupeContainer) {
-    // Effacer le contenu existant
-
-
-    // Ajouter l'iframe à l'élément parent
-    groupeContainer.appendChild(iframe);
-
-    // Envoyer un message à toutes les iframes imbriquées
-    const iframesImbriquées = document.querySelectorAll('iframe');
-    for (let i = 0; i < iframesImbriquées.length; i++) {
-        if (iframesImbriquées[i] !== iframe) {
-            iframesImbriquées[i].contentWindow.postMessage('NouvelleIframeCréée', '*');
+        // Envoyer un message à toutes les iframes imbriquées
+        const iframesImbriquées = document.querySelectorAll('iframe');
+        for (let i = 0; i < iframesImbriquées.length; i++) {
+            if (iframesImbriquées[i] !== iframe) {
+                iframesImbriquées[i].contentWindow.postMessage('NouvelleIframeCréée', '*');
+            }
         }
     }
-}
-
 }
 
 

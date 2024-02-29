@@ -4,6 +4,16 @@
    color: #fff;
 }
 
+.disabled-button {
+    background-color: lightgrey !important;
+    color: grey ;
+    cursor: not-allowed;
+}
+.green-button {
+    background-color: green !important;
+    color: white;
+}
+
 .tab-button {
 
    padding: 10px;

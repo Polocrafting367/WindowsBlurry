@@ -100,13 +100,14 @@ if (iframeData.type === 'enregistrement') {
     localStorage.setItem('enregistrements', JSON.stringify(enregistrements));
 
     // Mettre à jour le contenu de la div en utilisant les enregistrements
-    afficherEnregistrements();
+
     
     const tabulValue = localStorage.getItem('TABUL');
 if (tabulValue === "true") {
     // Code à exécuter si TABUL est égal à true
 } else {
     openTab('interventions');
+    afficherEnregistrements();
 } 
 }
  else if (iframeData.type === 'fermer') {
