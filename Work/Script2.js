@@ -49,38 +49,6 @@ function ouvrirBranchesPourLieu(lieu) {
 setTimeout(chargerIframesDepuisLocalStorage, 100);
 
 
-function showNotification(message, nomLieu) {
-    const notificationOptions = {
-        body: message,
-
-    };
-
-    // Vérifiez si les notifications sont supportées par le navigateur
-    if ('Notification' in window) {
-        Notification.requestPermission().then(function (permission) {
-            if (permission === 'granted') {
-                const notification = new Notification('Chrono en cours', notificationOptions);
-
-                // Ajouter un gestionnaire d'événements pour rediriger vers la page
-                notification.addEventListener('click', function () {
-                    // Rediriger vers la page souhaitée
-                    window.focus(); // Assure que la fenêtre est au premier plan
-                    toggleChronosState();
-
-                    // Mettre à jour le texte de la zone de texte avec le lieu
-                    const searchInput = document.getElementById('searchInput');
-                    if (searchInput) {
-                        searchInput.value = nomLieu;
-                        // Appeler la fonction de recherche
-                        searchLieu();
-                    } 
-                });
-            }
-        });
-    }
-}
-
-
 window.addEventListener('message', function(event) {
     // Vérifier si l'origine du message est autorisée, si nécessaire
     // if (event.origin !== 'http://exemple.com') return;
@@ -155,7 +123,6 @@ if (boutonLancerChrono) {
         } 
     }
 });
-
 
 
 let searchActive = false; // Variable pour suivre l'état de la recherche

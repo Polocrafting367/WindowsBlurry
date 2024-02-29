@@ -88,10 +88,6 @@ function ouvrirIframe(nomLieu, temps, Text1, Text2) {
     const chronoButton = document.getElementById('ChronoButton');
     chronoButton.textContent = `${nombreChronosActifs} Chrono${nombreChronosActifs !== 1 ? 's' : ''}`;
 
-
-    const notificationMessage = "Chrono en cours sur : " + nomLieu;
-    showNotification(notificationMessage, nomLieu);
-
     
     // Vérifier si une iframe avec la pastille "Actif - " existe déjà
 // Récupérer l'état actuel de "TABUL" depuis le localStorage
