@@ -44,18 +44,18 @@ var theme = getURLParameter('theme'); // Ajout de cette ligne pour récupérer l
 function init() {
     // Récupérer le temps de l'URL
     const temps = getURLParameter('temps');
-    console.log(temps)
+
     const Text1 = getURLParameter('Text1');
     const Text2 = getURLParameter('Text2');
     // Si un temps est présent dans l'URL
     if (temps) {
         // Convertir le temps en millisecondes
         const tempsEnMillisecondes = convertirTempsEnMillisecondes(temps);
-        console.log(tempsEnMillisecondes)
+
 
         // Calculer la différence entre le temps actuel et le temps extrait
         const differenceTemps = new Date().getTime() - tempsEnMillisecondes;
-        console.log(differenceTemps)
+
         // Mettre à jour la variable `startTime` avec le résultat du calcul
 
         elapsedTime = 0;
@@ -369,7 +369,6 @@ function saveRecord() {
 
         const formattedDate = `${pad(currentDate.getDate())}/${pad(currentDate.getMonth() + 1)}/${currentDate.getFullYear()}`;
         const enregistrement = `${formattedDate} - ${tempsAffiche} - ${lieu} - ${zoneTexte.value.trim()} - ${zonePieces.value.trim()}`;
-        console.log(enregistrement)
 
         sendEventToParent('enregistrement', enregistrement);
 
