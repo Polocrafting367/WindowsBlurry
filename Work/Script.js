@@ -41,11 +41,11 @@ if (!localStorage.getItem('lieuxEnregistres')) {
 function showTutorialPopup(restt) {
     // Créer la balise vidéo
     const videoElement = document.createElement('video');
-    videoElement.controls = true;
+    videoElement.controls = false;
     videoElement.autoplay = true; // Ajout de l'attribut autoplay
-    videoElement.style.width = '50%';
-    videoElement.style.height = '50%';
-    videoElement.style.objectFit = 'contain'; // Ou 'cover' selon vos préférences
+    videoElement.style.width = '100%'; // Ajuster la largeur à 75%
+    videoElement.style.height = '75vh'; // Ajuster la hauteur à 75% de la hauteur de la vue (viewport height)
+
 
     // Ajouter la source de la vidéo au format MP4
     const sourceElement = document.createElement('source');
@@ -74,6 +74,7 @@ function showTutorialPopup(restt) {
     // Afficher la modal
     document.getElementById('tutorialModal').style.display = 'block';
 }
+
 
 
 

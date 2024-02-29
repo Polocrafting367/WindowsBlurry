@@ -229,7 +229,7 @@ h1 {
     margin: 5px; /* Espacement entre les boutons */
     height: 25px;
 }
-
+#tutorialModal{width: 85%}
 #enregistrements button {
 
     height: 25px;

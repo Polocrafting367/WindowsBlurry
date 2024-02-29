@@ -566,6 +566,7 @@ button.non-cliquable {
   transition: .4s;
   border-radius: 8px;
 }
+#tutorialModal{width: 85%}
 
 .slider:before {
   position: absolute;
