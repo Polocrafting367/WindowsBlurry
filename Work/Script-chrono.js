@@ -87,9 +87,8 @@ function init() {
     }
 }
 
-
 function convertirTempsEnMillisecondes(temps) {
-    const regex = /(\d+)([hms])/g;
+    const regex = /(\d+)([jhrsm])/g;
     let match;
     let tempsEnMillisecondes = 0;
 
@@ -98,6 +97,9 @@ function convertirTempsEnMillisecondes(temps) {
         const unite = match[2];
 
         switch (unite) {
+            case 'j':
+                tempsEnMillisecondes += valeur * 24 * 60 * 60 * 1000;
+                break;
             case 'h':
                 tempsEnMillisecondes += valeur * 60 * 60 * 1000;
                 break;
@@ -114,7 +116,6 @@ function convertirTempsEnMillisecondes(temps) {
     }
 
     return tempsEnMillisecondes;
-
 }
 
 

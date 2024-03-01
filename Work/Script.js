@@ -8,11 +8,8 @@ let restt = localStorage.getItem('currentTab');
 setTimeout(function () {
     if (restt !== null && restt !== undefined && restt.trim() !== '') {
         openTab(restt);
-        closeTutorialModal();
-    } else {
-        // La variable restt est vide, afficher la popup avec le tutoriel
-        showTutorialPopup();
-    }
+
+    } 
 }, 100);
 
 
@@ -37,63 +34,6 @@ setTimeout(function () {
 
 if (!localStorage.getItem('lieuxEnregistres')) {
     localStorage.setItem('lieuxEnregistres', JSON.stringify([]));
-}
-function showTutorialPopup(restt) {
-    // Créer la balise vidéo
-    const videoElement = document.createElement('video');
-    videoElement.controls = false;
-    videoElement.autoplay = true; // Ajout de l'attribut autoplay
-    videoElement.style.width = '100%'; // Ajuster la largeur à 75%
-    videoElement.style.height = '75vh'; // Ajuster la hauteur à 75% de la hauteur de la vue (viewport height)
-
-
-    // Ajouter la source de la vidéo au format MP4
-    const sourceElement = document.createElement('source');
-    sourceElement.src = 'tuto.mp4';
-    sourceElement.type = 'video/mp4';
-
-    videoElement.appendChild(sourceElement);
-
-    // Créer la balise <span> pour la fermeture de la modal
-    const closeSpan = document.createElement('span');
-    closeSpan.className = 'close';
-    closeSpan.innerHTML = '&times;';
-    closeSpan.onclick = closeTutorialModal;
-
-    // Créer la balise <h2> pour le titre
-    const titleH2 = document.createElement('h2');
-    titleH2.textContent = 'Tutoriel';
-
-    // Ajouter la balise vidéo, le span pour la fermeture et le titre à la modal
-    const modalContent = document.querySelector('.modal-content');
-    modalContent.innerHTML = ''; // Supprimer le contenu existant
-    modalContent.appendChild(closeSpan);
-    modalContent.appendChild(titleH2);
-    modalContent.appendChild(videoElement);
-
-    // Afficher la modal
-    document.getElementById('tutorialModal').style.display = 'block';
-}
-
-
-
-
-
-function closeTutorialModal() {
-    // Récupérer l'élément vidéo
-    const videoElement = document.querySelector('.modal-content video');
-
-    // Mettre en pause la vidéo
-    if (videoElement) {
-        videoElement.pause();
-
-        // Supprimer l'élément vidéo du DOM
-        const modalContent = document.querySelector('.modal-content');
-        modalContent.removeChild(videoElement);
-    }
-
-    // Fermer la modal
-    document.getElementById('tutorialModal').style.display = 'none';
 }
 
 
