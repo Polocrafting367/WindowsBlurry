@@ -37,6 +37,12 @@ if (!localStorage.getItem('lieuxEnregistres')) {
 }
 
 
+
+
+
+
+
+
 const newEnregistrement = ajouterInformationsSupplementaires('2024-02-14 - 12:00 PM - Texte 1 - Texte 2 - Texte 3');
 
 function ajouterInformationsSupplementaires(data) {
@@ -326,46 +332,6 @@ let globalPauseState = false;
 }
 
 
-function supprimerLieu() {
-    const lieuxDropdown = document.getElementById('lieuxDropdown');
-    const selectedLieu = lieuxDropdown.value;
-
-    if (selectedLieu) {
-        // Ajoutez une confirmation avant de supprimer
-        const confirmation = window.confirm("Êtes-vous sûr de vouloir supprimer ce lieu ?");
-        
-        if (confirmation) {
-            // Supprimez l'élément sélectionné des cookies
-            const lieuxEnregistres = localStorage.getItem('lieuxEnregistres') || '';
-            
-            // Convertir la chaîne en tableau en supprimant les espaces vides
-            const lieuxEnregistresArray = lieuxEnregistres.split(',').filter(lieu => lieu.trim() !== '' && lieu !== "[]");
-
-            const indexToRemove = lieuxEnregistresArray.indexOf(selectedLieu);
-
-            if (indexToRemove !== -1) {
-                lieuxEnregistresArray.splice(indexToRemove, 1);
-                localStorage.setItem('lieuxEnregistres', lieuxEnregistresArray.join(','));
-
-                // Effacer la liste déroulante actuelle
-                lieuxDropdown.innerHTML = '';
-
-                lieuxEnregistresArray.forEach(nomLieu => {
-                    const option = document.createElement('option');
-                    option.value = nomLieu;
-                    option.textContent = nomLieu;
-                    lieuxDropdown.appendChild(option);
-                });
-
-                // Supprimer l'élément correspondant dans la liste lieux-list
-                const lieuxList = document.getElementById('lieux-list');
-                const lieuItemToRemove = document.querySelector(`[data-texte="${selectedLieu}"]`).parentNode.parentNode;
-                lieuxList.removeChild(lieuItemToRemove);
-            }
-        }
-    }
-}
-
 
 
 
@@ -487,87 +453,6 @@ function chargerLieuxPersonnalises() {
 
 
 
-function supprimerTousLesCookies() {
-    // Demandez une confirmation avant de supprimer tous les cookies
-   const confirmation = window.confirm(
-  "Êtes-vous sûr de vouloir supprimer tous les cookies ?\nLes interventions, lieux personnalisés, chronos en court seront supprimés"
-);
-
-    if (confirmation) {
-        // Supprimez le cookie 'lieuxEnregistres'
-        localStorage.removeItem('lieuxEnregistres');
-
-        // Supprimez le cookie 'enregistrements'
-        localStorage.removeItem('enregistrements');
-        localStorage.removeItem('maListe');
-
-
-const chronosContainer = document.getElementById('chronosContainer');
-parcourirArborescenceEtCreerIframes(arborescence, chronosContainer);
-
-        const iframesImbriquées = document.querySelectorAll('iframe');
-
-        for (let i = 0; i < iframesImbriquées.length; i++) {
-            iframesImbriquées[i].contentWindow.postMessage('SupprimerCookie', '*');
-        }
-
-localStorage.removeItem('maListe');
-
-
-
-
-
-        alert("Tous les cookies ont été supprimés");
-        // Rafraîchissez la page ou mettez à jour l'affichage des enregistrements
-        location.reload();
-
-        // Affichez un message après la suppression des cookies
-
-    }
-}
-function supprimerchronos() {
-
-
-    const confirmation = window.confirm("Êtes-vous sûr de vouloir stopper tous les chronos?");
-
-    if (confirmation) {
-        const iframesImbriquées = document.querySelectorAll('iframe');
-
-        for (let i = 0; i < iframesImbriquées.length; i++) {
-            iframesImbriquées[i].contentWindow.postMessage('SupprimerCookie', '*');
-        }
-
-localStorage.removeItem('maListe');
-
-        alert("Tous les chronos ont été stoppés");
-        location.reload();
-    }
-}
-
-
-function supprimerchronosHARD() {
-    const confirmation = window.confirm("Êtes-vous sûr de vouloir stopper tous les chronos?");
-
-   if (confirmation) {
-    
-const chronosContainer = document.getElementById('chronosContainer');
-parcourirArborescenceEtCreerIframes(arborescence, chronosContainer);
-
-        const iframesImbriquées = document.querySelectorAll('iframe');
-
-        for (let i = 0; i < iframesImbriquées.length; i++) {
-            iframesImbriquées[i].contentWindow.postMessage('SupprimerCookie', '*');
-        }
-
-localStorage.removeItem('maListe');
-
-        alert("Tous les chronos ont été stoppés");
-        location.reload();
-
-    }
-}
-
-
 function parcourirArborescenceEtCreerIframes(arbre, parent) {
     for (const lieu in arbre) {
         const iframeContainer = document.createElement('div');
@@ -613,26 +498,45 @@ function exportToTxt() {
 }
 
 
+function supprimerLieu() {
+    const lieuxDropdown = document.getElementById('lieuxDropdown');
+    const selectedLieu = lieuxDropdown.value;
 
+    if (selectedLieu) {
+        // Ajoutez une confirmation avant de supprimer
+        const confirmation = window.confirm("Êtes-vous sûr de vouloir supprimer ce lieu ?");
+        
+        if (confirmation) {
+            // Supprimez l'élément sélectionné des cookies
+            const lieuxEnregistres = localStorage.getItem('lieuxEnregistres') || '';
+            
+            // Convertir la chaîne en tableau en supprimant les espaces vides
+            const lieuxEnregistresArray = lieuxEnregistres.split(',').filter(lieu => lieu.trim() !== '' && lieu !== "[]");
 
+            const indexToRemove = lieuxEnregistresArray.indexOf(selectedLieu);
 
-function deleteCookies() {
-    // Demander une confirmation avant de supprimer tous les enregistrements
-    const confirmation = window.confirm("Êtes-vous sûr de vouloir supprimer tous les enregistrements ?");
+            if (indexToRemove !== -1) {
+                lieuxEnregistresArray.splice(indexToRemove, 1);
+                localStorage.setItem('lieuxEnregistres', lieuxEnregistresArray.join(','));
 
-    if (confirmation) {
-        // Supprimer tous les enregistrements dans localStorage
-        localStorage.removeItem('enregistrements');
- localStorage.removeItem('angleCouleur');
-        // Rafraîchir ou mettre à jour l'affichage des enregistrements
+                // Effacer la liste déroulante actuelle
+                lieuxDropdown.innerHTML = '';
 
+                lieuxEnregistresArray.forEach(nomLieu => {
+                    const option = document.createElement('option');
+                    option.value = nomLieu;
+                    option.textContent = nomLieu;
+                    lieuxDropdown.appendChild(option);
+                });
 
-        alert("Tous les enregistrements ont été supprimés");
-
-                location.reload();
+                // Supprimer l'élément correspondant dans la liste lieux-list
+                const lieuxList = document.getElementById('lieux-list');
+                const lieuItemToRemove = document.querySelector(`[data-texte="${selectedLieu}"]`).parentNode.parentNode;
+                lieuxList.removeChild(lieuItemToRemove);
+            }
+        }
     }
 }
-
 
 
 // Fonction pour basculer l'état du slider et mettre à jour le paramètre "TABUL"
