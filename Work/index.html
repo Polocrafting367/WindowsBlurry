@@ -55,7 +55,14 @@
     max-width: 100%; /* Pour éviter que la largeur ne dépasse la largeur du contenu parent */
     max-height: 400px; /* Pour éviter que la hauteur ne dépasse la hauteur du contenu parent */
 }
+    #themeButtons {
+        text-align: center;  /* Aligner les boutons au centre de la div */
+    }
 
+    #themeButtons button {
+        display: inline-block;  /* Afficher les boutons en ligne */
+        margin-right: 10px;  /* Espacement entre les boutons */
+    }
             </style>
 
             <div id="overlay"></div>
@@ -89,10 +96,12 @@
            <h2>Choisir un thème</h2>
     <div>
         <hr>
-        <select id="themeSelector" onchange="changerTheme(this.value)">
-            <option value="style">Thème Claire</option>
-            <option value="style-neo">Thème Sombre</option>
-        </select>
+
+<div style="display: flex; justify-content: center;">
+    <button onclick="changerTheme('style')" style="margin-right: 10px; background-color: #888 !important; padding: 5px 10px; border: none; color: #fff; cursor: pointer;">Thème Claire</button>
+    <button onclick="changerTheme('style-neo')" style="background-color: #111 !important; padding: 5px 10px; border: none; cursor: pointer; color: #fff;">Thème Sombre</button>
+</div>
+
         <!-- Ajouter un bouton "Supprimer Couleurs" -->
         <button onclick="supprimerCouleurs()">Supprimer Couleurs</button>
     </div>
@@ -148,16 +157,15 @@
 </label>
  <hr>
         <h2>Choisir un thème</h2>
-    <div>
-        <select id="themeSelector" onchange="changerTheme(this.value)">
-            <option value="style">Thème Claire</option>
-            <option value="style-neo">Thème Sombre</option>
-            <!-- <option value="style2">Thème Lite</option> 
-             <option value="NoStyle(debug)">NoStyle(debug)</option> -->
-        </select>
-        <!-- Ajouter un bouton "Supprimer Couleurs" -->
-        <button onclick="supprimerCouleurs()">Supprimer Couleurs</button>
-    </div>
+<div style="display: flex; justify-content: center;">
+    <button onclick="changerTheme('style')" style="margin-right: 10px; background-color: #888 !important; padding: 5px 10px; border: none; color: #fff; cursor: pointer;">Thème Claire</button>
+    <button onclick="changerTheme('style-neo')" style="background-color: #111 !important; padding: 5px 10px; border: none; cursor: pointer; color: #fff;">Thème Sombre</button>
+</div>
+
+
+       
+    <button onclick="supprimerCouleurs()">Supprimer Couleurs</button>
+
             <input type="range" id="colorSlider" min="0" max="360" step="1" value="0" onchange="changerCouleur(this.value)">
 
         <!-- Ajouter un séparateur horizontal -->
@@ -180,7 +188,7 @@
 
 </body>
 <script src="unorm.js"></script>
-
+<script src="style.js"></script>
 <script src="Lieu.js"></script>
 
 <script src="Script.js"></script>
