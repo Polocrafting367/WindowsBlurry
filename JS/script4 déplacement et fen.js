@@ -211,12 +211,12 @@ function Calculatrice() {
 }
 
 function Yout() {
-NouvelleFenetre("Yout", "Paint", "../App/yout.html", menu, menuIsVisible, true);
+NouvelleFenetre("Yout", "Paint", "../App/yout.html", menu, menuIsVisible, false);
 
 }
 
 function LOGO() {
-  NouvelleFenetre("LOGO", "Crédits", "../App/Logo.html", menu, menuIsVisible, false);
+  NouvelleFenetre("LOGO", "App Personnaliser", "../App/Logo.html", menu, menuIsVisible, true);
 
 }
 
