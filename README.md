@@ -4,7 +4,7 @@ Page HTML créée en partie avec des IA, le code n'est pas vraiment optimisé, m
 
 À visualiser en ligne à cette adresse : [Blurry Windows](https://sites.google.com/view/polocrafting/blurry-windows)
 
-![image](https://github.com/Polocrafting367/WindowsBlurry-1/assets/152706679/fd4ab2bc-be05-4fe2-9887-902015191375)
+![image](https://github.com/Polocrafting367/WindowsBlurry-1/blob/main/Images/Capture%20d'%C3%A9cran%202024-03-04%20212100.png?raw=true)
 
 
 Chaîne YouTube : [Ma chaine Youtube](https://www.youtube.com/channel/UCTL3fXI8aZnYweRvys6m2bA)
