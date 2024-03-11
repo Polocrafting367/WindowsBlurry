@@ -16,6 +16,7 @@
 
         #generatedImage {
             border: 1px solid #ccc;
+        }
 
         select {
             margin: 10px;
@@ -39,11 +40,32 @@
         #resultTable {
             margin: 0 auto;
             border-collapse: collapse;
+            border: 1px solid #000;
         }
 
         #resultTable th, #resultTable td {
-            border: 1px solid #ddd;
+            border: 1px solid #000;
             padding: 8px;
+        }
+
+        #weekInputContainer {
+            margin-bottom: 10px;
+        }
+
+        .labelContainer {
+            margin-top: 10px;
+        }
+
+        .labelContainer label {
+            margin-right: 10px;
+        }
+
+        .selectContainer {
+            margin-bottom: 10px;
+        }
+
+        .selectContainer select {
+            margin-right: 10px;
         }
     </style>
 </head>
@@ -51,46 +73,21 @@
 
     <h1>Générateur d'Image</h1>
 
+    <div id="weekInputContainer">
+        <label for="startWeek">Semaine de départ:</label>
+        <input type="text" id="startWeek" oninput="updateLabels()">
+    </div>
+
+    <div id="labelContainer" class="labelContainer"></div>
+
+    <div id="selectContainer" class="selectContainer"></div>
+
     <label for="month">Mois:</label>
     <select id="month">
         <option value="Janvier">Janvier</option>
         <option value="Février">Février</option>
         <option value="Mars">Mars</option>
         <!-- Ajoutez les autres mois ici -->
-    </select>
-
-    <br>
-
-    <label for="M">M:</label>
-    <select id="M">
-        <option value="M">M</option>
-        <option value="J">J</option>
-        <option value="S">S</option>
-        <option value="N">N</option>
-    </select>
-
-    <label for="J">J:</label>
-    <select id="J">
-        <option value="M">M</option>
-        <option value="J">J</option>
-        <option value="S">S</option>
-        <option value="N">N</option>
-    </select>
-
-    <label for="S">S:</label>
-    <select id="S">
-        <option value="M">M</option>
-        <option value="J">J</option>
-        <option value="S">S</option>
-        <option value="N">N</option>
-    </select>
-
-    <label for="N">N:</label>
-    <select id="N">
-        <option value="M">M</option>
-        <option value="J">J</option>
-        <option value="S">S</option>
-        <option value="N">N</option>
     </select>
 
     <br>
@@ -122,10 +119,6 @@
     <script>
         function generateImage() {
             var month = document.getElementById('month').value;
-            var M = document.getElementById('M').value;
-            var J = document.getElementById('J').value;
-            var S = document.getElementById('S').value;
-            var N = document.getElementById('N').value;
 
             var canvas = document.createElement('canvas');
             canvas.width = 200;
@@ -139,24 +132,27 @@
             context.fillStyle = '#000000';
             context.fillText(month, 70, 20);
 
-            var letters = [M, J, S, N];
-            for (var i = 0; i < letters.length; i++) {
-                var bgColor = getBackgroundColor(letters[i]);
+            var selectContainer = document.getElementById('selectContainer');
+            var resultRow = document.getElementById('resultRow');
+            var letters = ['M', 'J', 'S', 'N'];
+
+            for (var i = 0; i < selectContainer.children.length; i++) {
+                var week = document.getElementById('startWeek').value ? parseInt(document.getElementById('startWeek').value) : 0;
+                var weekLabel = document.getElementById('weekLabel' + i).textContent;
+                var selectValue = document.getElementById('select' + i).value;
+
+                var bgColor = getBackgroundColor(selectValue);
                 var textColor = getTextColor(bgColor);
                 context.fillStyle = bgColor;
                 context.fillRect(20 + i * 40, 40, 30, 30);
                 context.fillStyle = textColor;
-                context.fillText(letters[i], 20 + i * 40 + 10, 60);
+                context.fillText(selectValue, 20 + i * 40 + 10, 60);
+
+                // Affiche le résultat dans le tableau
+                resultRow.cells[i].textContent = selectValue + ' (Semaine ' + (week + parseInt(weekLabel)) + ')';
             }
 
             document.getElementById('generatedImage').src = canvas.toDataURL();
-
-            // Affiche le résultat dans le tableau
-            var resultRow = document.getElementById('resultRow');
-            resultRow.cells[0].textContent = M;
-            resultRow.cells[1].textContent = J;
-            resultRow.cells[2].textContent = S;
-            resultRow.cells[3].textContent = N;
         }
 
         function getBackgroundColor(time) {
@@ -182,6 +178,31 @@
             var b = parseInt(hex.substring(4, 6), 16);
             var brightness = (r * 299 + g * 587 + b * 114) / 1000;
             return brightness > 128 ? '#000000' : '#FFFFFF';
+        }
+
+        function updateLabels() {
+            var startWeek = parseInt(document.getElementById('startWeek').value) || 0;
+            var labelContainer = document.getElementById('labelContainer');
+            var selectContainer = document.getElementById('selectContainer');
+            labelContainer.innerHTML = '';
+            selectContainer.innerHTML = '';
+
+            for (var i = 0; i < 11; i++) {
+                var label = document.createElement('label');
+                label.textContent = startWeek + i;
+                label.id = 'weekLabel' + i;
+                labelContainer.appendChild(label);
+
+                var select = document.createElement('select');
+                select.id = 'select' + i;
+                for (var j = 0; j < letters.length; j++) {
+                    var option = document.createElement('option');
+                    option.value = letters[j];
+                    option.textContent = letters[j];
+                    select.appendChild(option);
+                }
+                selectContainer.appendChild(select);
+            }
         }
     </script>
 
