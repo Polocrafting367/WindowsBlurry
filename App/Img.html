@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur d'Image</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        #imageContainer {
+            margin-top: 20px;
+        }
+
+        #generatedImage {
+            border: 1px solid #ccc;
+
+        select {
+            margin: 10px;
+            padding: 5px;
+        }
+
+        #generateButton {
+            margin-top: 10px;
+            padding: 8px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #resultContainer {
+            margin-top: 20px;
+        }
+
+        #resultTable {
+            margin: 0 auto;
+            border-collapse: collapse;
+        }
+
+        #resultTable th, #resultTable td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Générateur d'Image</h1>
+
+    <label for="month">Mois:</label>
+    <select id="month">
+        <option value="Janvier">Janvier</option>
+        <option value="Février">Février</option>
+        <option value="Mars">Mars</option>
+        <!-- Ajoutez les autres mois ici -->
+    </select>
+
+    <br>
+
+    <label for="M">M:</label>
+    <select id="M">
+        <option value="M">M</option>
+        <option value="J">J</option>
+        <option value="S">S</option>
+        <option value="N">N</option>
+    </select>
+
+    <label for="J">J:</label>
+    <select id="J">
+        <option value="M">M</option>
+        <option value="J">J</option>
+        <option value="S">S</option>
+        <option value="N">N</option>
+    </select>
+
+    <label for="S">S:</label>
+    <select id="S">
+        <option value="M">M</option>
+        <option value="J">J</option>
+        <option value="S">S</option>
+        <option value="N">N</option>
+    </select>
+
+    <label for="N">N:</label>
+    <select id="N">
+        <option value="M">M</option>
+        <option value="J">J</option>
+        <option value="S">S</option>
+        <option value="N">N</option>
+    </select>
+
+    <br>
+
+    <button id="generateButton" onclick="generateImage()">Générer Image</button>
+
+    <div id="imageContainer">
+        <img id="generatedImage" alt="Generated Image" width="200" height="200">
+    </div>
+
+    <div id="resultContainer">
+        <h2>Résultat:</h2>
+        <table id="resultTable">
+            <tr>
+                <th>M</th>
+                <th>J</th>
+                <th>S</th>
+                <th>N</th>
+            </tr>
+            <tr id="resultRow">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+
+    <script>
+        function generateImage() {
+            var month = document.getElementById('month').value;
+            var M = document.getElementById('M').value;
+            var J = document.getElementById('J').value;
+            var S = document.getElementById('S').value;
+            var N = document.getElementById('N').value;
+
+            var canvas = document.createElement('canvas');
+            canvas.width = 200;
+            canvas.height = 200;
+            var context = canvas.getContext('2d');
+
+            context.fillStyle = '#FFFFFF';
+            context.fillRect(0, 0, canvas.width, canvas.height);
+
+            context.font = '14px Arial';
+            context.fillStyle = '#000000';
+            context.fillText(month, 70, 20);
+
+            var letters = [M, J, S, N];
+            for (var i = 0; i < letters.length; i++) {
+                var bgColor = getBackgroundColor(letters[i]);
+                var textColor = getTextColor(bgColor);
+                context.fillStyle = bgColor;
+                context.fillRect(20 + i * 40, 40, 30, 30);
+                context.fillStyle = textColor;
+                context.fillText(letters[i], 20 + i * 40 + 10, 60);
+            }
+
+            document.getElementById('generatedImage').src = canvas.toDataURL();
+
+            // Affiche le résultat dans le tableau
+            var resultRow = document.getElementById('resultRow');
+            resultRow.cells[0].textContent = M;
+            resultRow.cells[1].textContent = J;
+            resultRow.cells[2].textContent = S;
+            resultRow.cells[3].textContent = N;
+        }
+
+        function getBackgroundColor(time) {
+            switch (time) {
+                case 'M':
+                    return '#FF0000'; // Rouge pour le matin
+                case 'J':
+                    return '#E0E0E0'; // Gris clair pour la journée
+                case 'S':
+                    return '#FFFFFF'; // Blanc pour le soir
+                case 'N':
+                    return '#000000'; // Noir pour la nuit
+                default:
+                    return '#FFFFFF'; // Blanc par défaut
+            }
+        }
+
+        function getTextColor(bgColor) {
+            // Si la couleur de fond est sombre, utilisez le texte blanc, sinon, utilisez le texte noir
+            var hex = bgColor.slice(1); // Retire le '#' du début
+            var r = parseInt(hex.substring(0, 2), 16);
+            var g = parseInt(hex.substring(2, 4), 16);
+            var b = parseInt(hex.substring(4, 6), 16);
+            var brightness = (r * 299 + g * 587 + b * 114) / 1000;
+            return brightness > 128 ? '#000000' : '#FFFFFF';
+        }
+    </script>
+
+</body>
+</html>
