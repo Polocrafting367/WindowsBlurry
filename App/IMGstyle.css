@@ -1,0 +1,62 @@
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        #imageContainer {
+            margin-top: 20px;
+        }
+
+        #generatedImage {
+            border: 1px solid #ccc;
+        }
+
+        select {
+            margin: 10px;
+            padding: 5px;
+        }
+
+        #generateButton {
+            margin-top: 10px;
+            padding: 8px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #resultContainer {
+            margin-top: 20px;
+        }
+
+        #resultTable {
+            margin: 0 auto;
+            border-collapse: collapse;
+            border: 1px solid #000;
+        }
+
+        #resultTable th, #resultTable td {
+            border: 1px solid #000;
+            padding: 8px;
+        }
+
+        #weekInputContainer {
+            margin-bottom: 10px;
+        }
+
+        .labelContainer {
+            margin-top: 10px;
+        }
+
+        .labelContainer label {
+            margin-right: 10px;
+        }
+
+        .selectContainer {
+            margin-bottom: 10px;
+        }
+
+        .selectContainer select {
+            margin-right: 10px;
+        }

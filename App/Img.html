@@ -3,208 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="IMGstyle.css">
     <title>Générateur d'Image</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-        }
-
-        #imageContainer {
-            margin-top: 20px;
-        }
-
-        #generatedImage {
-            border: 1px solid #ccc;
-        }
-
-        select {
-            margin: 10px;
-            padding: 5px;
-        }
-
-        #generateButton {
-            margin-top: 10px;
-            padding: 8px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        #resultContainer {
-            margin-top: 20px;
-        }
-
-        #resultTable {
-            margin: 0 auto;
-            border-collapse: collapse;
-            border: 1px solid #000;
-        }
-
-        #resultTable th, #resultTable td {
-            border: 1px solid #000;
-            padding: 8px;
-        }
-
-        #weekInputContainer {
-            margin-bottom: 10px;
-        }
-
-        .labelContainer {
-            margin-top: 10px;
-        }
-
-        .labelContainer label {
-            margin-right: 10px;
-        }
-
-        .selectContainer {
-            margin-bottom: 10px;
-        }
-
-        .selectContainer select {
-            margin-right: 10px;
-        }
-    </style>
 </head>
 <body>
 
-    <h1>Générateur d'Image</h1>
-
-    <div id="weekInputContainer">
-        <label for="startWeek">Semaine de départ:</label>
-        <input type="text" id="startWeek" oninput="updateLabels()">
-    </div>
-
-    <div id="labelContainer" class="labelContainer"></div>
-
-    <div id="selectContainer" class="selectContainer"></div>
-
-    <label for="month">Mois:</label>
+    <label for="month">Mois de l'année:</label>
     <select id="month">
         <option value="Janvier">Janvier</option>
         <option value="Février">Février</option>
         <option value="Mars">Mars</option>
-        <!-- Ajoutez les autres mois ici -->
+        <option value="Avril">Avril</option>
+        <option value="Mai">Mai</option>
+        <option value="Juin">Juin</option>
+        <option value="Juillet">Juillet</option>
+        <option value="Août">Août</option>
+        <option value="Septembre">Septembre</option>
+        <option value="Octobre">Octobre</option>
+        <option value="Novembre">Novembre</option>
+        <option value="Décembre">Décembre</option>
     </select>
+    
+    <label for="startWeek">Semaine de départ:</label>
+    <input type="text" id="startWeek" placeholder="Semaine de départ" oninput="updateLabels()">
 
-    <br>
+    <div id="labelContainer"></div>
+    <div id="selectContainer"></div>
 
-    <button id="generateButton" onclick="generateImage()">Générer Image</button>
+    <button onclick="generateImage()">Générer Image</button>
 
-    <div id="imageContainer">
-        <img id="generatedImage" alt="Generated Image" width="200" height="200">
-    </div>
-
-    <div id="resultContainer">
-        <h2>Résultat:</h2>
-        <table id="resultTable">
-            <tr>
-                <th>M</th>
-                <th>J</th>
-                <th>S</th>
-                <th>N</th>
-            </tr>
-            <tr id="resultRow">
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
+    <div id="savedValuesContainer">
+        <h2>Valeurs Enregistrées:</h2>
+        <table id="savedValuesTable">
+            <thead id="savedValuesHeader"></thead>
+            <tbody id="savedValuesBody"></tbody>
         </table>
     </div>
 
-    <script>
-        function generateImage() {
-            var month = document.getElementById('month').value;
+    <img id="generatedImage" alt="Generated Image">
 
-            var canvas = document.createElement('canvas');
-            canvas.width = 200;
-            canvas.height = 200;
-            var context = canvas.getContext('2d');
+    <script src="IMGscript.js"></script>
 
-            context.fillStyle = '#FFFFFF';
-            context.fillRect(0, 0, canvas.width, canvas.height);
-
-            context.font = '14px Arial';
-            context.fillStyle = '#000000';
-            context.fillText(month, 70, 20);
-
-            var selectContainer = document.getElementById('selectContainer');
-            var resultRow = document.getElementById('resultRow');
-            var letters = ['M', 'J', 'S', 'N'];
-
-            for (var i = 0; i < selectContainer.children.length; i++) {
-                var week = document.getElementById('startWeek').value ? parseInt(document.getElementById('startWeek').value) : 0;
-                var weekLabel = document.getElementById('weekLabel' + i).textContent;
-                var selectValue = document.getElementById('select' + i).value;
-
-                var bgColor = getBackgroundColor(selectValue);
-                var textColor = getTextColor(bgColor);
-                context.fillStyle = bgColor;
-                context.fillRect(20 + i * 40, 40, 30, 30);
-                context.fillStyle = textColor;
-                context.fillText(selectValue, 20 + i * 40 + 10, 60);
-
-                // Affiche le résultat dans le tableau
-                resultRow.cells[i].textContent = selectValue + ' (Semaine ' + (week + parseInt(weekLabel)) + ')';
-            }
-
-            document.getElementById('generatedImage').src = canvas.toDataURL();
-        }
-
-        function getBackgroundColor(time) {
-            switch (time) {
-                case 'M':
-                    return '#FF0000'; // Rouge pour le matin
-                case 'J':
-                    return '#E0E0E0'; // Gris clair pour la journée
-                case 'S':
-                    return '#FFFFFF'; // Blanc pour le soir
-                case 'N':
-                    return '#000000'; // Noir pour la nuit
-                default:
-                    return '#FFFFFF'; // Blanc par défaut
-            }
-        }
-
-        function getTextColor(bgColor) {
-            // Si la couleur de fond est sombre, utilisez le texte blanc, sinon, utilisez le texte noir
-            var hex = bgColor.slice(1); // Retire le '#' du début
-            var r = parseInt(hex.substring(0, 2), 16);
-            var g = parseInt(hex.substring(2, 4), 16);
-            var b = parseInt(hex.substring(4, 6), 16);
-            var brightness = (r * 299 + g * 587 + b * 114) / 1000;
-            return brightness > 128 ? '#000000' : '#FFFFFF';
-        }
-
-        function updateLabels() {
-            var startWeek = parseInt(document.getElementById('startWeek').value) || 0;
-            var labelContainer = document.getElementById('labelContainer');
-            var selectContainer = document.getElementById('selectContainer');
-            labelContainer.innerHTML = '';
-            selectContainer.innerHTML = '';
-
-            for (var i = 0; i < 11; i++) {
-                var label = document.createElement('label');
-                label.textContent = startWeek + i;
-                label.id = 'weekLabel' + i;
-                labelContainer.appendChild(label);
-
-                var select = document.createElement('select');
-                select.id = 'select' + i;
-                for (var j = 0; j < letters.length; j++) {
-                    var option = document.createElement('option');
-                    option.value = letters[j];
-                    option.textContent = letters[j];
-                    select.appendChild(option);
-                }
-                selectContainer.appendChild(select);
-            }
-        }
-    </script>
 
 </body>
 </html>
