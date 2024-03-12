@@ -1,62 +1,82 @@
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-        }
+body {
+    font-family: 'Arial', sans-serif;
+    text-align: center;
+    background-color: #f8f8f8; /* Ajout d'une couleur de fond */
+    margin: 0;
+    padding: 0;
+}
 
-        #imageContainer {
-            margin-top: 20px;
-        }
+#imageContainer {
+    margin-top: 20px;
+}
 
-        #generatedImage {
-            border: 1px solid #ccc;
-        }
+#generatedImage {
+    border: 1px solid #ccc;
+    border-radius: 8px; /* Ajout de coins arrondis */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Ajout d'une légère ombre */
+}
 
-        select {
-            margin: 10px;
-            padding: 5px;
-        }
+select {
+    margin: 10px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff; /* Ajout d'une couleur de fond */
+}
 
-        #generateButton {
-            margin-top: 10px;
-            padding: 8px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
+#generateButton {
+    margin-top: 10px;
+    padding: 10px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px; /* Ajustement de la taille du texte */
+}
 
-        #resultContainer {
-            margin-top: 20px;
-        }
+#resultContainer {
+    margin-top: 20px;
+}
 
-        #resultTable {
-            margin: 0 auto;
-            border-collapse: collapse;
-            border: 1px solid #000;
-        }
+#resultTable {
+    margin: 0 auto;
+    border-collapse: collapse;
+    border: 1px solid #000;
+    width: 80%; /* Ajustement de la largeur du tableau */
+}
 
-        #resultTable th, #resultTable td {
-            border: 1px solid #000;
-            padding: 8px;
-        }
+#resultTable th, #resultTable td {
+    border: 1px solid #000;
+    padding: 12px; /* Ajustement de l'espacement interne */
+}
 
-        #weekInputContainer {
-            margin-bottom: 10px;
-        }
+#weekInputContainer {
+    margin-bottom: 20px; /* Ajustement de la marge inférieure */
+}
 
-        .labelContainer {
-            margin-top: 10px;
-        }
+.labelContainer {
+    margin-top: 20px; /* Ajustement de la marge supérieure */
+}
 
-        .labelContainer label {
-            margin-right: 10px;
-        }
+.labelContainer label {
+    margin-right: 15px; /* Ajustement de la marge droite */
+}
 
-        .selectContainer {
-            margin-bottom: 10px;
-        }
+.selectContainer {
+    margin-bottom: 20px;
+}
 
-        .selectContainer select {
-            margin-right: 10px;
-        }
+.selectContainer select {
+    margin-right: 15px;
+}
+
+#selectContainer {
+    margin: 0 auto;
+    margin-bottom: 20px;
+    width: 400px;
+}
+
+#savedValuesContainer{
+    display: none;
+}
