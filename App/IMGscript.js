@@ -20,8 +20,8 @@ function generateImage() {
     var initialCanvasHeight = 200;
 
     var canvas = document.createElement('canvas');
-    canvas.width = 200; // Nouvelle largeur de la toile
-    canvas.height = 200; // Nouvelle hauteur de la toile
+    canvas.width = 400; // Nouvelle largeur de la toile
+    canvas.height = 400; // Nouvelle hauteur de la toile
     var context = canvas.getContext('2d');
 
     // Calculer les facteurs d'échelle pour ajuster la taille des éléments
@@ -36,7 +36,7 @@ function generateImage() {
     context.font = (14 * scaleX) + 'px Arial';
 
     context.fillStyle = '#000000';
-    context.fillText(month, 70 * scaleX, 20 * scaleY); // Ajuster les positions en fonction des facteurs d'échelle
+    context.fillText(month, 70 * scaleX, 15 * scaleY); // Ajuster les positions en fonction des facteurs d'échelle
 
     updateSavedValues();
 
@@ -51,6 +51,8 @@ function generateImage() {
 
     // Définir l'espace entre les carrés
     var spacing = 0;
+
+var initialStrokeWidth = 2;
 
     for (var i = 0; i < savedValuesBody.children.length; i++) {
         for (var j = 0; j < savedValuesBody.children[i].children.length; j++) {
@@ -69,11 +71,15 @@ function generateImage() {
 
             // Utiliser les mêmes coordonnées que pour les en-têtes, mais ajuster la taille des éléments
             var x = 20 * scaleX + j * (initialSquareWidth * scaleX + spacing);
-            var y = 30 * scaleY + i * (initialSquareHeight * scaleY + spacing);
+            var y = 20 * scaleY + i * (initialSquareHeight * scaleY + spacing);
 
-            context.strokeStyle = '#000000';
-            context.lineWidth = 2;
-            context.strokeRect(x, y, initialSquareWidth * scaleX, initialSquareHeight * scaleY);
+        var strokeLineWidth = initialStrokeWidth * scaleX;
+
+
+      context.strokeStyle = '#000000'; // Couleur du contour noir
+        context.lineWidth = strokeLineWidth; // Épaisseur du contour
+        context.strokeRect(x, y, initialSquareWidth * scaleX, initialSquareHeight * scaleY);
+
 
             context.fillStyle = bgColor;
             context.fillRect(x, y, initialSquareWidth * scaleX, initialSquareHeight * scaleY);
@@ -82,7 +88,7 @@ function generateImage() {
             context.font = 'bold ' + (14 * scaleX) + 'px Arial'; // Ajuster la taille de la police
 
             var textX = x + (initialSquareWidth * scaleX - context.measureText(selectValue).width) / 2;
-            var textY = y + (initialSquareHeight * scaleY + (14 * scaleX)) / 2;
+            var textY = y + (initialSquareHeight * scaleY + (10 * scaleX)) / 2;
 
             context.fillText(selectValue, textX, textY);
         }
@@ -90,7 +96,7 @@ function generateImage() {
 
 
 
-var customText = "M: 5h30 - 13h     J: 8h30 - 16h\nS: 12h - 19h30    N: 18h30 - 3h";
+var customText = "M: 5h30 - 13h     J: 8h30 - 16h\nS: 12h - 19h30   N: 18h30 - 3h \n                              19h - 22h30";
 context.fillStyle = '#000000'; // Couleur du texte
 
 // Ajuster la taille de la police en fonction des facteurs d'échelle
@@ -103,10 +109,10 @@ var lines = customText.split('\n');
 var customTextX = 20 * scaleX; // Ajuster les marges horizontales en fonction des facteurs d'échelle
 
 // Ajuster la hauteur de départ du texte en fonction de la quantité d'espace vertical supplémentaire
-var customTextY = (canvas.height - 20 * scaleY); // Ajuster la position verticale en fonction des facteurs d'échelle
+var customTextY = (canvas.height - 32 * scaleY); // Ajuster la position verticale en fonction des facteurs d'échelle
 
 // Ajuster la hauteur de chaque ligne de texte par rapport à l'image
-var lineHeight = 16 * scaleY; // Ajuster la hauteur de ligne en fonction des facteurs d'échelle
+var lineHeight = 13 * scaleY; // Ajuster la hauteur de ligne en fonction des facteurs d'échelle
 
 // Dessiner chaque ligne de texte
 for (var i = 0; i < lines.length; i++) {
@@ -321,4 +327,18 @@ function generateAndDownloadImage() {
     link.href = canvas.toDataURL('image/png');
     link.download = 'image.png';
     link.click();
+}
+
+function updateImageSize() {
+    // Récupérer les valeurs de largeur et hauteur
+    var imageWidthInput = document.getElementById('imageWidth');
+    var imageHeightInput = imageWidthInput;
+
+    // Vérifier si les deux champs sont remplis
+    if (imageWidthInput.value && imageHeightInput.value) {
+        // Mettre à jour la taille de l'image
+        var generatedImage = document.getElementById('generatedImage');
+        generatedImage.style.width = imageWidthInput.value + 'px';
+        generatedImage.style.height = imageHeightInput.value + 'px';
+    }
 }
