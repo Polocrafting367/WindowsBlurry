@@ -21,7 +21,6 @@
     width: 50vw; /* Largeur de la fenêtre visible */
 }
 
-
 body {
     font-family: Arial, sans-serif;
     overflow: hidden;
@@ -30,7 +29,6 @@ body {
         margin-left: 0px;
         margin-right: 0px;
 }
-
 
 #chrono {
     font-size: 30px;
