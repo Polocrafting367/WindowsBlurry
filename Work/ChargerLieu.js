@@ -80,8 +80,8 @@ function toggleNiveau(element, niveau) {
 
 let nombreChronosActifs = 0;
 
-function ouvrirIframe(nomLieu, temps, Text1, Text2) {
-    console.log(nomLieu)
+function ouvrirIframe(nomLieu, temps, liste1, liste2, Text1, Text2) {
+
 
     toggleAnimations();
 
@@ -98,7 +98,7 @@ function ouvrirIframe(nomLieu, temps, Text1, Text2) {
 
 
     // Ajouter le titre et l'iframe au conteneur ChronoTab
-    ajouterTitreEtIframe(nomLieu, temps, Text1, Text2);
+    ajouterTitreEtIframe(nomLieu, temps, liste1, liste2, Text1, Text2);
     dejacrée(nomLieu)
 
     const boutonLancerChrono = document.getElementById(`lancer-chrono-btn-${nomLieu}`);
@@ -174,7 +174,7 @@ if (tabulValue === "true") {
 
 
 
-function ajouterTitreEtIframe(nomLieu, temps, Text1, Text2) {
+function ajouterTitreEtIframe(nomLieu, temps, liste1, liste2, Text1, Text2) {
     const chronosContainer = document.getElementById('chronosContainer');
 
     // Créer un nouveau conteneur div pour le titre et l'iframe
@@ -196,7 +196,7 @@ function ajouterTitreEtIframe(nomLieu, temps, Text1, Text2) {
 
     // Ajouter le temps à l'URL si la variable temps existe
     if (temps) {
-        url += `&temps=${temps}&Text1=${Text1}&Text2=${Text2}`;
+        url += `&temps=${temps}&liste1=${liste1}&liste2=${liste2}&Text1=${Text1}&Text2=${Text2}`;
     }
 
     iframe.src = url;

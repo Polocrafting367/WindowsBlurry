@@ -76,36 +76,10 @@ location.reload(true);
         iframeContainer.innerHTML = '<iframe id="TUTORIEL" src="' + url + '"></iframe>';
     }
     // Fonction pour gérer le changement d'état du bouton de cookie
-    function handleCookieChange() {
-        var cookieCheckbox = document.getElementById("Cookies");
-        var accessButton = document.getElementById("accessButton");
-        var overlay = document.getElementById("overlay");
-        var modal = document.getElementById("tutorialModal");
 
-        // Enregistre l'état de la case à cocher dans le localStorage
-        localStorage.setItem("cookieAccepted", cookieCheckbox.checked);
-
-        // Active/désactive le bouton en fonction de l'état de la case à cocher
-        if (cookieCheckbox.checked) {
-            accessButton.classList.remove('disabled-button');
-            accessButton.classList.add('green-button');
-        } else {
-            accessButton.classList.add('disabled-button');
-            accessButton.classList.remove('green-button');
-        }
-    }
 
     // Fonction pour ouvrir le site web
-    function openWebsite() {
-        var overlay = document.getElementById("overlay");
-        var modal = document.getElementById("tutorialModal");
 
-        // Ferme la modal et cache le fond gris semi-transparent
-        overlay.style.display = "none";
-        modal.style.display = "none";
-
-        // Insérez ici le code pour rediriger vers le site web
-    }
 
     // Fonction pour afficher la modal
     function showModal() {

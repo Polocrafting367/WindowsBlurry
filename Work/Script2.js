@@ -48,6 +48,14 @@ function ouvrirBranchesPourLieu(lieu) {
 setTimeout(chargerIframesDepuisLocalStorage, 100);
 
 
+
+
+function ajouterInformationsSupplementaires(data) {
+    const parties = data.split('-').map(partie => partie.trim());
+    const id = generateUniqueId();
+    return { id, date: parties[0], temps: parties[1], zoneTexte1: parties[2], zoneTexte2: parties[3], zoneTexte3: parties[4], zoneTexte4: parties[5], zoneTexte5: parties[6]};
+}
+
 window.addEventListener('message', function(event) {
     // Vérifier si l'origine du message est autorisée, si nécessaire
     // if (event.origin !== 'http://exemple.com') return;
@@ -62,6 +70,7 @@ if (iframeData.type === 'enregistrement') {
 
     // Ajouter le nouvel enregistrement à las liste
     enregistrements.push(ajouterInformationsSupplementaires(iframeData.data));
+
 
     // Mettre à jour le stockage local avec la liste mise à jour
     localStorage.setItem('enregistrements', JSON.stringify(enregistrements));
@@ -100,7 +109,7 @@ if (boutonLancerChrono) {
     }
 
     // Modifier le contenu de l'attribut "onclick" et mettre en surbrillance le chrono actif
-    boutonLancerChrono.setAttribute('onclick', `ouvrirIframe('${iframeData.data.replace(/\s+/g, '-')}')`);
+boutonLancerChrono.setAttribute('onclick', `ouvrirIframe('${iframeData.data.replace(/-/g, ' ')}')`);
 }
 
         if (iframeASupprimer) {

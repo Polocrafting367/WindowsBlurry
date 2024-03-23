@@ -13,7 +13,9 @@ function supprimerTousLesCookies() {
         // Supprimez le cookie 'enregistrements'
         localStorage.removeItem('enregistrements');
         localStorage.removeItem('maListe');
+ localStorage.removeItem('angleCouleur');
 
+        localStorage.removeItem("cookieAccepted");
 
 const chronosContainer = document.getElementById('chronosContainer');
 parcourirArborescenceEtCreerIframes(arborescence, chronosContainer);
@@ -88,7 +90,6 @@ function deleteCookies() {
     if (confirmation) {
         // Supprimer tous les enregistrements dans localStorage
         localStorage.removeItem('enregistrements');
- localStorage.removeItem('angleCouleur');
         // Rafraîchir ou mettre à jour l'affichage des enregistrements
 
 
@@ -100,3 +101,32 @@ function deleteCookies() {
 
 
 
+    function openWebsite() {
+        var overlay = document.getElementById("overlay");
+        var modal = document.getElementById("tutorialModal");
+
+        // Ferme la modal et cache le fond gris semi-transparent
+        overlay.style.display = "none";
+        modal.style.display = "none";
+
+        // Insérez ici le code pour rediriger vers le site web
+    }
+
+        function handleCookieChange() {
+        var cookieCheckbox = document.getElementById("Cookies");
+        var accessButton = document.getElementById("accessButton");
+        var overlay = document.getElementById("overlay");
+        var modal = document.getElementById("tutorialModal");
+
+        // Enregistre l'état de la case à cocher dans le localStorage
+        localStorage.setItem("cookieAccepted", cookieCheckbox.checked);
+
+        // Active/désactive le bouton en fonction de l'état de la case à cocher
+        if (cookieCheckbox.checked) {
+            accessButton.classList.remove('disabled-button');
+            accessButton.classList.add('green-button');
+        } else {
+            accessButton.classList.add('disabled-button');
+            accessButton.classList.remove('green-button');
+        }
+    }

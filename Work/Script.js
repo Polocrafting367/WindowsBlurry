@@ -42,15 +42,6 @@ if (!localStorage.getItem('lieuxEnregistres')) {
 
 
 
-
-const newEnregistrement = ajouterInformationsSupplementaires('2024-02-14 - 12:00 PM - Texte 1 - Texte 2 - Texte 3');
-
-function ajouterInformationsSupplementaires(data) {
-    const parties = data.split('-').map(partie => partie.trim());
-    const id = generateUniqueId();
-    return { id, date: parties[0], temps: parties[1], zoneTexte1: parties[2], zoneTexte2: parties[3], zoneTexte3: parties[4]};
-}
-
 function generateUniqueId() {
     return '_' + Math.random().toString(36).substr(2, 9);
 }
@@ -130,8 +121,9 @@ boutonRestaurer.classList.add('green-button'); // Add the green-button style
                 if (indexASupprimer !== -1) {
                     enregistrements.splice(indexASupprimer, 1);
                     localStorage.setItem('enregistrements', JSON.stringify(enregistrements));
+
                 } 
-                relancer(enregistrement.zoneTexte1, enregistrement.temps, enregistrement.zoneTexte2, enregistrement.zoneTexte3);
+                relancer(enregistrement.zoneTexte1, enregistrement.temps, enregistrement.zoneTexte2, enregistrement.zoneTexte3, enregistrement.zoneTexte4, enregistrement.zoneTexte5);
             });
 
             // Create "Supprimer" button with the id "dell"
@@ -170,11 +162,11 @@ boutonRestaurer.classList.add('green-button'); // Add the green-button style
 }
 
 
-function relancer(nomLieu, temps, Text1, Text2) {
+function relancer(nomLieu, temps, liste1, liste2, Text1, Text2) {
 
 
     // Ensuite, vous pouvez exécuter votre logique pour ouvrir l'iframe
-    ouvrirIframe(nomLieu, temps, Text1, Text2);
+    ouvrirIframe(nomLieu, temps, liste1, liste2, Text1, Text2);
 }
 
 
@@ -474,6 +466,7 @@ function parcourirArborescenceEtCreerIframes(arbre, parent) {
 function exportToTxt() {
     // Obtenir le contenu brut depuis le stockage local
     const enregistrementsString = localStorage.getItem('enregistrements');
+
 
     // Ajouter un saut de ligne après chaque `},{`
     const contentWithNewlines = enregistrementsString.split('},{').join('},\n{');

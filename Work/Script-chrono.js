@@ -1,3 +1,4 @@
+
 var isPaused;
 var startTime;
 var pauseStartTime;
@@ -28,7 +29,20 @@ window.addEventListener('message', function(event) {
     }
 );
 
+ const typeDropdown = document.getElementById("typeDropdown");
+    const causeDropdown = document.getElementById("causeDropdown");
 
+    lieuData.types.forEach(type => {
+        const option = document.createElement("option");
+        option.text = type;
+        typeDropdown.add(option);
+    });
+
+    lieuData.causes.forEach(cause => {
+        const option = document.createElement("option");
+        option.text = cause;
+        causeDropdown.add(option);
+    });
 
 
 var lieu = getURLParameter('lieu');
@@ -41,51 +55,95 @@ var theme = getURLParameter('theme'); // Ajout de cette ligne pour récupérer l
 
 
  document.addEventListener('DOMContentLoaded', init);
-function init() {
+
+ function init() {
     // Récupérer le temps de l'URL
-    const temps = getURLParameter('temps');
-
-    const Text1 = getURLParameter('Text1');
-    const Text2 = getURLParameter('Text2');
-    // Si un temps est présent dans l'URL
-    if (temps) {
-        // Convertir le temps en millisecondes
-        const tempsEnMillisecondes = convertirTempsEnMillisecondes(temps);
 
 
-        // Calculer la différence entre le temps actuel et le temps extrait
-        const differenceTemps = new Date().getTime() - tempsEnMillisecondes;
+    // Vérifier s'il y a des données dans le localStorage
+    const savedData = localStorage.getItem(lieu);
 
-        // Mettre à jour la variable `startTime` avec le résultat du calcul
+    // Si des données sont présentes dans le localStorage
+    if (savedData) {
+      
+        // Restaurer les données du chrono
+        restoreChronoData(0);
+    } else {
+        
 
+const temps = getURLParameter('temps');
+const liste1 = getURLParameter('Text1');
+const liste2 = getURLParameter('Text2');
+const Text1 = getURLParameter('liste1');
+const Text2 = getURLParameter('liste2');
+
+
+
+if (temps !== "") {
+
+        const tempsActuel = new Date().getTime();
         elapsedTime = 0;
         isPaused = false;
-        startTime = differenceTemps;
+        startTime = tempsActuel - convertirTempsEnMillisecondes(temps);
         pauseStartTime = 0;
         totalPauseDuration = 0;
-
         zoneTexte.value = Text1;
-        zonePieces.value = Text2;
+        zonePieces.value =Text2;
+        typeDropdown.value = liste1;
+        causeDropdown.value = liste2;
 
+        // Créer l'objet chronoData avec les valeurs initiales
         const chronoData = {
             isPaused: isPaused,
             startTime: startTime,
             pauseStartTime: pauseStartTime,
             totalPauseDuration: totalPauseDuration,
             elapsedTime: elapsedTime,
-            texteZone: zoneTexte.value,  // Store the value, not the element
-            piecesSortie: zonePieces.value,  // Store the value, not the element
+            texteZone: zoneTexte.value,
+            piecesSortie: zonePieces.value,
+            type: typeDropdown.value,
+            cause: causeDropdown.value
         };
 
+        // Enregistrer les données du chrono dans le localStorage
         localStorage.setItem(lieu, JSON.stringify(chronoData));
 
-        restoreChronoData(differenceTemps);
+} else {
 
-    } else {
-        // Restaurer les données du chrono sans ajustement de temps
-        restoreChronoData(0);
+
+
+            const tempsActuel = new Date().getTime();
+        elapsedTime = 0;
+        isPaused = false;
+        startTime = tempsActuel;
+        pauseStartTime = 0;
+        totalPauseDuration = 0;
+        zoneTexte.value = '';
+        zonePieces.value = '';
+
+        // Créer l'objet chronoData avec les valeurs initiales
+        const chronoData = {
+            isPaused: isPaused,
+            startTime: startTime,
+            pauseStartTime: pauseStartTime,
+            totalPauseDuration: totalPauseDuration,
+            elapsedTime: elapsedTime,
+            texteZone: '',
+            piecesSortie: '',
+            type: '',
+            cause: ''
+        };
+
+        // Enregistrer les données du chrono dans le localStorage
+        localStorage.setItem(lieu, JSON.stringify(chronoData));
+}
+
+        // Si aucun temps n'est présent dans l'URL, initialiser les données du chrono avec les valeurs de l'URL
+
     }
 }
+
+
 
 function convertirTempsEnMillisecondes(temps) {
     const regex = /(\d+)([jhrsm])/g;
@@ -120,11 +178,16 @@ function convertirTempsEnMillisecondes(temps) {
 
 
 function getURLParameter(name) {
+  
     name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
     var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
     var results = regex.exec(location.search);
+      
     return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+
 }
+
+
     function changerTheme(st) {
         // Obtenez l'élément link avec l'id "themeLink"
         var themeLink = document.getElementById('themeLink');
@@ -133,110 +196,130 @@ function getURLParameter(name) {
         themeLink.href = st + '.css';
     }
 
-
-function restoreChronoData(differenceTemps)  {
-
-theme = theme + '-chrono';
-
-
+function restoreChronoData(differenceTemps) {
+    theme = theme + '-chrono';
     changerTheme(theme);
-    // Récupérer les données du localStorage
-    const savedData = localStorage.getItem(lieu);
 
+    // Récupérer les données du localStorage
+    var savedData = localStorage.getItem(lieu);
+
+    // Récupérer les valeurs des paramètres de l'URL
+    const tempsURL = getURLParameter('temps');
+    const liste1URL = getURLParameter('liste1');
+    const liste2URL = getURLParameter('liste2');
+    const Text1URL = getURLParameter('Text1');
+    const Text2URL = getURLParameter('Text2');
 
     if (savedData || differenceTemps) {
         // Parser les données JSON
-        const chronoData = JSON.parse(savedData);
+        var chronoData = JSON.parse(savedData);
 
-        
+        if (chronoData) {
 
-if (chronoData ) {
-        // Restaurer les variables
-        isPaused = chronoData.isPaused;
-        startTime = chronoData.startTime;
-        pauseStartTime = chronoData.pauseStartTime;
-        totalPauseDuration = chronoData.totalPauseDuration;
-        elapsedTime = chronoData.elapsedTime;
+            // Restaurer les variables du chrono à partir du localStorage
+            isPaused = chronoData.isPaused;
+            startTime = chronoData.startTime;
+            pauseStartTime = chronoData.pauseStartTime;
+            totalPauseDuration = chronoData.totalPauseDuration;
+            elapsedTime = chronoData.elapsedTime;
 
-                const zoneTexte = document.getElementById('zone-texte');
-        if (chronoData.texteZone) {
-            zoneTexte.value = chronoData.texteZone;
+            var zoneTexte = document.getElementById('zone-texte');
+            if (chronoData.texteZone) {
+                zoneTexte.value = chronoData.texteZone;
+            }
+
+            var zonePieces = document.getElementById('zone-pieces');
+            if (chronoData.piecesSortie) {
+                zonePieces.value = chronoData.piecesSortie;
+            }
+
+            var typeDropdown = document.getElementById("typeDropdown");
+            var causeDropdown = document.getElementById("causeDropdown");
+
+            if (chronoData.type) {
+                typeDropdown.value = chronoData.type;
+            }
+
+            if (chronoData.cause) {
+                causeDropdown.value = chronoData.cause;
+            }
+
+            // Si des valeurs sont présentes dans l'URL, les utiliser pour restaurer les données du chrono
+            if (tempsURL) {
+                elapsedTime = convertirTempsEnMillisecondes(tempsURL);
+                startTime = new Date().getTime() - elapsedTime;
+                displayTime(elapsedTime);
+            }
+
+            if (!isPaused) {
+                            const currentTime = new Date().getTime();
+            elapsedTime = currentTime - startTime;
+            displayTime(elapsedTime);
+            }
+
+            if (liste1URL) {
+                typeDropdown.value = liste1URL;
+            }
+
+            if (liste2URL) {
+                causeDropdown.value = liste2URL;
+            }
+
+            if (Text1URL) {
+                zoneTexte.value = Text1URL;
+            }
+
+            if (Text2URL) {
+                zonePieces.value = Text2URL;
+            }
+            // Si le chrono est en pause, mettre à jour l'affichage en conséquence
+            if (isPaused) {
+                var currentTime = new Date().getTime();
+                var pauseDuration = currentTime - pauseStartTime;
+                totalPauseDuration += pauseDuration;
+                startTime += pauseDuration;
+                pauseStartTime = currentTime;
+                clearInterval(interval);
+                var listItem = document.querySelector('.active-chrono');
+                listItem.classList.add('paused');
+                var pauseResumeButton = listItem.querySelector('.modal-button[onclick="pauseResumeChrono()"]');
+                pauseResumeButton.textContent = 'Reprendre';
+                pauseResumeButton.style.backgroundColor = 'green';
+                document.querySelector('.chrono-status').textContent = 'En pause';
+                document.querySelector('.chrono-status').style.color = 'yellow';
+                displayTime(elapsedTime);
+            } 
         }
-
-        const zonePieces = document.getElementById('zone-pieces');
-        if (chronoData.piecesSortie) {
-            zonePieces.value = chronoData.piecesSortie;
-        }
-}
-
-
-
-
-        const listItem = document.querySelector('.active-chrono');
-        listItem.classList.remove('paused', 'STOP');
-        const pauseResumeButton = listItem.querySelector('.modal-button[onclick="pauseResumeChrono()"]');
-
-
-            if (isPaused) {        
-            const pauseDuration = new Date().getTime() - pauseStartTime;
-            totalPauseDuration += pauseDuration; // Ajouter la durée de la pause à la durée totale
-            startTime += pauseDuration;
-            pauseStartTime = new Date().getTime();
-            clearInterval(interval);
-            listItem.classList.add('paused');
-            pauseResumeButton.textContent = 'Reprendre';
-            pauseResumeButton.style.backgroundColor = 'green';
-            document.querySelector('.chrono-status').textContent = 'En pause';
-            document.querySelector('.chrono-status').style.color = 'yellow';
-
-
-}
-
-        const currentTime = new Date().getTime();
-        elapsedTime = currentTime - startTime ;
-        displayTime(elapsedTime);
-        interval = setInterval(updateChrono, 1000);
-
-
-
-
     } else {
+        // Si aucune donnée n'est présente dans le localStorage et aucune valeur n'est présente dans l'URL,
+        // initialiser les données du chrono avec les valeurs de l'URL
+        const tempsActuel = new Date().getTime();
         elapsedTime = 0;
         isPaused = false;
-                startTime = new Date().getTime() - elapsedTime;
+        startTime = tempsActuel;
         pauseStartTime = 0;
         totalPauseDuration = 0;
+        zoneTexte.value = '';
+        zonePieces.value = '';
 
- let interval;
+        // Créer l'objet chronoData avec les valeurs initiales
+        const chronoData = {
+            isPaused: isPaused,
+            startTime: startTime,
+            pauseStartTime: pauseStartTime,
+            totalPauseDuration: totalPauseDuration,
+            elapsedTime: elapsedTime,
+            texteZone: '',
+            piecesSortie: '',
+            type: Text1URL,
+            cause: Text2URL
+        };
 
-
-
-        const listItem = document.querySelector('.active-chrono');
-        listItem.classList.remove('paused', 'STOP');
-        document.querySelector('.chrono-status').textContent = 'En cours';
-
-
-        interval = setInterval(updateChrono, 1000);
-
-
-
-            const chronoData = {
-        isPaused: isPaused,
-        startTime: startTime,
-        pauseStartTime: pauseStartTime,
-        totalPauseDuration: totalPauseDuration,
-        elapsedTime: elapsedTime
-  
-    };
-
-    localStorage.setItem(lieu, JSON.stringify(chronoData));
-
-
-               
+        // Enregistrer les données du chrono dans le localStorage
+        localStorage.setItem(lieu, JSON.stringify(chronoData));
     }
-
-
 }
+
 
 
     function updateChrono() {
@@ -251,82 +334,84 @@ if (chronoData ) {
         
     }
 
-
 interval = setInterval(updateChrono, 1000);
 
 
+function pauseResumeChrono() {
+    const listItem = document.querySelector('.active-chrono');
+    const pauseResumeButton = listItem.querySelector('.modal-button[onclick="pauseResumeChrono()"]');
 
-    // ... (votre code existant)
+    if (!isPaused) {
+        isPaused = true;
+        listItem.classList.add('paused');
+        pauseStartTime = new Date().getTime();
+        clearInterval(interval);
 
-    function pauseResumeChrono() {
-        const listItem = document.querySelector('.active-chrono');
-        const pauseResumeButton = listItem.querySelector('.modal-button[onclick="pauseResumeChrono()"]');
-
-        if (!isPaused) {
-            isPaused = true;
-            listItem.classList.add('paused');
-
-
-            pauseStartTime = new Date().getTime();
-            clearInterval(interval);
-
-            const chronoData = {
+        // Ajouter les valeurs de type et de cause
+        const typeDropdown = document.getElementById("typeDropdown");
+        const causeDropdown = document.getElementById("causeDropdown");
+        const typeValue = typeDropdown.value;
+        const causeValue = causeDropdown.value;
+    const chronoData = {
         isPaused: isPaused,
         startTime: startTime,
         pauseStartTime: pauseStartTime,
         totalPauseDuration: totalPauseDuration,
-        elapsedTime: elapsedTime
- 
+        elapsedTime: elapsedTime,
+        texteZone: zoneTexte.value,
+        piecesSortie: zonePieces.value,
+        type: typeValue,
+        cause: causeValue
     };
 
-    localStorage.setItem(lieu, JSON.stringify(chronoData));
+        localStorage.setItem(lieu, JSON.stringify(chronoData));
 
-     
+        // Modifier le bouton pour afficher "Reprendre"
+        pauseResumeButton.textContent = 'Reprendre';
+        pauseResumeButton.style.backgroundColor = 'green';
+        document.querySelector('.chrono-status').textContent = 'En pause';
+        document.querySelector('.chrono-status').style.color = 'yellow';
+    } else {
+        isPaused = false;
+        listItem.classList.remove('paused');
+        listItem.classList.remove('STOP');
+        document.querySelector('.chrono-status').textContent = 'En cours';
+        document.querySelector('.chrono-status').style.color = 'limegreen';
+        const pauseDuration = new Date().getTime() - pauseStartTime;
+        totalPauseDuration += pauseDuration; // Ajouter la durée de la pause à la durée totale
+        startTime += pauseDuration;
+        interval = setInterval(updateChrono, 1000);
 
-
-            // Modifier le bouton pour afficher "Reprendre"
-            pauseResumeButton.textContent = 'Reprendre';
-            pauseResumeButton.style.backgroundColor = 'green';
-            document.querySelector('.chrono-status').textContent = 'En pause';
-            document.querySelector('.chrono-status').style.color = 'yellow';
-
-            // Afficher un log
-      
-        } else {
-            isPaused = false;
-            listItem.classList.remove('paused');
-            listItem.classList.remove('STOP');
-            document.querySelector('.chrono-status').textContent = 'En cours';
-            document.querySelector('.chrono-status').style.color = 'limegreen';
-            const pauseDuration = new Date().getTime() - pauseStartTime;
-            totalPauseDuration += pauseDuration; // Ajouter la durée de la pause à la durée totale
-            startTime += pauseDuration;
-            interval = setInterval(updateChrono, 1000);
-
-            // Modifier le bouton pour afficher "Pause"
-            pauseResumeButton.textContent = 'Pause';
-            pauseResumeButton.style.backgroundColor = 'yellow';
-
-
-
-            const chronoData = {
+        // Ajouter les valeurs de type et de cause
+        const typeDropdown = document.getElementById("typeDropdown");
+        const causeDropdown = document.getElementById("causeDropdown");
+        const typeValue = typeDropdown.value;
+        const causeValue = causeDropdown.value;
+    const chronoData = {
         isPaused: isPaused,
         startTime: startTime,
         pauseStartTime: pauseStartTime,
         totalPauseDuration: totalPauseDuration,
-        elapsedTime: elapsedTime
-
+        elapsedTime: elapsedTime,
+        texteZone: zoneTexte.value,
+        piecesSortie: zonePieces.value,
+        type: typeValue,
+        cause: causeValue
     };
 
-    localStorage.setItem(lieu, JSON.stringify(chronoData));
 
-            // Afficher un log
-  
-        }
+
+        // Modifier le bouton pour afficher "Pause"
+        pauseResumeButton.textContent = 'Pause';
+        pauseResumeButton.style.backgroundColor = 'yellow';
+
+        localStorage.setItem(lieu, JSON.stringify(chronoData));
+
+        // Afficher un log
     }
+}
 
 function saveRecord() {
-
     const listItem = document.querySelector('.active-chrono');
     const pauseResumeButton = listItem.querySelector('.modal-button[onclick="pauseResumeChrono()"]');
     
@@ -337,7 +422,11 @@ function saveRecord() {
         clearInterval(interval);
     }
 
+    // Récupérer les valeurs des listes déroulantes de type et de cause
+    const typeValue = document.getElementById('typeDropdown').value;
+    const causeValue = document.getElementById('causeDropdown').value;
 
+    // Créer l'objet chronoData avec les données de la chronologie et les informations de type et de cause
     const chronoData = {
         isPaused: isPaused,
         startTime: startTime,
@@ -345,7 +434,9 @@ function saveRecord() {
         totalPauseDuration: totalPauseDuration,
         elapsedTime: elapsedTime,
         texteZone: zoneTexte.value,
-        piecesSortie: zonePieces,
+        piecesSortie: zonePieces.value,
+        type: typeValue,
+        cause: causeValue
     };
 
     localStorage.setItem(lieu, JSON.stringify(chronoData));
@@ -357,29 +448,92 @@ function saveRecord() {
     pauseResumeButton.textContent = 'Reprendre';
     pauseResumeButton.style.backgroundColor = 'green';
 
-    // Vérifier si la première zone de texte est vide
-    if (zoneTexte.value.trim() === '') {
-        alert('Veuillez saisir quelque chose avant d\'enregistrer.');
-        return;
+    // Vérifier si les valeurs nécessaires sont renseignées
+    if (zoneTexte.value.trim() === '' || typeValue.trim() === '' || causeValue.trim() === '') {
+        // Demander une confirmation avant d'enregistrer
+        const confirmation = window.confirm('Toutes les valeurs nécessaires ne sont pas renseignées, elles pourront être complétées ultérieurement. Voulez-vous enregistrer quand même ?');
+        if (!confirmation) {
+            return; // Annuler l'enregistrement si l'utilisateur clique sur "Annuler"
+        }
     }
 
-    const confirmation = window.confirm('Voulez-vous vraiment enregistrer et supprimer cet enregistrement ?');
-    if (confirmation) {
-        const tempsAffiche = document.getElementById('chrono').textContent;
-        const currentDate = new Date();
+    // Si les valeurs nécessaires sont renseignées ou si l'utilisateur a confirmé l'enregistrement, procéder à l'enregistrement
+    const tempsAffiche = document.getElementById('chrono').textContent;
+    const currentDate = new Date();
 
-        const formattedDate = `${pad(currentDate.getDate())}/${pad(currentDate.getMonth() + 1)}/${currentDate.getFullYear()}`;
-        const enregistrement = `${formattedDate} - ${tempsAffiche} - ${lieu} - ${zoneTexte.value.trim()} - ${zonePieces.value.trim()}`;
+    const formattedDate = `${pad(currentDate.getDate())}/${pad(currentDate.getMonth() + 1)}/${currentDate.getFullYear()}`;
+    const enregistrement = `${formattedDate} - ${tempsAffiche} - ${lieu} - ${zoneTexte.value.trim()} - ${zonePieces.value.trim()} - ${typeValue.trim()} - ${causeValue.trim()}`;
 
-        sendEventToParent('enregistrement', enregistrement);
+    sendEventToParent('enregistrement', enregistrement);
 
-        setTimeout(() => {
-            sendEventToParent('fermer', lieu);
-            localStorage.removeItem(lieu);
-        }, 100);
-    }
+    setTimeout(() => {
+        sendEventToParent('fermer', lieu);
+        localStorage.removeItem(lieu);
+
+    }, 100);
 }
 
+function saveRecord() {
+    const listItem = document.querySelector('.active-chrono');
+    const pauseResumeButton = listItem.querySelector('.modal-button[onclick="pauseResumeChrono()"]');
+    
+    // Vérifier si la chronologie est en pause
+    if (isPaused === false) {
+        isPaused = true;
+        pauseStartTime = new Date().getTime();
+        clearInterval(interval);
+    }
+
+    // Récupérer les valeurs des listes déroulantes de type et de cause
+    const typeValue = document.getElementById('typeDropdown').value;
+    const causeValue = document.getElementById('causeDropdown').value;
+
+    // Créer l'objet chronoData avec les données de la chronologie et les informations de type et de cause
+    const chronoData = {
+        isPaused: isPaused,
+        startTime: startTime,
+        pauseStartTime: pauseStartTime,
+        totalPauseDuration: totalPauseDuration,
+        elapsedTime: elapsedTime,
+        texteZone: zoneTexte.value,
+        piecesSortie: zonePieces.value,
+        type: typeValue,
+        cause: causeValue
+    };
+
+    localStorage.setItem(lieu, JSON.stringify(chronoData));
+
+    // Marquer la chronologie comme STOP
+    listItem.classList.add('STOP');
+    document.querySelector('.chrono-status').textContent = 'Fini';
+    document.querySelector('.chrono-status').style.color = 'white';
+    pauseResumeButton.textContent = 'Reprendre';
+    pauseResumeButton.style.backgroundColor = 'green';
+
+    // Vérifier si les valeurs nécessaires sont renseignées
+    if (zoneTexte.value.trim() === '' || typeValue.trim() === '' || causeValue.trim() === '') {
+        // Demander une confirmation avant d'enregistrer
+        const confirmation = window.confirm('Toutes les valeurs nécessaires ne sont pas renseignées, elles pourront être complétées ultérieurement. Voulez-vous enregistrer quand même ?');
+        if (!confirmation) {
+            return; // Annuler l'enregistrement si l'utilisateur clique sur "Annuler"
+        }
+    }
+
+    // Si les valeurs nécessaires sont renseignées ou si l'utilisateur a confirmé l'enregistrement, procéder à l'enregistrement
+    const tempsAffiche = document.getElementById('chrono').textContent;
+    const currentDate = new Date();
+
+    const formattedDate = `${pad(currentDate.getDate())}/${pad(currentDate.getMonth() + 1)}/${currentDate.getFullYear()}`;
+    const enregistrement = `${formattedDate} - ${tempsAffiche} - ${lieu} - ${zoneTexte.value.trim()} - ${zonePieces.value.trim()} - ${typeValue.trim()} - ${causeValue.trim()}`;
+
+    sendEventToParent('enregistrement', enregistrement);
+
+    setTimeout(() => {
+        sendEventToParent('fermer', lieu);
+        localStorage.removeItem(lieu);
+
+    }, 100);
+}
 
 
 function cancelChrono() {
@@ -448,39 +602,65 @@ function displayTime(milliseconds) {
 
 const zoneTexte = document.getElementById('zone-texte');
 const zonePieces = document.getElementById('zone-pieces');
-let piecesSortie; // Déclaration de piecesSortie au niveau global
+// Variables globales pour stocker les valeurs des zones de texte et des listes déroulantes
+let texteZoneValue = '';
+let piecesSortieValue = '';
+let typeValue = '';
+let causeValue = '';
 
-// Ajoutez un gestionnaire d'événements pour l'événement 'input' pour la première zone de texte
+
+// Fonction pour mettre à jour les données dans le localStorage avec les valeurs actuelles
+function updateLocalStorage() {
+
+    // Récupérer les valeurs actuelles des listes déroulantes
+    typeValue = typeDropdown.value;
+    causeValue = causeDropdown.value;
+    texteZoneValue = zoneTexte.value;
+    piecesSortieValue = zonePieces.value;
+
+    const chronoData = {
+        isPaused: isPaused,
+        startTime: startTime,
+        pauseStartTime: pauseStartTime,
+        totalPauseDuration: totalPauseDuration,
+        elapsedTime: elapsedTime,
+        texteZone: texteZoneValue,
+        piecesSortie: piecesSortieValue,
+        type: typeValue,
+        cause: causeValue
+    };
+
+    localStorage.setItem(lieu, JSON.stringify(chronoData));
+}
+
+// Gestionnaire d'événements pour le changement de valeur de la première liste déroulante (Type)
+typeDropdown.addEventListener('change', function() {
+    // Mettre à jour la variable globale typeValue avec la nouvelle valeur sélectionnée dans la liste déroulante
+    typeValue = typeDropdown.value;
+    // Mettre à jour les données dans le localStorage avec les valeurs actuelles
+    updateLocalStorage();
+    // Mettre à jour la valeur de la zone de texte
+});
+
+// Gestionnaire d'événements pour le changement de valeur de la deuxième liste déroulante (Cause)
+causeDropdown.addEventListener('change', function() {
+    // Mettre à jour la variable globale causeValue avec la nouvelle valeur sélectionnée dans la liste déroulante
+    causeValue = causeDropdown.value;
+    // Mettre à jour les données dans le localStorage avec les valeurs actuelles
+    updateLocalStorage();
+    // Mettre à jour la valeur de la zone de texte
+});
+
+// Gestionnaire d'événements pour la première zone de texte (texteZone)
 zoneTexte.addEventListener('input', function() {
-    // Mettez à jour la propriété texteZone dans l'objet chronoData
-    const chronoData = {
-        isPaused: isPaused,
-        startTime: startTime,
-        pauseStartTime: pauseStartTime,
-        totalPauseDuration: totalPauseDuration,
-        elapsedTime: elapsedTime,
-        texteZone: zoneTexte.value,
-        piecesSortie: piecesSortie
-    };
-
-    // Mettez à jour les données dans le localStorage
-    localStorage.setItem(lieu, JSON.stringify(chronoData));
+    texteZoneValue = zoneTexte.value;
+    updateLocalStorage();
 });
 
-// Ajoutez un gestionnaire d'événements pour l'événement 'input' pour la deuxième zone de texte
+// Gestionnaire d'événements pour la deuxième zone de texte (zonePieces)
 zonePieces.addEventListener('input', function() {
-    // Mettez à jour la propriété piecesSortie dans l'objet chronoData
-    piecesSortie = zonePieces.value; // Définissez piecesSortie avec la valeur de la deuxième zone de texte
-    const chronoData = {
-        isPaused: isPaused,
-        startTime: startTime,
-        pauseStartTime: pauseStartTime,
-        totalPauseDuration: totalPauseDuration,
-        elapsedTime: elapsedTime,
-        piecesSortie: piecesSortie,
-        texteZone: zoneTexte.value
-    };
-
-    // Mettez à jour les données dans le localStorage
-    localStorage.setItem(lieu, JSON.stringify(chronoData));
+    piecesSortieValue = zonePieces.value;
+    updateLocalStorage();
 });
+
+

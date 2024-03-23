@@ -1,3 +1,27 @@
+/* Style pour les conteneurs des labels et des listes déroulantes */
+.dropdowns-container {
+    display: flex; /* Utilisation de flexbox */
+    align-items: center; /* Alignement vertical au centre */
+    flex-wrap: wrap; /* Les éléments peuvent sauter à la ligne */
+}
+
+/* Style pour les labels */
+.dropdowns-container label {
+    margin-right: 10px; /* Espacement entre le label et la liste déroulante */
+}
+
+/* Style pour les listes déroulantes */
+.dropdowns-container select {
+    width: 100%; /* La liste déroulante occupe toute la largeur disponible */
+}
+
+
+    .dropdowns-container {
+        flex-wrap: nowrap; /* Désactiver le saut à la ligne */
+    }
+
+
+
 
 body {
     font-family: Arial, sans-serif;
