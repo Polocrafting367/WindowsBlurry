@@ -358,7 +358,10 @@ function openTab(tabName) {
 
     // Appeler afficherEnregistrements si le tabName est "interventions"
     if (tabName === "interventions") {
-        afficherEnregistrements();
+        setTimeout(function () {
+    afficherEnregistrements();
+}, 100);
+
     }
 
     var angleCouleur = localStorage.getItem('angleCouleur');;
