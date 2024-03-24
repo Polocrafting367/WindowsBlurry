@@ -53,7 +53,7 @@ setTimeout(chargerIframesDepuisLocalStorage, 100);
 function ajouterInformationsSupplementaires(data) {
     const parties = data.split('-').map(partie => partie.trim());
     const id = generateUniqueId();
-    return { id, date: parties[0], temps: parties[1], zoneTexte1: parties[2], zoneTexte2: parties[3], zoneTexte3: parties[4], zoneTexte4: parties[5], zoneTexte5: parties[6]};
+    return { id, date: parties[0], temps: parties[1], zoneTexte1: parties[2], zoneTexte2: parties[3], zoneTexte3: parties[4], zoneTexte4: parties[5], zoneTexte5: parties[6],  zoneTexte6: parties[7]};
 }
 
 window.addEventListener('message', function(event) {

@@ -123,7 +123,7 @@ boutonRestaurer.classList.add('green-button'); // Add the green-button style
                     localStorage.setItem('enregistrements', JSON.stringify(enregistrements));
 
                 } 
-                relancer(enregistrement.zoneTexte1, enregistrement.temps, enregistrement.zoneTexte2, enregistrement.zoneTexte3, enregistrement.zoneTexte4, enregistrement.zoneTexte5);
+                relancer(enregistrement.zoneTexte1, enregistrement.temps, enregistrement.zoneTexte2, enregistrement.zoneTexte3, enregistrement.zoneTexte4, enregistrement.zoneTexte5,  enregistrement.zoneTexte6);
             });
 
             // Create "Supprimer" button with the id "dell"
@@ -162,11 +162,11 @@ boutonRestaurer.classList.add('green-button'); // Add the green-button style
 }
 
 
-function relancer(nomLieu, temps, liste1, liste2, Text1, Text2) {
+function relancer(nomLieu, temps, liste1, liste2, Text1, Text2, arret) {
 
 
     // Ensuite, vous pouvez exécuter votre logique pour ouvrir l'iframe
-    ouvrirIframe(nomLieu, temps, liste1, liste2, Text1, Text2);
+    ouvrirIframe(nomLieu, temps, liste1, liste2, Text1, Text2, arret);
 }
 
 
@@ -467,9 +467,16 @@ function parcourirArborescenceEtCreerIframes(arbre, parent) {
 }
 
 function exportToTxt() {
+    // Demander à l'utilisateur dans quelle liste exporter les données
+    const listName = window.prompt("Nom de famille utilisé dans la GMAO", "AUTRE");
+
+    // Vérifier si l'utilisateur a annulé la fenêtre contextuelle
+    if (listName === null) {
+        return; // Sortir de la fonction si l'utilisateur a annulé
+    }
+
     // Obtenir le contenu brut depuis le stockage local
     const enregistrementsString = localStorage.getItem('enregistrements');
-
 
     // Ajouter un saut de ligne après chaque `},{`
     const contentWithNewlines = enregistrementsString.split('},{').join('},\n{');
@@ -483,7 +490,7 @@ function exportToTxt() {
     // Créer un élément de lien pour déclencher le téléchargement
     const link = document.createElement('a');
     link.href = url;
-    link.download = 'export.txt';
+    link.download = `${listName}.txt`; // Utiliser le nom de la liste dans le nom du fichier
 
     // Ajouter le lien à la page et déclencher le téléchargement
     document.body.appendChild(link);
@@ -492,6 +499,7 @@ function exportToTxt() {
     // Retirer le lien de la page une fois le téléchargement terminé
     document.body.removeChild(link);
 }
+
 
 
 function supprimerLieu() {

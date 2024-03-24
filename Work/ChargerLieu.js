@@ -79,44 +79,36 @@ function toggleNiveau(element, niveau) {
 
 
 let nombreChronosActifs = 0;
-
-function ouvrirIframe(nomLieu, temps, liste1, liste2, Text1, Text2) {
-
-
+function ouvrirIframe(nomLieu, temps, liste1, liste2, Text1, Text2, arret) {
+    console.log(arret)
     toggleAnimations();
 
     nombreChronosActifs++;
     const chronoButton = document.getElementById('ChronoButton');
     chronoButton.textContent = `${nombreChronosActifs} Chrono${nombreChronosActifs !== 1 ? 's' : ''}`;
 
-    
-    // Vérifier si une iframe avec la pastille "Actif - " existe déjà
-// Récupérer l'état actuel de "TABUL" depuis le localStorage
-
     Restolieu(nomLieu);
 
-
-
     // Ajouter le titre et l'iframe au conteneur ChronoTab
-    ajouterTitreEtIframe(nomLieu, temps, liste1, liste2, Text1, Text2);
+    ajouterTitreEtIframe(nomLieu, temps, liste1, liste2, Text1, Text2, arret);
     dejacrée(nomLieu)
 
     const boutonLancerChrono = document.getElementById(`lancer-chrono-btn-${nomLieu}`);
-if (boutonLancerChrono) {
-    boutonLancerChrono.classList.add('non-cliquable');
+    if (boutonLancerChrono) {
+        boutonLancerChrono.classList.add('non-cliquable');
 
-    // Changer l'image du bouton
-    const imageChrono = boutonLancerChrono.querySelector('img');
-    if (imageChrono) {
-        imageChrono.src = 'loupe.png'; // Remplacez 'nouvelle_image.png' par le chemin de votre nouvelle image
-        imageChrono.alt = 'Nouvelle icône chrono'; // Remplacez 'Nouvelle icône chrono' par le nouvel texte alternatif
+        // Changer l'image du bouton
+        const imageChrono = boutonLancerChrono.querySelector('img');
+        if (imageChrono) {
+            imageChrono.src = 'loupe.png'; // Remplacez 'nouvelle_image.png' par le chemin de votre nouvelle image
+            imageChrono.alt = 'Nouvelle icône chrono'; // Remplacez 'Nouvelle icône chrono' par le nouvel texte alternatif
+        }
+
+        // Modifier le contenu de l'attribut "onclick" et mettre en surbrillance le chrono actif
+        boutonLancerChrono.setAttribute('onclick', `dejacrée('${nomLieu}')`);
     }
-
-    // Modifier le contenu de l'attribut "onclick" et mettre en surbrillance le chrono actif
-    boutonLancerChrono.setAttribute('onclick', `dejacrée('${nomLieu}')`);
 }
 
-}
 
 function dejacrée(nomLieu) {
 const tabulValue = localStorage.getItem('TABUL');
@@ -174,7 +166,7 @@ if (tabulValue === "true") {
 
 
 
-function ajouterTitreEtIframe(nomLieu, temps, liste1, liste2, Text1, Text2) {
+function ajouterTitreEtIframe(nomLieu, temps, liste1, liste2, Text1, Text2, arret) {
     const chronosContainer = document.getElementById('chronosContainer');
 
     // Créer un nouveau conteneur div pour le titre et l'iframe
@@ -189,14 +181,14 @@ function ajouterTitreEtIframe(nomLieu, temps, liste1, liste2, Text1, Text2) {
 
     // Créer une nouvelle iframe
     const iframe = document.createElement('iframe');
-    iframe.id = `iframe-${nomLieu.replace(/\s+/g, '-')}`; // Remplacer les espaces par des traits d'union
+iframe.id = `iframe-${nomLieu.replace(/\s+/g, '-')}`; // Remplacer les espaces par des traits d'union
     
     // Construire l'URL en ajoutant le lieu et le thème
-    let url = `chrono.html?lieu=${nomLieu}&theme=${localStorage.getItem('theme')}`;
+let url = `chrono.html?lieu=${nomLieu}&theme=${localStorage.getItem('theme')}`;
 
     // Ajouter le temps à l'URL si la variable temps existe
     if (temps) {
-        url += `&temps=${temps}&liste1=${liste1}&liste2=${liste2}&Text1=${Text1}&Text2=${Text2}`;
+    url += `&temps=${temps}&liste1=${liste1}&liste2=${liste2}&Text1=${Text1}&Text2=${Text2}&arret=${arret}`;
     }
 
     iframe.src = url;
