@@ -108,3 +108,40 @@ textarea {
 
     border-radius: 8px;
 }
+
+.row-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.dropdowns-container {
+    flex: 1;
+    margin-right: 10px;
+    max-width: calc(50% - 5px); /* La moitié de la largeur moins la marge */
+}
+
+/* Style pour les étiquettes */
+label {
+    flex-basis: 30%; /* Définit la base flexible de l'étiquette */
+    text-align: right;
+    margin-right: 10px;
+}
+
+/* Style pour les listes déroulantes */
+select {
+    width: 100%; /* Occupera toute la largeur du conteneur */
+    padding: 8px; /* Ajoute un peu d'espace intérieur pour le confort */
+    font-size: 16px; /* Taille de la police */
+    border: 1px solid #ccc; /* Bordure */
+    border-radius: 5px; /* Coins arrondis */
+    background-color: #FFFFFF; /* Couleur de fond */
+    border-radius: 8px;
+}
+
+/* Style pour les options des listes déroulantes */
+select option {
+    padding: 8px; /* Ajoute un peu d'espace intérieur pour le confort */
+    font-size: 16px; /* Taille de la police */
+}
+
+

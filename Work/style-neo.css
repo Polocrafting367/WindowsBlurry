@@ -432,9 +432,10 @@ iframe {
 
      width: 100%;
     border: none;
- height:210px;
+ height:300px;
 
 }
+
 
 
 .place-card {
@@ -467,6 +468,7 @@ ul {    padding-left: 20px;}
 #chronosContainer {
     overflow: auto; /* Ajoute une barre de défilement si nécessaire */
     max-height: 100%; /* Ajustez la hauteur maximale selon vos besoins */
+    background-color: rgba(50,50,50,0.6);
 }
 
 
@@ -529,7 +531,7 @@ button.non-cliquable {
 
 .groupe-container  {
 
-    background-color: rgba(50,50,50,0.4);
+    background-color: rgba(100,100,100,0.4);
     margin: 10px 0;
     padding: 10px;
     border-radius: 8px;

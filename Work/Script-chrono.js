@@ -33,7 +33,7 @@ tempsArretsInput.addEventListener('input', function() {
 
 
 var lieu = getURLParameter('lieu');
-var theme = getURLParameter('theme'); // Ajout de cette ligne pour récupérer le paramètre "theme"
+
     const temps = getURLParameter('temps');
 
 
@@ -178,16 +178,9 @@ function getURLParameter(name) {
 }
 
 
-    function changerTheme(st) {
-        // Obtenez l'élément link avec l'id "themeLink"
-        var themeLink = document.getElementById('themeLink');
 
-        // Modifiez l'attribut href pour charger le fichier CSS du thème sélectionné
-        themeLink.href = st + '.css';
-    }
 function restoreChronoData(differenceTemps) {
-    theme = theme + '-chrono';
-    changerTheme(theme);
+   
 
     // Récupérer les données du localStorage
     var savedData = localStorage.getItem(lieu);
