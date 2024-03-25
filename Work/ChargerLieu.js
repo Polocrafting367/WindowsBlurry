@@ -13,22 +13,16 @@ const chronoTabContainer = document.getElementById('ChronoTab').querySelector('.
 
 
 function parcourirArborescence(arbre, parent, cheminParent = '', niveau = 0) {
-    let lineNumber = 1; // Initialisation du numéro de ligne
+    let lineNumber = 1;
     for (const lieu in arbre) {
-        let cheminComplet;
-        if (niveau > 0) { // Vérifier si ce n'est pas le niveau "lieu"
-            cheminComplet = cheminParent + ' > ' + lineNumber + ' ' + lieu;
-            lineNumber++; // Incrémenter le numéro de ligne uniquement pour les niveaux autres que "lieu"
-        } else {
-            cheminComplet = cheminParent + lieu; // Pour le niveau "lieu", pas de numéro de ligne
-        }
+        const cheminComplet = cheminParent + (cheminParent ? ' > ' : '') + lineNumber + ' ' + lieu;
         const lieuItem = document.createElement('li');
         const icon = (Object.keys(arbre[lieu]).length > 0) ? '▶' : ' ';
         const displayStyle = (niveau === 0) ? 'block' : 'none';
 
         lieuItem.innerHTML = `
             <div class="place-card level-${niveau}" onclick="toggleNiveau(this, ${niveau})">
-                <span class="pastille" data-texte="${lieu}" style="display:${displayStyle}">${icon} ${cheminComplet}</span>
+                <span class="pastille" data-texte="${lieu}" style="display:${displayStyle}">${icon} ${lieu}</span>
                 <button id="lancer-chrono-btn-${lieu}" data-lieu="${lieu}" onclick="ouvrirIframe('${cheminComplet}')" style="width: 40px; height: 41px; position: absolute; top: -12px; right: -12px; border-radius: 8px; display: block;">
                     <img src="chrono.png" alt="Icône chrono" style="width: 20px; height: 20px; position: absolute; bottom: 10px; right: 9px;">
                 </button>
@@ -41,13 +35,13 @@ function parcourirArborescence(arbre, parent, cheminParent = '', niveau = 0) {
             const sousLieuxList = document.createElement('ul');
             sousLieuxList.style.display = 'none';
             lieuItem.appendChild(sousLieuxList);
-            parcourirArborescence(arbre[lieu], sousLieuxList, cheminComplet + ' > ', niveau + 1);
+            parcourirArborescence(arbre[lieu], sousLieuxList, cheminComplet, niveau + 1);
         }
+        lineNumber++;
     }
 }
 
 parcourirArborescence(arborescence, lieuxList);
-
 
 
 
