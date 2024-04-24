@@ -78,7 +78,6 @@ function toggleNiveau(element, niveau) {
 
 let nombreChronosActifs = 0;
 function ouvrirIframe(nomLieu, temps, liste1, liste2, Text1, Text2, arret) {
-    console.log(arret)
     toggleAnimations();
 
     nombreChronosActifs++;
@@ -89,9 +88,21 @@ function ouvrirIframe(nomLieu, temps, liste1, liste2, Text1, Text2, arret) {
 
     // Ajouter le titre et l'iframe au conteneur ChronoTab
     ajouterTitreEtIframe(nomLieu, temps, liste1, liste2, Text1, Text2, arret);
-    dejacrée(nomLieu)
+    
+    // Rechercher le dernier ">"
+    const lastArrowIndex = nomLieu.lastIndexOf('>');
+    
+    // Trouver le texte après le dernier ">"
+    const newText = nomLieu.substring(lastArrowIndex + 1).trim();
 
-    const boutonLancerChrono = document.getElementById(`lancer-chrono-btn-${nomLieu}`);
+    // Trouver le premier espace et supprimer tout ce qui précède
+    const firstSpaceIndex = newText.indexOf(' ');
+    const nomLieuFormatte = firstSpaceIndex !== -1 ? newText.substring(firstSpaceIndex + 1) : newText;
+        
+    dejaCree(nomLieu);
+
+
+    const boutonLancerChrono = document.getElementById(`lancer-chrono-btn-${nomLieuFormatte}`);
     if (boutonLancerChrono) {
         boutonLancerChrono.classList.add('non-cliquable');
 
@@ -103,23 +114,34 @@ function ouvrirIframe(nomLieu, temps, liste1, liste2, Text1, Text2, arret) {
         }
 
         // Modifier le contenu de l'attribut "onclick" et mettre en surbrillance le chrono actif
-        boutonLancerChrono.setAttribute('onclick', `dejacrée('${nomLieu}')`);
+        boutonLancerChrono.setAttribute('onclick', `dejaCree('${nomLieu}')`);
     }
+
+
 }
 
 
-function dejacrée(nomLieu) {
-const tabulValue = localStorage.getItem('TABUL');
-if (tabulValue === "true") {
-    // Code à exécuter si TABUL est égal à true
-} else {
-    openTab('Chrono');
-}
-    // Remplacer les espaces par des traits d'union dans le nom du lieu
-    const nomLieuFormatte = nomLieu.toLowerCase().replace(/\s+/g, '-');
 
-    // Construire l'ID de l'iframe avec le nom formaté
-    const iframeId = `lieu-${nomLieuFormatte}`;
+function dejaCree(nomLieu) {
+    const tabulValue = localStorage.getItem('TABUL');
+    if (tabulValue === "true") {
+        // Code à exécuter si TABUL est égal à true
+    } else {
+        openTab('Chrono');
+    }
+
+    // Trouver le texte après le dernier ">"
+    const lastArrowIndex = nomLieu.lastIndexOf('>');
+    const newText = nomLieu.substring(lastArrowIndex + 1).trim();
+
+    // Trouver le premier espace et supprimer tout ce qui précède
+    const firstSpaceIndex = newText.indexOf(' ');
+    const nomLieuFormatte = firstSpaceIndex !== -1 ? newText.substring(firstSpaceIndex + 1) : newText;
+
+    // Utiliser le résultat dans nomLieuFormatte
+    console.log(nomLieuFormatte);
+
+    const iframeId = `lieu-${nomLieu.toLowerCase().replace(/\s+/g, '-')}`;
     const chronoContainer = document.getElementById(iframeId);
 
     const clignotements = 3;
@@ -160,6 +182,8 @@ if (tabulValue === "true") {
         });
     }
 }
+
+
 
 
 
