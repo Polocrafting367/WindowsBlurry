@@ -24,7 +24,7 @@ const TILE_SIZE = 5;
 function init() {
     scene = new THREE.Scene();
 
-    camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.01, 50);
+    camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.01, 60);
     const initialCameraPosition = new THREE.Vector3(0, 10, -10);
     camera.position.copy(initialCameraPosition);
 
