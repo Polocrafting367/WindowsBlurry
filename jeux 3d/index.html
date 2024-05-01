@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game 3D</title>
+
+
+
+<div id="map">
+    <!-- Utilisation d'une balise div pour afficher le chronomètre -->
+    <div id="chronoDisplay">Records à battre 8.5 s</div>
+</div>
+
+
+
+<!-- Ajoutez cet élément à votre page HTML pour afficher le chronomètre -->
+
+
+<!-- Ajoutez cet écran figé avec le bouton "Recommencer" à votre page HTML -->
+<div id="overlay" style="display: none;">
+    <div id="endScreen">
+        <h1>Partie terminée!</h1>
+        <p id="bestTimeDisplay"></p>
+        <button onclick="restartGame()">Recommencer</button>
+    </div>
+</div>
+
+
+
+<style>
+    body {
+        margin: 0;
+        overflow: hidden;
+        font-family: Arial, sans-serif; /* Définir une police de caractères */
+    }
+
+    #map {
+        position: absolute;
+        top: 10px;
+        right: 40px;
+        z-index: 5;
+    }
+
+    #chronoDisplay {
+        background-color: black; /* Fond inversé */
+        color: white; /* Texte en couleur blanche */
+        font-weight: bold; /* Texte en gras */
+        font-size: 24px; /* Taille de police plus grande */
+        padding: 10px; /* Ajouter un espace intérieur pour le texte */
+    }
+</style>
+
+</head>
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="jeux.js"></script>
+</body>
+</html>
