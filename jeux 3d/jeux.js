@@ -452,8 +452,8 @@ if (chronoRunning) {
         const screenHeight = window.innerHeight;
 
         // Calculer characterX et characterZ en fonction de characterPosition
-        const characterX = -characterPosition.x + 100; // Position horizontale (à droite)
-        const characterY = characterPosition.z +100 ; // Position verticale (en haut)
+        const characterX = -characterPosition.x + 245; // Position horizontale (à droite)
+        const characterY = characterPosition.z +285 ; // Position verticale (en haut)
 
         // Mettre à jour la position de l'image du carré vert
         characterMarker.style.top = `${characterY}px`; // Position verticale (top)
