@@ -17,6 +17,7 @@ let coordinatesElement = document.getElementById('coordinates');
 let accelerationElement = document.getElementById('acceleration');
 let probaennemy = 0.02; // Vitesse initiale
 let chronoRunning = false;
+let play = true;
 let startTime;
 let endTime;
 
@@ -259,12 +260,6 @@ function startChrono() {
     chronoRunning = true;
 }
 
-// Fonction pour arrêter le chronomètre
-function stopChrono() {
-    endTime = performance.now();
-    chronoRunning = false;
-    const elapsedTime = (endTime - startTime) / 1000; // Durée en secondes
-}
 
 
 
@@ -466,6 +461,7 @@ if (chronoRunning) {
 
 
 function handleKeyDown(event) {
+    if (play) {
     switch (event.key) {
         case 'ArrowUp':
             moveForward = true;
@@ -479,10 +475,11 @@ function handleKeyDown(event) {
         case 'ArrowRight':
             rotateRight = true;
             break;
-    }
+    }}
 }
 
 function handleKeyUp(event) {
+    if (play) {
     switch (event.key) {
         case 'ArrowUp':
             moveForward = false;
@@ -496,22 +493,52 @@ function handleKeyUp(event) {
         case 'ArrowRight':
             rotateRight = false;
             break;
-    }
+    }}
 }
+
+
 function accelerate() {
-    if (speed < maxSpeed) {
-        if (Math.abs(speed) < 0.01) {
-            speed = 0.1;
-            if (chronoRunning === false) {
-                startChrono(); // Démarrer le chronomètre lorsque le mouvement commence
+    if (play && chronoRunning) {
+        // Accélération du mouvement uniquement si le jeu est en cours et le chronomètre est en cours d'exécution
+        if (speed < maxSpeed) {
+            if (Math.abs(speed) < 0.01) {
+                speed = 0.1;
+                // Démarrer le chronomètre lorsque le mouvement commence
+            }
+            speed *= accelerationFactor;
+            if (speed > maxSpeed) {
+                speed = maxSpeed;
             }
         }
-        speed *= accelerationFactor;
-        if (speed > maxSpeed) {
-            speed = maxSpeed;
-        }
+    } else if (play && !chronoRunning) {
+        // Redémarrer le chronomètre si le jeu est en cours mais le chronomètre est arrêté
+        startChrono();
     }
 }
+
+function stopChrono() {
+    endTime = performance.now();
+    chronoRunning = false;
+    play = false;
+    const elapsedTime = (endTime - startTime) / 1000; // Durée en secondes
+character.position.set(35, 5, -275);
+    speed = 0; // Arrête le mouvement
+    const chronoDisplay = document.getElementById('chronoDisplay');
+    if (elapsedTime < 30) {
+        chronoDisplay.textContent = `Bravo ! Temps : ${elapsedTime.toFixed(1)}s`;
+    } else {
+        chronoDisplay.textContent = `Dommage, temps : ${elapsedTime.toFixed(1)}s`;
+    }
+
+    // Déclencher la redirection vers LV2.html après un délai de 5 secondes
+    setTimeout(() => {
+        // Redirection vers LV2.html avec le paramètre de résultat
+        const redirectURL = `LV2.html?result=${elapsedTime.toFixed(1)}`;
+        window.location.href = redirectURL;
+    }, 500); // Attendre 5 secondes avant de rediriger
+}
+
+
 
 
 function decelerate() {
