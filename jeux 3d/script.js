@@ -6,33 +6,33 @@ let questions = [
     { 
         question: "Bonjour, Mr {nom}. Êtes-vous à l’heure ?",
         answers: [
-            { text: "Oui, j'ai fait de mon mieux.", next: 2 }
+            { text: "Oui, j'ai fait de mon mieux.", next: 2, score: 10 }
         ]
     },
     // 1
     { 
         question: "Bonjour, Mr {nom}. Êtes-vous en retard ?",
         answers: [
-            { text: "Oui, désolé j'ai eu quelques problèmes sur la route.", next: 3 }
+            { text: "Oui, désolé j'ai eu quelques problèmes sur la route.", next: 3 , score: 5}
         ]
     },
     // 2
     { 
         question: "Asseyez-vous, s'il vous plaît.",
-        answers: [{ text: "Merci", next: 4 }],
+        answers: [{ text: "Merci", next: 4 , score: 0}],
     }, 
     // 3
     { 
         question: "Ce n'est pas grave. Asseyez-vous, s'il vous plaît.",
-        answers: [{ text: "Merci", next: 4 }]
+        answers: [{ text: "Merci", next: 4 , score: 0}]
     },
     // 4
     { 
         question: "Alors, dites-moi pourquoi avoir choisi Chao Cinoche ?",
         answers: [
-            { text: "Pour être honnête, j'ai besoin d'un travail.", next: 5 },
-            { text: "J'ai toujours voulu travailler chez vous.", next: 10 },
-            { text: "Franchement, les cafés gratuits m'attirent.", next: 14 }
+            { text: "Pour être honnête, j'ai besoin d'un travail.", next: 5 , score: 5},
+            { text: "J'ai toujours voulu travailler chez vous.", next: 10 , score: 5},
+            { text: "Franchement, les cafés gratuits m'attirent.", next: 14 , score: 5}
         ]
     },
     // 5
@@ -136,9 +136,12 @@ let questions = [
         answers: []
     }
 ];
-
 let currentQuestionIndex = 0;
-let playerName = "Michel"; // Définir le nom du joueur directement
+let playerName = "Michel";
+let totalScore = 0; // Initialisation du score total
+
+// Sélection de l'élément pour afficher le score
+const scoreElement = document.getElementById('score-value');
 
 function askQuestion() {
     const currentQuestion = questions[currentQuestionIndex];
@@ -151,22 +154,37 @@ function askQuestion() {
         currentQuestion.answers.forEach(answer => {
             const button = document.createElement('button');
             button.textContent = answer.text;
-            button.addEventListener('click', () => selectAnswer(answer.next));
+            button.addEventListener('click', () => selectAnswer(answer.next, answer.score));
             choicesElement.appendChild(button);
         });
     } else {
-        // Afficher le bouton "Suivant" pour passer à la question suivante
         const nextButton = document.createElement('button');
         nextButton.textContent = "Suivant";
-        nextButton.addEventListener('click', () => selectAnswer(currentQuestionIndex + 1));
+        nextButton.addEventListener('click', () => selectAnswer(currentQuestionIndex + 1, 0));
         choicesElement.appendChild(nextButton);
     }
 }
 
-function selectAnswer(nextIndex) {
+function selectAnswer(nextIndex, score) {
     currentQuestionIndex = nextIndex;
+    totalScore += score; // Mettre à jour le score total en fonction de la réponse choisie
+
+    // Actualiser l'affichage du score
+    updateScore();
+
+    // Déterminer si nous devons afficher une question finale en fonction du score total
+    if (currentQuestionIndex === 99 || totalScore >= 50) {
+        currentQuestionIndex = questions.length - 1; // Index de la question finale
+    }
+
     askQuestion();
+}
+
+// Fonction pour mettre à jour l'affichage du score
+function updateScore() {
+    scoreElement.textContent = totalScore; // Mettre à jour le contenu de l'élément de score
 }
 
 // Commencer le jeu en posant la première question
 askQuestion();
+

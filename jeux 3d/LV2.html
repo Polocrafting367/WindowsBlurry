@@ -104,26 +104,16 @@ box-shadow: inset -1px -1px #fff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf
         <div class="dialogue-box">
             <p id="dialogue"></p>
             <div id="choices"></div>
+
         </div>
+
+        <div id="score">Score: <span id="score-value">0</span></div> <!-- Ajouter l'affichage du score -->
 
       </div>
     </div>
 
     <script src="script.js"></script>
 
-    <script>
-        // Récupérer les paramètres de l'URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const result = urlParams.get('result');
-        const elapsedTime = parseFloat(result); // Convertir en nombre
 
-        // Afficher le dialogue en fonction du temps
-
-        if (elapsedTime < 30) {
-            dialogueElement.textContent = `Bonjour, Mr Michel, Vous êtes  à l'heure. ${elapsedTime}s C'est bien !`;
-        } else {
-            dialogueElement.textContent = `Bonjour, Mr Michel, Vous êtes en retard ! ${elapsedTime}s C'est pas ouf...`;
-        }
-    </script>
 </body>
 </html>
