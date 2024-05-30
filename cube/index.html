@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cube Animation</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="cube"></div>
+    <div class="controls">
+        <input type="range" id="posX" min="0" max="400" value="200">
+        <input type="range" id="posY" min="0" max="400" value="200">
+        <input type="range" id="velocityX" min="-5" max="5" value="2">
+        <input type="range" id="velocityY" min="-5" max="5" value="2">
+        <input type="range" id="freezeTime" min="1000" max="5000" value="3000">
+        <button id="startBtn">Start</button>
+    </div>
+    <audio id="bounceSound" src="bi.mp3"></audio>
+    <script src="script.js"></script>
+</body>
+</html>

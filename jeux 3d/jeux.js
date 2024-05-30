@@ -535,7 +535,7 @@ character.position.set(35, 5, -275);
         // Redirection vers LV2.html avec le paramètre de résultat
         const redirectURL = `LV2.html?result=${elapsedTime.toFixed(1)}`;
         window.location.href = redirectURL;
-    }, 500); // Attendre 5 secondes avant de rediriger
+    }, 1500); // Attendre 5 secondes avant de rediriger
 }
 
 
