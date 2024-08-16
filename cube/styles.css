@@ -101,3 +101,11 @@ button {
 button:hover {
     background-color: #444;
 }
+.collision-zone {
+    position: absolute;
+    background-color: red; /* Couleur de fond pour la zone de collision */
+    opacity: 0.5; /* Opacité pour la zone de collision */
+    visibility: visible; /* Assurez-vous que la zone de collision est visible */
+    pointer-events: none; /* Ignorer les événements de souris sur la zone de collision */
+    z-index: 999; /* Assurez-vous que la zone de collision est au-dessus d'autres éléments */
+}

@@ -1,239 +1,502 @@
-const arborescence = {
-    "Controle entré": {
-        "Linge Sale": {
-            "Non Triés": {
-                "Convoyeur Inclinné": {                
-                    "Convoyeur incliné bleu": {},
-                    "INC 1 convoyeur inclinée vers étage": {},
-                    "INC 2 convoyeur inclinée vers pesée": {},
-                    "INC 3 convoyeur inclinée descente trolley vide": {},
-                    "INC 4 convoyeur inclinée sortie nappe inférieur": {},
-                    "INC 5 convoyeur inclinée entre industriel et résident": {},
-                    "INC 6 convoyeur inclinée après décroche sac": {},
-                    "INC 7 convoyeur inclinée nappe inférieur vers industriel": {},
-                },
-                "Décroche sac": {},
-                "Pesée nappe inférieur (NT2)": {},
-                "Pesée nappe supérieur (NT1)": {},
-                "Poste d'accrochage": {},
-                "station déchargement (DU...)": {
-                            "DU1 poste de déchargement avec pré-stockage": {},
-                            "DU2 poste de déchargement avec pré-stockage": {},
-                            "DU3 poste de déchargement avec pré-stockage": {},
-                            "DU4 poste de déchargement avec pré-stockage": {},
-                            "DU6 poste de déchargement avec pré-stockage": {}
-                },
-                "tampon stockage": {
-                            "SRS 20 (stockage avant CI1)": {},
-                            "SRS 21 (stockage après CI1)": {},
-                            "SRS 22 (stockage avant pesée)": {},
-                            "SRS 31 (stockage avant DU6)": {},
-                            "SRS 32 (stockage avant INC 5)": {},
-                            "DU1 poste de déchargement avec pré-stockage": {},
-                            "DU2 poste de déchargement avec pré-stockage": {},
-                            "DU3 poste de déchargement avec pré-stockage": {},
-                            "DU4 poste de déchargement avec pré-stockage": {},
-                            "DU6 poste de déchargement avec pré-stockage": {},
-                            "DU1 poste de déchargement avec pré-stockage": {},
-                            "DU2 poste de déchargement avec pré-stockage": {},
-                            "DU3 poste de déchargement avec pré-stockage": {},
-                            "DU4 poste de déchargement avec pré-stockage": {},
-                            "DU6 poste de déchargement avec pré-stockage": {}
-                }
-            },
-            
-            "Triés": {
-                "Nappe Industriel": {                
-                        "Alvéoles .. Industriel": {
-                            "Alvéoles 1 Industriel": {},
-                            "Alvéoles 2 Industriel": {},
-                            "Alvéoles 3 Industriel": {},
-                            "Alvéoles 4 Industriel": {},
-                            "Alvéoles 5 Industriel": {},
-                            "Alvéoles 6 Industriel": {},
-                            "Alvéoles 7 Industriel": {},
-                            "Alvéoles 8 Industriel": {},
-                            "Alvéoles 9 Industriel": {},
-                            "Alvéoles 10 Industriel": {},
-                            "Alvéoles 11 Industriel": {},
-                            "Alvéoles 12 Industriel": {}
-                        },
-                        "Futurail Industriel": {},
-                        "Aiguillage Industriel": {},
-                        "Tapis Industriel": {},
-                        "Basculeur Sling Vide": {},
-                        "Chargeur De Sac (Sling)": {},
-                        "Redresseur Sling Vide": {},
-                        "Dechargeur Tunnel ..": {}
-
-                },
-
-                "Nappe Résident": {                
-                    "Alvéoles .. Résident": {                            
-                            "Alvéoles 1 Industriel": {},
-                            "Alvéoles 2 Industriel": {},
-                            "Alvéoles 3 Industriel": {},
-                            "Alvéoles 4 Industriel": {},
-                            "Alvéoles 5 Industriel": {},
-                            "Alvéoles 6 Industriel": {},
-                            "Alvéoles 7 Industriel": {},
-                            "Alvéoles 8 Industriel": {}
-                        },
-                    "Futurail Résident": {},
-                    "Tapis Résident": {}
-                }
-
-
-            }
+const arborescence =  {
+  "linge sale": {
+    "Non Triés": {
+      "Convoyeur Inclinné": {
+        "Convoyeur incliné bleu": {},
+        "INC 1 convoyeur inclinée vers étage": {},
+        "INC 2 convoyeur inclinée vers pesée": {},
+        "INC 3 convoyeur inclinée descente trolley vide": {},
+        "INC 4 convoyeur inclinée sortie nappe inférieur": {},
+        "INC 5 convoyeur inclinée entre industriel et résident": {},
+        "INC 6 convoyeur inclinée après décroche sac": {},
+        "INC 7 convoyeur inclinée nappe inférieur vers industriel": {}
+      },
+      "Décroche sac": {},
+      "Pesée nappe inférieur (NT2)": {},
+      "Pesée nappe supérieur (NT1)": {},
+      "Poste d'accrochage": {},
+      "station déchargement (DU...)": {
+        "DU1 poste de déchargement avec pré-stockage": {},
+        "DU2 poste de déchargement avec pré-stockage": {},
+        "DU3 poste de déchargement avec pré-stockage": {},
+        "DU4 poste de déchargement avec pré-stockage": {},
+        "DU6 poste de déchargement avec pré-stockage": {}
+      },
+      "tampon stockage": {
+        "SRS 20 (stockage avant CI1)": {},
+        "SRS 21 (stockage après CI1)": {},
+        "SRS 22 (stockage avant pesée)": {},
+        "SRS 31 (stockage avant DU6)": {},
+        "SRS 32 (stockage avant INC 5)": {},
+        "Tampon 1 trolley vide": {},
+        "Tampon 2 trolley vide": {},
+        "Tampon 3 trolley vide": {},
+        "Tampon 4 trolley vide": {},
+        "Tampon draps alèses": {},
+        "Tampon DU3": {},
+        "Tampon DU4": {},
+        "Tampon sac vide industriel (avant décroche sac)": {},
+        "Tampon sac vide résident (avant décroche sac)": {},
+        "Tampon trolley vide avant poste d'accrochage": {}
+      },
+      "voie de stockage": {
+        "Voie 01": {},
+        "Voie 02": {},
+        "Voie 03": {},
+        "Voie 04": {},
+        "Voie 05": {},
+        "Voie 06": {},
+        "Voie 07": {},
+        "Voie 08": {},
+        "Voie 09": {},
+        "Voie 10": {},
+        "Voie 11": {},
+        "Voie 21": {},
+        "Voie 22": {},
+        "Voie 23": {},
+        "Voie 24": {},
+        "Voie 25": {},
+        "Voie 26": {},
+        "Voie 27": {},
+        "Voie 28": {},
+        "Voie 29": {},
+        "Voie 30": {}
+      }
+    },
+    "Triés": {
+      "Nappe Industriel": {
+        "alvéoles": {
+          "Alvéoles 1": {},
+          "Alvéoles 2": {},
+          "Alvéoles 3": {},
+          "Alvéoles 4": {},
+          "Alvéoles 5": {},
+          "Alvéoles 6": {},
+          "Alvéoles 7": {},
+          "Alvéoles 8": {},
+          "Alvéoles 9": {},
+          "Alvéoles 10": {},
+          "Alvéoles 11": {},
+          "Alvéoles 12": {}
         },
-        "Lavages": {
-            "Lavage Laveuses": {},
-            "Séchoirs Manuels": {},
-            "Lavage": {
-                "Tapis Lavage Industriel": {},
-                "Tapis Lavage Résident": {},
-                "Ampicker": {},
-                "Essoreuse Kannegiesser": {},
-                "Navette Industriel (Avant Séchoir)": {},
-                "Navette Kannegiesser (Avant Séchoir)": {},
-                "Presse Jensen Tunnel 10": {},
-                "Presse Lavatec Tunnel 12": {},
-                "Tunnel 10x35 Kannegiesser": {},
-                "Tunnel 10x50 Lavatec Industriel": {},
-                "Tunnel 12x50 Lavatec Industriel": {}
-              },
-            "Séchage": {
-                "Séchoirs Industriels": {                
-                    "Séchoir Industriel N°1": {},
-                    "Séchoir Industriel N°2": {},
-                    "Séchoir Industriel N°3": {},
-                    "Séchoir Industriel N°4": {},
-                    "Séchoir Industriel N°5": {}
-            },
-                "Séchoirs Résidents": {                    
-                    "Séchoir Résidents N°1": {},
-                    "Séchoir Résidents N°2": {},
-                    "Séchoir Résidents N°3": {},
-                    "Séchoir Résidents N°4": {},
-                    "Séchoir Résidents N°5": {}}
-            },
-            "Sodilec":{}
+        "Futurail": {
+          "aiguillage": {
+            "Aiguillage 3 voie sortie chargeur et voie de recyclage": {},
+            "Aiguillage 3 voies sortie nappe": {},
+            "Aiguillage entrée voie 1": {},
+            "Aiguillage entrée voie 2": {},
+            "Aiguillage entrée voie 3": {},
+            "Aiguillage entrée voie 4": {},
+            "Aiguillage sortie voie 1": {},
+            "Aiguillage sortie voie 2": {},
+            "Aiguillage sortie voie 3": {},
+            "Aiguillage sortie voie 4": {}
+          }
         },
-
-
-        "Finition": {
-            "Ligne Grand Plat Gp": {                        
-                "Cercleuse Automatique Grand Plat Gp": {},
-                "Engageuse Grand Plat Gp": {},
-                "Plieuse Classic Grand Plat Gp": {},
-                "Sécheuse Repasseuse Grand Plat Gp": {},
-                "Empileur Grand Plat Gp": {},
-                "Tapis Grand Plat Gp": {}
-            },
-            "Ligne Petit Plat Pp": {                
-                "Cercleuse Automatique Petit Plat Pp": {},
-                "Engageuse Petit Plat Pp": {},
-                "Plieuse Classic Petit Plat Pp": {},
-                "Plieuse Napkin Petit Plat Pp": {},
-                "Sécheuse Repasseuse Petit Plat Pp": {},
-                "Empileur Petit Plat Pp": {}
-            },
-            "Ligne Vt Et Non Pucé": {
-                "Convoyeurs Et Tapis": {},
-                "Ligne De Tri Système Métricon": {
-                    "Convoyeur A Chaine Métricon M..": {                    
-                        "Tri A": {},
-                        "Tri B": {},
-                        "Buffer": {}
-                    },
-                    "Mise Sur Cintre ": {                        
-                        "Mise Sur Cintre 1": {},
-                        "Mise Sur Cintre 2": {},
-                        "Mise Sur Cintre 3": {},
-                        "Mise Sur Cintre 4": {}
-                    },
-                    "Etiqueteuse Vt": {},
-                    "Filmeuse Pp Vt": {},
-                    "Tunnel De Finition": {},
-                    "Tunnel De Lecture ": {},
-                    "Système Informatique": {}
-
-                },
-                "Plieuses Vt": {                        
-                    "Plieuses Vt Maximat 1": {},
-                    "Plieuses Vt Maximat 2": {}
-                }
-            },
-
-
-        "Linge Séché": {
-            "Cercleuse Indépendante": {                        
-                "Cercleuse Lapaw": {},
-                "Cercleuse Couverture": {}},
-            "Plieuses Couverture": {},
-            " Ligne Plieuses Eponges": {
-                "Maitre": {},
-                "Esclave": {},
-                "Cercleuse Automatique Eponges": {},
-            },
-            "Petit Plat Résident Lapaw": {                
-                "Engageuse Petit Plat Lapaw": {},
-                "Plieuse Classic Petit Plat Lapaw": {},
-                "Plieuse Napkin Petit Plat Lapaw": {},
-                "Sécheuse Repasseuse Petit Plat Lapaw": {},
-                "Empileur Petit Plat Lapaw": {}},
-            "Pliage Manuel": {},
-            "Poste Bipage 1": {},
-            "Poste Bipage 2": {},
-            "Poste Marquage": {},
-            "Tapis": {}
-            }
-
-
-
+        "Basculeur sling vide": {},
+        "Chargeur de sac (sling)": {},
+        "D1 dechargeur tunnel 10": {},
+        "D2 dechargeur tunnel 12": {},
+        "Décroche sacs": {},
+        "LA1 (ascenceur avant voie de recyclage)": {},
+        "Redresseur sling vide": {},
+        "Tampon avant tunnel 10 (D1)": {},
+        "Tampon avant tunnel 12 (D2)": {},
+        "Tampon recyclage": {},
+        "Tampon sling vide avant chargeur": {},
+        "Tampon sling vide basculé": {},
+        "Tampon sling vide sortie redresseur": {},
+        "VC2 (descenceur avant tunnels)": {},
+        "Voie 1": {},
+        "Voie 2": {},
+        "Voie 3": {},
+        "Voie 4": {},
+        "Voie 5": {},
+        "tapis": {
+          "Tapis avant tapis incliné chargeur": {},
+          "Tapis derrière alvéoles 1 a 5": {},
+          "Tapis derrière alvéoles 11": {},
+          "Tapis derrière alvéoles 12": {},
+          "Tapis derrière alvéoles 6 a 10": {},
+          "Tapis devant alvéoles": {},
+          "Tapis incliné avant chargeur": {},
+          "Tapis tri devant alvéoles entre industriel et résindent": {},
+          "Tapis tri devant alvéoles résident": {}
+        }
+      },
+      "Nappe Résident": {
+        "alvéoles": {
+          "Alvéoles 1": {},
+          "Alvéoles 2": {},
+          "Alvéoles 3": {},
+          "Alvéoles 4": {},
+          "Alvéoles 5": {},
+          "Alvéoles 6": {},
+          "Alvéoles 7": {},
+          "Alvéoles 8": {}
         },
-         "Expedition": {
-            "Etiqueteuse Navette": {},            
-            "Etiqueteuse Qr Code Navette": {},
-            "Poste De Lecture (Ramses)": {}
-
+        "Futurail": {
+          "Basculeur sling vide": {},
+          "By-pass tunnel 3 pour sling vide": {},
+          "D3 dechargeur tunnel 3": {},
+          "D4 dechargeur laveuses": {},
+          "LU1 (chargeur de sac)": {},
+          "MLA1 (ascenceur sortie tunnel 3)": {},
+          "PLA1 (ascenceur sortie recyclage)": {},
+          "Pré-stockage PLA1 sortie tampon 3": {},
+          "Redresseur sling vide": {},
+          "Stockage sling plein après chargeur": {},
+          "Tampon 1 (sortie voies et avant tunnel 3)": {},
+          "Tampon 2 (sortie voies et avant laveuses)": {},
+          "Tampon 3 (recyclage)": {},
+          "Tampon laveuse": {},
+          "Tampon sling vide": {},
+          "Tampon tunnel 3": {},
+          "Voie 1": {},
+          "Voie 2": {},
+          "Voie 3": {},
+          "Voie 4": {}
         },
-         "Administratif": {},
-         "Autres": {},
-         "Batiment": {            
-            "Sanitaires": {},            
-            "Self": {},
-            "Alarme Incendie": {}
-        },
-        "Magasin": {            
-            "Imprimante Etiquette Cab": {},            
-            "Thermocolleuse Thermopatch": {},
-            "Machine A Coudre 1": {},
-            "Imprimante Etiquette Cab": {},            
-            "Poste Marquage 5 (Vers Caillebotis)": {}
-        },
-        "Technique": {            
-            "Local Chaufferie": {},            
-            " Local Eau": {            
-                "Adoucisseur": {},
-                "Dégrilleur": {},             
-                "Surpresseur": {}
-            },
-            "Local Electrique": {},
-            "Local Engin (Expédition)": {},            
-            " Local Lessiviel": {               
-                "Armoire Flux-Multi (Pompe Laveuses)": {},
-                "Armoire Electrique Laundry X-Pert": {}            
-            },
-            "Local Pneumatique": {               
-                "Compresseur (Droite Côté Cta)": {},
-                "Compresseur (Gauche Côté Nappe Résident)": {},
-                "Sécheur D Air": {}
-        },
-            "Local Tgbt": {},
-            "Local Ventilation": {},
-        },
+        "tapis": {
+          "T40.1 (tapis derrière alvéoles résident)": {},
+          "T40.2 (tapis derrière alvéoles résident)": {},
+          "T40.3 (tapis incliné avant chargeur)": {},
+          "T40.4 (tapis vers industriel)": {},
+          "T40.5 (tapis décatissage linge neuf)": {},
+          "Tapis tri devant alvéole 11": {}
+        }
+      },
+      "Tunnel de désinfection": {}
     }
+  },
+  "Lavages": {
+    "Lavage laveuses et séchoirs manuels": {
+      "Laveuse 25 kg n°3": {},
+      "Laveuse 70 kg n°2 (droite)": {},
+      "Laveuse 70kg n°1 (milieu)": {},
+      "Séchoir electrolux T4900 n°1": {},
+      "Séchoir electrolux T4900 n°2": {},
+      "Séchoir electrolux T4900 n°3": {},
+      "Table a détacher": {}
+    },
+    "Lavage tunnel": {
+      "tapis lavage industriel": {
+        "T1 (sortie presse vers navette)": {},
+        "T10.1 (tapis reception séchoir)": {},
+        "T10.2 (tapis reception séchoir)": {},
+        "T10.3 (tapis reception séchoir)": {},
+        "T11 (tapis de by pass)": {},
+        "T12 (tapis icliné sortie en chariot)": {},
+        "T13 (tapis sortie ampicker)": {},
+        "T14 (tapis sortie ampicker)": {},
+        "T17 (distribution postes alimentation GP)": {},
+        "T23 (tapis VT sortie navette en dessous tapis séchoir 1)": {},
+        "T3 (sortie presse vers ampicker)": {},
+        "T4.1 (tapis de by pass VT)": {},
+        "T4.2 (tapis de by pass VT)": {},
+        "T4.3 (tapis de by pass VT)": {},
+        "T5 (tapis chargement séchoir 1)": {},
+        "T5.1 (tapis incliné VT)": {},
+        "T5.10 (tapis alimentation poste 5 couvertures)": {},
+        "T5.11 (tapis alimentation poste 2 VT)": {},
+        "T5.12 (tapis engagement VT)": {},
+        "T5.13 (tapis engagement VT)": {},
+        "T5.2 (élévateur sortie séchoir)": {},
+        "T5.4 (tapis sortie élévateur)": {},
+        "T5.5 (tapis alimentation poste PP)": {},
+        "T5.6 (tapis alimentation secteur résident)": {},
+        "T5.7 (tapis alimentation poste 3 mixtes)": {},
+        "T5.8 (tapis alimentation poste 4 éponges)": {},
+        "T5.9A (tapis vers poste 3)": {},
+        "T5.9B (tapis vers poste 5)": {},
+        "T6 (tapis chargement séchoir 2)": {},
+        "T7 (tapis chargement séchoir 3)": {},
+        "T8 (tapis chargement séchoir 4)": {},
+        "T9 (tapis chargement séchoir 5)": {}
+      },
+      "tapis lavage résident": {
+        "T18 (tapis sortie essoreuse kannegiesser)": {},
+        "T23 (tapis de by pass)": {},
+        "T24.1 (tapis sortie séchoir)": {},
+        "T24.2 (tapis sortie séchoir)": {},
+        "T24.3 (tapis sortie séchoir)": {},
+        "TS1 (tapis stockage avant séchoir)": {},
+        "TS2 (tapis stockage avant séchoir)": {},
+        "TS3 (tapis stockage avant séchoir)": {},
+        "TS4 (tapis stockage avant séchoir)": {},
+        "TS5 (tapis stockage avant séchoir)": {}
+      },
+        "Ampicker": {},
+        "Élévateur sortie presse lavatec": {},
+        "Essoreuse kannegiesser": {},
+        "Navette industriel (avant séchoir)": {},
+        "Navette kannegiesser (avant séchoir)": {},
+        "Presse jensen": {},
+        "Presse lavatec tunnel 12": {},
+        "Tunnel 10x35": {},
+        "Tunnel LAVATEC": {
+          "Tunnel 10x50":{},
+          "Tunnel 12x50":{}
+        }
+    },
+ 
+    "Séchage": {
+      "Séchoirs industriels": {
+        "Aspiration peluche lavatec": {},
+        "Séchoir industriel n°1": {},
+        "Séchoir industriel n°2": {},
+        "Séchoir industriel n°3": {},
+        "Séchoir industriel n°4": {},
+        "Séchoir industriel n°5": {}
+      },
+      "Séchoirs résidents": {
+        "Armoire de gestion séchoir kannegiesser": {},
+        "Aspiration peluche kannegiesser": {},
+        "Séchoir kannegiesser n°1": {},
+        "Séchoir kannegiesser n°2": {},
+        "Séchoir kannegiesser n°3": {},
+        "Séchoir kannegiesser n°4": {},
+        "Séchoir kannegiesser n°5": {}
+      }
+  },
+  "Sodilec": {
+      "PC CE1": {},
+      "PC CE2": {},
+      "PC LN": {},
+      "PC LR": {},
+      "PC NT1": {},
+      "PC NT2": {},
+      "PC TD": {},
+      "PC ZP1": {},
+      "PC ZP2": {}
+  }},
+    "Finition": {
+    "Ligne grand plat": {
+      "Cercleuse automatique GP": {},
+      "Convoyeur à rouleaux sortie cercleuse GP": {},
+      "Empileur max twin stacker": {},
+      "Engageuse GP": {},
+      "Filmeuse GP": {},
+      "Plieuse classic GP": {},
+      "Sécheuse repasseuse GP": {},
+      "Tapis sortie cercleuse GP": {
+        "Tapis sortie GP (amovible/translateur)": {},
+        "Tapis sortie GP (après empileur alèzes)": {},
+        "Tapis sortie GP (après empileur drap)": {},
+        "Tapis sortie GP (avant cercleuse)": {}
+      }
+    },
+    "Ligne petit plat": {
+      "Cercleuse PP": {},
+      "Empileur bottom-up folder": {},
+      "Engageuse PP": {},
+      "Plieuse classic PP": {},
+      "Plieuse napkin PP": {},
+      "Sécheuse repasseuse PP": {}
+    },
+    "Ligne VT et non pucé": {
+      "Conveyors et tapis": {
+        "A - A1 convoyeur sortie maximat 1 après roll off": {},
+        "AAA - A11 roll off (convoyeur télescopique sortie maximat 1)": {},
+        "AAA - A12 convoyeur sortie maximat 1": {},
+        "B - B1 convoyeur sortie maximat 2": {},
+        "BB - B11 roll off (convoyeur télescopique sortie maximat 2)": {},
+        "BB - B12 convoyeur sortie maximat 2 après roll off": {},
+        "C - Tapis sortie maximat et PP": {},
+        "D - Tapis sortie maximat et PP": {},
+        "E - Tapis sortie maximat et PP": {},
+        "F - Tapis sortie maximat et PP": {},
+        "G - Convoyeur à rouleaux d'angle avec centreur": {},
+        "H - D1 Convoyeur + convoyeur": {},
+        "I - SD1 Convoyeur à rouleaux après centreur": {},
+        "J - Tapis avant filmuese PP VT (tapis bleu)": {},
+        "K - Tapis avant filmuese PP VT (tapis vert)": {},
+        "L - Convoyeur à rouleaux d'angle avant filmuese PP": {},
+        "M - Tapis entre filmuese et tunnel de lecture": {},
+        "N - Convoyeur à bandes tunnel de lectures": {},
+        "O - Transport 90° sous étiqueteuse": {},
+        "P - Tapis réception VT (après étiqueteuse)": {},
+        "Q - Convoyeur à rouleaux d'angle sortie étiqueteuse non pucé": {},
+        "QQ - Tapis sortie étiqueteuse non pucé": {}
+      },
     
-};
+    "Étiqueteuse VT": {},
+    "Filmeuse PP VT": {},
+      "Ligne de tri système Métricon": {   
+        "convoyeur à chaine Métricon": { 
+          "M1 (réception sortie poste 1 et 2)": {},
+          "M10 (avant entrée dans tri A)": {},
+          "M11 distribution tri A": {},
+          "M12.1 (barre de stockage tri A)": {},
+          "M12.2 (barre de stockage tri A)": {},
+          "M12.3 (barre de stockage tri A)": {},
+          "M12.4 (barre de stockage tri A)": {},
+          "M12.5 (barre de stockage tri A)": {},
+          "M12.6 (barre de stockage tri A)": {},
+          "M12.7 (barre de stockage tri A)": {},
+          "M12.8 (barre de stockage tri A)": {},
+          "M12.9 (barre de stockage tri A)": {},
+          "M13 (sortie barre de stockage tri A)": {},
+          "M14 (buffer entre tri A et tri B)": {},
+          "M15 (retour VT vers tri A)": {},
+          "M16 (distribution tri B)": {},
+          "M17.1 (barre de stockage tri B)": {},
+          "M17.2 (barre de stockage tri B)": {},
+          "M17.3 (barre de stockage tri B)": {},
+          "M17.4 (barre de stockage tri B)": {},
+          "M17.5 (barre de stockage tri B)": {},
+          "M17.6 (barre de stockage tri B)": {},
+          "M17.7 (barre de stockage tri B)": {},
+          "M17.8 (barre de stockage tri B)": {},
+          "M18 (sortie tri B)": {},
+          "M19 (recyclage phase de tri entrée sortie tri B)": {},
+          "M20 (transport entre sortie 1/2 et 3/4)": {},
+          "M21 (descente VT trié)": {},
+          "M22 (distribution VT vers maximats)": {},
+          "M23 (stockage devant maximat 1)": {},
+          "M24.1 (sortie centre vide maximat 1)": {},
+          "M24.2 (sortie centre vide maximat 2)": {},
+          "M25 (remonte centre vide pour stockage)": {},
+          "M26 (distribution centre vide stockage)": {},
+          "M27.1 (stockage cintres vide)": {},
+          "M27.2 (stockage cintres vide)": {},
+          "M27.3 (stockage cintres vide)": {},
+          "M27.4 (stockage cintres vide)": {},
+          "M28 (sortie stockage cintres vide)": {},
+          "M29 (alimentation centre au dessus PP)": {},
+          "M3 (récupération engagement 3/4 et M2)": {},
+          "M30 (alimentation cintre au dessus tapi VT)": {},
+          "M31 (distribution centre vide sur poste d'engagement)": {},
+          "M4 (arrivée vers entrée tunnel de finition)": {},
+          "M5 (sortie tunnel)": {},
+          "M6 (montée vers étage)": {},
+          "M7 (sortie M6 jusqu'à scanner L2I)": {},
+          "M8 (passage devant sortie GTI)": {},
+          "M9 (sortie engagement poste GTI)": {},
+          "MF1.1 (poste engagement 1)": {},
+          "MF1.2 (poste engagement 2)": {},
+          "MF1.3 (poste engagement 3)": {},
+          "MF1.4 (poste engagement 4)": {},
+          "MF2.1 (sortie poste engagement 1)": {},
+          "MF2.2 (sortie poste engagement 2)": {},
+          "MF2.3 (sortie poste engagement 3)": {},
+          "MF2.4 (sortie poste engagement 4)": {}
+    },
+         "Mise sur cintre et système informatique": {
+    "Armoire électrique métric": {},
+    "Cintres": {},
+    "MCPC": {},
+    "MFS (serveur)": {},
+    "Poste d'engagement magasin": {},
+    "Poste d'engagement VT n°1 (métrifié)": {},
+    "Poste d'engagement VT n°2 (métrifié)": {},
+    "Poste d'engagement VT n°3 (métrifié)": {},
+    "Poste d'engagement VT n°4 (métrifié)": {},
+    "Poste informatique métricon (baie à côté du bureau)": {},
+    "Poste informatique métricon (petite armoire en dessous bureau)": {},
+    "Poste lecture VT (vers centreur)": {}
+  }},
+  "Plieuses": {
+    "Plieuse VT 1": {},
+    "Plieuse VT 2": {},
+},
+    "Tunnel de finition": {},
+    "Tunnel de lecture": {}
+   }},
 
+
+
+
+  "Linge séché": {
+    "Cercleuse indépendante": {
+      "Cercleuse couverture": {},
+      "Cercleuse Lapauw": {}
+    },
+    "Ligne couverture": {
+      "Empileur couverture": {},
+      "Plieuse couverture": {}
+    },
+    "Ligne plieuses éponges": {
+      "Cercleuse automatique éponges": {},
+      "Plieuse éponge (esclave)": {},
+      "Plieuse éponge (maître)": {}
+    },
+    "Petit plat résident": {
+      "Empileur classic résident": {},
+      "Plieuse classic résident": {},
+      "Plieuse napkin résident": {},
+      "Sécheuse repasseuse résident": {}
+    },
+    "Pliage manuel": {},
+      "Poste bipage 1": {
+        "Poste 1 bipage ": {},
+      },
+            "Poste bipage 2": {
+        "Poste 2 bipage ": {},
+      },
+    
+    "Poste marquage": {
+      "Poste marquage": {},
+
+    },
+    "Table à repasser N°1": {},
+    "Table à repasser N°2": {},
+    "Tapis": {
+      "Roll off sortie éponges (convoyeur télescopique)": {},
+      "Tapis avant cercleuse couverture manuelle": {},
+      "Tapis N°2 récolte plieuse éponges": {},
+      "Tapis N°3 recolte plieuse éponges": {},
+      "Tapis N°4 recolte plieuse éponges": {}
+    }
+ 
+
+
+},
+
+  "Expedition": {
+    "Etiqueteuse Navette": {},
+    "Etiqueteuse Qr Code Navette": {},
+    "Poste De Lecture (Ramses)": {}
+  },
+  "Administratif": {},
+  "Autres": {
+    "Autres": {}
+},
+  "Batiment": {
+    "Sanitaires": {},
+    "Self": {
+        "PC commande repas": {}
+    },
+    "Alarme Incendie": {}
+  },
+    "Formation": {
+    "Formation": {}
+},
+  "Magasin": {
+    "Imprimante Etiquette Cab": {},
+    "Thermocolleuse Thermopatch": {},
+    "Machine A Coudre 1": {},
+    "Poste Marquage 5 (Vers Caillebotis)": {}
+  },
+  "Technique": {
+    "Local Chaufferie": {},
+    " Local Eau": {
+      "Adoucisseur": {},
+      "Dégrilleur": {},
+      "Surpresseur": {}
+    },
+    "Local Electrique": {},
+    "Local Engin (Expédition)": {},
+    " Local Lessiviel": {
+      "Armoire Flux-Multi (Pompe Laveuses)": {},
+      "Armoire Electrique Laundry X-Pert": {}
+    },
+    "Local Pneumatique": {
+      "Compresseur (Droite Côté Cta)": {},
+      "Compresseur (Gauche Côté Nappe Résident)": {},
+      "Sécheur D Air": {}
+    },
+    "Local Tgbt": {},
+    "Local Ventilation": {}
+  }
+}

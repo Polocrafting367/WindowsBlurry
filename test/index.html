@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fenêtres Déplaçables</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .window {
+      position: absolute;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      background-color: #fff;
+      width: 300px;
+      z-index: 10;
+      user-select: none;
+    }
+
+    .title-bar {
+      background-color: #0078d7;
+      color: white;
+      padding: 10px;
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+      cursor: move;
+    }
+
+    .content {
+      padding: 20px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="window" id="window1">
+  <div class="title-bar">Fenêtre 1</div>
+  <div class="content">Contenu de la fenêtre 1.</div>
+</div>
+
+<div class="window" id="window2">
+  <div class="title-bar">Fenêtre 2</div>
+  <div class="content">Contenu de la fenêtre 2.</div>
+</div>
+
+<script>
+  document.querySelectorAll('.window').forEach(windowEl => {
+    const titleBar = windowEl.querySelector('.title-bar');
+
+    titleBar.addEventListener('mousedown', (e) => {
+      let offsetX = e.clientX - windowEl.getBoundingClientRect().left;
+      let offsetY = e.clientY - windowEl.getBoundingClientRect().top;
+
+      const onMouseMove = (e) => {
+        windowEl.style.left = `${e.clientX - offsetX}px`;
+        windowEl.style.top = `${e.clientY - offsetY}px`;
+      };
+
+      document.addEventListener('mousemove', onMouseMove);
+
+      document.addEventListener('mouseup', () => {
+        document.removeEventListener('mousemove', onMouseMove);
+      }, { once: true });
+    });
+  });
+</script>
+
+</body>
+</html>
