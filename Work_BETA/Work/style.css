@@ -1,8 +1,11 @@
 .tab {
-   display: flex;
-   background-color: #1e1e1e;
-   color: #fff;
+    display: flex;
+
+    color: #fff;
+    backdrop-filter: blur(10px); /* Effet Glassmorphism */
+    border-radius: 20px;
 }
+
 /* Add this style to your stylesheet */
 .disabled-button {
     background-color: lightgrey !important;
@@ -13,40 +16,43 @@
     background-color: green !important;
     color: white;
 }
+
 .tab-button {
-   cursor: pointer;
-   padding: 10px;
-   flex: 1;
-   height: 40px;
-   box-sizing: border-box;
-   text-align: center;
-   background-color: #111;
-   color: #fff;
-   border-top-left-radius: 20px;
-   border-top-right-radius: 20px;
-   overflow: hidden;
-   white-space: nowrap;
-   text-overflow: ellipsis; /* Ajoutez cette ligne pour afficher "..." si le texte dépasse la taille du bouton */
+    cursor: pointer;
+    padding: 10px;
+    flex: 1;
+    height: 40px;
+    box-sizing: border-box;
+    text-align: center;
+   background-color: #002b56;
+    color: #fff;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    /* Ajoutez cette ligne pour afficher "..." si le texte dépasse la taille du bouton */
 }
 
 /* Style pour le bouton actif */
 .tab-button.active {
-   background-color: #333;
-   color: #FFF;
+  
+       background-color: #0056b3;
 }
+
 .place-card {
     min-height: 27px;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
+    width: calc(100% - 10px);
+    margin-top: 10px;
+    margin-left: 5px;
+    /* Ajoutez la valeur du décalage souhaité en haut */
 
-    justify-content: space-between; /* Permettre l'expansion complète des éléments à l'intérieur */
-    width: calc(100% - 10px); /* Ajout de cette propriété pour garantir une largeur de 100% */
-
-    margin-top: 10px; 
-    margin-left: 5px;/* Ajoutez la valeur du décalage souhaité en haut */
+    border-radius: 10px;
 
 }
-
 
 .chrono-status {
     font-size: 20px;
@@ -56,35 +62,33 @@
     width: 100%;
 }
 
+.tabcontent {
+    display: none;
+}
 
-
-    /* Style pour le contenu des onglets */
-    .tabcontent {
-        display: none;
-    }
-    body {
+body {
     font-family: 'Arial', sans-serif;
-    background-color: #1e1e1e; /* Fond sombre pour le corps de la page */
-    color: #fff; /* Texte en blanc */
 
-    padding: 0;
-
+    /* Fond sombre pour le corps de la page */
+    color: #333;
+    /* Texte en noir */
 }
 
 .container {
     max-width: 100%;
-    height: calc(100vh - 60px); /* 100% de la hauteur de la vue moins la hauteur de la bannière */
+    height: calc(100vh - 60px);
     overflow: hidden;
-    background-color: #333;
+    background-color: #dadada;
+    /* Couleur de fond */
     padding: 10px;
     border-bottom-right-radius: 20px;
     border-bottom-left-radius: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     box-sizing: border-box;
 }
 
 h1 {
-    color: #fff;
+    color: #333;
     font-size: 23px;
     margin-block-start: 0em;
     margin-block-end: 0.6em;
@@ -95,111 +99,114 @@ h1 {
 .lieux-list {
     list-style: none;
     padding: 5px;
-    height: calc(100% - 100px); /* Ajustez en fonction du padding de .container et de la hauteur de la bannière */
+    height: calc(100% - 100px);
+    /* Ajustez en fonction du padding de .container et de la hauteur de la bannière */
     overflow: auto;
-    box-shadow: 0px 0px 20px rgba(100, 100, 100, 0.5);
-    background: rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 0px 20px rgba(100, 100, 100, 0.8);
+    background: rgba(255, 255, 255, 0.5);
     border-radius: 10px;
 }
 
-
 .lieux-list li {
-    background-color: rgba(150,150,150,0.2); /* Fond sombre pour chaque élément de lieu */
+    background-color: rgba(255, 255, 255, 0.4);
+    /* Fond clair pour chaque élément de lieu */
     margin: 10px 0;
     padding: 2.5px;
     border-radius: 8px;
     cursor: pointer;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
 .lieux-list li button {
 
     color: #fff;
     border: none;
-    padding: 5px;
+    padding: 8px;
     border-radius: 4px;
     cursor: pointer;
     margin-right: 5px;
 }
 
 
+
 .lieux-list li .modal-content {
-    background-color: rgba(0,0,0,0.5); /* Fond sombre pour le contenu de la modal */
+    background-color: rgba(255, 255, 255, 0.9);
+    /* Fond clair pour le contenu de la modal */
     margin: 0.5% auto;
-    padding: 5px;
+    padding: 10px;
     border: 0px solid #888;
     border-radius: 8px;
-  }
 }
 
 .lieux-list li textarea {
     width: 100%;
     margin-bottom: 10px;
-    padding: 5px;
+    padding: 8px;
     border-radius: 4px;
 }
 
-/* Ajout d'un style pour le mode sombre lorsqu'un lieu est cliqué */
-
 #chrono {
     font-size: 30px;
-    display: inline-block; /* Assurez-vous que le bloc ne prend que la largeur nécessaire */
-    text-align: center; /* Centrer horizontalement le texte à l'intérieur du bloc */
-    margin: 0; /* Supprimer les marges par défaut qui pourraient affecter le centrage */
+    display: inline-block;
+    /* Assurez-vous que le bloc ne prend que la largeur nécessaire */
+    text-align: center;
+    /* Centrer horizontalement le texte à l'intérieur du bloc */
+    margin: 0;
+    /* Supprimer les marges par défaut qui pourraient affecter le centrage */
 }
 
-    @media screen and (max-width: 600px) {
+@media screen and (max-width: 600px) {
     /* Styles spécifiques aux petits écrans */
     .container {
         max-width: 100%;
         /* ... autres styles ... */
-
-
     }
 }
+
 #enregistrements {
     margin-top: 5px;
-   height: calc(100% - 100px); 
+    height: calc(100% - 100px);
     overflow: auto;
     box-shadow: 0px 0px 20px rgba(100, 100, 100, 0.5);
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(255, 255, 255, 0.8);
     border-radius: 10px;
     padding: 10px;
-    line-height: 2; /* Espace entre les lignes */
+    line-height: 2;
+    /* Espace entre les lignes */
 }
-
-
-
 
 #enregistrements p {
-
-    font-size: 18px; /* Modifiez la taille du texte selon vos besoins */
-
+    font-size: 18px;
+    /* Modifiez la taille du texte selon vos besoins */
 }
-
 
 #rech {
     display: flex;
-    align-items: center; /* Aligner les éléments verticalement au centre */
+    align-items: center;
+    /* Aligner les éléments verticalement au centre */
 }
 
 #toggleButton {
-    background-color: #3498db;
+    background-color: #007bff;
     color: #fff;
     border: none;
     padding: 8px;
     border-radius: 8px;
     cursor: pointer;
     margin-right: 5px;
-        height: 30px;
+    height: 30px;
 }
+
 #searchInput {
-    flex: 1; /* Utiliser l'espace disponible restant */
-    background-color: #CCC;
+    flex: 1;
+    /* Utiliser l'espace disponible restant */
+    background-color: #f0f0f0;
     border-radius: 10px 0 0 10px;
-    color: black;
+    color: #333;
     height: 38px;
     border: none;
-    padding-left: 5px; /* Déplacer le texte vers la droite de 15px */
+    padding-left: 10px;
+    /* Déplacer le texte vers la droite de 10px */
 }
 
 .modal {
@@ -209,28 +216,20 @@ h1 {
     left: 50%; /* Ajustez la position horizontale selon vos besoins */
      transform: translate(-50%, -50%);
     padding: 20px;
-    background-color: #333;
+    background-color: #fff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     z-index: 1000;
-    color: white;
+    color: black;
     display: flex;
     flex-direction: column;
 }
 
-.modal input{
-    border-radius: 8px;
-height: 25px;
-    background-color: #555;
-    color: white;
-    font-size: 15px;
-
-}
 /* Ajout de styles pour les boutons */
 .modal button {
     margin: 5px; /* Espacement entre les boutons */
     height: 25px;
 }
-
+#tutorialModal{width: 85%}
 #enregistrements button {
 
     height: 25px;
@@ -316,7 +315,13 @@ h1 {
     border-radius: 8px;
     cursor: pointer;
 }
+.modal input{
+    border-radius: 8px;
+height: 25px;
 
+    font-size: 15px;
+
+}
 
 /* Ajoutez des styles spécifiques pour le bouton de pause en mode "paused" */
 /* Ajoutez ces styles dans votre fichier CSS ou directement dans votre script JS */
@@ -332,27 +337,18 @@ h1 {
     /* Add any other styles as needed */
 }
 #parametresTab h1 {
-    color: #fff;
-}
-
-#parametresTab h2 {
-    color: #fff;
 
 }
+
 
 #parametresTab input,
+
 #parametresTab button,
 #parametresTab select {
     margin-top: 5px;
     padding: 5px;
     border-radius: 5px;
-    background-color: #4e4e4e;
-    color: white;
-}
 
-#parametresTab input::placeholder
- {
-    color: #AAA; /* Remplacez cette couleur par celle que vous souhaitez pour le texte du placeholder non saisi */
 }
 
 #dell {
@@ -373,7 +369,7 @@ h1 {
     width: calc(100% - 20px)
 }
 #parametresTab button {
-    background-color: #3498db;
+
     color: #fff;
     border: none;
     cursor: pointer;
@@ -381,7 +377,7 @@ h1 {
 }
 
 #parametresTab button:hover {
-    background-color: #2980b9;
+
 }
 
 
@@ -425,7 +421,7 @@ h1 {
     border: none; /* Supprimer la bordure par défaut */
     height: 1px; /* Définir la hauteur de la ligne */
     background-color: #777; /* Couleur de la ligne */
-    margin: 10px 0; /* Marge autour de la ligne */
+    margin: 5px 0; /* Marge autour de la ligne */
 }
 
 iframe {
@@ -435,8 +431,6 @@ iframe {
  height:310px;
 
 }
-
-
 
 .place-card {
     position: relative;
@@ -530,7 +524,7 @@ button.non-cliquable {
 
 .groupe-container  {
 
-    background-color: rgba(100,100,100,0.4);
+    background-color: rgba(255,255,255,0.6);
     margin: 10px 0;
     padding: 10px;
     border-radius: 8px;
@@ -566,7 +560,6 @@ button.non-cliquable {
   transition: .4s;
   border-radius: 8px;
 }
-#tutorialModal{width: 85%}
 
 .slider:before {
   position: absolute;
@@ -613,8 +606,9 @@ button {    border-radius: 4px;
 
 button, #searchInput, #nouveauLieu, #lieuxDropdown, #themeSelector {
     width: 100%;
-
 }
+
+
 
 /* Ajoutez cette classe pour définir la couleur active */
 .active {
@@ -642,37 +636,3 @@ button, #searchInput, #nouveauLieu, #lieuxDropdown, #themeSelector {
             border-radius: 50%;
             box-shadow: 0 0 4px rgba(0,0,0,0.5);
         }
-                table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-    font-size: 1em;
-    font-family: sans-serif;
-    min-width: 400px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-}
-
-table thead tr {
-    background-color: #009879;
-    color: #ffffff;
-    text-align: left;
-    font-weight: bold;
-}
-
-table th,
-table td {
-    padding: 12px 15px;
-    border: 1px solid #dddddd;
-}
-
-table tbody tr {
-    border-bottom: 1px solid #dddddd;
-}
-
-table tbody tr:nth-of-type(even) {
-    background-color: #f3f3f3;
-}
-
-table tbody tr:last-of-type {
-    border-bottom: 2px solid #009879;
-}
