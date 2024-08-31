@@ -1,18 +1,41 @@
+function getStoragePrefix() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const username = urlParams.get('user');
+    return username ? `${username}_` : '';
+}
+function setPrefixedItem(key, value) {
+    const prefix = getStoragePrefix();
+    localStorage.setItem(prefix + key, value);
+}
+
+function getPrefixedItem(key) {
+    const prefix = getStoragePrefix();
+    return localStorage.getItem(prefix + key);
+}
+
+function removePrefixedItem(key) {
+    const prefix = getStoragePrefix();
+    localStorage.removeItem(prefix + key);
+    
+}
+
+let restt = getPrefixedItem('currentTab');
+
 
 function changerTheme(theme) {
     var themeLink = document.getElementById('themeLink');
     themeLink.href = theme + '.css';
 
     // Vérifiez si le thème a changé par rapport à la valeur actuelle dans le stockage local
-    if (theme !== localStorage.getItem('theme')) {
+    if (theme !== getPrefixedItem('theme')) {
         // Mettez à jour le thème dans le stockage local
-        localStorage.setItem('theme', theme);
+        setPrefixedItem('theme', theme);
         
         // Rechargez la page pour appliquer le nouveau thème
         location.reload(true);
     }
 
-    var angleSauvegarde = localStorage.getItem('angleCouleur');
+    var angleSauvegarde = getPrefixedItem('angleCouleur');
     if (angleSauvegarde !== null) {
         changerCouleur(angleSauvegarde);
                 document.getElementById('colorSlider').value = angleSauvegarde;
@@ -26,7 +49,7 @@ function changerCouleur(angle) {
     // Convertir l'angle en couleur (HSL)
     var couleur = 'hsl(' + angle + ', 100%, 50%)';
 
-    localStorage.setItem('angleCouleur', angle);
+    setPrefixedItem('angleCouleur', angle);
 
     // Convertir la couleur HSL en RGB
     var tempElement = document.createElement('div');
@@ -66,7 +89,7 @@ var luminositeButt = 'hsl(' + angle + ', 50%, 50%)';
 
 
      function supprimerCouleurs() {
-                    localStorage.removeItem('angleCouleur');
+                    removePrefixedItem('angleCouleur');
 location.reload(true);
 
         }
@@ -98,7 +121,7 @@ location.reload(true);
         var accessButton = document.getElementById("accessButton");
 
         // Récupère l'état enregistré dans le localStorage
-        var cookieAccepted = localStorage.getItem("cookieAccepted");
+        var cookieAccepted = getPrefixedItem("cookieAccepted");
 
         // Initialise l'état de la case à cocher et le bouton en fonction du localStorage
         if (cookieAccepted === "true") {
@@ -112,39 +135,3 @@ location.reload(true);
 
     
     });
-
-
-        table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-    font-size: 1em;
-    font-family: sans-serif;
-    min-width: 400px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-}
-
-table thead tr {
-    background-color: #009879;
-    color: #ffffff;
-    text-align: left;
-    font-weight: bold;
-}
-
-table th,
-table td {
-    padding: 12px 15px;
-    border: 1px solid #dddddd;
-}
-
-table tbody tr {
-    border-bottom: 1px solid #dddddd;
-}
-
-table tbody tr:nth-of-type(even) {
-    background-color: #f3f3f3;
-}
-
-table tbody tr:last-of-type {
-    border-bottom: 2px solid #009879;
-}

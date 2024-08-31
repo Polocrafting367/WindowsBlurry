@@ -8,14 +8,14 @@ function supprimerTousLesCookies() {
 
     if (confirmation) {
         // Supprimez le cookie 'lieuxEnregistres'
-        localStorage.removeItem('lieuxEnregistres');
+        removePrefixedItem('lieuxEnregistres');
 
         // Supprimez le cookie 'enregistrements'
-        localStorage.removeItem('enregistrements');
-        localStorage.removeItem('maListe');
- localStorage.removeItem('angleCouleur');
+        removePrefixedItem('enregistrements');
+        removePrefixedItem('maListe');
+ removePrefixedItem('angleCouleur');
 
-        localStorage.removeItem("cookieAccepted");
+        removePrefixedItem("cookieAccepted");
 
 const chronosContainer = document.getElementById('chronosContainer');
 parcourirArborescenceEtCreerIframes(arborescence, chronosContainer);
@@ -26,7 +26,7 @@ parcourirArborescenceEtCreerIframes(arborescence, chronosContainer);
             iframesImbriquées[i].contentWindow.postMessage('SupprimerCookie', '*');
         }
 
-localStorage.removeItem('maListe');
+removePrefixedItem('maListe');
 
 
 
@@ -52,7 +52,7 @@ function supprimerchronos() {
             iframesImbriquées[i].contentWindow.postMessage('SupprimerCookie', '*');
         }
 
-localStorage.removeItem('maListe');
+removePrefixedItem('maListe');
 
         alert("Tous les chronos ont été stoppés");
         location.reload();
@@ -74,7 +74,7 @@ parcourirArborescenceEtCreerIframes(arborescence, chronosContainer);
             iframesImbriquées[i].contentWindow.postMessage('SupprimerCookie', '*');
         }
 
-localStorage.removeItem('maListe');
+removePrefixedItem('maListe');
 
         alert("Tous les chronos ont été stoppés");
         location.reload();
@@ -89,7 +89,7 @@ function deleteCookies() {
 
     if (confirmation) {
         // Supprimer tous les enregistrements dans localStorage
-        localStorage.removeItem('enregistrements');
+        removePrefixedItem('enregistrements');
         // Rafraîchir ou mettre à jour l'affichage des enregistrements
 
 
@@ -119,7 +119,7 @@ function deleteCookies() {
         var modal = document.getElementById("tutorialModal");
 
         // Enregistre l'état de la case à cocher dans le localStorage
-        localStorage.setItem("cookieAccepted", cookieCheckbox.checked);
+        setPrefixedItem("cookieAccepted", cookieCheckbox.checked);
 
         // Active/désactive le bouton en fonction de l'état de la case à cocher
         if (cookieCheckbox.checked) {

@@ -8,6 +8,13 @@ body {
         margin-right: 0px;
 }
 
+#updateTimeButton {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    top: 40px;
+    right: 5px;
+}
 
 #chrono {
     font-size: 30px;

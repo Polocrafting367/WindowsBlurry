@@ -34,10 +34,30 @@
 </div>
 
 <div id="ChronoTab" class="tabcontent">
+
     <!-- Contenu de l'onglet "Chrono" -->
     <div class="container">
         <div id="chronosContainer"></div>
     </div>
+
+
+<div id="modifierLieuModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="fermerModalModifierLieu()">&times;</span>
+        <h2>Choisir un nouveau lieu</h2>
+        
+        <!-- Zone de recherche -->
+        <div id="rech">
+            <input type="text" id="searchInput2" placeholder="Rechercher un lieu..." oninput="searchLieu2()">
+            <button id="clearButton2" style="display: none;" onclick="clearSearchInput2()">✖</button>
+        </div>
+        
+        <!-- Liste des lieux -->
+        <ul id="arborescenceLieux"></ul>
+    </div>
+</div>
+
+
 </div>
 
 
@@ -116,48 +136,43 @@
     <div class="container">
         <div class="buttons-container">
            <h1>Interventions</h1>
-<h1 style="color:red;">Au cas où<br>Merci d'exporter en local<br>puis sur le serveur</h1>
+            <div class="button-wrapper">
+                <button onclick="exportServ()"style="background-color: green;">Envoyer les intervention au server</button>
+            </div>
 
-            <div class="button-wrapper">
-                <button onclick="exportToTxt()">Exporter en local (csv)</button>
-            </div>
-            <div class="button-wrapper">
-                <button onclick="exportServ()">Envoyer au server (suppression local)</button>
-            </div>
-            <div class="button-wrapper">
-                <button id="dell" onclick="deleteCookies()">Tous supprimer</button>
-            </div>
-            <div class="button-wrapper">
-                <button onclick="getInterventions()">Afficher les interventions sur le server pas encore exporté</button>
-            </div>
         </div>
 
         <div id="enregistrements"></div>
+
+
+
     </div>
 </div>
 
 <div id="parametresTab" class="tabcontent">
+
     <!-- Contenu de l'onglet "Paramètres" -->
     <div class="container">
         <div class="Paramètres">
         <!-- Ajoutez le contenu des paramètres ici -->
         <h1>Paramètres</h1>
         <button onclick="showModal()">Tutoriel / Cookies</button>
-        <h2>Ajouter un lieu personnalisé <p> (uniquement pour cet appareil)</h2>
-        <input type="text" id="nouveauLieu" placeholder="Nouveau lieu">
-        <button onclick="ajouterLieu()">Ajouter lieu</button>
+                <hr>
+        <h2>Bouton avancé  </h2>
+            <div class="button-wrapper">
+                <button onclick="exportToTxt()">Exporter en local les interventions (csv)</button>
+            </div>
+            <div class="button-wrapper">
+                <button id="dell" onclick="deleteCookies()">Supprimer toutes les intervention enregistré</button>
 
+            </div>
+                        <div class="button-wrapper">
+                <button style="display: none !important;" onclick="getInterventions()" >Afficher les interventions sur le server pas encore exporté</button>
+            </div>
         <!-- Ajouter un séparateur horizontal -->
         <hr>
 
-        <h2>Supprimer un lieu</h2>
-        <ul id="lieux-list"></ul>
 
-        
-        <select id="lieuxDropdown"></select>
-        
-        <button onclick="supprimerLieu()">Supprimer Lieu personnalisé</button>
-        <hr>
         <h2>Désactiver la tabulation automatique</h2>
 <label class="switch">
   <input type="checkbox" id="tabulSlider" onchange="toggleTabul()">
@@ -166,8 +181,8 @@
  <hr>
         <h2>Choisir un thème</h2>
 <div style="display: flex; justify-content: center;">
-    <button onclick="changerTheme('style')" style="margin-right: 10px; background-color: #888 !important; padding: 5px 10px; border: none; color: #fff; cursor: pointer;">Thème Claire</button>
-    <button onclick="changerTheme('style-neo')" style="background-color: #111 !important; padding: 5px 10px; border: none; cursor: pointer; color: #fff;">Thème Sombre</button>
+    <button onclick="changerTheme('style')" style="display: none !important; margin-right: 10px; background-color: #888 !important; padding: 5px 10px; border: none; color: #fff; cursor: pointer;">Thème Claire</button>
+    <button onclick="changerTheme('style-neo')" style=" display: none !important; background-color: #111 !important; padding: 5px 10px; border: none; cursor: pointer; color: #fff;">Thème Sombre</button>
 </div>
 
 
@@ -200,9 +215,12 @@
 <script src="Lieu.js"></script>
 <script src="Cookies.js"></script>
 <script src="Script.js"></script>
-<script src="Script2.js"></script>
-<script src="ChargerLieu.js"></script>
+<script src="GestionIframe.js"></script>
+<script src="Préconf.js"></script>
+<script src="ModalArbre.js"></script>
+<script src="AffichageEtGestionLieu.js"></script>
+<script src="GestCSV.js"></script>
+<script src="GestionInterSauvegarde.js"></script>
 
 </html>
-
 
