@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premier Test</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Press Start 2P', cursive;
+            background-color: #000;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .header-bar {
+            width: 100%;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 20px 0;
+            font-size: 30px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            z-index: 1; /* S'assure que le header reste au-dessus */
+            position: relative;
+        }
+
+        .content {
+            position: relative;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            z-index: 0; /* Place le contenu en dessous du header */
+        }
+
+        .content img, .content  {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            image-rendering: pixelated;
+        }
+
+       .yellow-box {
+            position: absolute;
+            top: 80px;
+            left: 20px;
+
+            object-fit: cover;
+            image-rendering: pixelated;
+        }
+        .yellow-box {
+            width: 200px;
+            height: 200px;
+            border: 8px solid yellow;
+            display: none;
+            z-index: 3; /* Au-dessus du GIF et de l'image PNG */
+        }
+
+        .overlay-text {
+            position: absolute;
+            color: white;
+            font-size: 30px;
+            top: 120px;
+
+            transform: translate(0%, -50%);
+            z-index: 2; /* Assure que le texte est devant l'image */
+        }
+
+        #scene-gif {
+            z-index: 1; /* L'image GIF est derrière */
+        }
+
+        #scene-png {
+            display: none;
+            z-index: 2; /* L'image PNG est devant le GIF mais derrière le texte */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-bar" id="header-text">
+        Allons-y pour un second
+    </div>
+
+    <div class="content">
+        <img src="Salle.png" alt="Salle" id="scene-image">
+        <img src="FILM1.gif" alt="Film1 GIF" id="scene-gif" style="display:none;">
+        <img src="FILM1.png" alt="Film1 PNG" id="scene-png">
+        <div class="yellow-box" id="yellow-box"></div>
+        <div class="overlay-text">Appuyez sur A pour commencer <br> avec une scéne d'HARRY POTTER </div>
+    </div>
+
+    <script>
+        let currentScene = 'SALLE';
+        let aPressedAfterB = false;
+
+document.addEventListener('keydown', function(event) {
+    const sceneGif = document.getElementById('scene-gif');
+    const scenePng = document.getElementById('scene-png');
+    const overlayText = document.querySelector('.overlay-text');
+    const yellowBox = document.getElementById('yellow-box');
+    const headerText = document.getElementById('header-text'); // Sélectionne la barre d'en-tête
+
+    if (event.key === 'a' || event.key === 'A') {
+        if (currentScene === 'SALLE') {
+            sceneGif.style.display = 'block'; // Affiche le GIF
+            overlayText.textContent = 'Appuyez sur B pour continuer';
+            currentScene = 'GIF'; // Mise à jour de l'état
+        } else if (currentScene === 'GIF') {
+            // Prépare à la prochaine scène
+            currentScene = 'AFTER_GIF';
+        } else if (currentScene === 'AFTER_GIF' && aPressedAfterB) {
+            overlayText.textContent = 'Bien joué ! On continue';
+            yellowBox.style.display = 'none';
+            currentScene = 'FINAL_MESSAGE'; // Mise à jour de l'état
+        } else if (currentScene === 'FINAL_MESSAGE') {
+            window.location.href = 'index2.html'; // Redirige vers la prochaine page
+        }
+    } else if (event.key === 'b' || event.key === 'B') {
+        if (currentScene === 'GIF') {
+            sceneGif.style.display = 'none'; // Masque le GIF
+            scenePng.style.display = 'block'; // Affiche l'image PNG
+            yellowBox.style.display = 'block'; // Affiche le carré jaune
+            overlayText.textContent = 'Déplacez le carré avec les flèches';
+            headerText.textContent = 'Appuyez sur A pour continuer'; // Change le texte de la barre d'en-tête
+            currentScene = 'AFTER_GIF'; // Mise à jour de l'état
+            aPressedAfterB = true;
+        }
+    } else if (currentScene === 'AFTER_GIF') {
+        moveYellowBox(event, yellowBox);
+    }
+});
+
+
+
+        function moveYellowBox(event, yellowBox) {
+            const step = 20; // Distance de déplacement à chaque pression de touche
+
+            const currentPosition = yellowBox.getBoundingClientRect();
+            const content = document.querySelector('.content');
+
+            switch (event.key) {
+                case 'ArrowUp':
+                    if (currentPosition.top > 0) {
+                        yellowBox.style.top = `${currentPosition.top - step}px`;
+                    }
+                    break;
+                case 'ArrowDown':
+                    if (currentPosition.bottom < content.clientHeight) {
+                        yellowBox.style.top = `${currentPosition.top + step}px`;
+                    }
+                    break;
+                case 'ArrowLeft':
+                    if (currentPosition.left > 0) {
+                        yellowBox.style.left = `${currentPosition.left - step}px`;
+                    }
+                    break;
+                case 'ArrowRight':
+                    if (currentPosition.right < content.clientWidth) {
+                        yellowBox.style.left = `${currentPosition.left + step}px`;
+                    }
+                    break;
+            }
+        }
+    </script>
+
+</body>
+</html>

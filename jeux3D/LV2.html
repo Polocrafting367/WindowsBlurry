@@ -1,0 +1,136 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+    <style>
+body {
+    font-family: 'Press Start 2P', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #FFFFFF;
+    font-size: 30px;
+     /* Pour rendre les images pixelisées */
+
+}
+
+.game-container {
+    width: 1024px;
+    height: 960px;
+    box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #dfdfdf, inset -2px -2px grey, inset 2px 2px #fff;
+    background: #008080;
+    padding: 3px;
+    box-sizing: border-box;
+    transform-origin: top left;
+    background-image: url('Employeur.png'); /* Chemin vers l'image de fond */
+    background-size: 1024px 960px; /* Agrandit l'image pour qu'elle couvre toute la div */
+    background-position: center; /* L'image est centrée dans la div */
+    background-repeat: no-repeat; /* L'image ne se répète pas */
+    image-rendering: pixelated; /* Maintient l'image nette même lorsqu'elle est agrandie */
+    overflow: hidden;
+}
+
+
+
+
+#dialogue {
+    margin: 10px;
+    
+}
+
+#choices {
+    margin-top: 10px;
+    
+}
+
+button {
+    width: calc(100% - 20px);
+    margin: 10px;
+    box-sizing: border-box;
+    border: none;
+        box-shadow: inset -4px -4px #fff, inset 4px 4px #0a0a0a, inset -8px -8px #dfdfdf, inset 8px 8px grey;
+
+    background: rgb(200, 200, 200);
+    border-radius: 0;
+    min-width: 75px;
+    min-height: 23px;
+    padding: 10 12px;
+    font-size: 30px;
+    font-family: 'Press Start 2P', sans-serif;
+}
+
+
+.selected {
+    outline: 4px solid blue; /* Ajoute une bordure jaune autour du bouton sélectionné */
+        box-shadow: inset -4px -4px #0a0a0a, inset 4px 4px #fff, inset -8px -8px grey, inset 8px 8px #dfdfdf;
+        background: rgb(200, 200, 250);
+
+
+}
+
+.window {
+    position: fixed;
+    width: 1000px;
+    box-shadow: inset -4px -4px #0a0a0a, inset 4px 4px #dfdfdf, inset -8px -8px grey, inset 8px 8px #fff;
+    background: silver;
+    padding: 9px;
+    bottom: 150px;
+    
+}
+
+.title-bar {
+    background: navy;
+    padding: 3px 2px 3px 3px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+}
+
+.title-bar-text {
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0;
+    margin-right: 24px;
+    font-size: 30px;
+    
+}
+
+.choices {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    
+}
+.window-body {
+padding: 10;
+    
+}
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="window">
+            <div class="title-bar">
+                <div class="title-bar-text">
+                    Manager
+                </div>
+                <div class="title-bar-controls">
+                </div>
+            </div>
+            <div class="window-body">
+                <div class="dialogue-box">
+                    <p id="dialogue"></p>
+                    <div id="choices"></div>
+                </div>
+                <div id="score">Score: <span id="score-value">0</span></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>

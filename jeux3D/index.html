@@ -1,0 +1,139 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jeu NES</title>
+</head>
+<body>
+
+    <div id="game-container">
+            <div id="game-bar">
+                <span id="text">Direction mon rendez-vous !</span>
+                <br>
+    <span id="timer">00:00</span>
+</div>
+        <div id="map"></div>
+        <div id="player"></div>
+    </div>
+    <script src="jeux.js"></script>
+<!-- Code injected by live-server -->
+<script type="text/javascript">
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function() {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					head.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					head.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function(msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			console.log('Live reload enabled.');
+		})();
+	}
+	// ]]>
+</script>
+</body>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+</html>
+<style> 
+    #game-bar {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 80px;
+    background-color: black;
+    color: white;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 30px;
+    text-align: center;
+    line-height: 40px;
+    z-index: 1000;
+        image-rendering: pixelated; /* Maintient l'image nette même lorsqu'elle est agrandie */
+
+}
+#player {
+    background-image: url("car_texture.png");
+    background-size: cover; /* Pour s'assurer que l'image couvre toute la taille du div */
+    width: 100px; /* Définir la largeur du joueur */
+    height: 100px; /* Définir la hauteur du joueur */
+    position: absolute; /* Pour pouvoir positionner le joueur sur la carte */
+        image-rendering: pixelated; /* Maintient l'image nette même lorsqu'elle est agrandie */
+
+}
+
+#game-container {
+    position: absolute;
+    top: 40px; /* Décalage pour laisser de la place à la barre */
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow: hidden;
+        image-rendering: pixelated; /* Maintient l'image nette même lorsqu'elle est agrandie */
+
+}
+
+#map {
+    position: relative;
+        image-rendering: pixelated; /* Maintient l'image nette même lorsqu'elle est agrandie */
+
+}
+
+    body {
+    margin: 0;
+    overflow: hidden;
+}
+
+#game-container {
+    position: relative;
+    width: 1024px;
+    height: 960px;
+    margin: 0 auto;
+    border: 2px solid black;
+    background-color: #000;
+    overflow: hidden;
+}
+
+#map {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1600px; /* Largeur de la map complète */
+    height: 1200px; /* Hauteur de la map complète */
+}
+
+#map img {
+    position: absolute;
+    width: 100px; /* Taille des tuiles */
+    height: 100px; /* Taille des tuiles */
+}
+
+#player {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000; /* Au-dessus de la carte */
+}
+
+
+</style>
