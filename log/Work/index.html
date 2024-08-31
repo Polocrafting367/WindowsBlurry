@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="fr" translate="no">
+<head translate="no">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Interventions</title>
+   
+
+    <link id="themeLink" rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="logo-app.png">
+</head>
+<body>
+<div class="tab">
+    <div id="creerButton" class="tab-button" onclick="openTab('creer')">Ajouter</div>
+    <div id="ChronoButton" class="tab-button" onclick="openTab('Chrono')" annim="false">Chronos</div>
+    <div id="interventionsButton" class="tab-button" onclick="openTab('interventions')">Inters.</div>
+    <div id="parametresButton" class="tab-button" onclick="openTab('parametres')">Réglages</div>
+
+
+</div>
+
+<div id="creerTab" class="tabcontent">
+    <!-- Contenu de l'onglet "Créer" -->
+    <div class="container">
+        <h1>Choix du Lieu, Machine</h1>
+<div id="rech">
+    <input type="text" id="searchInput" placeholder="Rechercher un lieu..." oninput="searchLieu()">
+    <button id="clearButton" style="display: none;" onclick="clearSearchInput()">✖</button>
+</div>
+
+
+        <ul id="lieux-list" class="lieux-list"></ul>
+    </div>
+</div>
+
+<div id="ChronoTab" class="tabcontent">
+
+    <!-- Contenu de l'onglet "Chrono" -->
+    <div class="container">
+        <div id="chronosContainer"></div>
+    </div>
+
+
+<div id="modifierLieuModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="fermerModalModifierLieu()">&times;</span>
+        <h2>Choisir un nouveau lieu</h2>
+        
+        <!-- Zone de recherche -->
+        <div id="rech">
+            <input type="text" id="searchInput2" placeholder="Rechercher un lieu..." oninput="searchLieu2()">
+            <button id="clearButton2" style="display: none;" onclick="clearSearchInput2()">✖</button>
+        </div>
+        
+        <!-- Liste des lieux -->
+        <ul id="arborescenceLieux"></ul>
+    </div>
+</div>
+
+
+</div>
+
+
+
+
+
+<style>
+        /* Styles pour le fond gris semi-transparent */
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Fond gris semi-transparent */
+            z-index: 1;
+        }
+#TUTORIEL {
+    height: 70vw ; /* Calcul de la hauteur en fonction du ratio 16:9 */
+    max-width: 100%; /* Pour éviter que la largeur ne dépasse la largeur du contenu parent */
+    max-height: 370px; /* Pour éviter que la hauteur ne dépasse la hauteur du contenu parent */
+}
+    #themeButtons {
+        text-align: center;  /* Aligner les boutons au centre de la div */
+    }
+
+    #themeButtons button {
+        display: inline-block;  /* Afficher les boutons en ligne */
+        margin-right: 10px;  /* Espacement entre les boutons */
+    }
+            </style>
+
+            <div id="overlay"></div>
+
+<!-- Structure de la modal -->
+<div id="tutorialModal" class="modal" style="display: none;">
+    <div class="modal-content">
+           <h2>Comment fonctionne le site web</h2>
+        <div id="carousel">
+            <div class="iframe-container" id="iframeContainer"></div>
+
+        </div>
+
+<hr>
+        <!-- Notification sur l'utilisation des cookies -->
+        <div class="cookie-notification">
+            <p>Ce site utilise des cookies pour stocké les crhono, ils ne sont donc accesible que sur un appareil à la fois, cependant, après l'exportations, ils seront stocké en dehors du téléphone et accésible sur nimporte quel appareil</p>
+
+
+        </div>
+
+        <!-- Bouton d'accès au site web -->
+        <button id="accessButton" class="disabled-button" onclick="openWebsite()">Accéder au site web</button>
+    </div>
+           <h2>Choisir un thème</h2>
+    <div>
+        <hr>
+
+<div style="display: flex; justify-content: center;">
+    <button onclick="changerTheme('style')" style="margin-right: 10px; background-color: #888 !important; padding: 5px 10px; border: none; color: #fff; cursor: pointer;">Thème Claire</button>
+    <button onclick="changerTheme('style-neo')" style="background-color: #111 !important; padding: 5px 10px; border: none; cursor: pointer; color: #fff;">Thème Sombre</button>
+</div>
+
+        <!-- Ajouter un bouton "Supprimer Couleurs" -->
+        <button onclick="supprimerCouleurs()">Supprimer Couleurs</button>
+    </div>
+            <input type="range" id="colorSlider" min="0" max="360" step="1" value="0" onchange="changerCouleur(this.value)">
+</div>
+
+
+
+
+<div id="interventionsTab" class="tabcontent">
+    <!-- Contenu de l'onglet "Interventions" -->
+    <div class="container">
+        <div class="buttons-container">
+           <h1>Interventions</h1>
+            <div class="button-wrapper">
+                <button onclick="exportServ()"style="background-color: green;">Envoyer les intervention au server</button>
+            </div>
+
+        </div>
+
+        <div id="enregistrements"></div>
+
+
+
+    </div>
+</div>
+
+<div id="parametresTab" class="tabcontent">
+
+    <!-- Contenu de l'onglet "Paramètres" -->
+    <div class="container">
+        <div class="Paramètres">
+        <!-- Ajoutez le contenu des paramètres ici -->
+        <h1>Paramètres</h1>
+        <button onclick="showModal()">Tutoriel / Cookies</button>
+                <hr>
+        <h2>Bouton avancé  </h2>
+            <div class="button-wrapper">
+                <button onclick="exportToTxt()">Exporter en local les interventions (csv)</button>
+            </div>
+            <div class="button-wrapper">
+                <button id="dell" onclick="deleteCookies()">Supprimer toutes les intervention enregistré</button>
+
+            </div>
+                        <div class="button-wrapper">
+                <button style="display: none !important;" onclick="getInterventions()" >Afficher les interventions sur le server pas encore exporté</button>
+            </div>
+        <!-- Ajouter un séparateur horizontal -->
+        <hr>
+
+
+        <h2>Désactiver la tabulation automatique</h2>
+<label class="switch">
+  <input type="checkbox" id="tabulSlider" onchange="toggleTabul()">
+  <span class="slider round"></span>
+</label>
+ <hr>
+        <h2>Choisir un thème</h2>
+<div style="display: flex; justify-content: center;">
+    <button onclick="changerTheme('style')" style="display: none !important; margin-right: 10px; background-color: #888 !important; padding: 5px 10px; border: none; color: #fff; cursor: pointer;">Thème Claire</button>
+    <button onclick="changerTheme('style-neo')" style=" display: none !important; background-color: #111 !important; padding: 5px 10px; border: none; cursor: pointer; color: #fff;">Thème Sombre</button>
+</div>
+
+
+       
+    <button onclick="supprimerCouleurs()">Supprimer Couleurs</button>
+
+            <input type="range" id="colorSlider" min="0" max="360" step="1" value="0" onchange="changerCouleur(this.value)">
+
+        <!-- Ajouter un séparateur horizontal -->
+        <hr>
+        <button id="dell" onclick="supprimerchronos()">Stopper et réinitialier tout les chronos</button>
+        <button id="dellHARD" onclick="supprimerchronosHARD()">Stopper et réinitialier tout les chronos HARD</button>
+        <hr>
+        <!-- Ajoutez ce bouton à l'endroit souhaité dans votre page HTML -->
+        <button id="dell" onclick="supprimerTousLesCookies()">Supprimer tous les cookies</button>
+
+
+        <h2>Créé par Polocrafting début 2024</h2>
+    </div>
+</div>
+</div>
+
+
+
+
+
+</body>
+<script src="unorm.js"></script>
+<script src="style.js"></script>
+<script src="Lieu.js"></script>
+<script src="Cookies.js"></script>
+<script src="Script.js"></script>
+<script src="GestionIframe.js"></script>
+<script src="Préconf.js"></script>
+<script src="ModalArbre.js"></script>
+<script src="AffichageEtGestionLieu.js"></script>
+<script src="GestCSV.js"></script>
+<script src="GestionInterSauvegarde.js"></script>
+
+</html>
+
