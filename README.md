@@ -5,7 +5,7 @@ Pannel de touts mes projets d'on l'un de mes favoris "windows blurry" mais aussi
 
 À visualiser en ligne à cette adresse : [Polocrafting.fr](https://polocrafting.fr/)
 
-ou sur github : [polocrafting367.github](https://polocrafting367.github.io/)
+ou sur github : [polocrafting367.github](https://polocrafting367.github.io/WindowsBlurry-1/)
 
 ou sur google lol : [sites.google.com](https://sites.google.com/view/polocrafting/blurry-windows)
 
