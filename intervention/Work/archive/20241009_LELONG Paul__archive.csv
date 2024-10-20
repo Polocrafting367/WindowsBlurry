@@ -1,0 +1,12 @@
+﻿Date intervention;Désignation machine;Type de panne;Cause;Résumé intervention;Durée arrêt (h);Personnel;Nombre d'heures;Heure de fin;
+20241004;Cercleuse couverture;Plus de consommable;Plus de bobine;Changement rouleau;0.08333333333333333;LELONG Paul;0.113;12:23:52
+20241004;Engageuse GP;Electrique;Autre;Armoire électrique surchauffe et réglage pour programme draps neuf;0.5;LELONG Paul;0.334;12:24:51
+20241004;Cercleuse automatique éponges;Bobine emmêlée/coincée;Bobine emmêlée/coincée;F01;0.08333333333333333;LELONG Paul;0.050;12:24:57
+20241004;Essoreuse kannegiesser;Alarme;Poussière / Salissure;Nettoyage cellule défaut linge non tombé;0.08333333333333333;LELONG Paul;0.126;12:25:21
+20241004;Étiqueteuse VT;Plus de consommable;Plus d'encre;Changement rouleau d'encre;0.08333333333333333;LELONG Paul;0.050;12:25:27
+20241004;Engageuse GP;Electrique;Autre;Armoire électrique surchauffe et réglage pour programme draps neuf;0.5;ROBIN Denis;0.667;12:24:51
+20241004;Engageuse GP;Electrique;Autre;Armoire électrique surchauffe et réglage pour programme draps neuf;0.5;PERDRIAT Sébastien;0.667;12:24:51
+20241004;Filmeuse PP VT;Bourrage;Autre;Vt coincé entré;0.03333333333333333;LELONG Paul;0.034;12:27:13
+20241004;G - Convoyeur à rouleaux d'angle avec centreur;Bourrage de linge;Arrêt d'urgence;Bourrage de linge suite a un arrêt d'urgence;0.03333333333333333;LELONG Paul;0.086;12:28:48
+20241004;Plieuse VT 2;Bourrage de linge;Autre;Chemise bloqué sous Assesseurs;0;LELONG Paul;0.084;13:11:29
+20241004;Nappe Résident;Sling bloqué;Autre;Sling bloqué avant MLA1;0;LELONG Paul;0.050;13:12:02

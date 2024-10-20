@@ -1,0 +1,22 @@
+﻿Date intervention;Désignation machine;Type de panne;Cause;Résumé intervention;Durée arrêt (h);Personnel;Nombre d'heures;Heure de fin;
+20240902;Étiqueteuse VT;Mécanique;Autre;Support chute rouleau étiquettes dévissé;0.133;LELONG Paul;0.017;12:12:47
+20240902;Plieuse napkin résident;Mécanique;Autre;Poste 4 vis desseré bloquant l'empilage;0.083;LELONG Paul;0.017;13:46:07
+20240902;4 Expedition;Informatique;Manque de formation du personnel;Scanner mal démarré;0.000;LELONG Paul;0.017;13:46:37
+20240902;Tapis derrière alvéoles 12;Bourrage de linge;Autre;Couverture bloqué entre tapis;0.167;LELONG Paul;0.017;13:47:55
+20240902;Filmeuse PP VT;Film déchiré ou cassé;Fil coupé;Film arraché haut et bas;0.000;LELONG Paul;0.017;13:48:14
+20240905;Ligne de tri système Métricon;Informatique;Autre;Ordinateur MCPC perdu l'heure, retour en 1980.
+Mise sur cintre 4 non fonctionnel du a ça.
+Redémarrage pc MCPC pour remise a l'heure, défaut sauvegarde. Perte de tout les vêtements après redémarrage. Restauration et test, a suivre;0.33;LELONG Paul;2.00;12:59:45
+20240905;Ligne de tri système Métricon;Informatique;Autre;Ordinateur MCPC perdu l'heure, retour en 1980.
+Mise sur cintre 4 non fonctionnel du a ça.
+Redémarrage pc MCPC pour remise a l'heure, défaut sauvegarde. Perte de tout les vêtements après redémarrage. Restauration et test, a suivre;0.33;BERNARD Julien;0.02;12:59:45
+20240905;Ligne de tri système Métricon;Informatique;Autre;Ordinateur MCPC perdu l'heure, retour en 1980.
+Mise sur cintre 4 non fonctionnel du a ça.
+Redémarrage pc MCPC pour remise a l'heure, défaut sauvegarde. Perte de tout les vêtements après redémarrage. Restauration et test, a suivre;0.33;PICOCHE Jordan;0.02;12:59:45
+20240905;M27.1 (stockage cintres vide);Cintres coincés;Cintres croisés;Cintre croisé;0.17;LELONG Paul;0.02;13:02:21
+20240905;Plieuse VT 2;Mauvais pliage / Pas de pliage;Poussière / Salissure;Soufflage rapide;0.00;LELONG Paul;0.02;13:03:06
+20240906;Cercleuse automatique GP;Bobine emmêlée/coincée;Bobine emmêlée/coincée;F03;0.08;LELONG Paul;0.02;08:23:36
+20240906;Plieuse VT 2;Alarme;Autre;Vêtements non vue par prod dans plieuses;0.00;LELONG Paul;0.02;08:24:45
+20240906;Séchoir industriel n°1;Bourrage de linge;Bourrage linge;Tambour rotation;0.00;LELONG Paul;0.02;08:25:26
+20240906;Nappe Résident;Sling bloqué;Sling en travers;Sling de travers lu1;0.00;LELONG Paul;0.02;08:25:50
+20240906;Ligne petit plat;Bourrage de linge;Autre;Bourrage;0.00;LELONG Paul;0.02;08:27:18

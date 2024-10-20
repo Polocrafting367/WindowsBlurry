@@ -1,0 +1,21 @@
+RewriteEngine On
+RewriteBase /
+
+# Redirection vers HTTPS
+RewriteCond %{HTTPS} !=on
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+Redirect 301 /Accueil https://polocrafting.fr/
+RewriteCond %{REQUEST_URI} ^/Accueil [NC]
+RewriteRule ^.*$ https://polocrafting.fr/ [L,R=301]
+
+
+# Si le fichier ou le répertoire n'existe pas, rediriger vers la page d'erreur 404
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^.*$ /index.html?Text=404 [L,R=302]
+
+# Gérer les erreurs 404 proprement
+ErrorDocument 404 /index.html?Text=404
+
+

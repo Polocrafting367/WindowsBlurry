@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galerie d'images</title>
+    <style>
+img {
+    height: 200px; /* Fixez une hauteur spécifique, ajustez selon vos besoins */
+    width: auto; /* La largeur s'ajustera automatiquement */
+    object-fit: cover; /* Permet de recadrer l'image si nécessaire */
+    box-shadow: 5px 5px 10px black;
+    filter: drop-shadow(5px 5px 10px black);
+    margin: 7px;
+    padding: 7px;
+    border-radius: 40px;
+    background-color: rgba(255, 255, 255, 0.4);
+}
+
+
+        img:active,
+        img:hover {
+            transform: scale(1.07);
+            border-radius: 0px;
+            opacity: 1;
+            transition: all 2s ease-in-out;
+            padding: 0px;
+            margin: 14px;
+            background-color: rgba(255,255,255,1);
+        }
+
+        img:not(:focus) {
+            transition: all .2s ease-in-out;
+        }
+
+        div {
+            display: wrap;
+            flex-wrap: wrap;
+            text-align: center;
+        }
+
+        body {
+            background-color: rgba(100,100,100,1);
+        }
+
+        .fullscreen-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+        }
+
+        .fullscreen-overlay img {
+            width: 85%;
+            height: 85%;
+            object-fit: contain;
+            border-radius: 40px;
+            margin: auto;
+            cursor: pointer;
+        }
+
+        .top-bar {
+            background-color: black;
+            color: white;
+            text-align: center;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <p>Cliquez sur les images pour les afficher en grand</p>
+    </div>
+
+    <div id="image-gallery"></div>
+
+    <script>
+        // Fonction pour charger dynamiquement les images
+        function loadImages() {
+            console.log("appel à php")
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', 'index.php', true);
+            xhr.onload = function() {
+                if (this.status === 200) {
+                    document.getElementById('image-gallery').innerHTML = this.responseText;
+
+                    // Ajoute des console.log pour vérifier les images chargées
+                    const images = document.querySelectorAll('#image-gallery img');
+                    images.forEach(img => {
+                        console.log("Image source:", img.src);
+                        console.log("Image filename:", img.getAttribute('data-filename'));
+                    });
+                } else {
+                    console.log('Erreur lors du chargement des images');
+                }
+            };
+            xhr.send();
+        }
+
+        // Charger les images à l'ouverture de la page
+        window.onload = loadImages;
+
+        function fullscreen(img) {
+            console.log("Affichage en plein écran pour:", img.getAttribute('data-filename'));
+
+            const overlay = document.createElement("div");
+            overlay.classList.add("fullscreen-overlay");
+            overlay.onclick = () => {
+                document.body.removeChild(overlay);
+                document.body.style.overflow = "auto";
+            };
+            const imgClone = img.cloneNode();
+            overlay.appendChild(imgClone);
+            document.body.appendChild(overlay);
+
+            // Désactiver le scroll sur le body lorsque l'image est en plein écran
+            document.body.style.overflow = "hidden";
+        }
+    </script>
+</body>
+</html>

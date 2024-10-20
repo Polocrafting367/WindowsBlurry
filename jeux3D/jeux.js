@@ -370,6 +370,7 @@ function getTileImage(tile) {
         case 'b': return 'building_small.png';
         case 'A': return 'building_finish.png';
         case 'X': return '0.png';
+        case 'c': return 'T.jpg';
         default: return 'terrain.jpg';
     }
 }

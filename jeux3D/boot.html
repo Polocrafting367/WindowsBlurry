@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GIF en plein écran</title>
+    <style>
+        /* Style pour le corps de la page */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Style pour le GIF en plein écran */
+        #gif {
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            image-rendering: pixelated; /* Effet pixelisé */
+        }
+
+        /* Masquer le GIF après sa disparition */
+        #gif.hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <img src="intro.gif" id="gif" alt="GIF animé">
+
+    <script>
+        // Lorsque la page est complètement chargée
+        window.addEventListener('load', function() {
+            var gif = document.getElementById('gif');
+
+            // Attendre 3.3 secondes avant de rediriger vers start.html
+            setTimeout(function() {
+                // Rediriger vers start.html
+                window.location.href = "start.html";
+            }, 5000); // 3300 millisecondes = 3.3 secondes
+        });
+    </script>
+
+</body>
+</html>

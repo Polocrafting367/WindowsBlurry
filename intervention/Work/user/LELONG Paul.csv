@@ -1,0 +1,10 @@
+﻿Date intervention;Désignation machine;Type de panne;Cause;Résumé intervention;Durée arrêt (h);Personnel;Nombre d'heures;Heure de fin;
+20241009;Essoreuse kannegiesser;Electrique;Poussière / Salissure;Nettoyage cellule + petit saleté devant cellule gauche;0;LELONG Paul;0.275;18:52:27
+20241009;Filmeuse PP VT;Plus de consommable;Plus de film;Changement rouleau film Bas;0.08333333333333333;LELONG Paul;0.088;18:53:15
+20241009;Essoreuse kannegiesser;Electrique;Poussière / Salissure;Nettoyage cellule + petit saleté devant cellule gauche;0;PERDRIAT Sébastien;0.275;18:52:27
+20241009;Filmeuse PP VT;Plus de consommable;Plus de film;Changement rouleau film Bas;0.08333333333333333;PERDRIAT Sébastien;0.088;18:53:15
+20241009;Plieuse VT 2;Mécanique;Usures matériels;Changement Turbine + surveillance;2.25;PERDRIAT Sébastien;3.006;18:56:59
+20241009;Plieuse VT 2;Mécanique;Usures matériels;Changement Turbine + surveillance;2.25;LELONG Paul;2.506;18:56:59
+20241010;SRS 31 (stockage avant DU6);Mécanique;Usures matériels;Découpe buté trolley;0;LELONG Paul;0.414;11:46:13
+20241010;SRS 31 (stockage avant DU6);Mécanique;Usures matériels;Découpe buté trolley;0;PERDRIAT Sébastien;0.414;11:46:13
+20241010;Empileur max twin stacker;Bourrage de linge;Autre;Alèses bourré devant cellule empileur 2;0;LELONG Paul;0.117;11:47:29

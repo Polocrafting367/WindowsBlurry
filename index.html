@@ -1,1 +1,201 @@
-<script>window.location.href = "Boot/bios.html";</script>
+<!DOCTYPE html>
+<html lang="fr">
+
+</body>
+<nav>
+    <ul>
+        <li><a href="/Annexe/index.html">Projets</a></li>
+        <li><a href="/jeux3D/index.html">Jeux NES</a></li>
+        <li><a href="/Boot/boot.html">Windows 367</a></li>
+        <li><a href="/intervention/index.html">Intervention</a></li>
+        <li><a href="/Annexe/Blog/index.html">Intervention</a></li>
+    </ul>
+</nav>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Bienvenue</title>
+    <meta name="description" content="Bienvenue sur mon site ! Découvrez mes projets, Comme Windows 367, des deux et plus encore. Explorez mes créations !">
+    <link rel="icon" type="image/png" href="favicon.ico">
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+
+
+
+<div class="windowsett" id="window4" style="display: block;">
+    <div class="windowsett-top">
+        <div id="titrefn" class="welcome-title">Site web de polocrafting</div>
+    </div>
+    <div class="close" onclick="">
+        <div class="line"></div>
+        <div class="line"></div>
+    </div>
+    <div class="windowsett-if">
+  <iframe src="LV.html" class="iframe-droite"></iframe>
+</div>
+
+            <div class="windowsett-content">
+                           <div class="réseau">
+            <a href="https://www.youtube.com/channel/UCTL3fXI8aZnYweRvys6m2bA" target="_blank" class="RNpQXe" >
+                <img src="YouTube.png" alt="YouTube" class="xbGufb" ></a>
+            <a href="https://www.google.com/url?q=https%3A%2F%2Fdiscord.gg%2FuBKuBYY&amp;sa=D&amp;sntz=1&amp;usg=AOvVaw303qKRwkNg8kD_ihH23bfc" target="_blank" class="RNpQXe" >
+                <img src="dd.png" alt="Lien" class="xbGufb" ></a>
+            <a href="https://www.google.com/url?q=https%3A%2F%2Fwww.tiktok.com%2F%40polocrafting&amp;sa=D&amp;sntz=1&amp;usg=AOvVaw2FeIl4MW5_DeThDjy93FLU" target="_blank" class="RNpQXe" >
+                <img src="tik.png" alt="TikTok" class="xbGufb" ></a>
+            <a href="https://www.google.com/url?q=https%3A%2F%2Fwww.twitch.tv%2FPVictimi&amp;sa=D&amp;sntz=1&amp;usg=AOvVaw3maAtXRURskjy53D3wcSUb" target="_blank" class="RNpQXe" >
+                <img src="twitch.png" alt="Lien" class="xbGufb" ></a>
+            <a href="https://github.com/Polocrafting367" target="_blank" class="RNpQXe" >
+                <img src="Git.png" alt="Lien" class="xbGufb" ></a>
+        </div>
+        <p id="messagefn"></p>
+
+    </div>
+</div>
+
+
+<div class="window" id="window1" style="display: block;">
+    <div class="window-header">
+        <div id="titrefn">Mes projets</div>
+    </div>
+    <div class="close" onclick="">          
+        <div class="line"></div>
+        <div class="line"></div>
+    </div>
+    <div class="window-content">
+        <iframe src="Galerie.html" class="transparent-iframe" style="width: 99.5%; height: 99.5%;"></iframe>
+    </div>
+</div>
+
+<div class="bggene" id="window5" style="display: block;">
+    <div class="bggene-top">
+        <div id="titrefn">Windows 367</div>
+    </div>
+    <div class="close" onclick="closeBG()">Ouvrir</div>
+    <div class="bggene-content">
+        <iframe src="Boot/bios.html" class="transparent-iframe" style="width: 99%; height: 99.5%;"></iframe>
+    </div>
+</div>
+
+
+
+<div class="window2" id="window3" style="display: block;">
+    <div class="window2-header">
+        <div id="titrefn">Jeux NES</div>
+    </div>
+    <div class="close" onclick="">Ouvrir</div>
+    <div class="window2-content">
+        <iframe src="jeux3D/index.html" class="transparent-iframe" style="width: 99%; height: 99.5%;"></iframe>
+    </div>
+</div>
+
+
+
+</div>
+
+    <canvas id="defaultCanvas0" class="p5Canvas"></canvas>
+<iframe id="backgg" src="bgOK.html" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; border: none;"></iframe>
+
+<script src="script.js"></script>
+<script>
+
+
+window.onload = function() {
+    // Récupérer l'URL actuelle
+    const currentUrl = new URL(window.location.href);
+    
+    // Extraire le paramètre 'inter' de l'URL
+    const params = new URLSearchParams(currentUrl.search);
+    const interLieu = params.get('inter');
+    
+    // Logique pour rediriger l'utilisateur vers la page correcte
+if (interLieu) {
+        // Si 'inter' est présent mais pas AUTOUSER, rediriger vers la page avec 'inter'
+        window.location.href = `intervention/?&inter=${interLieu}`;
+    } 
+    // Optionnel : afficher un titre ou un message après la redirection (si nécessaire)
+    displayTitleAndMessage();
+};
+
+
+
+function displayTitleAndMessage() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const textParam = urlParams.get('Text');
+    const repParam = urlParams.get('Rep');
+    const titleElement = document.getElementById('titrefn');
+    const messageElement = document.getElementById('messagefn');
+    const bgg = document.getElementById('backgg');
+    const bodyElement = document.body;
+
+if (textParam === "404") {
+    // Mise à jour pour le titre et le message en cas d'erreur 404
+    titleElement.textContent = "Erreur 404";
+    messageElement.innerHTML = "Le Fichier est introuvable ou incorrect";
+    
+    // Rendre le texte en gras
+    titleElement.style.fontWeight = 'bold';
+    messageElement.style.fontWeight = 'bold';
+    
+    messageElement.style.color = 'pink'; 
+    messageElement.innerHTML += '<br>' + titleElement.textContent;
+    bgg.src = 'bgE.html';
+        history.pushState({}, '', '404');
+
+
+    // Changer le fond du body pour un dégradé rouge
+} else if (textParam) {
+    // Si textParam a une valeur autre que 404
+    titleElement.textContent = repParam;
+    messageElement.innerHTML = textParam;
+    
+    // Rendre le texte en gras
+    titleElement.style.fontWeight = 'bold';
+    messageElement.style.fontWeight = 'bold';
+    
+    messageElement.style.color = 'White'; 
+    messageElement.innerHTML += '<br>' + titleElement.textContent;
+    bgg.src = 'bgP.html';
+        history.pushState({}, '', '/');
+
+
+    
+} else {
+    // Message de bienvenue par défaut
+    titleElement.textContent = 'Trouvez en dessous mes projets.';
+    messageElement.innerHTML = 'Bienvenue sur mon site !';
+        
+    // Rendre le texte en gras
+    titleElement.style.fontWeight = 'bold';
+    messageElement.style.fontWeight = 'bold';
+    
+    titleElement.style.color = 'white';
+    bgg.src = 'bgOK.html';
+    messageElement.innerHTML += '<br>' + titleElement.textContent;
+    history.pushState({}, '', '/');
+}
+
+
+
+}
+
+
+
+        // Optionnel : Redimensionner automatiquement le canevas avec le redimensionnement de la fenêtre
+        window.addEventListener('resize', resizeCanvas);
+
+        function resizeCanvas() {
+            const canvas = document.getElementById('defaultCanvas0');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        // Initial resize pour prendre tout l'écran
+        resizeCanvas();
+</script>
+
+
+</body>
+</html>

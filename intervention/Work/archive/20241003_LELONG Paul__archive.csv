@@ -1,0 +1,4 @@
+﻿Date intervention;Désignation machine;Type de panne;Cause;Résumé intervention;Durée arrêt (h);Personnel;Nombre d'heures;Heure de fin;
+20241003;Séchoir industriel n°1;Capteur;Capteur déréglé;Air cl;0.08333333333333333;LELONG Paul;0.084;16:04:52
+20241003;Chargeur de sac (sling);Informatique;Autre;Chargeur perdu dans programme;0.08333333333333333;LELONG Paul;0.117;16:05:46
+20241003;Étiqueteuse VT;Qualité;Plus d'étiquette;Étiquette mal posé + surveillance;0.08333333333333333;LELONG Paul;0.252;16:06:03

@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="fr" translate="no">
+<head translate="no">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Interventions</title>
+   
+
+    <link id="themeLink" rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="logo-app.png">
+</head>
+<body>
+<div class="tab">
+    <div id="cameraButton" class="tab-button_u" onclick="openTab('camera')">📷</div>
+    <div class="tab_under">
+        <div id="creerButton" class="tab-button" onclick="openTab('creer')">Ajouter</div>
+        <div id="ChronoButton" class="tab-button" onclick="openTab('Chrono')" annim="false">Chronos</div>
+        <div id="interventionsButton" class="tab-button" onclick="openTab('interventions')">Inters.</div>
+    </div>
+</div>
+
+
+<div id="appTab" class="tabcontent">
+    <div class="container">
+        <div class="CamVisu">
+            <img src="Photo.jpg" alt="Camera QR" class="center-image">
+        </div>
+    </div>
+</div>
+
+
+<div id="impTab" class="tabcontent">
+    <div class="container">
+        <div class="CamVisu">
+            <img src="imp.png" alt="Camera QR" class="center-image">
+        </div>
+    </div>
+</div>
+
+
+<div id="EXPTab" class="tabcontent">
+      <div class="container">
+
+  <iframe src="Gest.html" style="height: 100% !important; width: 100%;"></iframe>
+          </div>
+
+</div>
+
+
+<div id="cameraTab" class="tabcontent">
+    <div class="container">
+        <div class="CamVisu">
+            <h1>Camera QR</h1>
+            <img src="Camera.png" alt="Camera QR" class="center-image">
+        </div>
+    </div>
+</div>
+
+
+<div id="creerTab" class="tabcontent">
+    <!-- Contenu de l'onglet "Créer" -->
+    <div class="container">
+        <h1>Choix du Lieu, Machine</h1>
+<div id="rech">
+    <input type="text" id="searchInput" placeholder="Rechercher un lieu..." oninput="searchLieu()">
+    <button id="clearButton" style="display: none;" onclick="clearSearchInput()">✖</button>
+</div>
+
+
+        <ul id="lieux-list" onclick="" class="lieux-list"></ul>
+    </div>
+</div>
+
+<div id="ChronoTab" class="tabcontent">
+
+    <!-- Contenu de l'onglet "Chrono" -->
+    <div class="container">
+        <div id="chronosContainer"></div>
+    </div>
+
+
+<div id="modifierLieuModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="fermerModalModifierLieu()">&times;</span>
+        <h2>Choisir un nouveau lieu</h2>
+        
+        <!-- Zone de recherche -->
+        <div id="rech">
+            <input type="text" id="searchInput2" placeholder="Rechercher un lieu..." oninput="searchLieu2()">
+            <button id="clearButton2" style="display: none;" onclick="clearSearchInput2()">✖</button>
+        </div>
+        
+        <!-- Liste des lieux -->
+        <ul id="arborescenceLieux"></ul>
+    </div>
+</div>
+
+
+</div>
+
+
+
+
+
+<style>
+        /* Styles pour le fond gris semi-transparent */
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Fond gris semi-transparent */
+            z-index: 1;
+        }
+#TUTORIEL {
+    height: 70vw ; /* Calcul de la hauteur en fonction du ratio 16:9 */
+    max-width: 100%; /* Pour éviter que la largeur ne dépasse la largeur du contenu parent */
+    max-height: 370px; /* Pour éviter que la hauteur ne dépasse la hauteur du contenu parent */
+}
+    #themeButtons {
+        text-align: center;  /* Aligner les boutons au centre de la div */
+    }
+
+    #themeButtons button {
+        display: inline-block;  /* Afficher les boutons en ligne */
+        margin-right: 10px;  /* Espacement entre les boutons */
+    }
+            </style>
+
+            <div id="overlay"></div>
+
+<!-- Structure de la modal -->
+<div id="tutorialModal" class="modal" style="display: none;">
+    <div class="modal-content">
+           <h2>Comment fonctionne le site web</h2>
+        <div id="carousel">
+            <div class="iframe-container" id="iframeContainer"></div>
+
+        </div>
+
+<hr>
+        <!-- Notification sur l'utilisation des cookies -->
+        <div class="cookie-notification">
+            <p>Ce site utilise des cookies pour stocké les crhono, ils ne sont donc accesible que sur un appareil à la fois, cependant, après l'exportations, ils seront stocké en dehors du téléphone et accésible sur nimporte quel appareil</p>
+
+
+        </div>
+
+        <!-- Bouton d'accès au site web -->
+        <button id="accessButton" class="button" onclick="openWebsite()">Accéder au site web</button>
+    </div>
+
+</div>
+
+
+
+
+<div id="interventionsTab" class="tabcontent">
+    <!-- Contenu de l'onglet "Interventions" -->
+    <div class="container">
+        <div class="buttons-container">
+           <h1>Interventions</h1>
+            <div class="button-wrapper">
+                <button onclick="exportServ()"style="background-color: green;">Envoyer les intervention au server</button>
+            </div>
+
+        </div>
+
+        <div id="enregistrements">
+            <div class="groupe-enregistrements" id="groupe-_6ek3q5piu"><h3>Tutoriel</h3><div class="AFregis">24/09/2024 - résumé de l'intervention<div style="display: flex; align-items: center;"><button class="button-supprimer" style="margin-right: 10px;">🗑️</button><span>01m 50s - Technicien ayant participé</span></div><div style="display: flex;"><button class="button-tech" style="margin-right: 5px;">+ Tech.</button><button class="button-restaurer" style="margin-right: 5px;">Restaurer</button></div></div></div>
+
+</div>
+
+    </div>
+</div>
+
+
+</div>
+</div>
+
+  <style>
+
+ .window {
+    position: absolute;
+    border: 3px solid black;
+    border-radius: 13px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    width: 93%;
+    z-index: 1000;
+    user-select: none;
+    bottom: 1%;
+    left: 50%;
+    transform: translate(-50%, 0);
+  }
+
+  .title-bar {
+    background-color: red;
+    color: white;
+    padding: 4px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    font-size: 15px;  }
+
+  .content {
+    padding: 5px;
+    font-size: 15px;
+  }
+
+  .button-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+  }
+
+  .btn {
+    padding: 4px 6px;
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 4px;
+  }
+
+  .btn:hover {
+    background-color: darkred;
+  }
+
+    .btn:disabled {
+    background-color: grey;
+  }
+  </style>
+
+
+<div class="window" id="window1">
+  <div class="title-bar">Tutoriel</div>
+  <div class="content" id="tutorialContent">Bienvenu sur "intervention"</div>
+  <div class="button-container">
+        <button class="btn" id="prevBtn" disabled>Précédent</button>
+
+    <button class="btn" id="nextBtn">Suivant</button>
+  </div>
+</div>
+
+
+
+<script>
+
+window.onload = function() {
+}
+
+
+    function autreFonction() {
+
+
+    }
+
+    // Tableau des étapes du tutoriel avec contenu et actions associées
+ const tutorialSteps = [
+  {
+    content: 'Bienvenue sur "intervention".<br><br>Les éléments à prendre en compte seront surlignés en orange ou rouge.<br><br>Cliquez sur Suivant pour commencer.',
+    action: null // Pas d'action pour la première étape
+  },
+{
+  content: "La page contient des onglets en haut permettant de se promener sur le site web",
+  action: () => {
+    // Récupérer le premier élément avec la classe 'tab'
+    const aff = document.getElementsByClassName('tab')[0]; // Accéder au premier élément 'tab'
+
+    // Récupérer les éléments par leur ID
+    const str1 = document.getElementById('creerButton');
+    const str2 = document.getElementById('ChronoButton');
+    const str3 = document.getElementById('interventionsButton');
+
+    // Appliquer les styles si l'élément existe
+    if (aff) {
+      aff.style.backgroundColor = 'Red'; // Appliquer la couleur rouge au premier 'tab'
+    }
+
+    if (str1) {
+      str1.style.backgroundColor = 'rgba(200,200,200,0.3)'; // Appliquer une couleur à 'creerButton'
+    }
+
+    if (str2) {
+      str2.style.backgroundColor = 'rgba(200,200,200,0.3)'; // Appliquer une couleur à 'ChronoButton'
+    }
+
+    if (str3) {
+      str3.style.backgroundColor = 'rgba(200,200,200,0.3)'; // Appliquer une couleur à 'interventionsButton'
+    }
+  }
+},
+{
+  content: "Étape 1 : Choix d'une machine ou d'un lieu.",
+  action: () => {
+
+    // Réinitialiser les styles appliqués précédemment
+    const aff = document.getElementsByClassName('tab')[0]; // Accéder au premier élément 'tab'
+
+    // Récupérer les éléments par leur ID
+    const str1 = document.getElementById('creerButton');
+    const str2 = document.getElementById('ChronoButton');
+    const str3 = document.getElementById('interventionsButton');
+
+    // Réinitialiser les styles si l'élément existe
+    if (aff) {
+      aff.style.backgroundColor = ''; // Réinitialiser la couleur de fond du 'tab' à son état par défaut
+    }
+
+    if (str1) {
+      str1.style.backgroundColor = ''; // Réinitialiser à l'état par défaut défini par le CSS
+    }
+
+    if (str2) {
+      str2.style.backgroundColor = ''; // Réinitialiser à l'état par défaut
+    }
+
+    if (str3) {
+      str3.style.backgroundColor = ''; // Réinitialiser à l'état par défaut
+    }
+        openTab('creer'); // Ouvrir l'onglet 'creer'
+  }
+},
+
+
+  {
+    content: "Cliquez sur un lieu pour le dérouler et ainsi découvrir les machines ou d'autres lieux.",
+    action: () => {
+      // Récupérer le premier élément avec la classe 'place-card level-0'
+      const aff = document.getElementsByClassName('place-card level-0')[1];
+      if (aff) {
+        aff.style.backgroundColor = 'orange'; // Changer la couleur de fond en orange
+      }
+    }
+  },
+  {
+    content: "Il est possible de chercher un lieu précis en cas de besoin",
+    action: () => {
+      // Réinitialiser la couleur de fond de l'élément précédent
+      const aff = document.getElementsByClassName('place-card level-0')[1];
+      if (aff) {
+        aff.style.backgroundColor = ''; // Réinitialiser la couleur de fond
+      }
+
+      // Récupérer l'input avec l'id 'searchInput'
+      const str = document.getElementById('searchInput');
+      if (str) {
+        str.style.backgroundColor = 'orange'; // Changer la couleur de fond en orange
+      }
+    }
+  },
+  {
+    content: "Une fois le lieu trouvé, créez une intervention en cliquant sur l'icône d'un chrono à la droite du lieu.",
+    action: () => {
+      // Réinitialiser la couleur de fond de l'élément précédent
+      const aff = document.getElementById('searchInput');   
+      if (aff) {
+        aff.style.backgroundColor = ''; // Réinitialiser la couleur de fond
+      }
+
+      // Récupérer l'élément avec l'id 'lancer-chrono-btn-Tutoriel'
+      const str = document.getElementById('lancer-chrono-btn-Tutoriel');
+      if (str) {
+        str.style.backgroundColor = 'orange'; // Exemple : changer la couleur de fond en orange
+      }
+    }
+  },
+  {
+  content: "Il est également possible de crée inter via QR code",
+  action:  () => {
+       const aff = document.getElementById('cameraButton');   
+      if (aff) {
+        aff.style.backgroundColor = 'orange'; // Réinitialiser la couleur de fond
+      }
+}
+},
+{
+  content: "Scanner le QRcode via la camera : <br>L'intervention ce lancera automatiquement",
+  action: () => {
+       const aff = document.getElementById('cameraButton');   
+      if (aff) {
+        aff.style.backgroundColor = ''; // Réinitialiser la couleur de fond
+      }
+    
+        openTab('camera'); // Ouvrir l'onglet 'creer'
+  }
+},
+  {
+  content: "Il est possible de scanner ce même QRcode depuis l'aplication 'Appareil Photo' du téléphone, celui si renvera vers le site",
+  action: () => {
+
+    
+        openTab('app'); // Ouvrir l'onglet 'creer'
+  }
+},
+  {
+    content: "Étape 2 : Gestion de l'intervention",
+    action: () => { 
+ajouterTitreEtIframe('Tutoriel');
+ajouterTitreEtIframe('Lieu dit');
+ajouterTitreEtIframe('Secteur 2');
+OVC()}
+  },
+    {
+    content: "Un chonomètre est automatiquement lancé. <br><br> Vous trouverez 3 boutons en bas pour la gestion de l'intervention : <br>Annuler&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Pause&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Enregistrer",
+    action: null
+  },
+  {
+    content: "Vous trouverez tous les éléments pour créer convenablement une intervention, comme les éléments type, cause, résumer... <br><br> Vous pouvez soit cliquez dessus pour avoir la liste déroulante, soit directement chercher avec le clavier",
+    action: null
+  },
+{
+  content: "Le temps peut également être modifié avec le bouton suivant sur la page : <br><div id='buttonContainer'></div><br> Attention le temps doit être sous cette forme<br> 5j 23h 12m<br><br>on peut écrire dans n'importe quel sens en omettant certain élement mais on doit toujours avoir 'j', 'm', 's' pour signaler le temps voulu, par exemple <br> 3h 1j fonctionnera ",
+  action: () => {
+    const buttonContainer = document.getElementById('buttonContainer');
+    
+    // Créer un bouton dynamiquement
+    const button = document.createElement('button');
+    button.innerHTML = '🕔';
+    button.classList.add('modal-button');
+
+    // Appliquer des styles au bouton
+    button.style.backgroundColor = '#3498db';
+    button.style.color = '#fff';
+    button.style.border = 'none';
+    button.style.padding = '8px';
+    button.style.borderRadius = '8px';
+    button.style.cursor = 'pointer';
+    button.style.marginRight = '5px';
+    button.style.height = '40px';
+    button.style.width = '40px';
+    
+    // Ajouter le bouton dans le conteneur après les <br>
+    buttonContainer.appendChild(button);
+  }
+},
+
+  {
+    content: "Modification du lieu, le bouton 'modifier' permets la modification du lieu en cas d'erreur",
+    action: () =>{
+      // Réinitialiser la couleur de fond de l'élément précédent
+const aff = document.querySelector('.titre-lieu button');
+      if (aff) {
+        aff.style.backgroundColor = 'red'; // Réinitialiser la couleur de fond
+      }} // Il manque probablement une action ici, je l'ai laissée vide pour l'instant
+  },
+  {
+    content: "Après que tout les éléments soit bien remplis il est possible de l'enregistrer",
+    action: () => {
+const aff = document.querySelector('.titre-lieu button');
+      if (aff) {
+        aff.style.backgroundColor = ''; // Réinitialiser la couleur de fond
+      }} // Il manque probablement une action ici, je l'ai laissée vide pour l'instant
+    
+  },
+  {
+    content: 'Ici sont stocké temporairement sur le téléphone les interventions',
+    action:  () => {openTab('interventions')}
+  },
+   {
+    content: "Il est possible d'ajouter un thechnicien sur l'intervention, de réstoré sur le précédent écran l'intervention voir de la supprimer avec le thechnicien",
+    action:  null
+  },
+{
+  content: "à présent que toutes les interventions sont sauvegardées sur le téléphone (à la fin de journée par exemple) <br>Il n'y a plus qu'à envoyer les inters sur le serveur",
+  action: () => {
+    // Récupérer le premier élément avec la classe 'buttons-container'
+    const dfg = document.getElementsByClassName('buttons-container');
+    if (dfg.length > 0) {  // Vérifie s'il y a au moins un élément
+      dfg[0].style.backgroundColor = 'orange'; // Appliquer la couleur de fond à l'élément
+    } 
+  }
+},
+{
+  content: "Voila pour la partie intervention",
+  action: () => {
+    // Récupérer le premier élément avec la classe 'buttons-container'
+    const dfg = document.getElementsByClassName('buttons-container');
+    if (dfg.length > 0) {  // Vérifie s'il y a au moins un élément
+      dfg[0].style.backgroundColor = ''; // Appliquer la couleur de fond à l'élément
+    } 
+      const dfgdgf = document.getElementsByClassName('groupe-enregistrements');
+    if (dfgdgf.length > 0) {  // Vérifie s'il y a au moins un élément
+      dfgdgf[0].style.display = 'none'; // Appliquer la couleur de fond à l'élément
+    } 
+  }
+},
+{
+  content: "Maintenant connecté vous sur la session gestion",
+  action: () => {         // Ouvrir l'onglet 'creer'
+const dfg = document.getElementsByClassName('tab');
+for (let i = 0; i < dfg.length; i++) {
+    dfg[i].style.display = 'none';  // Applique le style 'display: none' à chaque élément
+}
+
+// Ensuite, vous pouvez appeler la fonction openTab avec le nom de l'onglet souhaité
+openTab('dsr');
+
+  }
+},
+{
+  content: "Maintenant connecté vous avez 2 obtion principal <br><br>Exportation = qui exporte les CSV pour ManageMaint 4<br><br>Accéder aux archives permettant d'acceder au archives ",
+  action: () => { 
+// Ensuite, vous pouvez appeler la fonction openTab avec le nom de l'onglet souhaité
+openTab('EXP');
+
+  }
+},
+{
+  content: "Sur cette même page plus bas ce trouvent des obtion pour crée des utilisateur ainsi que modifier leurs mots de passes"
+},
+{
+  content: "il ne reste plus qu'à importer le csv dans la gmao",
+  action: () => { 
+// Ensuite, vous pouvez appeler la fonction openTab avec le nom de l'onglet souhaité
+openTab('imp');
+
+  }
+},
+{
+    content: 'rendez vous page 284 pour plus d\'information sur la GMAO : <a href="https://as-informatique.com/pdf/notice_managemaint.pdf" target="_blank">https://as-informatique.com/pdf/notice_managemaint.pdf</a>',
+  action: () => {}
+},
+{
+  content: "Fin de la visite",
+  action: () => { 
+// Ensuite, vous pouvez appeler la fonction openTab avec le nom de l'onglet souhaité
+openTab('sdfsdf');
+
+  }
+},
+
+];
+
+
+    let currentStep = 0;
+
+    // Mettre à jour le contenu du tutoriel et exécuter l'action associée
+    function updateContent() {
+      const contentElement = document.getElementById('tutorialContent');
+      contentElement.innerHTML = tutorialSteps[currentStep].content;
+
+      // Exécuter l'action associée si elle existe
+      if (tutorialSteps[currentStep].action) {
+        tutorialSteps[currentStep].action();
+      }
+
+      // Gérer l'état des boutons
+      document.getElementById('prevBtn').disabled = currentStep === 0;
+      document.getElementById('nextBtn').disabled = currentStep === tutorialSteps.length - 1;
+    }
+
+    // Écouteurs pour les boutons "Précédent" et "Suivant"
+    document.getElementById('prevBtn').addEventListener('click', () => {
+      if (currentStep > 0) {
+        currentStep--;
+        updateContent();
+      }
+    });
+
+    document.getElementById('nextBtn').addEventListener('click', () => {
+      if (currentStep < tutorialSteps.length - 1) {
+        currentStep++;
+        updateContent();
+      }
+    });
+
+    // Initialisation du contenu au chargement de la page
+    updateContent();
+
+
+function OVC() {
+
+
+
+    openTab('Chrono')
+
+}
+
+</script>
+
+
+</body>
+<script src="Lieu.js"></script>
+<script src="GestionIframe.js"></script>
+
+
+</html>
+

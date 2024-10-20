@@ -1,0 +1,24 @@
+body {
+    margin: 0;
+    overflow: hidden;
+    background: linear-gradient(to bottom, #87CEEB, #1E90FF); /* Dégradé de bleu clair à bleu plus foncé */
+}
+
+
+#blocker {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
+#instructions {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    top: 50%;
+    font-size: 24px;
+    color: white;
+    font-family: Arial, sans-serif;
+}

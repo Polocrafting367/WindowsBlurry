@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="icon" type="image/png" href="logo-app.ico">
+<link rel="manifest" href="intervention/manifest.json">
+<link rel="icon" sizes="192x192" href="logo-app.ico">
+<link rel="apple-touch-icon" sizes="192x192" href="logo-app.ico">
+
+    <title>Intervention</title>
+</head>
+
+<style>
+    html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+    overflow: hidden; /* Permet le défilement dans l'iframe */
+    }
+
+.container {
+    height: 100%;
+    width: 100%;
+    overflow: hidden; /* Permet le défilement */
+}
+
+iframe {
+    width: 100%;
+    height: 100%;
+    border: none; /* Supprime la bordure de l'iframe */
+}
+
+</style>
+<script>
+
+window.onload = function() {
+    const autoUser = localStorage.getItem('AUTOUSER');
+    const currentUrl = new URL(window.location.href);
+    const params = new URLSearchParams(currentUrl.search);
+    const interLieu = params.get('inter');
+    const iframe = document.querySelector('iframe');
+    
+    // Générer un timestamp pour éviter le cache
+    const timestamp = new Date().getTime();
+
+    history.pushState({}, '', '/intervention');
+
+    // Vérification des conditions et ajout du timestamp dans l'URL de l'iframe
+    if (autoUser && !interLieu) {
+        iframe.src = `intervention/Work/index.html?user=${autoUser}&timestamp=${timestamp}`;
+    } else if (autoUser && interLieu) {
+        iframe.src = `intervention/Work/index.html?user=${autoUser}&inter=${interLieu}&timestamp=${timestamp}`;
+    } else if (interLieu && !autoUser) {
+        iframe.src = `intervention/Log.html?inter=${interLieu}&timestamp=${timestamp}`;
+    } else {
+        iframe.src = `intervention/Log.html?timestamp=${timestamp}`;
+    }
+};
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').then((registration) => {
+    console.log('Service Worker enregistré avec succès :', registration);
+  }).catch((error) => {
+    console.log('Erreur d\'enregistrement du Service Worker :', error);
+  });
+}
+
+
+</script>
+<body>
+
+    <div class="container">
+        <iframe title="Contenu de LV3" scrolling="yes"></iframe>
+
+    </div>
+
+</body>
+</html>

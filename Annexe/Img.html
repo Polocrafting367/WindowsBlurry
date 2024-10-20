@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="IMGstyle.css">
+    <title>Générateur d'Image</title>
+</head>
+<body>
+
+    <label for="month">Mois de l'année:</label>
+    <select id="month">
+        <option value="Janvier">Janvier</option>
+        <option value="Février">Février</option>
+        <option value="Mars">Mars</option>
+        <option value="Avril">Avril</option>
+        <option value="Mai">Mai</option>
+        <option value="Juin">Juin</option>
+        <option value="Juillet">Juillet</option>
+        <option value="Août">Août</option>
+        <option value="Septembre">Septembre</option>
+        <option value="Octobre">Octobre</option>
+        <option value="Novembre">Novembre</option>
+        <option value="Décembre">Décembre</option>
+    </select>
+    
+    <label for="startWeek">Semaine de départ:</label>
+    <input type="text" id="startWeek" placeholder="Semaine de départ" oninput="updateLabels()">
+
+
+
+    <div id="labelContainer"></div>
+    <div id="selectContainer"></div>
+
+    <button onclick="generateImage()">Générer Image</button>
+<button onclick="generateAndDownloadImage()">Télécharger l'image</button>
+
+  <div ></div>
+ <img id="generatedImage" alt="Generated Image">
+
+    <div id="savedValuesContainer">
+        <h2>Valeurs Enregistrées:</h2>
+        <table id="savedValuesTable">
+            <thead id="savedValuesHeader"></thead>
+            <tbody id="savedValuesBody"></tbody>
+        </table>
+    </div>
+
+   
+
+    <script src="IMGscript.js"></script>
+
+
+</body>
+</html>

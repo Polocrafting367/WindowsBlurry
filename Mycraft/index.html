@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minecraft 3D POV</title>
+
+    <link rel="stylesheet" href="style.css">
+<div id="blocker">
+    <div id="instructions">
+        <span>Cliquez n'importe où pour commencer</span>
+        <h3>Paramètres</h3>
+        <form id="settingsForm">
+            <label for="bordurecam">Bordure Caméra : <span id="bordurecamValue"></span></label>
+            <input type="range" id="bordurecam" name="bordurecam" min="-1" max="4" value="-1"><br>
+
+            <label for="anglecam">Angle Caméra : <span id="anglecamValue"></span></label>
+            <input type="range" id="anglecam" name="anglecam" min="05" max="170" value="75"><br>
+
+            <label for="speed">Vitesse de déplacement : <span id="speedValue"></span></label>
+            <input type="range" id="speed" name="speed" min="50" max="200" value="100"><br>
+
+            <label for="verticalSpeed">Vitesse de vole : <span id="verticalSpeedValue"></span></label>
+            <input type="range" id="verticalSpeed" name="verticalSpeed" min="5" max="50" value="10"><br>
+
+            <label for="playerHeight">Hauteur du joueur : <span id="playerHeightValue"></span></label>
+            <input type="range" id="playerHeight" name="playerHeight" min="1" max="5" value="3"><br>
+
+            <label for="jumpVelocity">Vitesse du saut : <span id="jumpVelocityValue"></span></label>
+            <input type="range" id="jumpVelocity" name="jumpVelocity" min="5" max="50" value="10"><br>
+
+            <label for="gravity">Gravité : <span id="gravityValue"></span></label>
+            <input type="range" id="gravity" name="gravity" min="10" max="100" value="30"><br>
+
+            <label for="chunkSize">Taille des chunks : <span id="chunkSizeValue"></span></label>
+            <input type="range" id="chunkSize" name="chunkSize" min="1" max="32" value="10"><br>
+
+            <label for="chunkDistance">Distance des chunks : <span id="chunkDistanceValue"></span></label>
+            <input type="range" id="chunkDistance" name="chunkDistance" min="1" max="10" value="3"><br>
+            <label for="quality">Qualité de rendu : <span id="qualityValue"></span></label>
+<input type="range" id="quality" name="quality" min="1" max="4" value="4" step="1"><br>
+
+        </form>
+    </div>
+</div>
+
+<div id="overlay" style="position: absolute; top: 10px; left: 10px; color: white; z-index: 100;">
+    Coordonnées: X: <span id="playerX">0</span>, Y: <span id="playerY">0</span>, Z: <span id="playerZ">0</span>
+    <br>
+    Chunk: <span id="chunkX">0</span>, <span id="chunkZ">0</span>
+    <br>
+    FPS: <span id="fps">0</span>  <!-- Ajout de l'affichage des FPS -->
+</div>
+
+
+</head>
+<body>
+        <script src="model.js"></script>
+
+        <script src="Parametre.js"></script>
+    <script src="perlin.js"></script>
+    <script src="three.min.js"></script>
+
+    <script src="PointerLockControls.js"></script>
+                <script src="textures.js"></script>
+
+        <script src="script.js"></script>
+
+
+</body>
+</html>

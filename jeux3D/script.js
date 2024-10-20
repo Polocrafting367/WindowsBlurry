@@ -296,7 +296,7 @@ function askQuestion() {
         const okButton = document.createElement('button');
         okButton.textContent = "OK";
         okButton.addEventListener('click', () => {
-            window.location.href = "LV3.html";
+            window.location.href = "lv3";
         });
         choicesElement.appendChild(okButton);
     } else if (currentQuestionIndex === 39) {

@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /Annexe/
+Allow: /Boot/
+Allow: /App/
+Allow: /intervention/
+Allow: /jeux3D/
+Allow: /index.html
+Allow: /Galerie.html

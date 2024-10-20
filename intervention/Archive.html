@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archives des Fichiers</title>
+    <link rel="stylesheet" href="style3.css">
+    <style>
+        /* Style du tableau avec cadrillage */
+        table {
+            width: 100%;
+            border-collapse: collapse; /* Assure que les bordures ne se chevauchent pas */
+        }
+
+        th, td {
+            border: 1px solid #000; /* Bordure noire pour les cellules */
+            padding: 8px;
+            text-align: left; /* Alignement à gauche */
+        }
+
+        th {
+            cursor: pointer; /* Afficher le pointeur pour indiquer que c'est cliquable */
+            background-color: #f2f2f2; /* Couleur de fond pour l'en-tête */
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9; /* Couleur de fond alternée pour les lignes */
+        }
+    </style>
+</head>
+
+
+<body>
+    <div class="container">
+        <h1>Archives des Fichiers</h1>
+        <a class="btn-back" href="Log.html">Retour à la page principale</a>
+        <div class="filter-options">
+            <label for="name-filter">Trié par Nom/Prénom :</label>
+            <select id="name-filter" onchange="filterFiles()">
+                <option value="">Tout afficher</option>
+                <!-- Les options seront chargées ici par JavaScript -->
+            </select>
+
+            <label for="date-filter">Trié par Date :</label>
+            <input type="date" id="date-filter" onchange="filterFiles()">
+        </div>
+
+        <table id="file-table">
+            <thead>
+                <tr>
+                    <th onclick="sortTable(0)">Date <span class="sort-arrow"></span></th>
+                    <th onclick="sortTable(1)">Nom Prénom <span class="sort-arrow"></span></th>
+                    <th>Télécharger</th>
+                    <th>Supprimer</th>
+                </tr>
+            </thead>
+            <tbody id="file-list">
+                <!-- Les fichiers seront chargés ici par JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Fonction pour charger les fichiers et les options des noms
+        function loadData() {
+            fetch('data.php')
+                .then(response => response.json())
+                .then(data => {
+                    // Injecter les options du select
+                    document.getElementById('name-filter').innerHTML += data.nameOptions;
+
+                    // Injecter la liste des fichiers dans le tableau
+                    document.getElementById('file-list').innerHTML = data.fileList;
+                })
+                .catch(error => console.error('Erreur de chargement:', error));
+        }
+
+        // Appeler la fonction pour charger les données au démarrage de la page
+        window.onload = loadData;
+
+        function filterFiles() {
+            const nameFilter = document.getElementById('name-filter').value.toLowerCase();
+            const dateFilter = document.getElementById('date-filter').value.replace(/-/g, ''); // Format YYYYMMDD sans tirets
+
+            const rows = document.querySelectorAll('#file-list tr');
+            rows.forEach(row => {
+                const fullName = row.getAttribute('data-fullname').toLowerCase();
+                const fileDate = row.getAttribute('data-date');
+
+                const matchesName = !nameFilter || fullName.includes(nameFilter);
+                const matchesDate = !dateFilter || fileDate === dateFilter;
+
+                if (matchesName && matchesDate) {
+                    row.style.display = ''; // Affiche l'élément
+                } else {
+                    row.style.display = 'none'; // Masque l'élément
+                }
+            });
+        }
+
+        let sortDirection = {}; // Objet pour suivre l'état de tri de chaque colonne
+
+        function sortTable(columnIndex) {
+            const table = document.getElementById("file-table");
+            const rows = Array.from(table.rows).slice(1); // Exclure l'en-tête
+
+            // Déterminer l'ordre de tri (croissant/décroissant)
+            if (!sortDirection[columnIndex]) {
+                sortDirection[columnIndex] = 'asc'; // Par défaut, tri croissant
+            } else {
+                sortDirection[columnIndex] = sortDirection[columnIndex] === 'asc' ? 'desc' : 'asc'; // Alterner
+            }
+
+            let sortedRows;
+            
+            if (columnIndex === 0) { // Trier par date
+                sortedRows = rows.sort((a, b) => {
+                    const dateA = a.cells[0].innerText;
+                    const dateB = b.cells[0].innerText;
+
+                    if (sortDirection[columnIndex] === 'asc') {
+                        return dateA.localeCompare(dateB); // Tri croissant
+                    } else {
+                        return dateB.localeCompare(dateA); // Tri décroissant
+                    }
+                });
+            } else if (columnIndex === 1) { // Trier par Nom Prénom
+                sortedRows = rows.sort((a, b) => {
+                    const nameA = a.cells[1].innerText.toLowerCase();
+                    const nameB = b.cells[1].innerText.toLowerCase();
+
+                    if (sortDirection[columnIndex] === 'asc') {
+                        return nameA.localeCompare(nameB); // Tri croissant
+                    } else {
+                        return nameB.localeCompare(nameA); // Tri décroissant
+                    }
+                });
+            }
+
+            // Réinjecter les lignes triées dans le tableau
+            const tbody = document.getElementById("file-list");
+            sortedRows.forEach(row => tbody.appendChild(row));
+
+            // Mise à jour des flèches de tri dans l'en-tête
+            updateSortArrows(columnIndex);
+        }
+
+        function updateSortArrows(columnIndex) {
+            const headers = document.querySelectorAll('th .sort-arrow');
+
+            headers.forEach((arrow, index) => {
+                // Remettre toutes les flèches à vide
+                arrow.innerText = '';
+                
+                // Ajouter la flèche pour la colonne triée
+                if (index === columnIndex) {
+                    if (sortDirection[columnIndex] === 'asc') {
+                        arrow.innerText = '▲'; // Flèche vers le haut (croissant)
+                    } else {
+                        arrow.innerText = '▼'; // Flèche vers le bas (décroissant)
+                    }
+                }
+            });
+        }
+
+        // Fonction pour supprimer un fichier
+        function deleteFile(filePath) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer ce fichier ?')) {
+                fetch('data.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: 'file=' + encodeURIComponent(filePath)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message); // Afficher le message de succès ou d'erreur
+                    loadData(); // Recharger la liste des fichiers après suppression
+                })
+                .catch(error => console.error('Erreur de suppression:', error));
+            }
+        }
+    </script>
+</body>
+
+</html>

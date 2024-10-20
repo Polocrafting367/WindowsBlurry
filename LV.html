@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ma dernière vidéo Youtube</title>
+    <style>
+        /* Assurer que html et body prennent 100% de la hauteur de la fenêtre */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: transparent;
+        }
+
+        /* Style pour centrer le titre en haut */
+        h1 {
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            font-size: 20px;
+            color: white;
+            background-color: rgba(0, 0, 0, 0.3);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Le conteneur principal prend toute la hauteur */
+        #container {
+            height: 100%;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+
+        /* L'iframe prend tout l'espace disponible sauf la largeur du texte et du logo */
+        iframe {
+            flex-grow: 1;
+            height: 100%;
+            border: none;
+        }
+
+        /* Style du texte et du logo à gauche */
+#info {
+    display: flex; /* Flexbox pour aligner logo et texte horizontalement */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 20px; /* Ajustez la largeur selon vos besoins */
+
+    padding: 10px;
+}
+
+#info .text-container {
+    display: flex; /* Flexbox pour aligner logo et texte horizontalement */
+    flex-direction: row; /* Alignement en ligne */
+    align-items: center; /* Centrage vertical */
+}
+#info img {
+    width: 20px; /* Largeur du logo */
+    height: 20px; /* Hauteur du logo */
+    position: relative; /* Positionnement relatif si besoin */
+    transform: rotate(90deg) translateX(60px); /* Combiner la rotation et la translation */
+}
+
+
+#info p {
+    color: white;
+    font-size: 15px;
+    white-space: nowrap; /* Empêche le texte de se couper en plusieurs lignes */
+    transform: rotate(90deg); /* Tourner le texte à 90° */
+    margin: 0; /* Supprime la marge par défaut */
+}
+
+
+        /* Style du loader pendant le chargement */
+        #loader {
+            font-size: 18px;
+            color: #555;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="info">
+                        <p>Ma dernière vidéo</p>
+
+            <img src="https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg" alt="Logo YouTube">
+        </div>
+        <iframe id="youtubeVideo" src="" allowfullscreen></iframe>
+        <div id="loader">Chargement...</div>
+    </div>
+
+    <script>
+        // Fonction pour récupérer le dernier lien vidéo de l'API et l'insérer dans l'iframe
+        async function fetchLatestVideo() {
+            const response = await fetch('https://decapi.me/youtube/latest_video?id=UCTL3fXI8aZnYweRvys6m2bA');
+            const text = await response.text();
+            
+            // Regex pour extraire l'URL de la vidéo YouTube
+            const videoUrlRegex = /(https:\/\/youtu\.be\/[a-zA-Z0-9_-]+)/;
+            const match = text.match(videoUrlRegex);
+            
+            if (match && match[1]) {
+                const videoUrl = match[1];
+                const videoId = videoUrl.split('/').pop(); // Récupère l'ID de la vidéo
+                const embedUrl = `https://www.youtube.com/embed/${videoId}`;
+
+                // Met à jour l'iframe avec le lien embeddable
+                document.getElementById('youtubeVideo').src = embedUrl;
+                document.getElementById('loader').style.display = 'none'; // Cache le texte de chargement
+            } else {
+                document.getElementById('loader').textContent = 'Erreur lors de la récupération de la vidéo.';
+            }
+        }
+
+        // Appel de la fonction au chargement de la page
+        fetchLatestVideo();
+    </script>
+</body>
+</html>

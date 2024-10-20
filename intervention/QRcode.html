@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator</title>
+    <style>
+       <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: #34495e;
+            color: white;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            z-index: 1000;
+        }
+
+        #header p {
+            margin: 0;
+            font-size: 1.1em;
+        }
+
+        #header button {
+            margin: 10px 5px;
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        #header button:hover {
+            background-color: #27ae60;
+        }
+
+        .input-actions {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            width: 60%;
+            font-size: 1.1em;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #3498db;
+            color: white;
+            cursor: pointer;
+            font-size: 1.1em;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        #labelContainer {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+            padding: 20px;
+            margin-top: 30px;
+            width: 90%;
+        }
+
+        .label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            border: 2px solid #34495e;
+            border-radius: 10px;
+            background-color: white;
+            text-align: center;
+        }
+
+        .label h2 {
+            font-size: 1.2em;
+            color: #2c3e50;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .qr-container {
+            width: 150px;
+            height: 150px;
+            margin: 10px 0;
+        }
+
+        .download-btn {
+            margin-top: 10px;
+            padding: 5px 10px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: none;
+        }
+
+        .download-btn:hover {
+            background-color: #c0392b;
+        }
+
+        label {
+            margin: 10px;
+            font-size: 1.1em;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        @media (max-width: 600px) {
+            #header {
+                padding: 10px;
+            }
+
+            #header p {
+                font-size: 0.9em;
+            }
+
+            .input-actions {
+                flex-direction: column;
+                padding: 20px;
+            }
+
+            input[type="text"] {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+
+        /* Style de fond pour la modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5); /* Fond semi-transparent */
+
+}
+
+/* Contenu de la modal */
+.modal-content {
+    background-color: #fff;
+    margin: 1% auto; /* Centrer la modal verticalement et horizontalement */
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 80%;
+    max-width: 500px;
+    animation: slideDown 0.3s ease; /* Animation à l'ouverture */
+}
+.lieux-list li, #arborescenceLieux li {
+    display: block;
+    margin: 5px 0;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.lieux-list {
+    list-style: none;
+    color: black !important;
+    padding: 5px;
+    height: calc(100% - 100px);
+    overflow: auto;
+    box-shadow: 0px 0px 20px rgba(100, 100, 100, 0.8);
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 10px;
+}.place-card {
+    min-height: 27px;
+    display: flex;
+    justify-content: space-between; /* Ensures the content is spaced between */
+    align-items: center; /* Aligns the items vertically in the center */
+    width: calc(100% - 10px);
+    margin-top: 10px;
+    margin-left: 5px;
+    border-radius: 10px;
+    background-color: #f9f9f9; /* Example background color */
+    padding: 10px; /* Add some padding inside */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional shadow */
+}
+
+ #arborescenceLieux {
+    list-style: none;
+    padding: 5px;
+    height: calc(100% - 100px);
+    /* Ajustez en fonction du padding de .container et de la hauteur de la bannière */
+    overflow: auto;
+    box-shadow: 0px 0px 20px rgba(100, 100, 100, 0.8);
+    background: rgba(100, 100, 100, 0.5);
+    border-radius: 10px;
+}
+.lieux-list li ,#arborescenceLieux li  {
+    background-color: rgba(255, 255, 255, 0.4);
+    /* Fond clair pour chaque élément de lieu */
+    margin: 10px 0;
+    padding: 2.5px;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+
+
+li button {display: block !important}
+
+
+.lieux-list li textarea , #arborescenceLieux li textarea {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 8px;
+    border-radius: 4px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+    </style>
+</head>
+<body>
+
+<div id="header">
+    <p>Générez rapidement vos QR codes personnalisés.</p>
+    <div class="input-actions">
+        <button onclick="ouvrirModalModifierLieu()">Afficher les lieux à ajouter</button>
+        <br>
+        <input type="text" id="inputText" placeholder="Entrez le texte à intégrer dans le QR Code..." />
+        <button onclick="generateQRCode()">Générer QR Code</button>
+    </div>
+    <div>
+        <button class="download-all-btn" onclick="downloadAllLabels()">Télécharger tous les QR Codes</button>
+        <button onclick="window.print()">Imprimer</button>
+        <button onclick="createExcelFile()">Créer fichier Excel</button>
+        <button onclick="previewExcelFile()">Prévisualiser fichier Excel</button>
+    </div>
+    <label>
+        <input type="checkbox" id="toggleDownload" onchange="toggleDownloadButtons()" checked> Afficher les boutons de téléchargement individuel
+    </label>
+
+    <label>
+
+        <input type="checkbox" id="useFullPath" onchange="updateUrlExample()" checked> Utiliser l'URL complète
+    </label>
+</div>
+
+    <div id="modifierLieuModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="fermerModalModifierLieu()">&times;</span>
+            <h2>Choisir les lieux à ajouter</h2>
+            <ul id="arborescenceLieux"></ul>
+        </div>
+    </div>
+
+<div id="labelContainer"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.2/xlsx.full.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
+<script src="Work/Lieu.js"></script>
+
+<script>
+function createExcelFile() {
+    const inputText = document.getElementById('inputText').value;
+    const lieux = inputText.split(',').map(lieu => lieu.trim());
+    const useFullPath = document.getElementById('useFullPath').checked;
+
+    if (lieux.length === 0 || lieux[0] === '') {
+        alert('Veuillez entrer au moins un lieu.');
+        return;
+    }
+
+    // Récupérer l'URL de base comme dans generateQRCode()
+    let currentUrl = window.location.href;
+    let urlParts = currentUrl.replace(/^https?:\/\//, '').split('/');
+    let baseUrl = urlParts[0]; // Domaine seulement
+    let path = urlParts[1] ? '/' + urlParts[1] + '/' : '/';
+
+    // Création des données pour le fichier Excel (URL identique à celle des QR codes)
+    const data = lieux.map(lieu => {
+        let url;
+        if (useFullPath) {
+            url = `${baseUrl}${path}?&inter=${encodeURIComponent(lieu)}`;
+        } else {
+            url = `${baseUrl}/?&inter=${encodeURIComponent(lieu)}`;
+        }
+        return [lieu, url];
+    });
+
+    // Création d'un nouveau workbook (classeur)
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet([["Lieu", "URL"], ...data]); // Première ligne pour les entêtes
+    XLSX.utils.book_append_sheet(wb, ws, "Lieux et URLs");
+
+    // Génération et téléchargement du fichier Excel
+    XLSX.writeFile(wb, 'Lieux_URLs.xlsx');
+}
+
+function previewExcelFile() {
+    const inputText = document.getElementById('inputText').value;
+    const lieux = inputText.split(',').map(lieu => lieu.trim());
+    const useFullPath = document.getElementById('useFullPath').checked;
+
+    if (lieux.length === 0 || lieux[0] === '') {
+        alert('Veuillez entrer au moins un lieu.');
+        return;
+    }
+
+    // Récupérer l'URL de base comme dans generateQRCode()
+    let currentUrl = window.location.href;
+    let urlParts = currentUrl.replace(/^https?:\/\//, '').split('/');
+    let baseUrl = urlParts[0]; // Domaine seulement
+    let path = urlParts[1] ? '/' + urlParts[1] + '/' : '/';
+
+    // Création des données pour la prévisualisation (URL identique à celle des QR codes)
+    const data = lieux.map(lieu => {
+        let url;
+        if (useFullPath) {
+            url = `${baseUrl}${path}?&inter=${encodeURIComponent(lieu)}`;
+        } else {
+            url = `${baseUrl}/?&inter=${encodeURIComponent(lieu)}`;
+        }
+        return [lieu, url];
+    });
+
+    // Création du tableau HTML pour la prévisualisation
+    let previewTable = '<table border="1"><tr><th>Lieu</th><th>URL</th></tr>';
+    data.forEach(row => {
+        previewTable += `<tr><td>${row[0]}</td><td>${row[1]}</td></tr>`;
+    });
+    previewTable += '</table>';
+
+    // Affichage de la table dans une nouvelle fenêtre
+    const newWindow = window.open();
+    newWindow.document.write('<html><head><title>Prévisualisation du fichier Excel</title></head><body>');
+    newWindow.document.write(previewTable);
+    newWindow.document.close();
+}
+
+    function adjustBodyPadding() {
+        const header = document.getElementById('header');
+        const headerHeight = header.offsetHeight; // Obtenir la hauteur du header
+        document.body.style.paddingTop = headerHeight + 'px'; // Appliquer cette hauteur en padding-top
+    }
+
+    // Appeler la fonction lors du chargement de la page
+    window.onload = adjustBodyPadding;
+
+    // Appeler la fonction lorsqu'il y a un redimensionnement de la fenêtre
+    window.onresize = adjustBodyPadding;
+
+    let qrCodes = [];
+
+function updateUrlExample() {
+    const useFullPath = document.getElementById('useFullPath').checked;
+    const urlExample = document.getElementById('urlExample');
+
+    localStorage.setItem('useFullPath', useFullPath);
+    // Récupérer l'URL actuelle
+    let currentUrl = window.location.href;
+    let urlParts = currentUrl.replace(/^https?:\/\//, '').split('/');
+    let baseUrl = urlParts[0]; // Domaine seulement (ex : glandu.fr)
+    let path = urlParts[1] ? '/' + urlParts[1] + '/' : '/'; // Si le chemin existe, l'ajouter
+
+    // Mettre à jour l'URL d'exemple en fonction de la case cochée
+    if (useFullPath) {
+        urlExample.textContent = `${baseUrl}${path}?&inter=QRCODE2`;
+    } else {
+        urlExample.textContent = `${baseUrl}/?&inter=QRCODE2`;
+    }
+}
+
+// Appeler la fonction au chargement pour s'assurer que l'URL est correcte dès le départ
+
+window.onload = function() {
+    const savedState = localStorage.getItem('useFullPath');
+
+    // Si un état est sauvegardé dans le localStorage, l'appliquer
+    if (savedState !== null) {
+        document.getElementById('useFullPath').checked = savedState === 'true';
+    }
+
+    // Mettre à jour l'exemple d'URL dès le chargement de la page
+    updateUrlExample();
+};
+function generateQRCode() {
+    const inputText = document.getElementById('inputText').value;
+    const labelContainer = document.getElementById('labelContainer');
+    const useFullPath = document.getElementById('useFullPath').checked;
+
+    // Récupérer l'URL actuelle
+    let currentUrl = window.location.href;
+    let urlParts = currentUrl.replace(/^https?:\/\//, '').split('/');
+    let baseUrl = urlParts[0]; // Domaine seulement (ex : glandu.fr)
+    let path = urlParts[1] ? '/' + urlParts[1] + '/' : '/'; // Si le chemin existe, l'ajouter
+    // Vider le conteneur de toutes les étiquettes précédentes
+    labelContainer.innerHTML = '';
+
+    if (!inputText) {
+        alert('Veuillez entrer au moins un texte.');
+        return;
+    }
+
+    // Séparer les lieux par virgules
+    const lieux = inputText.split(',').map(lieu => lieu.trim());
+
+    lieux.forEach((lieu, index) => {
+        if (lieu) {
+            // Créer une div conteneur parent pour chaque étiquette et bouton
+            const container = document.createElement('div');
+            container.className = 'label-container';
+
+            // Créer l'étiquette pour chaque lieu
+            const label = document.createElement('div');
+            label.className = 'label';
+            label.id = `label${index}`;
+
+            const labelTitle = document.createElement('h2');
+            labelTitle.textContent = lieu;
+
+            const qrContainer = document.createElement('div');
+            qrContainer.className = 'qr-container';
+            qrContainer.id = `qrContainer${index}`;
+
+            // Ajouter le titre et le QR code dans l'étiquette
+            label.appendChild(labelTitle);
+            label.appendChild(qrContainer);
+
+            // Ajouter l'étiquette à la div parent
+            container.appendChild(label);
+
+            // Créer le bouton de téléchargement juste en dessous de l'étiquette
+            const downloadButton = document.createElement('button');
+            downloadButton.className = 'download-btn';
+            downloadButton.textContent = 'Télécharger';
+            downloadButton.onclick = () => downloadLabel(lieu, index);
+
+            // Ajouter le bouton de téléchargement à la div parent
+            container.appendChild(downloadButton);
+
+            // Ajouter la div parent au conteneur principal
+            labelContainer.appendChild(container);
+
+            // Générer l'URL en fonction de la case à cocher
+            let url;
+            if (useFullPath) {
+                url = `${baseUrl}${path}?&inter=${encodeURIComponent(lieu)}`;
+            } else {
+                url = `${baseUrl}/?&inter=${encodeURIComponent(lieu)}`;
+            }
+
+            // Générer le QR Code
+            new QRCode(qrContainer, {
+                text: url,
+                width: 150,
+                height: 150,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+            });
+
+            // Stocker l'information du QR code généré
+            qrCodes.push({
+                element: label,
+                lieu: lieu,
+                index: index
+            });
+        }
+    });
+    toggleDownloadButtons();
+}
+
+
+
+
+
+
+
+
+    // Fonction pour afficher/masquer les boutons de téléchargement
+    function toggleDownloadButtons() {
+        const showDownloadButtons = document.getElementById('toggleDownload').checked;
+        const downloadButtons = document.querySelectorAll('.download-btn');
+        downloadButtons.forEach(button => {
+            button.style.display = showDownloadButtons ? 'block' : 'none';
+        });
+    }
+
+
+    function downloadLabel(lieu, index) {
+        const element = document.getElementById(`label${index}`);
+        
+        // Créer un canvas temporaire pour chaque étiquette
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        const labelWidth = 300; // Respecter la taille de l'étiquette affichée
+        const labelHeight = 200; // Même hauteur que l'étiquette affichée
+
+        canvas.width = labelWidth;
+        canvas.height = labelHeight;
+
+        // Dessiner l'étiquette sur le canvas
+        context.fillStyle = '#ffffff';
+        context.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Dessiner le contour noir avec arrondis
+        const borderRadius = 10;
+        context.strokeStyle = '#000000';
+        context.lineWidth = 1;
+        context.beginPath();
+        context.moveTo(borderRadius, 0);
+        context.lineTo(canvas.width - borderRadius, 0);
+        context.quadraticCurveTo(canvas.width, 0, canvas.width, borderRadius);
+        context.lineTo(canvas.width, canvas.height - borderRadius);
+        context.quadraticCurveTo(canvas.width, canvas.height, canvas.width - borderRadius, canvas.height);
+        context.lineTo(borderRadius, canvas.height);
+        context.quadraticCurveTo(0, canvas.height, 0, canvas.height - borderRadius);
+        context.lineTo(0, borderRadius);
+        context.quadraticCurveTo(0, 0, borderRadius, 0);
+        context.stroke();
+
+        // Dessiner le texte
+        context.fillStyle = '#000000';
+        context.font = '20px Arial';
+        context.textAlign = 'center';
+
+        // Gérer le texte trop long
+        let maxTextWidth = canvas.width - 20;
+        let truncatedLieu = lieu;
+        while (context.measureText(truncatedLieu).width > maxTextWidth) {
+            truncatedLieu = truncatedLieu.substring(0, truncatedLieu.length - 1);
+            if (truncatedLieu.length <= 3) break;
+        }
+
+        if (truncatedLieu !== lieu) {
+            truncatedLieu = truncatedLieu.substring(0, truncatedLieu.length - 3) + '...';
+        }
+
+        context.fillText(truncatedLieu, canvas.width / 2, 30);
+
+        // Dessiner le QR code
+        const qrImage = document.querySelector(`#qrContainer${index} img`);
+        if (qrImage) {
+            context.drawImage(qrImage, (canvas.width - 150) / 2, 40, 150, 150);
+        }
+
+        // Télécharger l'image pour chaque étiquette
+        const link = document.createElement('a');
+        link.href = canvas.toDataURL('image/png');
+        link.download = `${lieu}_etiquette.png`;
+        link.click();
+    }
+
+    // Télécharger tous les QR codes
+    function downloadAllLabels() {
+        qrCodes.forEach(({ lieu, index }) => {
+            downloadLabel(lieu, index);
+        });
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function toggleNiveau(element, niveau) {
+    const ulElement = element.nextElementSibling;
+    if (ulElement) {
+        ulElement.style.display = (ulElement.style.display === 'none' || ulElement.style.display === '') ? 'block' : 'none';
+        const iconElement = element.querySelector('.pastille');
+        const texteElement = iconElement.getAttribute('data-texte');
+        iconElement.innerHTML = (ulElement.style.display === 'none') ? '▶ ' + texteElement : '▼ ' + texteElement;
+
+        const boutonLancerChrono = document.getElementById(`lancer-chrono-btn-${texteElement}`);
+        if (boutonLancerChrono && element.classList.contains('non-cliquable')) {
+            boutonLancerChrono.disabled = true;
+        }
+
+        if (ulElement.style.display === 'block') {
+            const sousNiveaux = ulElement.querySelectorAll('.pastille');
+            sousNiveaux.forEach(sousNiveau => {
+                sousNiveau.style.display = 'block';
+                const ulSousNiveau = sousNiveau.nextElementSibling;
+                if (ulSousNiveau) {
+                    ulSousNiveau.style.display = 'none';
+                }
+            });
+        }
+    }
+}
+
+let nombreChronosActifs = 0;
+function ouvrirModalModifierLieu(nomLieuActuel) {
+    const modal = document.getElementById('modifierLieuModal');
+    modal.style.display = 'block';
+    const listeEnregistree ='';
+    // Charger l'arborescence des lieux ici
+    const arborescenceLieux = document.getElementById('arborescenceLieux');
+    arborescenceLieux.innerHTML = ''; // Vider la liste
+
+parcourirArborescenceSansPreconfiguration(arborescence, arborescenceLieux, '', 0, nomLieuActuel, listeEnregistree);
+
+}
+
+function fermerModalModifierLieu() {
+    const modal = document.getElementById('modifierLieuModal');
+    modal.style.display = 'none';
+}
+
+
+function parcourirArborescenceSansPreconfiguration(arbre, parent, cheminParent = '', niveau = 0, nomLieuActuel, listeEnregistree = []) {
+    for (const lieu in arbre) {
+        const cheminComplet = cheminParent + (cheminParent ? ' > ' : '') + lieu;
+        const nomLieuBrut = lieu.trim();
+        const nomLieuPourJS = lieu.trim().replace(/'/g, "\\'");
+
+        const lieuItem = document.createElement('li');
+        const icon = (Object.keys(arbre[lieu]).length > 0) ? '▶' : ' ';
+        const displayStyle = (niveau === 0) ? 'block' : 'none';
+
+        let buttonHTML = '';
+        if (nomLieuBrut === nomLieuActuel || listeEnregistree.includes(nomLieuBrut)) {
+            // Si c'est le lieu actuel ou s'il est dans la liste enregistrée, désactiver le bouton
+            const message = nomLieuBrut === nomLieuActuel ? 'Lieu actuel' : 'Lieu bloqué';
+            buttonHTML = `<button disabled style="margin-left: 10px;">⛔ ${message}</button>`;
+        } else {
+            // Pass `this` as the second argument to refer to the button element itself
+            buttonHTML = `<button onclick="choisirLieu('${nomLieuBrut}', this)" style="margin-left: 10px;">👆 Sélectionner</button>`;
+        }
+
+        lieuItem.innerHTML = `
+            <div class="place-card level-${niveau}" onclick="toggleNiveau(this, ${niveau})">
+                <span class="pastille" data-texte="${nomLieuBrut}" style="display:${displayStyle}">${icon} ${nomLieuBrut}</span>
+                ${buttonHTML}
+            </div>`;
+        parent.appendChild(lieuItem);
+
+        // Recursive call for nested places
+        if (Object.keys(arbre[lieu]).length > 0) {
+            const sousLieuxList = document.createElement('ul');
+            sousLieuxList.style.display = 'none';
+            lieuItem.appendChild(sousLieuxList);
+            parcourirArborescenceSansPreconfiguration(arbre[lieu], sousLieuxList, cheminComplet, niveau + 1, nomLieuActuel, listeEnregistree);
+        }
+    }
+}
+
+
+function choisirLieu(nomLieu, buttonElement) {
+    console.log('Lieu sélectionné:', nomLieu); // Log the selected location to ensure it's passed correctly
+    
+    const input = document.getElementById('inputText');
+    
+    // If input already has content, append the new location with a comma
+    if (input.value) {
+        input.value += ', ' + nomLieu;
+    } else {
+        input.value = nomLieu; // If it's empty, add the first location
+    }
+
+    // Disable the button and change its text to show that it's selected
+    if (buttonElement) {
+        buttonElement.disabled = true;
+        buttonElement.innerHTML = '⛔'; // Update the button appearance
+    } else {
+        console.error("buttonElement is not defined");
+    }
+}
+
+
+
+
+function convertToIdFormat(str) {
+    // Check if the input is a string and not null/undefined
+    if (typeof str !== 'string') {
+        console.error("Invalid string passed to convertToIdFormat", str);
+        return '';  // Return an empty string if invalid input
+    }
+
+    return str.trim().replace(/\s+/g, '_'); // Convert spaces to underscores
+}
+
+
+function searchLieu2(arbre) {
+    const clearButton2 = document.getElementById('clearButton2');  // Bouton de nettoyage de la seconde barre de recherche
+    const searchInput2 = document.getElementById('searchInput2');  // Champ de texte de la seconde barre de recherche
+    const searchTerm2 = normalizeString(searchInput2.value.toLowerCase());
+
+    const arborescenceLieux = document.getElementById('arborescenceLieux');  // L'élément contenant la liste des lieux dans la modal
+    const lieuxItems2 = arborescenceLieux.querySelectorAll('li');  // Tous les éléments `li` de la liste des lieux
+
+    // Afficher ou masquer le bouton de nettoyage en fonction de la valeur de la recherche
+    clearButton2.style.display = searchInput2.value.trim() !== '' ? 'block' : 'block';
+
+    // Parcourir la liste des lieux
+    for (let i = 0; i < lieuxItems2.length; i++) {
+        const lieuItem2 = lieuxItems2[i];
+        const placeCard2 = lieuItem2.querySelector('.place-card');
+
+        if (placeCard2) {
+            const placeCardText2 = normalizeString(placeCard2.innerText.toLowerCase());
+            const matchesSearch2 = placeCardText2.includes(searchTerm2);
+
+            // Masquer ou afficher la place-card en fonction de la correspondance
+            placeCard2.style.display = matchesSearch2 ? 'block' : 'none';
+        }
+
+        const lieuName2 = normalizeString(lieuItem2.innerText.toLowerCase());
+        const searchTerms2 = searchTerm2.split(/\s+/);
+        const matchesSearch2 = searchTerms2.every(term => lieuName2.includes(term));
+
+        if (matchesSearch2) {
+            // Afficher l'élément trouvé
+            lieuItem2.style.display = 'block';
+            lieuItem2.classList.add('active');
+
+            // Ouvrir les branches jusqu'à cet élément
+            let parent2 = lieuItem2.parentElement;
+            while (parent2 && parent2 !== arborescenceLieux) {
+                if (parent2.tagName === 'UL') {
+                    parent2.style.display = 'block';
+                }
+                parent2 = parent2.parentElement;
+            }
+        } else {
+            // Cacher les éléments qui ne correspondent pas
+            lieuItem2.style.display = 'none';
+            lieuItem2.classList.remove('active');
+        }
+    }
+
+    // Refermer toutes les branches si la zone de recherche est vide
+    if (searchTerm2 === '') {
+        const allBranches2 = arborescenceLieux.querySelectorAll('ul');
+        allBranches2.forEach(branch => {
+            branch.style.display = 'none';
+        });
+    }
+}
+
+function clearSearchInput2() {
+    const searchInput2 = document.getElementById('searchInput2');
+    searchInput2.value = '';
+
+    // Cacher le bouton après avoir effacé la zone de texte
+    const clearButton2 = document.getElementById('clearButton2');
+
+    searchLieu2();  // Relancer la recherche avec une zone de texte vide
+}
+
+
+function normalizeString(str) {
+    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, ""); // Supprimer les accents
+}
+
+
+
+function convertToIdFormat(str) {
+
+    // Si vos IDs sont sensibles à la casse, supprimez la conversion en minuscules
+    return str.trim().replace(/\s+/g, '_');
+
+}
+
+</script>
+
+</body>
+</html>

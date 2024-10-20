@@ -1,0 +1,14 @@
+﻿Date intervention;Désignation machine;Type de panne;Cause;Résumé intervention;Durée arrêt (h);Personnel;Nombre d'heures;Heure de fin;
+20241001;Étiqueteuse VT;Mauvais réglage;Autre;Étiquette mal posé;0;LELONG Paul;0.333;10:42:37
+20241001;Étiqueteuse VT;Mauvais réglage;Autre;Étiquette mal posé;0;PERDRIAT Sébastien;0.333;10:42:37
+20241001;Tunnel 10x50;Electrique;Autre;Sonde module 8 - connecteur encrassé;0;LELONG Paul;0.017;13:47:39
+20241001;Plieuses;Alarme;Autre;Soufflage des deux plieuse;0.16666666666666666;LELONG Paul;0.250;13:48:38
+20241001;Tunnel 10x35;Electrique;Autre;Défaut variateur, acquittement sur pc "super visor" plus sectionner;0.08333333333333333;LELONG Paul;0.087;13:49:30
+20241001;Tunnel 10x35;Electrique;Autre;Défaut variateur, acquittement sur pc "super visor" plus sectionner;0.08333333333333333;PERDRIAT Sébastien;0.087;13:49:30
+20241001;Filmeuse PP VT;Plus de consommable;Plus de film;Changement rouleau film Bas;0.08333333333333333;LELONG Paul;0.117;13:50:02
+20241001;M14 (buffer entre tri A et tri B);Bourrage;Autre;Bourrage M14;0.06666666666666667;LELONG Paul;0.117;13:53:40
+20241001;M14 (buffer entre tri A et tri B);Bourrage;Autre;Bourrage M14;0.06666666666666667;PERDRIAT Sébastien;0.117;13:53:40
+20241001;Filmeuse PP VT;Plus de consommable;Plus de film;Changement rouleau film Bas;0.08333333333333333;PERDRIAT Sébastien;0.117;13:50:02
+20241001;.Poste marquage (5 vers caillebotis);Informatique;Usures matériels;Changement raquette par L400;0;LELONG Paul;4.006;21:51:04
+20241001;.Poste marquage (5 vers caillebotis);Informatique;Usures matériels;Changement raquette par L400;0;PICOCHE Jordan;0.756;21:51:04
+20241001;.Poste marquage (5 vers caillebotis);Informatique;Usures matériels;Changement raquette par L400;0;BERNARD Julien;1.506;21:51:04

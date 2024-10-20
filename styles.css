@@ -1,0 +1,888 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: black; /* Fond par défaut (blanc) */
+    transition: background-color 0.5s ease, background-image 0.5s ease;
+
+        user-select: none;
+
+        position: relative;
+        background-size: cover;
+        background-position: center;
+  overflow: hidden;
+      }
+
+nav {display: none;}
+
+
+.button {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    z-index: 1000;
+    padding: 10px;
+    width: 100px;
+    background-color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 6px;
+    transform: translateX(-50px);
+    background-color: rgba(255, 255, 255, 1);
+
+}
+      .button:hover {
+
+        background-color: rgba(200, 200, 200, 0.6);
+
+      }
+
+    .window {
+        position: absolute;
+        bottom: 3%;
+        left: 3%;
+        width: 33%;
+        height: 67%;
+        background-color: rgba(255, 200, 100, 0.2);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        z-index: 1;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+          will-change: transform;
+
+      }
+
+
+      .window-header {
+
+
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 30px;
+background-color: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        cursor: move;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+
+      }
+
+      .window-content {
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        position: absolute;
+        top: 30px;
+        left: 0;
+        width: 100%;
+        height: calc(100% - 30px);
+        background-color: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(50px);
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+      }
+    
+     .window2 {
+        position: absolute;
+  bottom: 3%;
+  right: 3%;
+  width: auto; /* Pas besoin de spécifier */
+  height: 43%;
+  aspect-ratio: 1 / 1; /* Assure que la largeur est toujours égale à la hauteur */
+        background-color: rgba(255, 200, 100, 0.2);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        z-index: 1;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+          will-change: transform;
+
+      }
+
+
+      .window2-header {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 30px;
+background-color: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        cursor: move;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+      }
+
+      .window2-content {
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        position: absolute;
+        top: 30px;
+        left: 0;
+        width: 100%;
+        height: calc(100% - 30px);
+        background-color: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(50px);
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+      }
+         
+
+.windowsett {
+    position: absolute;
+    top: 2%;
+    left: 3%;
+    width: 94%; /* Largeur de l'écran moins 45% de la hauteur de l'écran */
+    height: 25%;
+    background-color: rgba(255, 200, 100, 0.2);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    z-index: 1;
+    border-radius: 10px;
+    will-change: transform;
+}
+
+
+
+      .windowsett-top {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 30px;
+background-color: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        cursor: move;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+      }
+
+.windowsett-content {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    position: absolute;
+    top: 30px;
+    left: 0;
+    width: calc(100% - 400px);
+    height: calc(100% - 30px);
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(50px);
+    border-bottom-left-radius: 10px;
+
+    color: white;
+    font-size: 30px;
+    font-family: 'Arial', sans-serif;
+    text-align: center;
+}
+
+.windowsett-if {
+  height: 100%;
+    display: flex; /* Active Flexbox */
+    justify-content: flex-end; /* Aligne les éléments horizontalement sur la droite */
+    align-items: center; /* Centre verticalement les éléments à l'intérieur */
+     /* Déplace les éléments de 10px vers le haut */
+}
+
+.iframe-droite {
+  height: calc(100% - 30px);
+  width: 400px;
+  transform: translateY(-15px);
+}
+
+.xbGufb {width: 32px; height: 32px; }
+.RNpQXe {width: 32px; height: 32px; margin: 9px;}
+
+
+
+@media screen and (max-width: 850px) {
+#messagefn{
+font-size: 23px;
+
+}
+
+.xbGufb {width: 32px; height: 32px; }
+.RNpQXe {width: 32px; height: 32px; margin: 0px;}
+
+}
+
+
+@media screen and (max-width: 720px) {
+  .windowsett-content {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    position: absolute;
+    top: 30px;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 30px);
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(50px);
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    : 10px;
+    color: white;
+    font-size: 30px;
+    font-family: 'Arial', sans-serif;
+    text-align: center;
+}
+.iframe-droite{
+display: none;
+
+}
+.xbGufb {width: 32px; height: 32px; }
+.RNpQXe {width: 32px; height: 32px; margin: 9px;}
+
+#messagefn{
+  font-size: 30px;
+}
+}
+
+
+         #titrefn {
+   position: absolute;
+  color:white;
+  font-size: 17px;
+  top:5px;
+  left:10px;
+font-family: arial;
+pointer-events: none;
+}
+
+#textt {
+   position: absolute;
+  color:white;
+  font-size: 17px;
+  top:100px;
+  left:3%;
+font-family: arial;
+pointer-events: none;
+}
+
+.bggene {
+  position: absolute;
+      bottom: 20%;
+        right: 10%;
+        width: 53%;
+        height: 50%;
+  background-color: rgba(255, 200, 100, 0.2);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  z-index: 1;
+  border-radius: 10px;
+  will-change: transform;
+}
+
+
+
+      .bggene-top {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 30px;
+background-color: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        cursor: move;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+      }
+
+      .bggene-content {
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        position: absolute;
+        top: 30px;
+        left: 0;
+        width: 100%;
+        height: calc(100% - 30px);
+        background-color: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(50px);
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+      }
+         
+
+
+.window-selected {
+  z-index: 3;
+}
+
+
+       
+
+#messagefn {
+
+transform: translateY(-30px);
+
+}
+
+
+
+.top-bar input[type="text"] {
+left: 30px;
+top: 30px;
+  padding: 18px;
+position: absolute;
+  color :white;
+  border: none;
+  border-radius: 5px;
+  background-color:rgba(0, 0, 0, 0.3);
+    width: 86%;
+    font-size : 17px;
+
+}
+.top-bar input::placeholder {
+  color: #CCC;
+}
+
+.bottom-bar {
+  background-color: rgba(255, 255, 255, 0.5);
+  bottom: 0;
+  width: 100%;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      position: absolute;
+
+
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+
+}
+
+
+
+.profil img {
+  margin-left: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  background-color: rgba(0, 0, 0, 0.5);
+
+}
+
+.status-icon img {
+
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  background-color: rgba(0, 0, 0, 0.5);
+  margin-right: 20px;
+}
+
+
+.close {
+    width: 60px;
+    height: 30px;
+    background-color: transparent;
+    position: relative;
+    left: 100%;
+    transform: translatex(-100%);
+    overflow: hidden;
+    color: white;
+    font-family: arial;
+    text-align: center; /* Centrer le texte horizontalement */
+    
+    display: flex; /* Utiliser flexbox pour centrer */
+    justify-content: center; /* Centrer horizontalement (déjà fait par text-align) */
+    align-items: center; /* Centrer verticalement */
+}
+
+    .close:hover {
+      background-color: rgba(255, 0, 0, 0.5);
+              border-top-right-radius: 10px;
+    }
+    .line {
+      position: absolute;
+      top: 50%;
+      left: 36%;
+      width: 23%;
+      height: 1px;
+      background-color: white;
+      transform: rotate(45deg);
+      transform-origin: center;
+
+    }
+    .line:nth-child(2) {
+      transform: rotate(-45deg);
+    }
+
+.blurr {
+  position: absolute;
+  top: 25PX;
+  left: 30px;
+  color: white;
+  font-size: 18px;
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.5);
+  height: 40px;
+  width: 86%;
+  display: flex;
+font-family:arial;
+  justify-content: center;
+  align-items: center;
+}
+.blurr:hover {
+background-color: rgba(255, 255, 255, 0.1);
+              border-radius: 4px;
+    }
+
+.opp {
+  position: absolute;
+  top: 75px;
+  left: 30px;
+  color: white;
+  font-size: 18px;
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.5);
+  height: 40px;
+  width: 86%;
+  display: flex;
+font-family:arial;
+  justify-content: center;
+  align-items: center;
+}
+.opp:hover {
+background-color: rgba(255, 255, 255, 0.1);
+              border-radius: 4px;
+    }
+
+
+#changer-arriere-plan{
+    position: absolute;
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  border-radius: 4px;
+    top: 125px;
+  left: 30px;
+  width: 86%;
+    font-size: 18px;
+
+}
+    #changer-arriere-plan:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+ border-radius: 4px;
+    }
+#button-color{
+    position: absolute;
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  border-radius: 4px;
+    top: 175px;
+  left: 30px;
+  width: 86%;
+    font-size: 18px;
+}
+   #button-color:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+              border-radius: 4px;
+    }
+
+#dark{
+    position: absolute;
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  border-radius: 4px;
+    top: 225px;
+  left: 30px;
+  width: 42%;
+    font-size: 18px;
+}
+   #dark:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+              border-radius: 4px;
+    }
+    #light{
+    position: absolute;
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  border-radius: 4px;
+    top: 225px;
+  right: 26px;
+  width: 42%;
+    font-size: 18px;
+}
+   #light:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+              border-radius: 4px;
+    }
+
+        #newwind{
+    position: absolute;
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  border-radius: 4px;
+    top: 110px;
+  left: 30px;
+  width: 86%;
+    font-size: 18px;
+}
+   #newwind:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+              border-radius: 4px;
+    }
+
+        #newwind2{
+    position: absolute;
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  border-radius: 4px;
+    top: 160px;
+  left: 30px;
+  width: 86%;
+    font-size: 18px;
+}
+   #newwind2:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+              border-radius: 4px;
+    }
+          #newwind3{
+    position: absolute;
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  border-radius: 4px;
+    top: 210px;
+  left: 30px;
+  width: 86%;
+    font-size: 18px;
+}
+   #newwind3:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+              border-radius: 4px;
+    }
+        #generate-btn{
+    position: absolute;
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  border-radius: 4px;
+    top: 4%;
+  left: 30px;
+  width: 90%;
+    font-size: 18px;
+}
+   #generate-btn:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+              border-radius: 4px;
+    }
+.loading-bar-container {
+  width: 100%;
+  height: 4px;
+  background-color: #eee;
+}
+
+.loading-bar {
+  width: 0%;
+  height: 100%;
+  background-color: #007bff;
+  animation: loading-bar-animation 1s infinite;
+  transition: width .2s ease-in-out;
+}
+
+@keyframes loading-bar-animation {
+  0% { width: 0%; }
+  50% { width: 50%; }
+  73% { width: 100%; }
+  100% { width: 0%; }
+}
+
+
+
+
+        #btn-rapide{
+    position: absolute;
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  border-radius: 4px;
+    top: 50%;
+  left: 30px;
+  width: 86%;
+    font-size: 18px;
+}
+   #par:hover {
+      background-color: rgba(100, 100, 100, 0.5);
+              border-radius: 4px;
+    }
+   #par{
+    position: absolute;
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  border-radius: 4px;
+    bottom: 3.8%;
+  right: 70px;
+  width: 30%;
+    font-size: 18px;
+}
+   #btn-rapide:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+              border-radius: 4px;
+    }
+
+.content {
+  margin: 10px auto;
+  max-width: 600px;
+  padding: 10px;
+  color: white;
+  font-size: 20px;
+}
+
+
+
+
+
+textarea {
+  border: none;
+  font-size: 20px;
+  height: 300px;
+  outline: none;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+
+#fenet {
+      position: absolute;
+  left: 125px;
+  bottom : 10px;
+}
+#ope {
+  background-color: rgba(255, 255, 255, 0.1);
+  bottom: 0;
+  width: 90px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      position: absolute;
+left:0;
+
+}
+
+
+input[type=button] {
+      background-color: rgba(0, 0, 0, 0.5);
+      border: none;
+      color: white;
+
+      padding: 10px 30px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
+      border-radius: 10px;
+    }
+    input[type=button]:hover {
+background-color: rgba(100, 100, 100, 0.5);
+    }
+    input[type=text] {
+      width: 100%;
+      padding: 12px 20px;
+      margin: 8px 0;
+      box-sizing: border-box;
+      border: 2px solid #ccc;
+      border-radius: 4px;
+    }
+
+
+
+#heure, #date {
+      font-size: 20px;
+      font-weight: bold;
+      margin: 0;
+      position: absolute;
+      right:20px;
+      top:3px;
+      color:white;
+    }
+    #date {
+            position: absolute;
+
+      top:50%;
+    }
+
+.réseau{
+
+padding: 20px;
+
+}
+    iframe {
+           border: none;
+  background-color: transparent;
+
+          border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+    }
+
+
+        /* Définir le style des boutons */
+    #saveim {
+      margin: 10px;
+      padding: 10px;
+
+      border: none;
+      border-radius: 5px;
+      background-color: white;
+      color: black;
+      cursor: pointer;
+    }
+
+
+/* Styles pour les appareils avec une largeur d'écran de 768px ou moins */
+@media screen and (max-width: 1400px) {
+   .window2 {
+
+  width: auto; /* Pas besoin de spécifier */
+  height: 25%;
+  aspect-ratio: 1 / 1; /* Augmenter la hauteur pour utiliser l'espace vertical */
+   /* Positionner la fenêtre un peu plus haut */
+    bottom: 3%;
+    right:3%; /* Empêche la fenêtre d'être fixée en bas de l'écran */
+  }
+
+
+
+
+}
+
+input[type="text"], textarea {
+  font-size: 16px; /* Taille de texte suffisante pour éviter le zoom automatique */
+}
+
+@media screen and (max-width: 520px) {
+  .iframe-droite
+{
+  display: none;
+}
+   .window2 {
+display: none !important;
+  width: auto; /* Pas besoin de spécifier */
+  height: 23%;
+  aspect-ratio: 1 / 1; /* Augmenter la hauteur pour utiliser l'espace vertical */
+   /* Positionner la fenêtre un peu plus haut */
+    bottom: 3%;
+    right:3%; /* Empêche la fenêtre d'être fixée en bas de l'écran */
+  }
+
+     .window {
+
+  width: auto; /* Pas besoin de spécifier */
+  height: 37%;
+  top: 27%;
+   /* Positionner la fenêtre un peu plus haut */
+    right:3%; /* Empêche la fenêtre d'être fixée en bas de l'écran */
+  }
+
+       .bggene {
+
+  width: 95%; /* Pas besoin de spécifier */
+  height: 30%;
+  top: 67%;
+   /* Positionner la fenêtre un peu plus haut */
+    right:3%; /* Empêche la fenêtre d'être fixée en bas de l'écran */
+  }
+
+ .windowsett {
+    position: absolute;
+    top: 2%;
+    left: 3%;
+    width: 94%; /* Largeur de l'écran moins 45% de la hauteur de l'écran */
+    height: 23%;
+    background-color: rgba(255, 200, 100, 0.2);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    z-index: 1;
+    border-radius: 10px;
+    will-change: transform;
+}
+
+
+  /* Ajustement de l'iframe pour qu'il occupe tout l'espace de la fenêtre sur mobile */
+  iframe {
+    width: 100%;
+    height: calc(100% - 40px); /* Adapter la taille de l'iframe à la fenêtre */
+  }
+
+#messagefn {
+    font-size: 25px !important;
+}
+}
+
+@media screen and (max-width: 430px) {
+
+
+#messagefn {
+    font-size: 20px !important;
+}
+
+  /* Ajustement de l'iframe pour qu'il occupe tout l'espace de la fenêtre sur mobile */
+  iframe {
+    width: 100%;
+    height: calc(100% - 40px); /* Adapter la taille de l'iframe à la fenêtre */
+  }
+
+
+}
+
+
+@media screen and (max-width: 350px) {
+
+
+#messagefn {
+    font-size: 20px !important;
+}
+
+  /* Ajustement de l'iframe pour qu'il occupe tout l'espace de la fenêtre sur mobile */
+  iframe {
+    width: 100%;
+    height: calc(100% - 40px); /* Adapter la taille de l'iframe à la fenêtre */
+  }
+.xbGufb {width: 32px; height: 32px; }
+.RNpQXe {width: 32px; height: 32px; margin: 0px;}
+
+  .réseau {
+    padding: 10px;
+  }
+}
+
+@media screen and (max-width: 260px) {
+
+
+#messagefn {
+    font-size: 15px !important;
+}
+
+  /* Ajustement de l'iframe pour qu'il occupe tout l'espace de la fenêtre sur mobile */
+  iframe {
+    width: 100%;
+    height: calc(100% - 40px); /* Adapter la taille de l'iframe à la fenêtre */
+  }
+.xbGufb {width: 20px; height: 20px; }
+.RNpQXe {width: 20px; height: 20px; margin: 0px;}
+
+  .réseau {
+    padding: 10px;
+  }
+}
