@@ -1,7 +1,8 @@
 # WindowsBlurry
 
-Pannel de touts mes projets d'on l'un de mes favoris "windows blurry" mais aussi un jeux style NES "jeux3D" et autres
+Pannel de touts mes projets qui ne dispose pas de leurs dossiers github perso, comme "windows blurry", video, mais aussi un jeux style NES "jeux3D" et autres...
 
+GMAPP et MasterPaint on tout 2 leurs propre repo github
 
 À visualiser en ligne à cette adresse : [Polocrafting.fr](https://polocrafting.fr/)
 
@@ -12,12 +13,6 @@ ou sur google lol : [sites.google.com](https://sites.google.com/view/polocraftin
 
 suivez moi aussi sur Youtube  : [Ma chaine Youtube](https://www.youtube.com/channel/UCTL3fXI8aZnYweRvys6m2bA)
 
-Voila une image de ce qu'est windows Blurry
-![image](https://github.com/Polocrafting367/WindowsBlurry-1/blob/main/Images/Capture%20d'%C3%A9cran%202024-03-04%20212100.png?raw=true)
-
-
-
-J'ai perdu l'accès à mon ancien compte "polocrafting", mais je reste le créateur du projet. Je vais continuer son développement ici. Merci à [@Zerbaib](https://github.com/Zerbaib) pour sa petite contribution sur l'ancien projet et l'idée de séparer les fichiers pour une meilleure organisation.
 
 ## Changelog
 
