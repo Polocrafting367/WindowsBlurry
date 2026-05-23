@@ -98,3 +98,27 @@ setTimeout(function() {
 window.location.href = "../Boot/boot.html";
 }, 3900);
 
+
+
+
+            trackVisit('Win367')
+
+function trackVisit(pageName = "Accueil") {
+    // 1. Générer ou récupérer un ID Appareil unique
+    let deviceId = localStorage.getItem('app_device_id');
+    if (!deviceId) {
+        deviceId = 'dev-' + Math.random().toString(36).substr(2, 9) + '-' + Date.now();
+        localStorage.setItem('app_device_id', deviceId);
+    }
+
+    // 2. Envoyer les données
+    fetch('/track.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            deviceId: deviceId,
+            page: pageName
+        })
+    }).catch(e => console.log("Tracking error", e));
+}
+

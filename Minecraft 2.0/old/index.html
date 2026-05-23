@@ -1,0 +1,2225 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polocraft 3.67 - Survie & Créatif</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap');
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #2d5016;
+            font-family: 'Silkscreen', 'Courier New', monospace;
+            user-select: none;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+
+        #ui-layer {
+            position: absolute;
+            top: 0; 
+            left: 0; 
+            width: 100vw; 
+            height: 100vh;
+            pointer-events: none;
+        }
+
+        #crosshair {
+            position: absolute; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%);
+            color: rgba(255, 255, 255, 0.8); 
+            font-size: 24px; 
+            font-weight: bold; 
+            text-shadow: 1px 1px 0 #000;
+        }
+
+        /* --- HUD SURVIE (Coeurs et Faim) --- */
+        #survival-hud {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 14px;
+            font-size: 20px;
+            pointer-events: none;
+        }
+
+        .stat-bar { 
+            display: flex; 
+            gap: 2px; 
+            text-shadow: 2px 2px 0 #000; 
+        }
+
+        #hotbar {
+            position: absolute; 
+            bottom: 20px; 
+            left: 50%; 
+            transform: translateX(-50%);
+            display: flex; 
+            gap: 5px; 
+            background: rgba(0, 0, 0, 0.6); 
+            padding: 8px;
+            border: 3px solid #333; 
+            border-radius: 5px; 
+            pointer-events: auto;
+        }
+
+        .slot {
+            position: relative; 
+            width: 50px; 
+            height: 50px; 
+            border: 3px solid #555;
+            box-sizing: border-box; 
+            border-radius: 4px; 
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+            transition: all 0.1s; 
+            image-rendering: pixelated; 
+            background-size: 200px 800px; 
+            background-color: #222;
+            background-repeat: no-repeat;
+            overflow: hidden;
+        }
+
+        .slot .count {
+            position: absolute; 
+            bottom: 0px; 
+            right: 2px; 
+            color: white;
+            font-weight: bold; 
+            font-size: 14px; 
+            text-shadow: 1px 1px 0 #000;
+            pointer-events: none;
+        }
+
+        .slot.active { 
+            border-color: #fff; 
+            transform: scale(1.1); 
+            box-shadow: 0 0 15px rgba(255,255,255,0.5); 
+            z-index: 2; 
+        }
+
+        .slot:hover { 
+            border-color: #aaa; 
+        }
+
+        /* --- INVENTAIRE ET CRAFTING UI --- */
+        #inventory-screen {
+            display: none; 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100vw; 
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.45); 
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 20; 
+            pointer-events: auto;
+            align-items: center; 
+            justify-content: center;
+            font-family: inherit;
+            flex-direction: row;
+            gap: 24px;
+        }
+
+        .inv-container { 
+            background: #c6c6c6; 
+            border: 4px solid #555; 
+            border-radius: 5px; 
+            padding: 20px; 
+            display: flex; 
+            gap: 20px; 
+            box-shadow: inset -4px -4px 0px rgba(0,0,0,0.2), inset 4px 4px 0px rgba(255,255,255,0.5); 
+            cursor: default;
+            font-family: inherit;
+        }
+
+        .inv-grid { 
+            display: grid; 
+            grid-template-columns: repeat(9, 50px); 
+            gap: 5px; 
+            background: #8b8b8b; 
+            padding: 10px; 
+            border-radius: 5px; 
+        }
+
+        .crafting-panel { 
+            background: #8b8b8b; 
+            padding: 10px; 
+            border-radius: 5px; 
+            width: 250px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 10px; 
+            max-height: 300px; 
+            overflow-y: auto; 
+        }
+        /* Décoration du panneau Recettes (inventaire, à droite du container) */
+        #inventory-screen #crafting-panel {
+            border: 3px solid #3d5c1e;
+            box-shadow: 0 3px 0 #2d5016, inset 0 1px 0 rgba(255,255,255,0.2);
+            background: linear-gradient(180deg, #9a9a9a 0%, #7a7a7a 100%);
+            padding: 14px;
+            border-radius: 6px;
+        }
+        #inventory-screen #crafting-panel::before {
+            content: 'Recettes';
+            display: block;
+            font-family: inherit;
+            font-weight: 700;
+            color: #2d5016;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+            text-shadow: 1px 1px 0 rgba(255,255,255,0.3);
+        }
+        
+        .recipe { 
+            background: #c6c6c6; 
+            padding: 5px; 
+            border: 2px solid #555; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+        }
+
+        .recipe:hover { 
+            background: #dfdfdf; 
+        }
+
+        .recipe.disabled { 
+            opacity: 0.5; 
+            cursor: not-allowed; 
+        }
+
+        #cursor-item {
+            display: none; 
+            position: absolute; 
+            width: 50px; 
+            height: 50px;
+            pointer-events: none; 
+            z-index: 100; 
+            image-rendering: pixelated;
+            background-size: 200px 800px; 
+            filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.5));
+        }
+
+        #cursor-item .count { 
+            position: absolute; 
+            bottom: 0px; 
+            right: 2px; 
+            color: white; 
+            font-weight: bold; 
+            font-size: 14px; 
+            text-shadow: 1px 1px 0 #000; 
+        }
+
+        #menu {
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100vw; 
+            height: 100vh;
+            background: linear-gradient(180deg, rgba(20, 35, 15, 0.25) 0%, rgba(10, 22, 8, 0.35) 50%, rgba(8, 18, 6, 0.4) 100%); 
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            color: #e0e0e0; 
+            z-index: 10; 
+            pointer-events: auto; 
+            box-shadow: inset 0 0 60px rgba(0,0,0,0.08);
+        }
+
+        #menu .title-center {
+            display: none;
+        }
+        #screen-title.title-buttons-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            flex: 1;
+            width: 100%;
+            max-width: 320px;
+        }
+        #screen-title.title-buttons-wrapper .menu-title-logo { margin-bottom: 8px; }
+        #menu .menu-title-logo {
+            display: inline-flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 0 2px;
+            padding: 20px 32px;
+            border: 3px solid #2d5016;
+            font-family: inherit;
+            font-size: 4rem;
+            font-weight: 700;
+            letter-spacing: -10px;
+            box-shadow: 0 5px 0 #1a3009, 0 8px 0 rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.2);
+            background: rgba(30, 50, 20, 0.5);
+        }
+        #menu .menu-title-logo .logo-char {
+            display: inline-block;
+            background-repeat: no-repeat;
+            background-origin: border-box;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-variant: no-common-ligatures;
+            filter: drop-shadow(2px 2px 0 #1a3009) drop-shadow(3px 3px 0 rgba(0,0,0,0.6));
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+        /* Une tuile bloc = une lettre : atlas 4×16 tuiles, centrée sur le glyphe */
+        #menu .menu-title-logo .logo-char.logo-block {
+            background-size: 4em 16em;
+        }
+        /* Tête de mob : atlas 4×8, cellule centrée sur le glyphe */
+        #menu .menu-title-logo .logo-char.logo-mob {
+            background-size: 4em 8em;
+        }
+
+        .play-btn { 
+            margin-top: 20px; 
+            padding: 14px 50px; 
+            font-size: 1.2rem; 
+            font-family: inherit;
+            background: linear-gradient(180deg, #7cff7c 0%, #5cb85c 50%, #4a934a 100%); 
+            color: #1a1a1a; 
+            border: 3px solid #2d5016; 
+            cursor: pointer; 
+            text-transform: uppercase; 
+            font-weight: bold; 
+            border-radius: 0; 
+            box-shadow: 0 4px 0 #2d5016, inset 0 1px 0 rgba(255,255,255,0.4); 
+            transition: transform 0.05s, box-shadow 0.05s;
+        }
+
+        .play-btn:hover { 
+            background: linear-gradient(180deg, #8fff8f 0%, #6bc96b 50%, #5aa35a 100%); 
+            transform: translateY(1px);
+            box-shadow: 0 3px 0 #2d5016, inset 0 1px 0 rgba(255,255,255,0.4);
+        }
+
+        .play-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 #2d5016, inset 0 1px 0 rgba(255,255,255,0.2);
+        }
+
+        /* --- Interface style Minecraft --- */
+        #menu {
+            display: flex; 
+            flex-direction: column;
+            align-items: center;
+            justify-content: center; 
+            padding: 40px 20px 20px;
+            gap: 24px;
+        }
+        #menu .menu-screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 520px;
+        }
+        #menu .menu-screen.active { display: flex; flex: 1; justify-content: center; align-items: center; }
+        #screen-title.menu-screen.active { flex: 1; justify-content: center; }
+        .mc-panel {
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(8px);
+            border: 4px solid #3d5c1e;
+            box-shadow: inset 0 0 0 2px #2d5016, 0 4px 0 #1a3009;
+            padding: 20px 28px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .mc-panel h2, .mc-panel h3 {
+            color: #7cff7c;
+            font-size: 1rem;
+            margin: 0 0 14px 0;
+            text-shadow: 2px 2px 0 #000;
+        }
+        .mc-btn {
+            display: inline-block;
+            background: linear-gradient(180deg, #5cb85c 0%, #3d7a3d 100%);
+            color: #fff;
+            border: 2px solid #2d5016;
+            padding: 10px 24px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            cursor: pointer; 
+            margin: 4px;
+            box-shadow: 0 3px 0 #2d5016, inset 0 1px 0 rgba(255,255,255,0.3);
+            border-radius: 0;
+            transition: transform 0.05s, box-shadow 0.05s, filter 0.1s;
+        }
+        .mc-btn:hover { filter: brightness(1.1); }
+        .mc-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 #2d5016; }
+        .mc-btn.secondary { background: linear-gradient(180deg, #666 0%, #444 100%); border-color: #333; box-shadow: 0 3px 0 #333; }
+        .mc-btn.danger { background: linear-gradient(180deg, #a33 0%, #722 100%); border-color: #511; box-shadow: 0 3px 0 #511; }
+        .mc-btn.small { padding: 6px 12px; font-size: 0.8rem; }
+        #save-load-overlay {
+            display: none; position: fixed; inset: 0; z-index: 60; align-items: center; justify-content: center;
+            background: rgba(10, 22, 8, 0.85); backdrop-filter: blur(8px); pointer-events: auto;
+            font-family: inherit;
+        }
+        #save-load-overlay .save-load-box {
+            padding: 28px 48px; border: 4px solid #3d5c1e; background: rgba(20, 35, 15, 0.9);
+            box-shadow: 0 6px 0 #1a3009, inset 0 1px 0 rgba(255,255,255,0.15);
+            color: #7cff7c; font-size: 1.2rem; text-shadow: 2px 2px 0 #000;
+        }
+        #loading-screen {
+            display: flex; position: fixed; inset: 0; z-index: 9999; align-items: center; justify-content: center;
+            background: rgba(10, 22, 8, 0.95); backdrop-filter: blur(8px); font-family: inherit;
+        }
+        #loading-screen .loading-box {
+            padding: 32px 56px; border: 4px solid #3d5c1e; background: rgba(20, 35, 15, 0.95);
+            box-shadow: 0 6px 0 #1a3009, inset 0 1px 0 rgba(255,255,255,0.15);
+            color: #7cff7c; font-size: 1.3rem; text-shadow: 2px 2px 0 #000;
+        }
+        .radio-group { display: flex; gap: 16px; justify-content: center; margin-bottom: 12px; font-size: 0.85rem; }
+        .radio-group label { color: #c0c0c0; cursor: pointer; }
+        .radio-group input { cursor: pointer; margin-right: 6px; accent-color: #5cb85c; }
+        .settings-row { margin-bottom: 10px; }
+        .settings-row label { display: block; margin-bottom: 4px; color: #b0b0b0; font-size: 0.85rem; }
+        .mc-panel input[type="range"] { width: 180px; cursor: pointer; accent-color: #5cb85c; }
+        .mc-panel select, .mc-panel input[type="text"] {
+            font-family: inherit; background: #2d5016; color: #e0e0e0; border: 2px solid #3d5c1e; padding: 6px 10px; width: 200px; box-sizing: border-box;
+        }
+        .world-list { list-style: none; padding: 0; margin: 12px 0; max-height: 280px; overflow-y: auto; }
+        .world-list li {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 8px 10px; margin-bottom: 4px; background: rgba(45,80,22,0.4); border: 2px solid #3d5c1e;
+        }
+        .world-list li .world-name { color: #ddd; flex: 1; margin-right: 8px; }
+        .world-list li .world-actions { display: flex; gap: 4px; }
+        .title-buttons {
+            display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 320px;
+            align-items: center; justify-content: center;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+    <div id="loading-screen">
+        <div class="loading-box">Chargement…</div>
+    </div>
+    <div id="menu">
+        <!-- Écran titre principal : 3 boutons centrés sur la hauteur -->
+        <div id="screen-title" class="menu-screen active title-buttons-wrapper">
+            <div class="menu-title-logo" id="menu-title-logo"></div>
+            <div class="title-buttons">
+                <button type="button" class="mc-btn" id="btn-singleplayer">Rejoindre un monde</button>
+                <button type="button" class="mc-btn secondary" id="btn-graphique-title">Paramètres</button>
+                <button type="button" class="mc-btn secondary" id="btn-texture-title">Texture</button>
+            </div>
+        </div>
+
+        <!-- Écran sélection du monde -->
+        <div id="screen-worlds" class="menu-screen">
+            <div class="mc-panel">
+                <h2>Sélection du monde</h2>
+            <div class="radio-group">
+                <label><input type="radio" name="gmode" value="survival" checked> Survie</label>
+                <label><input type="radio" name="gmode" value="creative"> Créatif</label>
+                <label><input type="radio" name="gmode" value="spectator"> Spectateur</label>
+            </div>
+                <div class="settings-row">
+                    <label>Nouveau monde</label>
+                    <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                        <input type="text" id="world-name-input" placeholder="Nom du monde" maxlength="24">
+                        <button type="button" class="mc-btn small" id="world-create-btn">Créer et jouer</button>
+                    </div>
+                </div>
+                <h3 style="margin-top:16px;">Mondes sauvegardés</h3>
+                <ul id="world-list" class="world-list"></ul>
+                <div style="margin-top:12px;"><button type="button" class="mc-btn secondary" id="btn-back-worlds">Retour</button></div>
+            </div>
+        </div>
+
+        <!-- Écran Options (sous-menu) -->
+        <div id="screen-options" class="menu-screen">
+            <div class="mc-panel">
+                <h2>Options</h2>
+                <div style="display:flex; flex-direction:column; gap:8px;">
+                    <button type="button" class="mc-btn" id="btn-options-video">Graphismes</button>
+                    <button type="button" class="mc-btn" id="btn-options-game">Jeu (IA, performance)</button>
+                    <button type="button" class="mc-btn" id="btn-options-controls">Contrôles</button>
+                </div>
+                <div class="settings-row" style="margin-top:14px;">
+                    <button type="button" class="mc-btn small" id="show-atlas-btn">Afficher l'atlas des textures</button>
+                </div>
+                <div style="margin-top:14px;"><button type="button" class="mc-btn secondary" id="btn-back-options">Retour</button></div>
+            </div>
+        </div>
+
+        <!-- Sous-écran Contrôles -->
+        <div id="screen-options-controls" class="menu-screen">
+            <div class="mc-panel">
+                <h2>Contrôles</h2>
+                <p style="font-size:0.85rem; color:#aaa; margin-bottom:12px;">Cliquez sur « Définir » puis appuyez sur la touche ou le bouton souhaité.</p>
+                <div id="controls-list" style="display:flex; flex-direction:column; gap:8px;"></div>
+                <div style="margin-top:14px;"><button type="button" class="mc-btn secondary" id="btn-back-controls">Retour</button></div>
+            </div>
+        </div>
+
+        <!-- Sous-écran Graphismes -->
+        <div id="screen-options-video" class="menu-screen">
+            <div class="mc-panel">
+                <h2>Graphismes</h2>
+                <div class="settings-row">
+                    <label>Shaders / Qualité</label>
+                    <select id="shader-quality" style="width:100%;">
+                        <option value="off">Désactivé</option>
+                        <option value="low">Faible</option>
+                        <option value="medium" selected>Normal (ombres)</option>
+                        <option value="high">Élevé (ombres + feuillage + eau)</option>
+            </select>
+                </div>
+                <div class="settings-row">
+                    <label>Style visuel</label>
+                    <select id="render-style" style="width:100%;">
+                        <option value="texture">Textures</option>
+                        <option value="wireframe">Fil de fer</option>
+                        <option value="normal">Normales 3D</option>
+                    </select>
+                </div>
+                <div class="settings-row">
+                    <label>Champ de vision (FOV): <span id="fov-val">75</span></label>
+                    <input type="range" id="fov-slider" min="50" max="110" value="75">
+                </div>
+                <div class="settings-row">
+                    <label>Distance d'affichage: <span id="render-val">4</span> chunks</label>
+                    <input type="range" id="render-slider" min="1" max="15" value="4" step="1">
+                </div>
+                <div class="settings-row">
+                    <label>Nuages</label>
+                    <select id="clouds-option" style="width:100%;">
+                        <option value="on" selected>Animés</option>
+                        <option value="off">Désactivés</option>
+                    </select>
+                </div>
+                <div class="settings-row">
+                    <label style="display:flex; align-items:center; gap:8px; cursor:pointer; color:#c0c0c0;">
+                        <input type="checkbox" id="fog-enabled" checked>
+                        Brouillard
+                    </label>
+                </div>
+                <div class="settings-row">
+                    <label style="color:#c0c0c0;">Limite FPS</label>
+                    <select id="target-fps" style="margin-left:8px; padding:4px 8px; background:#3d3d3d; color:#eee; border:1px solid #555;">
+                        <option value="0">Illimité</option>
+                        <option value="30">30</option>
+                        <option value="40">40</option>
+                        <option value="60">60</option>
+                    </select>
+                </div>
+                <label style="display:flex; align-items:center; gap:8px; cursor:pointer; color:#c0c0c0;">
+                    <input type="checkbox" id="disable-mob-animations">
+                    Désactiver les animations des mobs (jambes, bras)
+                </label>
+                <div style="margin-top:12px;"><button type="button" class="mc-btn secondary" id="btn-back-video">Retour</button></div>
+            </div>
+        </div>
+
+        <!-- Sous-écran Jeu (IA) -->
+        <div id="screen-options-game" class="menu-screen">
+            <div class="mc-panel">
+                <h2>Jeu & Performance</h2>
+                <label style="display:flex; align-items:center; gap:8px; cursor:pointer; color:#c0c0c0;">
+                    <input type="checkbox" id="disable-mob-ai">
+                    Désactiver l'IA des mobs (recommandé si ralentissements)
+                </label>
+                <div style="margin-top:8px;">
+                    <label style="color:#c0c0c0;">Portée des mobs (IA)</label>
+                    <select id="mob-range" style="margin-left:8px; padding:4px 8px; background:#3d3d3d; color:#eee; border:1px solid #555;">
+                        <option value="1">100%</option>
+                        <option value="0.75">75%</option>
+                        <option value="0.5">50%</option>
+                    </select>
+                </div>
+                <div style="margin-top:14px;"><button type="button" class="mc-btn secondary" id="btn-back-game">Retour</button></div>
+            </div>
+        </div>
+
+        <!-- Menu pause (en jeu, ESC) : sous-menus Visuels / IA -->
+        <div id="menu-pause" class="menu-screen" style="display:none;">
+            <div class="mc-panel">
+                <h2>Menu de pause</h2>
+                <div style="display:flex; flex-direction:column; gap:10px;">
+                    <button type="button" class="mc-btn" id="resume-btn">Reprendre</button>
+                    <div class="settings-row">
+                        <label>Mode de jeu</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="gmode-pause" value="survival"> Survie</label>
+                            <label><input type="radio" name="gmode-pause" value="creative"> Créatif</label>
+                            <label><input type="radio" name="gmode-pause" value="spectator"> Spectateur</label>
+                        </div>
+                    </div>
+                    <button type="button" class="mc-btn secondary" id="pause-btn-graphismes">Graphismes</button>
+                    <button type="button" class="mc-btn secondary" id="pause-btn-ia">Jeu (IA)</button>
+                    <button type="button" class="mc-btn secondary" id="pause-btn-controls">Contrôles</button>
+                    <button type="button" class="mc-btn danger" id="quit-world-btn">Quitter le monde</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="menu-help" style="position:absolute; bottom:86px; left:50%; transform:translateX(-50%); width:92%; max-width:720px; box-sizing:border-box; background:#2d2d2d; border:3px solid #555; border-radius:6px; padding:8px 12px;">
+            <p style="margin:2px 0; font-size:0.75rem; color:#ddd; line-height:1.35;">⌨️ ZQSD · Espace · E (inventaire) · F2 Sauvegarde · F3 Debug</p>
+            <p style="margin:2px 0; font-size:0.75rem; color:#ddd; line-height:1.35;">Clic G/D · - (cacher menu titre) · Chunks: <span id="title-chunks-count">—</span></p>
+        </div>
+    </div>
+
+    <div id="cursor-item">
+        <div class="count" id="cursor-count"></div>
+    </div>
+
+    <div id="inv-tooltip" style="display:none; position:fixed; z-index:100; background:rgba(0,0,0,0.9); color:#eee; padding:6px 10px; border-radius:4px; font-size:12px; pointer-events:none; white-space:pre-line; border:1px solid #3d5c1e;"></div>
+<div id="chest-screen" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:40; justify-content:center; align-items:center; font-family:inherit; flex-direction:column;">
+            <div class="inv-container" style="background:#5c4021; border:4px solid #3d2a14; padding:16px; border-radius:8px; display:flex; flex-direction:column; align-items:center;">
+            <h3 style="margin-top:0; color:#f0e6d2;">Coffre</h3>
+            <div class="inv-grid" id="chest-inv-grid" style="grid-template-columns:repeat(9, 40px);"></div>
+            <h3 style="margin:16px 0 8px; color:#f0e6d2;">Inventaire</h3>
+            <div class="inv-grid" id="chest-player-hotbar" style="grid-template-columns:repeat(9, 40px); margin-bottom:8px;"></div>
+            <div class="inv-grid" id="chest-player-storage" style="grid-template-columns:repeat(9, 40px);"></div>
+        </div>
+        <p class="gui-close-hint" style="margin-top:12px; font-size:0.8rem; color:rgba(255,255,255,0.7);">E ou clic à côté pour fermer</p>
+    </div>
+    <div id="crafting-screen" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:40; justify-content:center; align-items:center; font-family:inherit; flex-direction:column;">
+        <div class="inv-container" style="background:#5c4021; border:4px solid #3d2a14; padding:16px; border-radius:8px; display:flex; flex-direction:row; align-items:flex-start; gap:20px; flex-wrap:wrap;">
+            <div style="display:flex; flex-direction:column; align-items:center;">
+                <h3 style="margin-top:0; color:#f0e6d2;">Table de craft</h3>
+                <div style="display:flex; align-items:center; gap:24px; flex-wrap:wrap;">
+                    <div style="display:grid; grid-template-columns:repeat(3, 40px); gap:4px;" id="craft-grid-3x3"></div>
+                    <div style="font-size:24px; color:#888;">→</div>
+                    <div class="slot" id="craft-result-slot" style="width:40px; height:40px;"></div>
+                </div>
+                <h3 style="margin:16px 0 8px; color:#f0e6d2;">Inventaire</h3>
+                <div class="inv-grid" id="craft-player-hotbar" style="grid-template-columns:repeat(9, 40px); margin-bottom:8px;"></div>
+                <div class="inv-grid" id="craft-player-storage" style="grid-template-columns:repeat(9, 40px);"></div>
+            </div>
+            <div id="craft-screen-recipes-column">
+                <h3 style="margin-top:0; color:#f0e6d2;">Recettes</h3>
+                <div class="crafting-panel" id="craft-table-recipe-panel" style="max-height:320px; background:#8b8b8b;"></div>
+            </div>
+        </div>
+        <p class="gui-close-hint" style="margin-top:12px; font-size:0.8rem; color:rgba(255,255,255,0.7);">E ou clic à côté pour fermer</p>
+    </div>
+    <div id="inventory-screen">
+        <div class="inv-container" style="flex-direction:row;">
+            <div style="flex:0 0 auto;">
+                <h3 style="margin-top:0; font-family:inherit; color:#333;" id="inv-title">Sac à dos</h3>
+                <div id="container-inv-section" style="display:none; margin-bottom:12px;">
+                    <h3 style="font-family:inherit; color:#333; margin-bottom:4px;">Coffre</h3>
+                    <div class="inv-grid" id="container-inv-grid" style="grid-template-columns:repeat(9, 40px);"></div>
+                </div>
+                <div id="creative-picker" style="display:none;">
+                    <div id="creative-tabs" style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px;"></div>
+                    <div id="creative-grid" style="display:grid; grid-template-columns:repeat(8, 50px); gap:4px; margin-bottom:12px;"></div>
+                </div>
+                <div id="inv-survival-label" style="display:none; font-size:12px; color:#555; margin-bottom:4px;">Inventaire (conservé en survie)</div>
+                <div class="inv-grid" id="inv-hotbar" style="grid-template-columns:repeat(9, 40px); margin-bottom:8px;"></div>
+                <div class="inv-grid" id="inv-storage" style="grid-template-columns:repeat(9, 40px);"></div>
+            </div>
+            <div id="inv-craft-column" style="flex:0 0 auto; border-left:3px solid #555; padding-left:20px;">
+                <h3 style="margin-top:0; font-family:inherit; color:#333;">Artisanat (Craft)</h3>
+                <div id="inv-craft-2x2-section" style="display:flex; align-items:center; gap:8px;">
+                    <div style="display:grid; grid-template-columns:repeat(2, 40px); gap:4px;" id="inv-craft-grid-2x2"></div>
+                    <span style="color:#555; font-size:18px;">→</span>
+                    <div class="slot" id="inv-craft-result-slot" style="width:40px; height:40px;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="crafting-panel" id="crafting-panel"></div>
+        <p class="gui-close-hint" style="position:absolute; bottom:24px; left:50%; transform:translateX(-50%); margin:0; font-size:0.8rem; color:rgba(255,255,255,0.8);">E ou clic à côté pour fermer</p>
+    </div>
+
+    <div id="atlas-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:50; justify-content:center; align-items:center; flex-direction:column; flex-wrap:nowrap;">
+        <div style="background:#2d5016; border:2px solid #3d5c1e; padding:20px; border-radius:8px; max-width:95vw; max-height:90vh; overflow:auto;">
+            <h3 style="margin-top:0; color:#ddd;">Textures (stockées en localStorage)</h3>
+            <div style="display:flex; gap:8px; margin-bottom:12px;">
+                <button type="button" class="mc-btn small" id="atlas-tab-blocks">Blocs</button>
+                <button type="button" class="mc-btn small secondary" id="atlas-tab-mobs">Mobs</button>
+            </div>
+            <img id="atlas-img" src="" alt="Atlas" style="image-rendering:pixelated; image-rendering:crisp-edges; max-width:90vw; display:block;">
+            <div id="atlas-actions-blocks" style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap;">
+                <button type="button" class="mc-btn small" id="atlas-download-btn">Télécharger (blocs)</button>
+                <button type="button" class="mc-btn small" id="atlas-import-btn">Importer une image</button>
+                <button type="button" class="mc-btn small" id="atlas-regenerate-btn">Régénérer</button>
+            </div>
+            <div id="atlas-actions-mobs" style="margin-top:12px; display:none; gap:8px; flex-wrap:wrap;">
+                <button type="button" class="mc-btn small" id="atlas-download-mobs-btn">Télécharger (mobs)</button>
+                <button type="button" class="mc-btn small" id="atlas-import-mobs-btn">Importer une image</button>
+                <button type="button" class="mc-btn small" id="atlas-regenerate-mobs-btn">Régénérer</button>
+            </div>
+            <div style="margin-top:12px;"><button type="button" class="mc-btn small secondary" id="atlas-close-btn">Fermer</button></div>
+            <input type="file" id="atlas-file-input" accept="image/*" style="display:none;">
+            <input type="file" id="atlas-mobs-file-input" accept="image/*" style="display:none;">
+        </div>
+    </div>
+    <div id="toast" style="display:none; position:fixed; bottom:100px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.85); color:#7cff7c; padding:10px 24px; border:2px solid #3d5c1e; z-index:30; font-family:inherit; font-size:0.9rem; pointer-events:none;"></div>
+    <div id="save-load-overlay">
+        <div class="save-load-box"><span id="save-load-text">Chargement en cours...</span></div>
+    </div>
+    <div id="debug-f3" style="display:none; position:fixed; top:8px; left:8px; right:8px; color:#fff; font-family:inherit; font-size:12px; line-height:1.4; text-shadow:1px 1px 0 #000; z-index:25; pointer-events:none; background:rgba(0,0,0,0.6); padding:8px 12px; border-radius:4px;"></div>
+    <div id="ui-layer">
+        <div id="gameover-screen" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:500; align-items:center; justify-content:center; flex-direction:column; gap:20px; cursor:default; pointer-events:auto;">
+            <h2 style="color:#c44; font-size:2.5rem; margin:0; text-shadow:0 0 20px #f00;">Vous êtes mort</h2>
+            <p style="color:#aaa; font-size:1.1rem;">Appuyez pour réapparaître au point de spawn.</p>
+            <button type="button" class="mc-btn" id="respawn-btn" style="font-size:1.2rem;">Réapparaître</button>
+        </div>
+        <div id="survival-hud">
+            <div class="stat-bar" id="hearts-container"></div>
+            <div class="stat-bar" id="hunger-container"></div>
+        </div>
+        <div id="crosshair">+</div>
+        <div id="hotbar">
+            <div class="slot active" id="hb-0"></div>
+            <div class="slot" id="hb-1"></div>
+            <div class="slot" id="hb-2"></div>
+            <div class="slot" id="hb-3"></div>
+            <div class="slot" id="hb-4"></div>
+            <div class="slot" id="hb-5"></div>
+            <div class="slot" id="hb-6"></div>
+            <div class="slot" id="hb-7"></div>
+            <div class="slot" id="hb-8"></div>
+        </div>
+    </div>
+<script src="js/save.js"></script>
+    <script src="js/init.js"></script>
+    <script src="js/textures.js"></script>
+    <script src="js/world.js"></script>
+    <script src="js/entities.js"></script>
+    <script src="js/inventory.js"></script>
+    <script src="js/player.js"></script>
+    <script>
+      function buildLogo3D() {
+            var el = document.getElementById('menu-title-logo');
+            if (!el) return;
+            var text = 'Polocraft 3.67';
+            var atlasUrl = (typeof window.getAtlasDataUrl === 'function' && window.getAtlasDataUrl()) || window.atlasDataUrl || '';
+            if (!atlasUrl && typeof window.regenerateAtlas === 'function') { window.regenerateAtlas(); atlasUrl = window.atlasDataUrl || ''; }
+            if (!atlasUrl) atlasUrl = (typeof window.atlasDataUrl !== 'undefined' && window.atlasDataUrl) || '';
+            var mobAtlasUrl = '';
+            try { if (typeof window.getMobAtlasDataUrl === 'function') mobAtlasUrl = window.getMobAtlasDataUrl() || ''; } catch (e) {}
+            /* Blocs 100 % pleins sans transparence (col, row) : terre, pierre, herbe, bois, planches, cobble, sable, neige, feuilles… pas de verre/eau */
+            var blockTiles = [
+                [0, 0], [1, 0], [3, 0], [0, 1], [2, 1], [2, 2], [0, 3], [1, 1],
+                [3, 1], [0, 2], [1, 2], [0, 4], [1, 4], [2, 5], [0, 5]
+            ];
+            /* 3 visages mob (o, o, a) */
+            var mobFaceCenters = [[1.5, 5.5], [1.5, 0.5], [1.5, 4.5]];
+            /* Positions ajustées manuellement : 2e, 4e, 5e, 7e, 8e, 9e, 10e, 11e, 12e, 13e, 14e */
+            var customPos = {
+                1: '-1.1em -5.8em',
+                3: '-1.1em -0.8em',
+                4: '-1em 0.1em',
+                6: '-1.1em -4.7em',
+                7: '-1.2em -0.8em',
+                8: '-2em -8em',
+                9: '-3.2em -2.9em',
+                10: '-1em -2.9em',
+                11: '0em -3.4em',
+                12: '-1em -3.9em',
+                13: '-2.5em -3.6em'
+            };
+            var mobFaceIndex = 0;
+            el.innerHTML = '';
+            for (var i = 0; i < text.length; i++) {
+                var span = document.createElement('span');
+                span.className = 'logo-char';
+                span.textContent = text[i];
+                var ch = text[i];
+                var isA = ch === 'A' || ch === 'a';
+                var isO = ch === 'O' || ch === 'o';
+                var posOverride = customPos[i];
+                if ((isA || isO) && mobAtlasUrl) {
+                    span.className += ' logo-mob';
+                    span.style.backgroundImage = 'url(' + mobAtlasUrl + ')';
+                    span.style.backgroundPosition = posOverride || ((-mobFaceCenters[mobFaceIndex % 3][0]) + 'em ' + (-mobFaceCenters[mobFaceIndex % 3][1]) + 'em');
+                    mobFaceIndex++;
+                } else if (atlasUrl) {
+                    span.className += ' logo-block';
+                    span.style.backgroundImage = 'url(' + atlasUrl + ')';
+                    span.style.backgroundSize = '4em 16em';
+                    var t = blockTiles[i % blockTiles.length];
+                    span.style.backgroundPosition = posOverride || ((-t[0]) + 'em ' + (-t[1]) + 'em');
+                } else {
+                    span.style.color = '#7cff7c';
+                    span.style.backgroundImage = 'none';
+                    span.style.filter = 'drop-shadow(2px 2px 0 #1a3009)';
+                }
+                el.appendChild(span);
+            }
+        }
+        buildLogo3D();
+        window.rebuildLogo = buildLogo3D;
+        setTimeout(buildLogo3D, 300);
+        setTimeout(buildLogo3D, 800);
+      // --- Minage : overlay bloc + fissures progressives ---
+let breakingData = null; // Stocke {bx, by, bz, type, progress, maxProgress}
+const breakingMesh = new THREE.Mesh(
+    new THREE.BoxGeometry(1.02, 1.02, 1.02),
+    new THREE.MeshBasicMaterial({
+        map: typeof window.blockAtlasTexture !== 'undefined' ? window.blockAtlasTexture : null,
+        transparent: true,
+        opacity: 0.5,
+        alphaTest: 0.1,
+        depthWrite: false
+    })
+);
+breakingMesh.visible = false;
+scene.add(breakingMesh);
+const crackOverlayMesh = new THREE.Mesh(
+    new THREE.BoxGeometry(1.021, 1.021, 1.021),
+    new THREE.MeshBasicMaterial({
+        map: typeof window.crackOverlayTexture !== 'undefined' ? window.crackOverlayTexture : null,
+        transparent: true,
+        opacity: 0,
+        depthWrite: false,
+        side: THREE.FrontSide
+    })
+);
+crackOverlayMesh.visible = false;
+scene.add(crackOverlayMesh);
+function updateBreakingMeshForBlock(blockType) {
+    if (typeof window.createBreakingBlockGeometry !== 'function') return;
+    if (breakingMesh.geometry) breakingMesh.geometry.dispose();
+    breakingMesh.geometry = window.createBreakingBlockGeometry(blockType);
+    if (window.blockAtlasTexture && breakingMesh.material.map !== window.blockAtlasTexture) {
+        breakingMesh.material.map = window.blockAtlasTexture;
+        breakingMesh.material.needsUpdate = true;
+    }
+}
+function doBreakBlock(bx, by, bz, type, bKey) {
+    let dropType = type;
+    let canDrop = true;
+    const activeItem = inventory[selectedHotbarIndex];
+    let tool = activeItem ? activeItem.type : '';
+    if (['stone', 'cobblestone'].includes(type) && !tool.includes('pickaxe')) canDrop = false;
+    else if (type === 'iron_ore') { if(!tool.includes('pickaxe')) canDrop = false; dropType = 'iron_ingot'; }
+    else if (type === 'diamond_ore') { if(tool !== 'iron_pickaxe' && tool !== 'diamond_pickaxe') canDrop = false; dropType = 'diamond'; }
+    else if (type === 'coal_ore') { dropType = 'coal'; }
+    else if (type === 'gold_ore') { if(!tool.includes('pickaxe')) canDrop = false; dropType = 'gold_ore'; }
+    delete blocks[bKey];
+    const cKey = `${Math.floor(bx / chunkSize)},${Math.floor(bz / chunkSize)}`;
+    if(chunkBlocks[cKey]) chunkBlocks[cKey] = chunkBlocks[cKey].filter(k => k !== bKey);
+    rebuildChunkAndBorders(bx, bz);
+    if (canDrop) spawnDrop(bx, by, bz, dropType);
+}
+
+// Temps nécessaire (en secondes) pour casser chaque bloc à mains nues
+const blockHardness = {
+    'stone': 1.5, 'cobblestone': 2.0, 'dirt': 0.4, 'grass': 0.5, 
+    'wood': 1.5, 'leaves': 0.2, 'diamond_ore': 3.0, 'iron_ore': 3.0, 'iron_ingot': 0.5,
+    'coal_ore': 0.4, 'gold_ore': 3.0, 'sand': 0.4, 'snow': 0.2, 'snow_layer': 0.2, 'torch': 0.2, 'tnt': 0.5, 'fire': 0.1, 'chest': 0.8, 'bed': 0.4, 'wool': 0.5
+};
+        // ==========================================
+        // UI ET PARAMÈTRES + sauvegarde localStorage
+// ==========================================
+        const POLOCRAFT_SETTINGS_KEY = 'polocraft_settings';
+        const DEFAULT_CONTROLS = { forward: 'KeyW', back: 'KeyS', left: 'KeyA', right: 'KeyD', jump: 'Space', sneak: 'ShiftLeft', inventory: 'KeyE', attack: 0, use: 2 };
+        window.keyBindings = JSON.parse(JSON.stringify(DEFAULT_CONTROLS));
+        function getKeyLabel(val) {
+            if (typeof val === 'number') return val === 0 ? 'Clic gauche' : val === 2 ? 'Clic droit' : 'Bouton ' + val;
+            const map = { KeyW: 'W', KeyS: 'S', KeyA: 'A', KeyD: 'D', KeyZ: 'Z', KeyQ: 'Q', Space: 'Espace', ShiftLeft: 'Shift', ShiftRight: 'Shift', KeyE: 'E' };
+            return map[val] || (val ? val.replace('Key', '') : '—');
+        }
+        function saveSettings() {
+            try {
+                const o = {};
+                const q = document.getElementById('shader-quality'); if (q) o.shaderQuality = q.value;
+                const r = document.getElementById('render-style'); if (r) o.renderStyle = r.value;
+                const fov = document.getElementById('fov-slider'); if (fov) o.fov = fov.value;
+                const rd = document.getElementById('render-slider'); if (rd) o.renderDistance = rd.value;
+                const co = document.getElementById('clouds-option'); if (co) o.clouds = co.value;
+                const fog = document.getElementById('fog-enabled'); if (fog) o.fog = fog.checked;
+                const ai = document.getElementById('disable-mob-ai'); if (ai) o.disableMobAI = ai.checked;
+                const tfps = document.getElementById('target-fps'); if (tfps) o.targetFps = tfps.value;
+                const anim = document.getElementById('disable-mob-animations'); if (anim) o.disableMobAnimations = anim.checked;
+                const mrange = document.getElementById('mob-range'); if (mrange) o.mobRangeMultiplier = mrange.value;
+                if (window.keyBindings) o.controlSettings = window.keyBindings;
+                localStorage.setItem(POLOCRAFT_SETTINGS_KEY, JSON.stringify(o));
+            } catch (e) {}
+        }
+        function restoreSettings() {
+            try {
+                const raw = localStorage.getItem(POLOCRAFT_SETTINGS_KEY);
+                if (!raw) return;
+                const o = JSON.parse(raw);
+                const q = document.getElementById('shader-quality'); if (q && o.shaderQuality) { q.value = o.shaderQuality; if (typeof window.applyShaderQuality === 'function') window.applyShaderQuality(o.shaderQuality); }
+                const r = document.getElementById('render-style'); if (r && o.renderStyle) { r.value = o.renderStyle; if (typeof window.applyRenderStyle === 'function') window.applyRenderStyle(o.renderStyle); }
+                const fov = document.getElementById('fov-slider'); if (fov && o.fov !== undefined) { fov.value = o.fov; if (typeof fovValue !== 'undefined') fovValue = parseInt(o.fov); if (camera) { camera.fov = parseInt(o.fov); camera.updateProjectionMatrix(); } document.getElementById('fov-val') && (document.getElementById('fov-val').textContent = o.fov); }
+                const rd = document.getElementById('render-slider'); if (rd && o.renderDistance !== undefined) { rd.value = o.renderDistance; var rv = document.getElementById('render-val'); if (rv) rv.textContent = o.renderDistance; if (typeof renderDistance !== 'undefined') { renderDistance = parseInt(o.renderDistance); maxRenderDistance = Math.min(15, parseInt(o.renderDistance) + 1); if (window.mobActiveDistance !== undefined && typeof chunkSize !== 'undefined') window.mobActiveDistance = Math.max(8, renderDistance * chunkSize * (typeof window.mobRangeMultiplier === 'number' ? window.mobRangeMultiplier : 1)); } if (window.fogEnabled !== false && scene.fog && typeof chunkSize !== 'undefined') { scene.fog.near = Math.max(0, (parseInt(o.renderDistance) - 1.5)) * chunkSize; scene.fog.far = parseInt(o.renderDistance) * chunkSize; } }
+                const co = document.getElementById('clouds-option'); if (co && o.clouds) { co.value = o.clouds; if (typeof cloudPlane !== 'undefined') cloudPlane.visible = (o.clouds === 'on'); }
+                const fog = document.getElementById('fog-enabled'); if (fog && o.fog !== undefined) { fog.checked = o.fog; window.fogEnabled = o.fog; if (typeof applyFogEnabled === 'function') applyFogEnabled(); }
+                const ai = document.getElementById('disable-mob-ai'); if (ai && o.disableMobAI !== undefined) { ai.checked = o.disableMobAI; window.disableMobAI = o.disableMobAI; }
+                const tfps = document.getElementById('target-fps'); if (tfps && o.targetFps !== undefined) { tfps.value = o.targetFps; window.targetFps = parseInt(o.targetFps, 10) || 0; }
+                const anim = document.getElementById('disable-mob-animations'); if (anim && o.disableMobAnimations !== undefined) { anim.checked = o.disableMobAnimations; window.disableMobAnimations = o.disableMobAnimations; }
+                const mrange = document.getElementById('mob-range'); if (mrange && o.mobRangeMultiplier !== undefined) { mrange.value = o.mobRangeMultiplier; window.mobRangeMultiplier = parseFloat(o.mobRangeMultiplier) || 1; }
+                if (o.controlSettings && typeof o.controlSettings === 'object') {
+                    window.keyBindings = {};
+                    for (var k in DEFAULT_CONTROLS) window.keyBindings[k] = (o.controlSettings[k] !== undefined) ? o.controlSettings[k] : DEFAULT_CONTROLS[k];
+                }
+            } catch (e) {}
+        }
+        function buildControlsUI() {
+            const list = document.getElementById('controls-list');
+            if (!list) return;
+            const rows = [
+                { key: 'forward', label: 'Avancer' },
+                { key: 'back', label: 'Reculer' },
+                { key: 'left', label: 'Gauche' },
+                { key: 'right', label: 'Droite' },
+                { key: 'jump', label: 'Sauter' },
+                { key: 'sneak', label: "S'accroupir" },
+                { key: 'inventory', label: 'Inventaire' },
+                { key: 'attack', label: 'Casser / Attaquer' },
+                { key: 'use', label: 'Placer / Utiliser' }
+            ];
+            list.innerHTML = '';
+            rows.forEach(function(r) {
+                const row = document.createElement('div');
+                row.className = 'settings-row';
+                row.style.display = 'flex';
+                row.style.alignItems = 'center';
+                row.style.justifyContent = 'space-between';
+                row.style.gap = '8px';
+                const span = document.createElement('span');
+                span.style.color = '#c0c0c0';
+                span.id = 'control-label-' + r.key;
+                span.textContent = getKeyLabel(window.keyBindings[r.key]);
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'mc-btn small';
+                btn.textContent = 'Définir';
+                btn.addEventListener('click', function() {
+                    btn.textContent = '...';
+                    function onKey(ev) {
+                        if (ev.code === 'Escape') { btn.textContent = 'Définir'; document.removeEventListener('keydown', onKey); document.removeEventListener('mousedown', onMouse); return; }
+                        if (r.key !== 'attack' && r.key !== 'use') {
+                            ev.preventDefault();
+                            window.keyBindings[r.key] = ev.code;
+                            document.removeEventListener('keydown', onKey);
+                            document.removeEventListener('mousedown', onMouse);
+                            span.textContent = getKeyLabel(window.keyBindings[r.key]);
+                            btn.textContent = 'Définir';
+                            saveSettings();
+                        }
+                    }
+                    function onMouse(ev) {
+                        if (r.key === 'attack' || r.key === 'use') {
+                            ev.preventDefault();
+                            window.keyBindings[r.key] = ev.button;
+                            document.removeEventListener('keydown', onKey);
+                            document.removeEventListener('mousedown', onMouse);
+                            span.textContent = getKeyLabel(window.keyBindings[r.key]);
+                            btn.textContent = 'Définir';
+                            saveSettings();
+                        }
+                    }
+                    document.addEventListener('keydown', onKey);
+                    document.addEventListener('mousedown', onMouse);
+                });
+                const lab = document.createElement('label');
+                lab.textContent = r.label;
+                lab.style.minWidth = '160px';
+                row.appendChild(lab);
+                row.appendChild(span);
+                row.appendChild(btn);
+                list.appendChild(row);
+            });
+        }
+        const fovSlider = document.getElementById('fov-slider');
+        const fovValText = document.getElementById('fov-val');
+        if (fovSlider) fovSlider.addEventListener('input', (e) => {
+            fovValue = parseInt(e.target.value);
+            fovValText.innerText = fovValue;
+            camera.fov = fovValue;
+            camera.updateProjectionMatrix();
+            saveSettings();
+        });
+
+const renderSlider = document.getElementById('render-slider');
+        const renderValText = document.getElementById('render-val');
+        
+        if (renderSlider) {
+            renderSlider.addEventListener('input', (e) => {
+                let val = parseInt(e.target.value);
+                renderValText.innerText = val;
+                renderDistance = val;
+                maxRenderDistance = Math.min(15, val + 1);
+                if (typeof window.mobActiveDistance !== 'undefined' && typeof chunkSize !== 'undefined') window.mobActiveDistance = Math.max(8, renderDistance * chunkSize * (typeof window.mobRangeMultiplier === 'number' ? window.mobRangeMultiplier : 1)); 
+                if (window.fogEnabled !== false && scene.fog) {
+                    scene.fog.near = Math.max(0, (val - 1.5)) * chunkSize;
+                    scene.fog.far = val * chunkSize;
+                }
+                saveSettings();
+            });
+        }
+        window.fogEnabled = true;
+        function applyFogEnabled() {
+            const el = document.getElementById('fog-enabled');
+            window.fogEnabled = el ? el.checked : true;
+            const rd = typeof renderDistance !== 'undefined' ? renderDistance : 4;
+            const cs = typeof chunkSize !== 'undefined' ? chunkSize : 16;
+            if (window.fogEnabled) {
+                if (!scene.fog) scene.fog = new THREE.Fog(scene.background ? scene.background.clone() : 0x87ceeb, (rd - 1) * cs, rd * cs);
+                else {
+                    scene.fog.near = (rd - 1.5) * cs;
+                    scene.fog.far = rd * cs;
+                }
+            } else scene.fog = null;
+        }
+        const fogCheck = document.getElementById('fog-enabled');
+        if (fogCheck) fogCheck.addEventListener('change', function() { applyFogEnabled(); saveSettings(); });
+        const shaderQualitySelect = document.getElementById('shader-quality');
+        if (shaderQualitySelect) shaderQualitySelect.addEventListener('change', function() {
+            if (typeof window.applyShaderQuality === 'function') window.applyShaderQuality(this.value);
+            saveSettings();
+        });
+        // ==========================================
+        // NUAGES DYNAMIQUES
+        // ==========================================
+        const cloudCanvas = document.createElement('canvas'); 
+        cloudCanvas.width = 512; 
+        cloudCanvas.height = 512;
+        const cCtx = cloudCanvas.getContext('2d');
+        
+        cCtx.fillStyle = 'rgba(255, 255, 255, 0)'; 
+        cCtx.fillRect(0, 0, 512, 512);
+        
+        cCtx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+        for(let i = 0; i < 80; i++) {
+            cCtx.fillRect(Math.random() * 512, Math.random() * 512, 30 + Math.random() * 50, 30 + Math.random() * 50);
+        }
+        
+        const cloudTex = new THREE.CanvasTexture(cloudCanvas);
+        cloudTex.wrapS = THREE.RepeatWrapping; 
+        cloudTex.wrapT = THREE.RepeatWrapping; 
+        cloudTex.repeat.set(5, 5); 
+        
+        const cloudPlane = new THREE.Mesh(
+            new THREE.PlaneGeometry(1000, 1000), 
+            new THREE.MeshBasicMaterial({
+                map: cloudTex, 
+                transparent: true, 
+                side: THREE.DoubleSide, 
+                depthWrite: false
+            })
+        );
+        cloudPlane.rotation.x = -Math.PI / 2; 
+        cloudPlane.position.y = 50;
+        scene.add(cloudPlane);
+        function setCloudsVisible(visible) {
+            if (typeof cloudPlane !== 'undefined') cloudPlane.visible = visible;
+            const co = document.getElementById('clouds-option');
+            const coP = document.getElementById('clouds-option-pause');
+            if (co) co.value = visible ? 'on' : 'off';
+            if (coP) coP.value = visible ? 'on' : 'off';
+        }
+        const coEl = document.getElementById('clouds-option');
+        if (coEl) coEl.addEventListener('change', function() { cloudPlane.visible = (this.value === 'on'); document.getElementById('clouds-option-pause') && (document.getElementById('clouds-option-pause').value = this.value); saveSettings(); });
+        const coPauseEl = document.getElementById('clouds-option-pause');
+        if (coPauseEl) coPauseEl.addEventListener('change', function() { cloudPlane.visible = (this.value === 'on'); document.getElementById('clouds-option') && (document.getElementById('clouds-option').value = this.value); saveSettings(); });
+
+        (function() {
+            const ATLAS_STORAGE_KEY = 'polocraft_atlas_cache';
+            const modal = document.getElementById('atlas-modal');
+            const img = document.getElementById('atlas-img');
+            function showAtlas() {
+                let url = '';
+                if (typeof window.getAtlasDataUrl === 'function') url = window.getAtlasDataUrl();
+                if (!url && typeof window.atlasDataUrl !== 'undefined') url = window.atlasDataUrl;
+                if (!url && typeof window.regenerateAtlas === 'function') {
+                    window.regenerateAtlas();
+                    url = window.getAtlasDataUrl ? window.getAtlasDataUrl() : window.atlasDataUrl;
+                }
+                if (url) {
+                    img.src = url;
+                    modal.style.display = 'flex';
+                }
+            }
+            window.showAtlas = showAtlas;
+            let atlasTab = 'blocks';
+            function showAtlasTab(tab) {
+                atlasTab = tab;
+                document.getElementById('atlas-tab-blocks').style.background = (tab === 'blocks') ? '' : '#555';
+                document.getElementById('atlas-tab-mobs').style.background = (tab === 'mobs') ? '' : '#555';
+                document.getElementById('atlas-actions-blocks').style.display = (tab === 'blocks') ? 'flex' : 'none';
+                document.getElementById('atlas-actions-mobs').style.display = (tab === 'mobs') ? 'flex' : 'none';
+                if (tab === 'mobs' && typeof window.getMobAtlasDataUrl === 'function') {
+                    img.src = window.getMobAtlasDataUrl();
+                } else {
+                    let url = window.getAtlasDataUrl ? window.getAtlasDataUrl() : (window.atlasDataUrl || '');
+                    if (!url && window.regenerateAtlas) { window.regenerateAtlas(); url = window.atlasDataUrl || ''; }
+                    img.src = url || '';
+                }
+            }
+            document.getElementById('show-atlas-btn').addEventListener('click', function() { showAtlas(); showAtlasTab('blocks'); });
+            document.getElementById('atlas-tab-blocks').addEventListener('click', function() { showAtlasTab('blocks'); });
+            document.getElementById('atlas-tab-mobs').addEventListener('click', function() { showAtlasTab('mobs'); });
+            document.getElementById('atlas-close-btn').addEventListener('click', function() { modal.style.display = 'none'; if (typeof applyCursorAndLock === 'function') applyCursorAndLock(); });
+            document.getElementById('atlas-download-btn').addEventListener('click', function() {
+                const url = (atlasTab === 'blocks') ? (img.src || (window.getAtlasDataUrl && window.getAtlasDataUrl())) : img.src;
+                if (!url) return;
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'polocraft-atlas.png';
+                a.click();
+            });
+            document.getElementById('atlas-download-mobs-btn').addEventListener('click', function() {
+                if (typeof window.getMobAtlasDataUrl !== 'function') return;
+                const a = document.createElement('a');
+                a.href = window.getMobAtlasDataUrl();
+                a.download = 'polocraft-mobs-atlas.png';
+                a.click();
+            });
+            document.getElementById('atlas-import-mobs-btn').addEventListener('click', function() { document.getElementById('atlas-mobs-file-input').click(); });
+            document.getElementById('atlas-mobs-file-input').addEventListener('change', function(e) {
+                const f = e.target.files[0];
+                if (!f) return;
+                const r = new FileReader();
+                r.onload = function() {
+                    if (typeof window.updateMobAtlasFromDataUrl === 'function') {
+                        window.updateMobAtlasFromDataUrl(r.result, function() {
+                            img.src = (window.getMobAtlasDataUrl && window.getMobAtlasDataUrl()) || r.result;
+                        });
+                    }
+                };
+                r.readAsDataURL(f);
+                e.target.value = '';
+            });
+            document.getElementById('atlas-regenerate-mobs-btn').addEventListener('click', function() {
+                if (typeof window.regenerateMobAtlas === 'function') {
+                    window.regenerateMobAtlas();
+                    img.src = (window.getMobAtlasDataUrl && window.getMobAtlasDataUrl()) || '';
+                }
+            });
+            document.getElementById('atlas-import-btn').addEventListener('click', function() { document.getElementById('atlas-file-input').click(); });
+            document.getElementById('atlas-file-input').addEventListener('change', function(e) {
+                const f = e.target.files[0];
+                if (!f) return;
+                const r = new FileReader();
+                r.onload = function() {
+                    if (typeof window.updateAtlasFromDataUrl === 'function') {
+                        window.updateAtlasFromDataUrl(r.result, function() { img.src = r.result; });
+                    }
+                };
+                r.readAsDataURL(f);
+                e.target.value = '';
+            });
+            document.getElementById('atlas-regenerate-btn').addEventListener('click', function() {
+                if (typeof window.regenerateAtlas === 'function') {
+                    window.regenerateAtlas();
+                    img.src = window.getAtlasDataUrl ? window.getAtlasDataUrl() : window.atlasDataUrl;
+                }
+            });
+        })();
+
+        // ==========================================
+        // VARIABLES JEU ET SURVIE
+        // ==========================================
+
+
+
+
+
+        // ==========================================
+        // GÉNÉRATION DE L'ATLAS DE TEXTURES 
+        // ==========================================
+    
+
+        // ==========================================
+        // INVENTAIRE ET CRAFTING LOGIQUE
+        // ==========================================
+
+
+
+
+
+
+
+        const cursorIcon = document.getElementById('cursor-item');
+        const cursorCount = document.getElementById('cursor-count');
+        
+        document.addEventListener('mousemove', (e) => {
+            const chestScreen = document.getElementById('chest-screen');
+            const craftingScreen = document.getElementById('crafting-screen');
+            const chestOpen = chestScreen && (chestScreen.style.display === 'flex' || getComputedStyle(chestScreen).display === 'flex');
+            const craftingOpen = craftingScreen && (craftingScreen.style.display === 'flex' || getComputedStyle(craftingScreen).display === 'flex');
+            const invOpen = inventoryOpen || chestOpen || craftingOpen;
+            const held = (typeof window.getItemHeldInCursor === 'function') ? window.getItemHeldInCursor() : null;
+            if (invOpen && held) {
+                cursorIcon.style.left = (e.clientX - 25) + 'px';
+                cursorIcon.style.top = (e.clientY - 25) + 'px';
+            }
+        });
+        
+
+        // ==========================================
+        // DONNÉES DU MONDE ET CULLING
+        // ==========================================
+
+        
+
+
+ 
+
+   
+
+ 
+
+
+
+
+        // ==========================================
+        // GÉNÉRATION DU MONDE ET GROTTES
+        // ==========================================
+
+
+
+        // ==========================================
+        // TEXTURES ET MESHES DES MOBS
+        // ==========================================
+
+
+
+        // ==========================================
+        // TOAST ET SAUVEGARDE F2
+        // ==========================================
+        let toastTimeout = null;
+        function showToast(msg) {
+            const el = document.getElementById('toast');
+            if (!el) return;
+            if (toastTimeout) clearTimeout(toastTimeout);
+            el.textContent = msg;
+            el.style.display = 'block';
+            toastTimeout = setTimeout(() => { el.style.display = 'none'; }, 2500);
+        }
+        function showSaveLoadOverlay(msg) {
+            const el = document.getElementById('save-load-overlay');
+            const text = document.getElementById('save-load-text');
+            if (el && text) { text.textContent = msg || 'Chargement en cours...'; el.style.display = 'flex'; }
+        }
+        function hideSaveLoadOverlay() {
+            const el = document.getElementById('save-load-overlay');
+            if (el) el.style.display = 'none';
+        }
+        // ==========================================
+        // CONTROLES ET INPUTS
+        // ==========================================
+        let isLocked = false; 
+        let inventoryOpen = false;
+        
+        pitchObject.add(camera);
+        
+        /** Retourne true si au moins une interface (inventaire, menu, modal, game over) est affichée. */
+        function isAnyUIVisible() {
+            if (inventoryOpen) return true;
+            const chestScreen = document.getElementById('chest-screen');
+            if (chestScreen && chestScreen.style.display === 'flex') return true;
+            const craftingScreen = document.getElementById('crafting-screen');
+            if (craftingScreen && craftingScreen.style.display === 'flex') return true;
+            const menu = document.getElementById('menu');
+            if (menu && menu.style.display === 'flex') return true;
+            const atlasModal = document.getElementById('atlas-modal');
+            if (atlasModal && (atlasModal.style.display === 'block' || atlasModal.style.display === 'flex')) return true;
+            const gameover = document.getElementById('gameover-screen');
+            if (gameover && gameover.style.display === 'flex') return true;
+            return false;
+        }
+
+        /** Applique le bon état souris/pointer lock : UI visible → curseur libre, sinon → souris en jeu (pointer lock). */
+        function applyCursorAndLock() {
+            if (isAnyUIVisible()) {
+                try { if (document.exitPointerLock) document.exitPointerLock(); } catch (e) {}
+                document.body.style.cursor = 'default';
+                } else {
+                document.body.style.cursor = 'default';
+                if (typeof gameStarted !== 'undefined' && gameStarted && typeof window.playerDead !== 'undefined' && !window.playerDead) {
+                    try { if (document.body.requestPointerLock) document.body.requestPointerLock(); } catch (e) {}
+                }
+            }
+        }
+
+        function showScreen(id) {
+            document.querySelectorAll('#menu .menu-screen').forEach(function(el) { el.classList.remove('active'); el.style.display = 'none'; });
+            const el = document.getElementById(id);
+            if (el) { el.classList.add('active'); el.style.display = 'flex'; }
+            if (id === 'screen-title' && typeof window.rebuildLogo === 'function') setTimeout(window.rebuildLogo, 100);
+        }
+        function refreshWorldList() {
+            const ul = document.getElementById('world-list');
+            if (!ul) return;
+            function fillList(list) {
+                list = list || [];
+                ul.innerHTML = '';
+                list.forEach(function(name) {
+                    const li = document.createElement('li');
+                    li.innerHTML = '<span class="world-name">' + name + '</span><span class="world-actions">' +
+                        '<button type="button" class="mc-btn small" data-action="play" data-world="' + name.replace(/"/g, '&quot;') + '">Jouer</button>' +
+                        '<button type="button" class="mc-btn small secondary" data-action="duplicate" data-world="' + name.replace(/"/g, '&quot;') + '">Dupliquer</button>' +
+                        '<button type="button" class="mc-btn small danger" data-action="delete" data-world="' + name.replace(/"/g, '&quot;') + '">Supprimer</button></span>';
+                    ul.appendChild(li);
+                });
+            }
+            if (typeof getWorldListAsync === 'function') getWorldListAsync().then(fillList);
+            else fillList(typeof getWorldList === 'function' ? getWorldList() : []);
+        }
+        document.getElementById('world-list').addEventListener('click', function(e) {
+            const btn = e.target.closest('[data-action]');
+            if (!btn) return;
+            const action = btn.getAttribute('data-action');
+            const worldName = btn.getAttribute('data-world');
+            if (action === 'play') {
+                if (gameStarted) return;
+                const shaderQuality = document.getElementById('shader-quality') ? document.getElementById('shader-quality').value : 'medium';
+                if (typeof window.applyShaderQuality === 'function') window.applyShaderQuality(shaderQuality);
+                if (typeof loadWorldFromStorage === 'function') {
+                    showSaveLoadOverlay('Chargement en cours...');
+                    loadWorldFromStorage(worldName).then(function(ok) {
+                        if (ok) {
+                            gameStarted = true;
+                            if (typeof updateInventoryUI === 'function') updateInventoryUI();
+                            if (typeof updateSurvivalHUD === 'function') updateSurvivalHUD();
+                            var menuEl = document.getElementById('menu');
+                            if (menuEl) menuEl.style.display = 'none';
+                            applyCursorAndLock();
+                            showToast('Monde "' + worldName + '" chargé.');
+                        } else showToast('Erreur chargement.');
+                    }).catch(function() { showToast('Erreur chargement.'); }).finally(function() { hideSaveLoadOverlay(); });
+                } else showToast('Erreur chargement.');
+            } else if (action === 'duplicate') {
+                if (typeof duplicateWorld === 'function') {
+                    duplicateWorld(worldName).then(function(newName) {
+                        if (newName) { refreshWorldList(); showToast('Monde dupliqué : ' + newName); }
+                    });
+                }
+            } else if (action === 'delete') {
+                if (confirm('Supprimer le monde "' + worldName + '" ?')) {
+                    if (typeof deleteWorld === 'function') {
+                        deleteWorld(worldName).then(function() { refreshWorldList(); showToast('Monde supprimé.'); });
+                    }
+                }
+            }
+        });
+        function startGame() {
+            window.gameMode = document.querySelector('input[name="gmode"]:checked') ? document.querySelector('input[name="gmode"]:checked').value : 'survival';
+            if (window.gameMode !== 'creative') inventory.fill(null);
+                updateInventoryUI();
+                updateSurvivalHUD();
+                gameStarted = true;
+            applyCursorAndLock();
+        }
+        document.getElementById('world-create-btn').addEventListener('click', function() {
+            if (gameStarted) return;
+            const nameInput = document.getElementById('world-name-input');
+            const name = (nameInput && nameInput.value.trim()) || ('Monde_' + Date.now());
+            const shaderQuality = document.getElementById('shader-quality') ? document.getElementById('shader-quality').value : 'medium';
+            if (typeof window.applyShaderQuality === 'function') window.applyShaderQuality(shaderQuality);
+            if (typeof clearWorld === 'function') clearWorld();
+            window.currentWorldName = name;
+            window.worldSeed = (typeof window.stringToSeed === 'function') ? window.stringToSeed(name) : 0;
+            if (typeof generateChunk === 'function') generateChunk(0, 0);
+            if (typeof buildChunkMesh === 'function') buildChunkMesh(0, 0);
+            if (typeof requestChunk === 'function') requestChunk(0, 0);
+            function placePlayerOnSpawn() {
+                if (typeof window.findSpawnNear === 'function') {
+                    var sp = window.findSpawnNear(8, 8, 6, 25);
+                    yawObject.position.set(sp.x, sp.y, sp.z);
+                } else {
+                    var sh = (typeof window.getSurfaceHeight === 'function') ? window.getSurfaceHeight(8, 8) : 0;
+                    yawObject.position.set(8, sh + 1.5, 8);
+                }
+            }
+            if (typeof getWorldListAsync === 'function') {
+                getWorldListAsync().then(function(list) {
+                    if (!list.includes(name)) setWorldList(list.concat(name));
+                });
+            } else {
+                var list = typeof getWorldList === 'function' ? getWorldList() : [];
+                if (list && !list.includes(name)) setWorldList(list.concat(name));
+            }
+            placePlayerOnSpawn();
+            startGame();
+            var menuEl = document.getElementById('menu');
+            if (menuEl) menuEl.style.display = 'none';
+            applyCursorAndLock();
+            showToast('Monde "' + name + '" créé.');
+        });
+        document.getElementById('btn-singleplayer').addEventListener('click', function() {
+            showScreen('screen-worlds');
+            if (!window.previewWorldGenerated && typeof clearWorld === 'function') {
+                clearWorld();
+                if (typeof generateChunk === 'function') generateChunk(0, 0);
+                if (typeof buildChunkMesh === 'function') buildChunkMesh(0, 0);
+                if (typeof requestChunk === 'function') requestChunk(0, 0);
+                if (typeof yawObject !== 'undefined') {
+                    if (typeof window.findSpawnNear === 'function') {
+                        var sp = window.findSpawnNear(8, 8, 6, 25);
+                        yawObject.position.set(sp.x, sp.y, sp.z);
+                    } else {
+                        var sh = (typeof window.getSurfaceHeight === 'function') ? window.getSurfaceHeight(8, 8) : 0;
+                        yawObject.position.set(8, sh + 2, 8);
+                    }
+                }
+                window.previewWorldGenerated = true;
+            }
+            refreshWorldList();
+        });
+        document.getElementById('btn-graphique-title').addEventListener('click', function() { showScreen('screen-options'); });
+        document.getElementById('btn-texture-title').addEventListener('click', function() { if (typeof showAtlas === 'function') showAtlas(); });
+        document.getElementById('btn-back-worlds').addEventListener('click', function() { showScreen('screen-title'); });
+        document.getElementById('btn-options-video').addEventListener('click', function() { showScreen('screen-options-video'); });
+        document.getElementById('btn-options-game').addEventListener('click', function() { showScreen('screen-options-game'); });
+        document.getElementById('btn-options-controls').addEventListener('click', function() { buildControlsUI(); showScreen('screen-options-controls'); });
+        document.getElementById('btn-back-options').addEventListener('click', function() { showScreen('screen-title'); });
+        document.getElementById('btn-back-controls').addEventListener('click', function() { if (menuFromPause) { menuFromPause = false; showScreen('menu-pause'); } else showScreen('screen-options'); });
+        var menuFromPause = false;
+        document.getElementById('btn-back-video').addEventListener('click', function() {
+            if (menuFromPause) { menuFromPause = false; showScreen('menu-pause'); } else { showScreen('screen-options'); }
+        });
+        document.getElementById('btn-back-game').addEventListener('click', function() {
+            if (menuFromPause) { menuFromPause = false; showScreen('menu-pause'); } else { showScreen('screen-options'); }
+        });
+        document.getElementById('pause-btn-graphismes').addEventListener('click', function() { menuFromPause = true; showScreen('screen-options-video'); });
+        document.getElementById('pause-btn-ia').addEventListener('click', function() { menuFromPause = true; showScreen('screen-options-game'); });
+        document.getElementById('pause-btn-controls').addEventListener('click', function() { menuFromPause = true; buildControlsUI(); showScreen('screen-options-controls'); });
+        document.addEventListener('pointerlockchange', function() {
+            isLocked = document.pointerLockElement === document.body;
+            if (!isLocked) document.body.style.cursor = 'default';
+            const chestScreen = document.getElementById('chest-screen');
+            const craftingScreen = document.getElementById('crafting-screen');
+            const chestOrCraftOpen = (chestScreen && chestScreen.style.display === 'flex') || (craftingScreen && craftingScreen.style.display === 'flex');
+            const menu = document.getElementById('menu');
+            if (menu) menu.style.display = (!isLocked && !inventoryOpen && !chestOrCraftOpen) ? 'flex' : 'none';
+            if (!isLocked && !inventoryOpen && !chestOrCraftOpen) {
+                if (gameStarted) {
+                    showScreen('menu-pause');
+                    document.querySelectorAll('input[name="gmode-pause"]').forEach(function(r) { r.checked = (r.value === window.gameMode); });
+                } else {
+                    showScreen('screen-title');
+                }
+            }
+            if (!document.pointerLockElement && typeof refreshWorldList === 'function') refreshWorldList();
+        });
+        if (document.getElementById('menu')) document.getElementById('menu').addEventListener('focus', refreshWorldList);
+        window.addEventListener('focus', refreshWorldList);
+        refreshWorldList();
+        const disableMobAICb = document.getElementById('disable-mob-ai');
+        if (disableMobAICb) {
+            disableMobAICb.addEventListener('change', function() { window.disableMobAI = this.checked; saveSettings(); });
+            window.disableMobAI = disableMobAICb.checked;
+        }
+        const targetFpsEl = document.getElementById('target-fps');
+        if (targetFpsEl) targetFpsEl.addEventListener('change', function() { window.targetFps = parseInt(this.value, 10) || 0; saveSettings(); });
+        const disableMobAnimEl = document.getElementById('disable-mob-animations');
+        if (disableMobAnimEl) disableMobAnimEl.addEventListener('change', function() { window.disableMobAnimations = this.checked; saveSettings(); });
+        const mobRangeEl = document.getElementById('mob-range');
+        if (mobRangeEl) mobRangeEl.addEventListener('change', function() { window.mobRangeMultiplier = parseFloat(this.value) || 1; saveSettings(); });
+        (function() {
+            const el = document.getElementById('render-style');
+            if (el) el.addEventListener('change', saveSettings);
+        })();
+        restoreSettings();
+        document.querySelectorAll('input[name="gmode-pause"]').forEach(function(r) {
+            r.addEventListener('change', function() { if (typeof setGameMode === 'function') setGameMode(this.value); });
+        });
+        document.getElementById('resume-btn').addEventListener('click', function() {
+            document.getElementById('menu').style.display = 'none';
+            requestAnimationFrame(function() { requestAnimationFrame(function() { applyCursorAndLock(); }); });
+        });
+        const respawnBtn = document.getElementById('respawn-btn');
+        if (respawnBtn) respawnBtn.addEventListener('click', function() { if (typeof window.respawnPlayer === 'function') window.respawnPlayer(); });
+        document.getElementById('quit-world-btn').addEventListener('click', function() {
+            var quitDone = false;
+            showSaveLoadOverlay('Enregistrement en cours...');
+            function doQuit() {
+                if (quitDone) return;
+                quitDone = true;
+                hideSaveLoadOverlay();
+                gameStarted = false;
+                window.previewWorldGenerated = false;
+                if (typeof clearWorld === 'function') clearWorld();
+                showScreen('screen-title');
+                if (typeof window.regenerateTitlePreview === 'function') window.regenerateTitlePreview();
+                if (typeof showToast === 'function') showToast('Monde quitté. Sauvegardé.');
+            }
+            var timeout = setTimeout(function() { doQuit(); if (typeof showToast === 'function') showToast('Monde quitté (délai sauvegarde).'); }, 5000);
+            function onQuitDone() { clearTimeout(timeout); doQuit(); }
+            if (window.currentWorldName && typeof saveWorldToStorage === 'function') {
+                saveWorldToStorage(window.currentWorldName)
+                    .then(function(ok) { onQuitDone(); if (!ok && typeof showToast === 'function') showToast('Monde quitté (sauvegarde partielle).'); })
+                    .catch(function() { onQuitDone(); if (typeof showToast === 'function') showToast('Monde quitté. Sauvegarde échouée.'); });
+            } else {
+                clearTimeout(timeout);
+                doQuit();
+            }
+        });
+
+        document.addEventListener('click', function(e) {
+            var chestScreen = document.getElementById('chest-screen');
+            var craftingScreen = document.getElementById('crafting-screen');
+            var invScreen = document.getElementById('inventory-screen');
+            var chestOpen = chestScreen && (chestScreen.style.display === 'flex' || getComputedStyle(chestScreen).display === 'flex');
+            var craftOpen = craftingScreen && (craftingScreen.style.display === 'flex' || getComputedStyle(craftingScreen).display === 'flex');
+            var invOpen = invScreen && (invScreen.style.display === 'flex' || invScreen.style.display === 'block');
+            var held = (typeof window.getItemHeldInCursor === 'function') ? window.getItemHeldInCursor() : null;
+            function isClickOutsideGui(screenEl) {
+                return screenEl && screenEl.contains(e.target) && !e.target.closest('.inv-container');
+            }
+            if (chestOpen && isClickOutsideGui(chestScreen)) {
+                e.preventDefault();
+                if (held) {
+                    var yaw = yawObject.rotation.y;
+                    var dx = Math.sin(yaw) * 3.5, dz = Math.cos(yaw) * 3.5;
+                    var px = yawObject.position.x, py = yawObject.position.y, pz = yawObject.position.z;
+                    if (typeof spawnDrop === 'function') spawnDrop(px + dx, py, pz + dz, held.type, held.count);
+                    if (typeof window.setItemHeldInCursor === 'function') window.setItemHeldInCursor(null);
+                    if (typeof updateCursorItem === 'function') updateCursorItem();
+                    if (typeof updateChestUI === 'function') updateChestUI();
+                } else {
+                    chestScreen.style.display = 'none';
+                    window.openChestAt = null;
+                    if (typeof applyCursorAndLock === 'function') applyCursorAndLock();
+                }
+                return;
+            }
+            if (craftOpen && isClickOutsideGui(craftingScreen)) {
+                e.preventDefault();
+                if (held) {
+                    var yaw = yawObject.rotation.y;
+                    var dx = Math.sin(yaw) * 3.5, dz = Math.cos(yaw) * 3.5;
+                    var px = yawObject.position.x, py = yawObject.position.y, pz = yawObject.position.z;
+                    if (typeof spawnDrop === 'function') spawnDrop(px + dx, py, pz + dz, held.type, held.count);
+                    if (typeof window.setItemHeldInCursor === 'function') window.setItemHeldInCursor(null);
+                    if (typeof updateCursorItem === 'function') updateCursorItem();
+                    if (typeof updateCraftingUI === 'function') updateCraftingUI();
+                } else {
+                    craftingScreen.style.display = 'none';
+                    window.openCraftingScreen = false;
+                    if (window.craftGrid) { for (var i = 0; i < 9; i++) { if (window.craftGrid[i]) addToInventory(window.craftGrid[i].type, window.craftGrid[i].count); window.craftGrid[i] = null; } }
+                    if (typeof updateInventoryUI === 'function') updateInventoryUI();
+                    if (typeof applyCursorAndLock === 'function') applyCursorAndLock();
+                }
+                return;
+            }
+            if (invOpen && isClickOutsideGui(invScreen)) {
+                e.preventDefault();
+                if (held) {
+                    var yaw = yawObject.rotation.y;
+                    var dx = Math.sin(yaw) * 3.5, dz = Math.cos(yaw) * 3.5;
+                    var px = yawObject.position.x, py = yawObject.position.y, pz = yawObject.position.z;
+                    if (typeof spawnDrop === 'function') spawnDrop(px + dx, py, pz + dz, held.type, held.count);
+                    if (typeof window.setItemHeldInCursor === 'function') window.setItemHeldInCursor(null);
+                    if (typeof updateCursorItem === 'function') updateCursorItem();
+                    if (typeof updateInventoryUI === 'function') updateInventoryUI();
+                } else {
+                    inventoryOpen = false;
+                    invScreen.style.display = 'none';
+                    if (window.craftGrid2x2) { for (var i = 0; i < 4; i++) { if (window.craftGrid2x2[i]) addToInventory(window.craftGrid2x2[i].type, window.craftGrid2x2[i].count); window.craftGrid2x2[i] = null; } }
+                    var heldE = (typeof window.getItemHeldInCursor === 'function') ? window.getItemHeldInCursor() : null;
+                    if (heldE) { addToInventory(heldE.type, heldE.count); if (typeof window.setItemHeldInCursor === 'function') window.setItemHeldInCursor(null); }
+                    if (typeof updateInventoryUI === 'function') updateInventoryUI();
+                    if (typeof applyCursorAndLock === 'function') applyCursorAndLock();
+                }
+                return;
+            }
+        });
+
+        document.addEventListener('mousemove', (event) => {
+            if (!isLocked) return;
+            yawObject.rotation.y -= (event.movementX || 0) * 0.002; 
+            pitchObject.rotation.x -= (event.movementY || 0) * 0.002; 
+            pitchObject.rotation.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, pitchObject.rotation.x));
+        });
+
+const keys = { w: false, a: false, s: false, d: false, space: false, shift: false }; // <- Ajoute shift: false
+document.addEventListener('keydown', (e) => {
+    if (e.code === 'Escape') {
+                e.preventDefault();
+                if (window._escapeWaitRelease || (window._escapeMenuBlockedUntil && Date.now() < window._escapeMenuBlockedUntil)) {
+                    return;
+                }
+                const chestScreen = document.getElementById('chest-screen');
+                const chestOpen = chestScreen && (chestScreen.style.display === 'flex' || getComputedStyle(chestScreen).display === 'flex');
+                const craftingScreen = document.getElementById('crafting-screen');
+                const craftOpen = craftingScreen && (craftingScreen.style.display === 'flex' || getComputedStyle(craftingScreen).display === 'flex');
+                if (chestOpen || craftOpen) {
+                    return;
+                }
+                if (inventoryOpen) {
+                    inventoryOpen = false;
+                    document.getElementById('inventory-screen').style.display = 'none';
+                    if (window.craftGrid2x2) { for (let i = 0; i < 4; i++) { if (window.craftGrid2x2[i]) addToInventory(window.craftGrid2x2[i].type, window.craftGrid2x2[i].count); window.craftGrid2x2[i] = null; } }
+                    var held = (typeof window.getItemHeldInCursor === 'function') ? window.getItemHeldInCursor() : null;
+                    if (held) {
+                        addToInventory(held.type, held.count);
+                        if (typeof window.setItemHeldInCursor === 'function') window.setItemHeldInCursor(null);
+                        if (typeof updateCursorItem === 'function') updateCursorItem();
+                    }
+                    if (typeof updateInventoryUI === 'function') updateInventoryUI();
+                    window._justClosedUI = true; setTimeout(() => window._justClosedUI = false, 200); // Empêche le menu pause de s'ouvrir
+                    applyCursorAndLock();
+                    window._escapeWaitRelease = true;
+                    e.stopImmediatePropagation();
+                    return;
+                } else {
+                    const atlasModal = document.getElementById('atlas-modal');
+                    if (atlasModal && (atlasModal.style.display === 'block' || atlasModal.style.display === 'flex')) {
+                        atlasModal.style.display = 'none';
+                        applyCursorAndLock();
+                    } else {
+                        const menu = document.getElementById('menu');
+                        if (menu && menu.style.display === 'flex') {
+                            const active = document.querySelector('#menu .menu-screen.active');
+                            if (active) {
+                                if (active.id === 'screen-options-video' || active.id === 'screen-options-game' || active.id === 'screen-options-controls') {
+                                    if (typeof menuFromPause !== 'undefined' && menuFromPause) { menuFromPause = false; showScreen('menu-pause'); }
+                                    else showScreen('screen-options');
+                                } else if (active.id === 'screen-options' || active.id === 'screen-worlds') {
+                                    showScreen('screen-title');
+                                } else if (active.id === 'menu-pause') {
+                                    e.preventDefault();
+                                    menu.style.display = 'none';
+                                    if (typeof applyCursorAndLock === 'function') applyCursorAndLock();
+                                }
+                            }
+                        } else if (menu && typeof gameStarted !== 'undefined' && gameStarted && typeof window.playerDead !== 'undefined' && !window.playerDead) {
+                            menu.style.display = 'flex';
+                            showScreen('menu-pause');
+                            document.querySelectorAll('input[name="gmode-pause"]').forEach(function(r) { r.checked = (r.value === window.gameMode); });
+                            applyCursorAndLock();
+                        }
+                    }
+                }
+                return;
+            }
+            if (e.code === 'F3') {
+                e.preventDefault();
+                const el = document.getElementById('debug-f3');
+                if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
+                return;
+            }
+            if (e.code === 'F4') {
+                e.preventDefault();
+                if (window.gameMode === 'survival') setGameMode('creative');
+                else if (window.gameMode === 'creative') setGameMode('spectator');
+                else setGameMode('survival');
+                return;
+            }
+            if (e.code === 'F2' && gameStarted) {
+                e.preventDefault();
+                if (typeof saveWorldToStorage === 'function') saveWorldToStorage().then(function(ok) { if (ok) showToast('Monde sauvegardé.'); });
+                return;
+            }
+            if ((e.code === 'Minus' || e.code === 'NumpadSubtract') && !gameStarted) {
+                const menu = document.getElementById('menu');
+                const active = menu && document.querySelector('#menu .menu-screen.active');
+                if (menu && menu.style.display === 'flex' && active && active.id === 'screen-title') {
+                    e.preventDefault();
+                    menu.style.display = 'none';
+                    if (typeof document.body.requestPointerLock === 'function') document.body.requestPointerLock();
+                    else if (typeof applyCursorAndLock === 'function') applyCursorAndLock();
+                }
+                return;
+            }
+            if (e.code === (window.keyBindings ? window.keyBindings.inventory : 'KeyE')) {
+                if (typeof gameStarted !== 'undefined' && !gameStarted) return;
+                
+                const chestScreen = document.getElementById('chest-screen');
+                const chestOpen = chestScreen && (chestScreen.style.display === 'flex' || getComputedStyle(chestScreen).display === 'flex');
+                if (chestOpen) {
+                    chestScreen.style.display = 'none';
+                    window.openChestAt = null;
+                    applyCursorAndLock();
+                    return;
+                }
+
+                const craftingScreen = document.getElementById('crafting-screen');
+                const craftOpen = craftingScreen && (craftingScreen.style.display === 'flex' || getComputedStyle(craftingScreen).display === 'flex');
+                if (craftOpen) {
+                    craftingScreen.style.display = 'none';
+                    window.openCraftingScreen = false;
+                    if (window.craftGrid) { for (let i = 0; i < 9; i++) { if (window.craftGrid[i]) addToInventory(window.craftGrid[i].type, window.craftGrid[i].count); window.craftGrid[i] = null; } }
+                    if (typeof updateInventoryUI === 'function') updateInventoryUI();
+                    applyCursorAndLock();
+                    return;
+                }
+
+                // C'est ici que tu avais l'erreur "invUI is not defined", c'est maintenant corrigé !
+                inventoryOpen = !inventoryOpen;
+                const invUI = document.getElementById('inventory-screen');
+                if (inventoryOpen) {
+                    invUI.style.display = 'flex';
+                    if (typeof updateInventoryUI === 'function') updateInventoryUI();
+                } else {
+                    invUI.style.display = 'none';
+                    if (window.craftGrid2x2) { for (let i = 0; i < 4; i++) { if (window.craftGrid2x2[i]) addToInventory(window.craftGrid2x2[i].type, window.craftGrid2x2[i].count); window.craftGrid2x2[i] = null; } }
+                    var heldE = (typeof window.getItemHeldInCursor === 'function') ? window.getItemHeldInCursor() : null;
+                    if (heldE) {
+                        addToInventory(heldE.type, heldE.count);
+                        if (typeof window.setItemHeldInCursor === 'function') window.setItemHeldInCursor(null);
+                        if (typeof updateCursorItem === 'function') updateCursorItem();
+                    }
+                }
+                applyCursorAndLock();
+                return;
+            }
+            if (!isLocked) return;
+            
+            var kb = window.keyBindings || DEFAULT_CONTROLS;
+            if (e.code === kb.jump && !e.repeat && typeof window.gameMode !== 'undefined' && window.gameMode === 'creative') {
+                var now = Date.now();
+                if (window.lastSpaceTime && (now - window.lastSpaceTime) < 450) {
+                    window.creativeFlying = !window.creativeFlying;
+                }
+                window.lastSpaceTime = now;
+            }
+            if (e.code === kb.forward) keys.w = true;
+            if (e.code === kb.back) keys.s = true;
+            if (e.code === kb.left) keys.a = true;
+            if (e.code === kb.right) keys.d = true;
+            if (e.code === kb.jump) keys.space = true;
+            if (e.code === kb.sneak) keys.shift = true;
+            switch(e.code) { 
+                case 'Digit1': selectHotbar(0); break; 
+                case 'Digit2': selectHotbar(1); break; 
+                case 'Digit3': selectHotbar(2); break; 
+                case 'Digit4': selectHotbar(3); break; 
+                case 'Digit5': selectHotbar(4); break; 
+                case 'Digit6': selectHotbar(5); break; 
+                case 'Digit7': selectHotbar(6); break; 
+                case 'Digit8': selectHotbar(7); break; 
+                case 'Digit9': selectHotbar(8); break; 
+            }
+        });
+
+        document.addEventListener('keyup', (e) => { 
+            var kb = window.keyBindings || DEFAULT_CONTROLS;
+            if (e.code === kb.forward) keys.w = false;
+            if (e.code === kb.back) keys.s = false;
+            if (e.code === kb.left) keys.a = false;
+            if (e.code === kb.right) keys.d = false;
+            if (e.code === kb.jump) keys.space = false;
+            if (e.code === kb.sneak) keys.shift = false;
+        });
+
+        document.addEventListener('wheel', (e) => { 
+            if(!isLocked) return; 
+            if(e.deltaY > 0) selectHotbar((selectedHotbarIndex + 1) % 9); 
+            else selectHotbar((selectedHotbarIndex - 1 + 9) % 9); 
+        });
+
+
+        const raycaster = new THREE.Raycaster(); 
+        const center = new THREE.Vector2(0, 0);
+        const outlineMesh = new THREE.LineSegments(
+            new THREE.EdgesGeometry(new THREE.BoxGeometry(1.02, 1.02, 1.02)), 
+            new THREE.LineBasicMaterial({color: 0x000000, linewidth: 2})
+        ); 
+        outlineMesh.visible = false; 
+        scene.add(outlineMesh);
+        
+        window.addEventListener('contextmenu', e => e.preventDefault());
+
+        document.addEventListener('mousedown', (e) => {
+            if (!isLocked || window.gameMode === 'spectator') return; // Bloque les clics en 
+            
+            let allIntersectables = [...Object.values(chunks)];
+            if (typeof chunkTransparent !== 'undefined') allIntersectables = allIntersectables.concat(Object.values(chunkTransparent));
+            mobs.forEach(m => allIntersectables.push(m.group));
+
+            raycaster.setFromCamera(center, camera); 
+            const intersects = raycaster.intersectObjects(allIntersectables, true);
+
+            if (intersects.length > 0 && intersects[0].distance <= 6) {
+                // Priorité au premier objet touché qui appartient à un mob (remonter les parents)
+                let hitMob = null;
+                let hitIntersect = null;
+                for (let i = 0; i < intersects.length; i++) {
+                    const dist = intersects[i].distance;
+                    if (dist > 6) break;
+                    let obj = intersects[i].object;
+                    while (obj) {
+                        const m = mobs.find(m => m.group === obj);
+                        if (m) { hitMob = m; hitIntersect = intersects[i]; break; }
+                        obj = obj.parent;
+                    }
+                    if (hitMob) break;
+                }
+                const hitObj = hitIntersect ? hitIntersect.object : intersects[0].object;
+                
+if (hitMob && e.button === (window.keyBindings ? window.keyBindings.attack : 0)) { 
+    let damage = 1;
+    const activeItem = inventory[selectedHotbarIndex];
+    if (activeItem) {
+        if (activeItem.type === 'wood_sword') damage = 2;
+        else if (activeItem.type === 'iron_sword') damage = 4;
+        else if (activeItem.type === 'diamond_sword') damage = 7;
+    }
+    if (window.gameMode === 'creative') damage = 100;
+
+    hitMob.hp -= damage;
+    if (!hitMob.isHostile) {
+        hitMob.fleeing = true;
+        hitMob.fleeUntil = 4;
+    }
+    if (hitMob.isHostile) {
+        hitMob.aggro = true;
+        hitMob.aggroTime = 18;
+    }
+    
+    // Flash rouge ---
+    hitMob.group.traverse((child) => {
+        if (child.isMesh && child.material) {
+            const mat = child.material;
+            if (!child.userData.hasClonedMaterial) {
+                if (Array.isArray(mat)) {
+                    child.material = mat.map(function(m) { return m && m.clone ? m.clone() : m; });
+                } else if (mat && mat.clone) {
+                    child.material = mat.clone();
+                }
+                child.userData.hasClonedMaterial = true;
+            }
+            const setEmissive = function(m) { if (m && m.emissive) m.emissive.setHex(0xff0000); };
+            if (Array.isArray(child.material)) child.material.forEach(setEmissive);
+            else setEmissive(child.material);
+        }
+    });
+
+    // On remet la couleur normale après 200ms
+    setTimeout(() => {
+        if (hitMob.group) {
+            hitMob.group.traverse((child) => {
+                if (child.isMesh && child.material) {
+                    const setBlack = function(m) { if (m && m.emissive) m.emissive.setHex(0x000000); };
+                    if (Array.isArray(child.material)) child.material.forEach(setBlack);
+                    else setBlack(child.material);
+                }
+            });
+        }
+    }, 200);
+    // -----------------------------
+
+    if (hitMob.hp <= 0) {
+        if (hitMob.type === 'creeper' && typeof spawnDrop === 'function') spawnDrop(hitMob.x, hitMob.y, hitMob.z, 'gunpowder');
+        if (hitMob.type === 'sheep' && typeof spawnDrop === 'function') { const n = 1 + Math.floor(Math.random() * 2); for (let i = 0; i < n; i++) spawnDrop(hitMob.x, hitMob.y, hitMob.z, 'wool'); }
+        scene.remove(hitMob.group);
+        mobs.splice(mobs.indexOf(hitMob), 1);
+    }
+    return; 
+}
+
+                // Pour le minage, prendre la première intersection avec un bloc (pas un mob)
+                let blockIntersect = null;
+                for (let i = 0; i < intersects.length; i++) {
+                    if (intersects[i].distance > 6) break;
+                    let obj = intersects[i].object;
+                    let isMob = false;
+                    while (obj) {
+                        if (mobs.some(m => m.group === obj)) { isMob = true; break; }
+                        obj = obj.parent;
+                    }
+                    if (!isMob) { blockIntersect = intersects[i]; break; }
+                }
+                const intersect = blockIntersect || intersects[0]; 
+                const activeItem = inventory[selectedHotbarIndex];
+                
+if (e.button === (window.keyBindings ? window.keyBindings.attack : 0) && !hitMob && intersect) { 
+    // Préparer le minage d'un bloc
+    const pIn = intersect.point.clone().sub(intersect.face.normal.clone().multiplyScalar(0.1));
+    const bx = Math.round(pIn.x), by = Math.round(pIn.y), bz = Math.round(pIn.z); 
+    const bKey = `${bx},${by},${bz}`;
+    
+    if(blocks[bKey]) {
+        if (blocks[bKey].type === 'water') return;
+        if (window.gameMode === 'creative') {
+            // Créatif : On casse tout de suite (sans loot)
+            delete blocks[bKey];
+            const cKey = `${Math.floor(bx / chunkSize)},${Math.floor(bz / chunkSize)}`; 
+            if (chunkBlocks[cKey]) chunkBlocks[cKey] = chunkBlocks[cKey].filter(k => k !== bKey);
+            rebuildChunkAndBorders(bx, bz); 
+        } else {
+            const type = blocks[bKey].type;
+            const isInstantBreak = (typeof window.isFlora === 'function' && window.isFlora(type)) || type === 'torch';
+            if (isInstantBreak) {
+                doBreakBlock(bx, by, bz, type, bKey);
+                return;
+            }
+            let hardness = blockHardness[type] || 1.0;
+            let speedMulti = 1.0;
+            if (activeItem && activeItem.type.includes('pickaxe') && (type.includes('stone') || type.includes('ore'))) {
+                if (activeItem.type === 'wood_pickaxe') speedMulti = 4.0;
+                else if (activeItem.type === 'iron_pickaxe') speedMulti = 6.0;
+                else if (activeItem.type === 'diamond_pickaxe') speedMulti = 8.0;
+            }
+            breakingData = { bx, by, bz, type, progress: 0, maxProgress: hardness / speedMulti };
+            updateBreakingMeshForBlock(type);
+            breakingMesh.position.set(bx, by, bz);
+            breakingMesh.visible = true;
+            breakingMesh.material.opacity = 0.4;
+            crackOverlayMesh.position.set(bx, by, bz);
+            crackOverlayMesh.visible = true;
+            crackOverlayMesh.material.opacity = 0;
+        }
+    }
+}
+
+                if (e.button === (window.keyBindings ? window.keyBindings.use : 2) && !hitMob) {
+                    const intersect = intersects[0];
+                    const pInLook = intersect.point.clone().sub(intersect.face.normal.clone().multiplyScalar(0.1));
+                    const lookBx = Math.round(pInLook.x), lookBy = Math.round(pInLook.y), lookBz = Math.round(pInLook.z);
+                    const lookKey = `${lookBx},${lookBy},${lookBz}`;
+                    const lookBlock = blocks[lookKey];
+                    if (lookBlock && lookBlock.type === 'bed') {
+                        if (typeof window.isNight === 'function' && window.isNight()) {
+                            window.gameTime = Math.floor(window.gameTime / 24000) * 24000 + 24000;
+                            if (typeof showToast === 'function') showToast('Vous dormez... Bonne matinée !');
+                        }
+                        return;
+                    }
+                    if (lookBlock && lookBlock.type === 'chest') {
+                        if (!lookBlock.inventory) lookBlock.inventory = new Array(27).fill(null);
+                        window.openChestAt = lookKey;
+                        document.getElementById('chest-screen').style.display = 'flex';
+                        if (typeof updateChestUI === 'function') updateChestUI();
+                        try { if (document.exitPointerLock) document.exitPointerLock(); } catch (e) {}
+                        document.body.style.cursor = 'default';
+                        return;
+                    }
+                    if (lookBlock && lookBlock.type === 'crafting_table') {
+                        window.openCraftingScreen = true;
+                        if (typeof window.craftGrid !== 'undefined') window.craftGrid.fill(null);
+                        document.getElementById('crafting-screen').style.display = 'flex';
+                        if (typeof updateCraftingUI === 'function') updateCraftingUI();
+                        try { if (document.exitPointerLock) document.exitPointerLock(); } catch (e) {}
+                        document.body.style.cursor = 'default';
+                        return;
+                    }
+                    const activeItem = inventory[selectedHotbarIndex];
+                    const notPlaceable = ['wood_pickaxe', 'iron_pickaxe', 'diamond_pickaxe', 'wood_sword', 'iron_sword', 'diamond_sword', 'iron_ingot', 'diamond', 'stick', 'coal', 'gunpowder'];
+                    if (activeItem && !notPlaceable.includes(activeItem.type)) {
+                        const pOut = intersect.point.clone().add(intersect.face.normal.clone().multiplyScalar(0.1));
+                        const nx = Math.round(pOut.x), ny = Math.round(pOut.y), nz = Math.round(pOut.z);
+                        const nKey = `${nx},${ny},${nz}`;
+                        if (!blocks[nKey]) {
+                            const dist = Math.sqrt(
+                                Math.pow(yawObject.position.x - nx, 2) +
+                                Math.pow((yawObject.position.y - 1.5) - ny, 2) +
+                                Math.pow(yawObject.position.z - nz, 2)
+                            );
+                            if (dist > 1.2 || (typeof window.isFlora === 'function' && window.isFlora(activeItem.type))) {
+                                if (window.gameMode === 'creative' || removeFromInventory(activeItem.type, 1)) {
+                                    addBlock(nx, ny, nz, activeItem.type);
+                                    if (activeItem.type === 'fire' && typeof window.checkFireIgniteTNT === 'function') window.checkFireIgniteTNT(nx, ny, nz);
+                                    if (activeItem.type === 'tnt' && typeof window.checkTNTIgniteFromFire === 'function') window.checkTNTIgniteFromFire(nx, ny, nz);
+                                    rebuildChunkAndBorders(nx, nz);
+                                    updateInventoryUI();
+                                }
+                            }
+        }
+    }
+}
+            }
+        });
+
+        // ==========================================
+        // PHYSIQUE ET COLLISIONS
+        // ==========================================
+
+
+
+
+        const clock = new THREE.Clock();
+        let lastAutoSaveTime = 0;
+
+
+        // ==========================================
+        // GESTION DES ENTITES ET INTELLIGENCE ARTIFICIELLE
+        // ==========================================
+
+        // ==========================================
+        // GESTION DES CHUNKS ET BOUCLE DE JEU
+        // ==========================================
+        function unloadChunk(cx, cz) {
+            const chunkKey = `${cx},${cz}`;
+            if(chunks[chunkKey]) { 
+                scene.remove(chunks[chunkKey]); 
+                chunks[chunkKey].geometry.dispose(); 
+                delete chunks[chunkKey]; 
+            }
+            if (typeof chunkTransparent !== 'undefined' && chunkTransparent[chunkKey]) {
+                scene.remove(chunkTransparent[chunkKey]);
+                chunkTransparent[chunkKey].geometry.dispose();
+                delete chunkTransparent[chunkKey];
+            }
+            if(chunkBlocks[chunkKey]) { 
+                chunkBlocks[chunkKey].forEach(k => delete blocks[k]); 
+                delete chunkBlocks[chunkKey]; 
+            }
+            loadedChunks.delete(chunkKey);
+            
+            for(let i = items.length - 1; i >= 0; i--) { 
+                if(items[i].cx === cx && items[i].cz === cz) { 
+                    scene.remove(items[i].mesh); 
+                    items.splice(i, 1); 
+                } 
+            }
+            for(let i = mobs.length - 1; i >= 0; i--) { 
+                if(mobs[i].cx === cx && mobs[i].cz === cz) { 
+                    scene.remove(mobs[i].group); 
+                    mobs.splice(i, 1); 
+                } 
+            }
+        }
+
+        function updateChunksManager() {
+            const px = Math.floor(yawObject.position.x / chunkSize); 
+            const pz = Math.floor(yawObject.position.z / chunkSize);
+            
+            for(let cx = px - renderDistance; cx <= px + renderDistance; cx++) { 
+                for(let cz = pz - renderDistance; cz <= pz + renderDistance; cz++) { 
+                    requestChunk(cx, cz); 
+                } 
+            }
+            
+            loadedChunks.forEach(k => { 
+                const [cx,cz] = k.split(',').map(Number); 
+                if(Math.abs(cx - px) > maxRenderDistance || Math.abs(cz - pz) > maxRenderDistance) { 
+                    unloadChunk(cx, cz); 
+                } 
+            });
+        }
+
+        window.regenerateTitlePreview = function() {
+            window.worldSeed = (typeof window.stringToSeed === 'function') ? window.stringToSeed('Menu') : 0;
+            window.menuPreviewGenerating = true;
+            for (var cx = -3; cx <= 3; cx++) {
+                for (var cz = -3; cz <= 3; cz++) {
+                    if (typeof window.addLoadedChunk === 'function') window.addLoadedChunk(cx, cz);
+                    if (typeof generateChunk === 'function') generateChunk(cx, cz);
+                    if (typeof buildChunkMesh === 'function') buildChunkMesh(cx, cz);
+                }
+            }
+            window.menuPreviewGenerating = false;
+            yawObject.position.set(50, 15, 50);
+            yawObject.rotation.y = 0.6;
+            pitchObject.rotation.x = -0.2;
+            if (typeof window.gameTime === 'number') window.gameTime = 6000;
+            if (typeof window.updateDayNight === 'function') window.updateDayNight(6000, 50, 50);
+            window.previewWorldGenerated = true;
+            var tc = document.getElementById('title-chunks-count');
+            if (tc && typeof window.getLoadedChunksCount === 'function') tc.textContent = window.getLoadedChunksCount();
+            if (typeof updateInventoryUI === 'function') updateInventoryUI();
+        };
+        window.regenerateTitlePreview();
+        
+        window.targetFps = 0;
+        window._lastFrameTime = 0;
+        function animate() {
+            requestAnimationFrame(animate); 
+            var now = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
+            var targetFps = (typeof window.targetFps === 'number') ? window.targetFps : 0;
+            if (targetFps > 0 && window._lastFrameTime > 0 && (now - window._lastFrameTime) < (1000 / targetFps)) {
+                return;
+            }
+            window._lastFrameTime = now;
+            const delta = Math.min(clock.getDelta(), 0.1);
+            window.lastFps = (delta > 0) ? (1 / delta) : 0;
+            
+            if(isLocked) { 
+                updatePhysics(delta); 
+                updateEntities(delta); 
+            } else if (!gameStarted && window.previewWorldGenerated && typeof updateEntities === 'function') {
+                updateEntities(delta);
+            }
+            
+            // Animation du ciel
+            cloudTex.offset.x += 0.02 * delta; 
+            cloudPlane.position.x = yawObject.position.x; 
+            cloudPlane.position.z = yawObject.position.z;
+            if (window._tntFlashList && window._tntFlashList.length > 0) {
+                const t = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
+                window._tntFlashList.forEach(function(o) {
+                    if (t >= o.blinkAt) { o.mesh.visible = !o.mesh.visible; o.blinkAt = t + 80; }
+                });
+            }
+            if (gameStarted) {
+            updateChunksManager(); 
+            processChunksQueue(); 
+            }
+            if (window.waterPhysicsEnabled && typeof window.tickWaterSpread === 'function') window.tickWaterSpread(delta);
+            if (gameStarted && typeof window.gameTime === 'number' && !window.playerDead) {
+                window.gameTime += delta * 35;
+                if (window.updateDayNight) window.updateDayNight(window.gameTime, yawObject.position.x, yawObject.position.z);
+            }
+            if (gameStarted && window.currentWorldName && typeof saveWorldToStorage === 'function') {
+                const t = clock.getElapsedTime();
+                if (t - lastAutoSaveTime >= 60) {
+                    lastAutoSaveTime = t;
+                    setTimeout(function() { saveWorldToStorage(window.currentWorldName); }, 0);
+                }
+            }
+            const debugEl = document.getElementById('debug-f3');
+            if (debugEl && debugEl.style.display === 'block') {
+                const px = yawObject.position.x, py = yawObject.position.y, pz = yawObject.position.z;
+                const biome = typeof window.getBiomeAt === 'function' ? window.getBiomeAt(px, pz) : '?';
+                let blockInfo = '—';
+                raycaster.setFromCamera(center, camera);
+                const allForDebug = [...Object.values(chunks)].concat(typeof chunkTransparent !== 'undefined' ? Object.values(chunkTransparent) : []);
+                const hit = raycaster.intersectObjects(allForDebug, true);
+                if (hit.length > 0 && hit[0].distance <= 20) {
+                    const pIn = hit[0].point.clone().sub(hit[0].face.normal.clone().multiplyScalar(0.1));
+                    const bx = Math.round(pIn.x), by = Math.round(pIn.y), bz = Math.round(pIn.z);
+                    const bKey = bx + ',' + by + ',' + bz;
+                    blockInfo = (typeof blocks !== 'undefined' && blocks[bKey]) ? blocks[bKey].type : 'air';
+                    blockInfo += ' [' + bx + ', ' + by + ', ' + bz + ']';
+                }
+                const ticks = typeof window.gameTime === 'number' ? Math.floor(window.gameTime % 24000) : 0;
+                const day = typeof window.gameTime === 'number' ? Math.floor(window.gameTime / 24000) + 1 : 1;
+                const hour = Math.floor(ticks / 1000); const min = Math.floor((ticks % 1000) / 16.66);
+                const fps = (typeof window.lastFps === 'number') ? Math.round(window.lastFps) : '—';
+                const yawDeg = (yawObject.rotation.y * 180 / Math.PI); const pitchDeg = (pitchObject.rotation.x * 180 / Math.PI);
+                const direction = Math.round(((yawDeg % 360) + 360) % 360);
+                const inclinaison = Math.round(pitchDeg * 10) / 10;
+                const numChunks = (typeof window.getLoadedChunksCount === 'function') ? window.getLoadedChunksCount() : '—';
+                debugEl.innerHTML = 'FPS: ' + fps + '<br>XYZ: ' + px.toFixed(2) + ' / ' + py.toFixed(2) + ' / ' + pz.toFixed(2) + '<br>Direction: ' + direction + '° · Inclinaison: ' + inclinaison + '°<br>Chunks: ' + numChunks + '<br>Biome: ' + biome + '<br>Regard: ' + blockInfo + '<br>Heure: ' + (ticks) + ' (Jour ' + day + ', ~' + hour + 'h' + (min < 10 ? '0' : '') + min + ')';
+            }
+            if (typeof window.getFancyMaterialTime === 'function') {
+                const u = window.getFancyMaterialTime();
+                if (u && u.value !== undefined) u.value = clock.getElapsedTime();
+            }
+            if (typeof window.updateFancyMaterialUniforms === 'function') window.updateFancyMaterialUniforms(camera, scene);
+            // --- Logique de minage continu ---
+if (breakingData && isLocked && window.gameMode === 'survival') {
+    // On vérifie qu'on regarde toujours le même bloc
+    raycaster.setFromCamera(center, camera);
+    let allIntersectables = [...Object.values(chunks)];
+    if (typeof chunkTransparent !== 'undefined') allIntersectables = allIntersectables.concat(Object.values(chunkTransparent));
+    mobs.forEach(m => allIntersectables.push(m.group));
+    const intersects = raycaster.intersectObjects(allIntersectables, true);
+    
+    let stillLooking = false;
+    if (intersects.length > 0 && intersects[0].distance <= 6 && !mobs.find(m => m.group === intersects[0].object || m.group.children.includes(intersects[0].object))) {
+        const pIn = intersects[0].point.clone().sub(intersects[0].face.normal.clone().multiplyScalar(0.1));
+        const bx = Math.round(pIn.x), by = Math.round(pIn.y), bz = Math.round(pIn.z);
+        if (bx === breakingData.bx && by === breakingData.by && bz === breakingData.bz) {
+            stillLooking = true;
+        }
+    }
+
+    if (stillLooking) {
+        breakingData.progress += delta;
+        const ratio = Math.min(1, breakingData.progress / breakingData.maxProgress);
+        breakingMesh.material.opacity = 0.35 + ratio * 0.4;
+        crackOverlayMesh.material.opacity = ratio * 0.88;
+        if (breakingData.progress >= breakingData.maxProgress) {
+            const { bx, by, bz, type } = breakingData;
+            const bKey = `${bx},${by},${bz}`;
+            doBreakBlock(bx, by, bz, type, bKey);
+            breakingData = null;
+            breakingMesh.visible = false;
+            crackOverlayMesh.visible = false;
+        }
+    } else {
+        breakingData = null;
+        breakingMesh.visible = false;
+        crackOverlayMesh.visible = false;
+    }
+}
+            renderer.render(scene, camera);
+        }
+        
+        window.addEventListener('resize', () => { 
+            camera.aspect = window.innerWidth / window.innerHeight; 
+            camera.updateProjectionMatrix(); 
+            renderer.setSize(window.innerWidth, window.innerHeight); 
+        });
+        
+        animate();
+
+        document.addEventListener('mouseup', (e) => {
+    if (e.button === (window.keyBindings ? window.keyBindings.attack : 0)) {
+        breakingData = null;
+        breakingMesh.visible = false;
+        crackOverlayMesh.visible = false;
+    }
+});
+
+
+        function setGameMode(mode) {
+            window.gameMode = mode;
+            if (mode !== 'creative') window.creativeFlying = false;
+            // Mode de jeu changé (log désactivé pour éviter surcharge)
+
+            if (mode === 'creative') {
+                document.getElementById('survival-hud').style.display = 'none';
+                document.getElementById('hotbar').style.display = 'flex';
+                document.getElementById('crosshair').style.display = 'block';
+            } 
+            else if (mode === 'survival') {
+                // (Optionnel) Tu pourrais vider l'inventaire ici, mais pour la fluidité, on le garde
+                document.getElementById('survival-hud').style.display = 'flex';
+                document.getElementById('hotbar').style.display = 'flex';
+                document.getElementById('crosshair').style.display = 'block';
+            } 
+            else if (mode === 'spectator') {
+                document.getElementById('survival-hud').style.display = 'none';
+                document.getElementById('hotbar').style.display = 'none';
+                document.getElementById('crosshair').style.display = 'none';
+                if (typeof window.velocity !== 'undefined' && window.velocity) window.velocity.y = 0;
+            }
+
+            updateInventoryUI();
+            if (typeof updateSurvivalHUD === 'function') updateSurvivalHUD();
+        }
+
+        // Restauration des atlas depuis IndexedDB puis masquage de l'écran de chargement
+        (function hideLoadingWhenReady() {
+            var loadingEl = document.getElementById('loading-screen');
+            function hide() { if (loadingEl) loadingEl.style.display = 'none'; }
+            if (typeof window.restoreAtlasesFromIndexedDB !== 'function') { hide(); return; }
+            window.restoreAtlasesFromIndexedDB()
+                .then(function(arr) {
+                    var blocks = arr && arr[0], mobs = arr && arr[1];
+                    var chain = Promise.resolve();
+                    if (blocks) {
+                        try { localStorage.setItem('polocraft_atlas_cache', blocks); } catch (e) {}
+                        window.atlasDataUrl = blocks;
+                        if (typeof window.updateAtlasFromDataUrl === 'function') {
+                            chain = new Promise(function(res) {
+                                window.updateAtlasFromDataUrl(blocks, function() { res(); });
+                            });
+                        }
+                    }
+                    return chain.then(function() {
+                        if (mobs) {
+                            try { localStorage.setItem('polocraft_mobs_atlas_cache', mobs); } catch (e) {}
+                            if (typeof window.updateMobAtlasFromDataUrl === 'function') {
+                                return new Promise(function(res) {
+                                    window.updateMobAtlasFromDataUrl(mobs, function() { res(); });
+                                });
+                            }
+                        }
+                    });
+                })
+                .then(function() {
+                    if (typeof window.saveAtlasesToIndexedDB === 'function') window.saveAtlasesToIndexedDB();
+                })
+                .then(hide, hide);
+        })();
+    </script>
+</body>
+</html>

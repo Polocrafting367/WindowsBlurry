@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pocket Studio DAW - Worlde/Plugger</title>
+    <script src="https://cdn.jsdelivr.net/npm/soundfont-player@0.12.0/dist/soundfont-player.min.js"></script>
+    <style>
+        :root {
+            --bg: #080a0f;
+            --surface: rgba(22, 25, 37, 0.85);
+            --surface-light: rgba(35, 39, 58, 0.9);
+            --accent: #00f2ff;
+            --note-on: #00ff88;
+            --note-off: #ff4466;
+            --cc: #ffcc00;
+            --transport-play: #00aaff;
+            --transport-stop: #ff4466;
+            --transport-rec: #ff0044;
+            --text: #e0e0e0;
+            --text-dim: #94a3b8;
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --warning: #ffaa00;
+        }
+
+        * { box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+            /* Transition de l'ambiance */
+            background-image: radial-gradient(circle at top center, #111522 0%, var(--bg) 100%);
+            transition: background-image 0.5s ease, background-color 0.5s ease;
+        }
+
+        /* --- ÉTATS D'AMBIANCE (COULEURS DE FOND) --- */
+        body.state-play { background-image: radial-gradient(circle at top center, #002b5e 0%, var(--bg) 80%); }
+        body.state-rec { background-image: radial-gradient(circle at top center, #5e0011 0%, var(--bg) 80%); }
+        body.state-play-rec { background-image: radial-gradient(circle at top center, #5e005e 0%, var(--bg) 80%); }
+
+        header {
+            background: var(--surface);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            z-index: 10;
+        }
+
+        .logo-container { display: flex; align-items: center; gap: 15px; }
+
+        #midi-activity-led {
+            width: 12px; height: 12px;
+            background: #334155;
+            border-radius: 50%;
+            transition: background 0.1s, box-shadow 0.1s;
+        }
+        #midi-activity-led.active {
+            background: var(--accent);
+            box-shadow: 0 0 15px var(--accent);
+        }
+
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .status-waiting { background: #334155; color: white; }
+        .status-connected { background: #065f46; color: #34d399; border: 1px solid #34d399; }
+
+        .device-selector {
+            background: #000;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.8rem;
+        }
+
+        main {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .workspace {
+            display: flex;
+            flex: 1;
+            min-width: 0;
+            flex-direction: column;
+            gap: 1rem;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .card {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            backdrop-filter: blur(8px);
+        }
+
+        /* --- LAYOUT STUDIO --- */
+        .studio-layout {
+            display: flex;
+            gap: 1rem;
+            flex: 1;
+            min-height: 0;
+        }
+
+        .transport-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background: var(--surface-light);
+            padding: 15px 10px;
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+            align-items: center;
+            width: 80px;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+        .transport-sidebar.state-loop {
+            border-color: var(--warning);
+            box-shadow: 0 0 15px rgba(255, 170, 0, 0.2);
+        }
+
+        .studio-main {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .t-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.2s;
+            background: rgba(0,0,0,0.5);
+            border: 2px solid #334155;
+            color: var(--text-dim);
+            cursor: pointer;
+        }
+        .t-btn:hover { transform: scale(1.1); color: white; background: #000; }
+        .t-btn.active-play { border-color: var(--transport-play); color: var(--transport-play); box-shadow: 0 0 15px var(--transport-play); }
+        .t-btn.active-rec { border-color: var(--transport-rec); color: var(--transport-rec); box-shadow: 0 0 15px var(--transport-rec); animation: pulse 1s infinite; }
+        .t-btn.active-loop { border-color: var(--warning); color: var(--warning); }
+
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+
+        /* --- TIMELINE --- */
+        .timeline-card {
+            background: var(--surface);
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            flex: 0 0 180px;
+            overflow: hidden;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .timeline-card.state-loop { border-color: var(--warning); }
+
+        .timeline-header {
+            padding: 8px 15px;
+            background: var(--surface-light);
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: var(--text-dim);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+        }
+        .timeline-area {
+            position: relative;
+            flex: 1;
+            background: rgba(0,0,0,0.4);
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+        .timeline-grid {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 100% 12.5%; /* 8 lignes horizontales env */
+            pointer-events: none;
+        }
+        .timeline-tracks { position: absolute; top: 0; left: 0; bottom: 0; min-width: 100%; }
+        
+        .timeline-note {
+            position: absolute;
+            background: var(--accent);
+            border-radius: 4px;
+            min-width: 6px;
+            border: 1px solid rgba(0,0,0,0.8);
+            cursor: pointer;
+            opacity: 0.9;
+            box-shadow: 0 0 5px rgba(0, 242, 255, 0.3);
+            transition: transform 0.1s;
+        }
+        .timeline-note:hover { opacity: 1; background: #fff; box-shadow: 0 0 10px #fff; z-index: 10; transform: scaleY(1.2); }
+        .timeline-playhead {
+            position: absolute;
+            top: 0; bottom: 0;
+            width: 2px;
+            background: var(--transport-play);
+            box-shadow: 0 0 8px var(--transport-play);
+            left: 0%;
+            z-index: 20;
+            pointer-events: none;
+            display: none;
+        }
+
+        /* --- OPTIONS GLOBALES --- */
+        .global-controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 1.5rem; }
+        .ctrl-group { background: var(--surface-light); padding: 12px; border-radius: 8px; border: 1px solid var(--glass-border); }
+        .ctrl-group label { display: block; font-size: 0.7rem; color: var(--text-dim); margin-bottom: 5px; text-transform: uppercase; }
+        select, input[type="number"], button.btn-std {
+            width: 100%; background: #000; color: var(--accent); border: 1px solid #334155; padding: 8px; border-radius: 4px; font-family: monospace;
+        }
+
+        h2 { margin-top: 0; font-size: 1.1rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
+
+        /* --- PADS --- */
+        .pad-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 12px; }
+        .visual-pad {
+            aspect-ratio: 1;
+            background: #2a2f45;
+            border: 2px solid #3f4764;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            position: relative;
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.05s ease, background 0.05s ease;
+        }
+        .visual-pad.active {
+            background: var(--note-on);
+            border-color: white;
+            box-shadow: 0 0 25px var(--note-on);
+            transform: scale(0.95);
+        }
+        .pad-header { width: 100%; display: flex; justify-content: space-between; font-size: 0.6rem; color: var(--text-dim); }
+        .pad-id { font-size: 1.4rem; font-weight: bold; pointer-events: none;}
+        .pad-vel { font-size: 0.7rem; opacity: 0.7; pointer-events: none;}
+
+        .pad-config-hover {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            background: rgba(0,0,0,0.9); padding: 5px;
+            display: none; flex-direction: column; gap: 4px;
+            z-index: 10; border-radius: 0 0 8px 8px;
+        }
+        .visual-pad:hover .pad-config-hover { display: flex; }
+        .config-item { font-size: 0.6rem; display: flex; justify-content: space-between; align-items: center; }
+        .config-item select { font-size: 0.6rem; padding: 2px; height: auto; width: 60px; }
+
+        /* --- MAPPINGS --- */
+        .mapping-container { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; max-height: 150px; overflow-y:auto; padding-right:5px; }
+        .mapping-item { display: flex; justify-content: space-between; align-items: center; background: rgba(0, 0, 0, 0.5); padding: 6px 10px; border-radius: 6px; font-size: 0.75rem; }
+        .map-label { font-weight: bold; color: var(--text-dim); width: 60px; }
+        .map-controls { display: flex; align-items: center; gap: 8px; flex: 1; justify-content: flex-end; }
+        .map-val { color: var(--accent); font-family: monospace; background: rgba(0,0,0,0.8); padding: 2px 6px; border-radius: 4px; min-width: 60px; text-align: center; }
+        .learn-btn { padding: 2px 8px; font-size: 0.7rem; min-width: 24px; background:#334; color:white; border:none; border-radius:4px; cursor:pointer;}
+        .learn-btn:hover { background: var(--accent); color:#000; }
+
+        /* --- COLLAPSIBLE --- */
+        .collapsible { border: 1px solid var(--glass-border); border-radius: 12px; overflow: hidden; background: var(--surface); margin-bottom: 1rem; flex-shrink: 0; }
+        .collapsible-header {
+            padding: 10px 15px; background: var(--surface-light); cursor: pointer; display: flex; justify-content: space-between;
+            align-items: center; font-size: 0.8rem; font-weight: bold; color: var(--text-dim); user-select: none;
+        }
+        .collapsible-header:hover { background: #2a2f45; color: white; }
+        .collapsible-header::after { content: "▼"; font-size: 0.6rem; transition: transform 0.3s; }
+        .collapsible.collapsed .collapsible-header::after { transform: rotate(-90deg); }
+        .collapsible-content { padding: 1.5rem; display: block; }
+        .collapsible.collapsed .collapsible-content { display: none !important; }
+
+        /* --- LOG PANEL --- */
+        .log-panel { width: 350px; flex-shrink: 0; display: flex; flex-direction: column; background: rgba(0,0,0,0.8); border-radius: 12px; border: 1px solid var(--glass-border); transition: width 0.3s ease; }
+        .log-panel.collapsed { width: 45px; cursor: pointer; }
+        .log-panel.collapsed .collapsible-header { flex-direction: column; justify-content: flex-start; padding: 15px 0; height: 100%; gap: 15px; }
+        .log-panel.collapsed .header-title { writing-mode: vertical-rl; transform: rotate(180deg); }
+        .log-panel.collapsed .collapsible-content { display: none !important; }
+        #log-output { flex: 1; padding: 10px; font-family: 'Consolas', monospace; font-size: 0.75rem; overflow-y: auto; display: flex; flex-direction: column-reverse; }
+        .log-line { padding: 4px 8px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; gap: 8px; white-space: nowrap; }
+        .t-note-on { color: var(--note-on); } .t-note-off { color: var(--note-off); } .t-cc { color: var(--cc); }
+        .timestamp { color: #555; min-width: 65px; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo-container">
+        <div id="midi-activity-led"></div>
+        <h1 style="margin:0; font-size: 1.4rem;">POCKET PAD <span style="color:var(--accent)">STUDIO</span></h1>
+    </div>
+    <div style="display:flex; gap:10px; align-items:center;">
+        <select id="port-selector" class="device-selector" title="Entrée MIDI (Réception Pads)"></select>
+        <button onclick="requestAccess()" class="btn-std" style="width:auto; padding:5px 15px; cursor:pointer;">RE-SCAN</button>
+        <div id="midi-status" class="status-badge status-waiting">Hors ligne</div>
+    </div>
+</header>
+
+<main>
+    <div class="workspace">
+        <div class="collapsible collapsed" id="section-global-configs">
+            <div class="collapsible-header">⚙️ OPTIONS &amp; MAPPINGS</div>
+            <div class="collapsible-content">
+                <div class="global-controls">
+                    <div class="ctrl-group">
+                        <label>Config. Globale (Tous les Pads)</label>
+                        <select id="global-inst-select" style="margin-bottom:5px">
+                            <option value="">-- Changer Instrument --</option>
+                            <optgroup label="Oscillateurs">
+                                <option value="sine">Sine</option>
+                                <option value="square">Square</option>
+                                <option value="sawtooth">Saw</option>
+                                <option value="triangle">Triangle</option>
+                            </optgroup>
+                            <optgroup label="Realistic (SoundFont)" id="global-sf-list"></optgroup>
+                        </select>
+                    </div>
+                    
+                    <div class="ctrl-group">
+                        <label>Raccourcis Transport (MIDI)</label>
+                        <div id="transport-mapping-list" class="mapping-container">
+                            <div class="mapping-item"><span class="map-label">REW</span><div class="map-controls"><span id="map-rewind" class="map-val">---</span><button class="learn-btn" data-cmd="rewind">L</button></div></div>
+                            <div class="mapping-item"><span class="map-label">STOP</span><div class="map-controls"><span id="map-stop" class="map-val">---</span><button class="learn-btn" data-cmd="stop">L</button></div></div>
+                            <div class="mapping-item"><span class="map-label">PLAY</span><div class="map-controls"><span id="map-play" class="map-val">---</span><button class="learn-btn" data-cmd="play">L</button></div></div>
+                            <div class="mapping-item"><span class="map-label">LOOP</span><div class="map-controls"><span id="map-loop" class="map-val">---</span><button class="learn-btn" data-cmd="loop">L</button></div></div>
+                            <div class="mapping-item"><span class="map-label">REC</span><div class="map-controls"><span id="map-record" class="map-val">---</span><button class="learn-btn" data-cmd="record">L</button></div></div>
+                            <div class="mapping-item"><span class="map-label" style="width:70px">BANK PREV</span><div class="map-controls"><span id="map-bank_prev" class="map-val">---</span><button class="learn-btn" data-cmd="bank_prev">L</button></div></div>
+                            <div class="mapping-item"><span class="map-label" style="width:70px">BANK NEXT</span><div class="map-controls"><span id="map-bank_next" class="map-val">---</span><button class="learn-btn" data-cmd="bank_next">L</button></div></div>
+                        </div>
+                    </div>
+
+                    <div class="ctrl-group">
+                        <label>Banque & Grille</label>
+                        <select id="bank-select" style="margin-bottom:5px">
+                            <option value="1">Bank A</option>
+                            <option value="2">Bank B</option>
+                            <option value="3">Bank C</option>
+                            <option value="4">Bank D</option>
+                        </select>
+                        <div style="display:flex; gap:5px; margin-bottom:5px;">
+                            <input type="number" id="grid-cols" value="4" min="1" max="12" title="Colonnes">
+                            <input type="number" id="grid-rows" value="4" min="1" max="12" title="Lignes">
+                        </div>
+                        <button class="btn-std" id="btn-sort" style="cursor:pointer;">Trier IDs Matériel</button>
+                    </div>
+
+                    <div class="ctrl-group">
+                        <label>Release Audio (Relâchement)</label>
+                        <div style="display:flex; flex-direction:column; gap:5px">
+                            <input type="range" id="global-release" min="0" max="10" step="0.1" value="0.5" style="width:100%">
+                            <div style="display:flex; justify-content:space-between; font-size:0.7rem; color:var(--text-dim)">
+                                <span>Sec: <span id="release-val">0.5</span>s</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="studio-layout">
+            <div class="transport-sidebar" id="transport-sidebar">
+                <button id="btn-rew" class="t-btn" title="Effacer Timeline">⏪</button>
+                <button id="btn-stop" class="t-btn" title="Stop">⏹️</button>
+                <button id="btn-play" class="t-btn" title="Play">▶️</button>
+                <button id="btn-rec" class="t-btn" title="Record / Overdub">⏺️</button>
+                <div style="height:10px;"></div>
+                <button id="btn-loop" class="t-btn" title="Loop">🔁</button>
+            </div>
+            
+            <div class="studio-main">
+                <div class="card" style="flex:1;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                        <h2 style="margin:0">PADS (Bank <span id="ui-bank-display">A</span>)</h2>
+                        <div style="font-size:0.65rem; color:var(--text-dim)">Glissez pour réorganiser</div>
+                    </div>
+                    <div id="pad-container" class="pad-grid">
+                        <div style="grid-column:1/-1; text-align:center; padding:20px; color:#555;">
+                            Actionnez votre appareil ou cliquez ici...
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ZONE TIMELINE / PIANO ROLL -->
+                <div class="timeline-card" id="timeline-card">
+                    <div class="timeline-header">
+                        <span>SÉQUENCEUR (Piano Roll)</span>
+                        <span id="timeline-info" style="font-weight:normal;">0 note(s)</span>
+                    </div>
+                    <div class="timeline-area" id="timeline-area">
+                        <div class="timeline-grid"></div>
+                        <div id="timeline-playhead" class="timeline-playhead"></div>
+                        <div class="timeline-tracks" id="timeline-tracks">
+                            <!-- Les notes générées ici -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- fin .workspace -->
+
+    <aside class="log-panel collapsible collapsed" id="section-logs">
+        <div class="collapsible-header"><span class="header-title">MIDI MONITOR</span></div>
+        <div class="collapsible-content" style="padding:0; flex:1; display:flex; flex-direction:column; min-height:0;">
+            <div style="flex:1; overflow:hidden; display:flex; flex-direction:column;">
+                <div style="padding: 10px; background:#1a1d2e; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #ffffff10">
+                    <span id="detected-ports-count" style="font-size:0.7rem; color:var(--text-dim)">0 port(s)</span>
+                    <button class="btn-std" onclick="clearLogs()" style="padding:2px 8px; width:auto; font-size:0.7rem; cursor:pointer;">Effacer</button>
+                </div>
+                <div id="log-output"></div>
+            </div>
+        </div>
+    </aside>
+</main>
+
+<script>
+    // --- VARIABLES & ÉLÉMENTS DOM ---
+    const logOutput = document.getElementById('log-output');
+    const statusBadge = document.getElementById('midi-status');
+    const padContainer = document.getElementById('pad-container');
+    const led = document.getElementById('midi-activity-led');
+    const portSelector = document.getElementById('port-selector');
+    
+    let midiAccess = null;
+    const activePads = new Map();
+
+    // L'ÉTAT DU SEQUENCEUR ET DU MAPPING
+    const state = {
+        isPlaying: false,
+        isRecording: false,
+        isLooping: false,
+        bank: 1,
+        padMappings: JSON.parse(localStorage.getItem('midi-pad-mappings')) || {},
+        padOrder: JSON.parse(localStorage.getItem('midi-pad-order')) || [],
+        gridCols: localStorage.getItem('midi-grid-cols') || 4,
+        gridRows: localStorage.getItem('midi-grid-rows') || 4,
+        globalRelease: parseFloat(localStorage.getItem('midi-global-release')) || 0.5,
+        transportMappings: JSON.parse(localStorage.getItem('midi-transport-mappings')) || {},
+        learningCommand: null,
+        
+        // Moteur Sequencer
+        recordedEvents: [], // Stocke toutes les actions chronologiques
+        timelineNotes: [],  // Formatté pour le rendu (Note + Durée)
+        recordingStartTime: 0,
+        playbackStartTime: 0,
+        playbackTimeouts: [],
+        sequenceDuration: 0,
+        playheadInterval: null
+    };
+
+    // UI Transport
+    const btnPlay = document.getElementById('btn-play');
+    const btnStop = document.getElementById('btn-stop');
+    const btnRec = document.getElementById('btn-rec');
+    const btnLoop = document.getElementById('btn-loop');
+    const btnRew = document.getElementById('btn-rew');
+    
+    // UI Config
+    const globalInstSelect = document.getElementById('global-inst-select');
+    const globalSFList = document.getElementById('global-sf-list');
+    const globalReleaseInput = document.getElementById('global-release');
+    const releaseValText = document.getElementById('release-val');
+    const bankSelectEl = document.getElementById('bank-select');
+    const uiBankDisplay = document.getElementById('ui-bank-display');
+    const timelineTracks = document.getElementById('timeline-tracks');
+    const timelineInfo = document.getElementById('timeline-info');
+    const playhead = document.getElementById('timeline-playhead');
+
+    // Moteur Audio (Web Audio API & Soundfont)
+    let audioCtx = null;
+    const oscillators = new Map();
+    const sfPlayers = new Map();
+    const activeSFNotes = new Map();
+
+    const gmInstruments = [
+        "acoustic_grand_piano", "electric_piano_1", "harpsichord", "vibraphone", "marimba",
+        "drawbar_organ", "acoustic_guitar_nylon", "electric_guitar_jazz", "acoustic_bass", "slap_bass_1",
+        "violin", "string_ensemble_1", "synthstrings_1", "choir_aahs",
+        "trumpet", "brass_section", "alto_sax", "flute",
+        "lead_1_square", "lead_2_sawtooth", "pad_2_warm", "pad_3_polysynth",
+        "taiko_drum", "synth_drum", "woodblock", "reverse_cymbal"
+    ];
+
+    function initAudio() {
+        if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+    }
+
+    async function getSFPlayer(instName) {
+        if (sfPlayers.has(instName)) return sfPlayers.get(instName);
+        try {
+            const player = await Soundfont.instrument(audioCtx, instName, { soundfont: 'FluidR3_GM' });
+            sfPlayers.set(instName, player);
+            return player;
+        } catch (e) { return null; }
+    }
+
+    const getPadConfig = (id) => {
+        const configs = JSON.parse(localStorage.getItem('midi-pad-configs')) || {};
+        return configs[id] || { instrument: 'triangle' };
+    };
+
+    const savePadConfig = (id, config) => {
+        const configs = JSON.parse(localStorage.getItem('midi-pad-configs')) || {};
+        configs[id] = config;
+        localStorage.setItem('midi-pad-configs', JSON.stringify(configs));
+    };
+
+    function midiNoteToFreq(note) { return 440 * Math.pow(2, (note - 69) / 12); }
+
+    async function playNote(id, vel, instOverride = null) {
+        initAudio();
+        stopNote(id);
+
+        const config = getPadConfig(id);
+        const instrument = instOverride || config.instrument;
+        const volume = (vel / 127) * 0.4;
+
+        if (gmInstruments.includes(instrument)) {
+            const player = await getSFPlayer(instrument);
+            if (player) {
+                const note = player.play(id, audioCtx.currentTime, { gain: vel / 127 });
+                if (note) activeSFNotes.set(id, note);
+            }
+        } else {
+            const osc = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            osc.type = instrument;
+            osc.frequency.setValueAtTime(midiNoteToFreq(id), audioCtx.currentTime);
+            gainNode.gain.setValueAtTime(volume, audioCtx.currentTime);
+            osc.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            osc.start();
+            oscillators.set(id, { osc, gainNode });
+        }
+    }
+
+    function stopNote(id) {
+        const releaseTime = state.globalRelease;
+
+        if (activeSFNotes.has(id)) {
+            const note = activeSFNotes.get(id);
+            if (note && typeof note.stop === 'function') {
+                try { note.stop(audioCtx.currentTime + releaseTime); } catch(e) {}
+            }
+            activeSFNotes.delete(id);
+        }
+
+        if (oscillators.has(id)) {
+            const { osc, gainNode } = oscillators.get(id);
+            gainNode.gain.cancelScheduledValues(audioCtx.currentTime);
+            gainNode.gain.setValueAtTime(gainNode.gain.value, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + releaseTime);
+            setTimeout(() => {
+                try { osc.stop(); } catch(e) {}
+                osc.disconnect();
+                gainNode.disconnect();
+            }, (releaseTime * 1000) + 50);
+            oscillators.delete(id);
+        }
+    }
+
+    // --- INITIALISATION MIDI ---
+    function requestAccess() {
+        if (navigator.requestMIDIAccess) {
+            navigator.requestMIDIAccess().then(onMIDISuccess, onMIDIFailure);
+        } else {
+            updateStatus("API Non Supportée", "error");
+        }
+    }
+    requestAccess();
+
+    function onMIDISuccess(access) {
+        midiAccess = access;
+        updatePortList();
+        midiAccess.onstatechange = updatePortList;
+    }
+
+    function updatePortList() {
+        const inputs = midiAccess.inputs.values();
+        portSelector.innerHTML = '';
+        let count = 0;
+        let worldeFound = false;
+
+        for (let input of inputs) {
+            const option = document.createElement('option');
+            option.value = input.id;
+            option.text = input.name;
+            portSelector.appendChild(option);
+            
+            if (input.name.toLowerCase().includes('worlde') || input.name.toLowerCase().includes('pocket')) {
+                portSelector.value = input.id;
+                worldeFound = true;
+            }
+
+            input.removeEventListener('midimessage', onMIDIMessage);
+            input.addEventListener('midimessage', onMIDIMessage);
+            count++;
+        }
+
+        document.getElementById('detected-ports-count').innerText = `${count} port(s)`;
+        if (count > 0) updateStatus(worldeFound ? "Pocket Pad Détecté" : "MIDI Actif", "connected");
+        else updateStatus("Aucun port", "waiting");
+    }
+
+    function onMIDIFailure() { updateStatus("Accès Refusé", "error"); }
+    function updateStatus(text, type) {
+        statusBadge.innerText = text;
+        statusBadge.className = `status-badge status-${type}`;
+    }
+    function flashLed() {
+        led.classList.add('active');
+        setTimeout(() => led.classList.remove('active'), 80);
+    }
+
+    // --- COULEURS D'AMBIANCE DU STUDIO ---
+    function updateEnvironmentColors() {
+        document.body.classList.remove('state-play', 'state-rec', 'state-play-rec');
+        const timeline = document.getElementById('timeline-card');
+        const sidebar = document.getElementById('transport-sidebar');
+
+        if (state.isPlaying && state.isRecording) {
+            document.body.classList.add('state-play-rec'); // Overdub (Rose)
+        } else if (state.isPlaying) {
+            document.body.classList.add('state-play'); // Lecture (Bleu)
+        } else if (state.isRecording) {
+            document.body.classList.add('state-rec'); // Enregistrement (Rouge)
+        }
+
+        if (state.isLooping) {
+            timeline.classList.add('state-loop');
+            sidebar.classList.add('state-loop');
+        } else {
+            timeline.classList.remove('state-loop');
+            sidebar.classList.remove('state-loop');
+        }
+    }
+
+    // --- LOGIQUE OVERDUB & ENREGISTREMENT ---
+    function recordEvent(cmd, data1, data2) {
+        if (!state.isRecording) return;
+        const now = performance.now();
+        let timeObj = 0;
+
+        if (state.isPlaying && state.sequenceDuration > 0) {
+            // OVERDUB : La note se cale dans la boucle en cours
+            timeObj = (now - state.playbackStartTime) % state.sequenceDuration;
+        } else {
+            // ENREGISTREMENT NORMAL : on part de zéro
+            if (state.recordedEvents.length === 0 && !state.isPlaying) {
+                state.recordingStartTime = now;
+            }
+            timeObj = now - state.recordingStartTime;
+        }
+
+        state.recordedEvents.push({
+            time: timeObj,
+            cmd, data1, data2,
+            instrument: getPadConfig(data1).instrument
+        });
+
+        // Met à jour la vue de la timeline dynamiquement
+        processTimelineNotes();
+    }
+
+    function processTimelineNotes() {
+        state.timelineNotes = [];
+        const activeNotes = {};
+        
+        // IMPORTANT : On trie chronologiquement pour que l'overdub fonctionne bien
+        state.recordedEvents.sort((a, b) => a.time - b.time);
+
+        state.recordedEvents.forEach(evt => {
+            if (evt.cmd === 9 && evt.data2 > 0) { // Note ON
+                activeNotes[evt.data1] = { 
+                    pitch: evt.data1, startTime: evt.time, 
+                    velocity: evt.data2, instrument: evt.instrument 
+                };
+            } else if (evt.cmd === 8 || (evt.cmd === 9 && evt.data2 === 0)) { // Note OFF
+                if (activeNotes[evt.data1]) {
+                    const note = activeNotes[evt.data1];
+                    note.duration = evt.time - note.startTime;
+                    // Si duration est négative à cause d'un overdub de fin de boucle, on corrige
+                    if (note.duration < 0 && state.sequenceDuration > 0) {
+                        note.duration = (evt.time + state.sequenceDuration) - note.startTime;
+                    }
+                    if (note.duration > 10) state.timelineNotes.push(note);
+                    delete activeNotes[evt.data1];
+                }
+            }
+        });
+        
+        // Clôturer les notes en cours (ex: arrêt de l'enregistrement)
+        const endTime = state.isPlaying ? state.sequenceDuration : (performance.now() - state.recordingStartTime);
+        for (let pitch in activeNotes) {
+            const note = activeNotes[pitch];
+            note.duration = Math.max(10, endTime - note.startTime);
+            state.timelineNotes.push(note);
+        }
+
+        renderTimeline();
+    }
+
+    function renderTimeline() {
+        timelineTracks.innerHTML = '';
+        if (!state.timelineNotes || state.timelineNotes.length === 0) {
+            timelineInfo.innerText = "0 note(s)";
+            return;
+        }
+
+        timelineInfo.innerText = `${state.timelineNotes.length} note(s)`;
+        
+        // Ne met à jour la durée de la séquence QUE si on n'est pas en train de boucler par-dessus
+        if (!state.isPlaying || state.sequenceDuration === 0) {
+            state.sequenceDuration = Math.max(...state.timelineNotes.map(n => n.startTime + n.duration), 1500);
+        }
+        
+        const minPitch = Math.min(...state.timelineNotes.map(n => n.pitch));
+        const maxPitch = Math.max(...state.timelineNotes.map(n => n.pitch));
+        const pitchRange = Math.max(maxPitch - minPitch, 12);
+
+        state.timelineNotes.forEach((note) => {
+            const el = document.createElement('div');
+            el.className = 'timeline-note';
+            
+            const left = (note.startTime / state.sequenceDuration) * 100;
+            const width = (note.duration / state.sequenceDuration) * 100;
+            const top = ((maxPitch - note.pitch) / pitchRange) * 100;
+
+            el.style.left = `${left}%`;
+            el.style.width = Math.max(width, 0.5) + '%';
+            el.style.top = `${top * 0.9}%`;
+            el.style.height = `${100 / (pitchRange + 2)}%`;
+
+            // Clic pour effacer une note foirée
+            el.onclick = (e) => {
+                e.stopPropagation();
+                // Retirer l'événement source correspondant à cette note pour l'effacer définitivement
+                state.recordedEvents = state.recordedEvents.filter(evt => 
+                    !(evt.data1 === note.pitch && Math.abs(evt.time - note.startTime) < 5)
+                );
+                processTimelineNotes();
+            };
+
+            timelineTracks.appendChild(el);
+        });
+    }
+
+    // --- LECTURE (PLAYBACK) ---
+    function updatePlayhead() {
+        if (!state.isPlaying || state.sequenceDuration === 0) {
+            playhead.style.display = 'none';
+            return;
+        }
+        playhead.style.display = 'block';
+        const now = performance.now();
+        const elapsed = (now - state.playbackStartTime) % state.sequenceDuration;
+        const progress = (elapsed / state.sequenceDuration) * 100;
+        playhead.style.left = `${progress}%`;
+        
+        if (state.isPlaying) state.playheadInterval = requestAnimationFrame(updatePlayhead);
+    }
+
+    function scheduleNextLoop() {
+        if (!state.isPlaying) return;
+        
+        state.timelineNotes.forEach(note => {
+            const tOn = setTimeout(() => {
+                processNote(note.pitch, note.velocity, true);
+                playNote(note.pitch, note.velocity, note.instrument);
+            }, note.startTime);
+            
+            const tOff = setTimeout(() => {
+                processNote(note.pitch, 0, false);
+                stopNote(note.pitch);
+            }, note.startTime + note.duration);
+            
+            state.playbackTimeouts.push(tOn, tOff);
+        });
+
+        const loopT = setTimeout(() => {
+            if (state.isLooping && state.isPlaying) {
+                state.playbackStartTime = performance.now();
+                scheduleNextLoop(); // Relance la boucle
+            } else {
+                stopPlayback();
+            }
+        }, state.sequenceDuration);
+        state.playbackTimeouts.push(loopT);
+    }
+
+    function startPlayback() {
+        if (!state.timelineNotes || state.timelineNotes.length === 0) return;
+        stopPlayback(false); // Stop silencieux
+        
+        state.isPlaying = true;
+        updateTransportUI();
+        
+        state.playbackStartTime = performance.now();
+        updatePlayhead();
+        scheduleNextLoop();
+    }
+
+    function stopPlayback(fullReset = true) {
+        state.playbackTimeouts.forEach(t => clearTimeout(t));
+        state.playbackTimeouts = [];
+        if (fullReset) {
+            cancelAnimationFrame(state.playheadInterval);
+            state.isPlaying = false;
+            playhead.style.display = 'none';
+            
+            activePads.forEach((pad, id) => {
+                 processNote(id, 0, false);
+                 stopNote(id);
+            });
+            updateTransportUI();
+        }
+    }
+
+    // --- RECEPTION MIDI ---
+    function onMIDIMessage(event) {
+        const data = event.data;
+        if (!data || data.length === 0) return;
+        if (data[0] !== 0xf8) flashLed();
+
+        const statusByte = data[0];
+        const cmd = statusByte >> 4;
+        const data1 = data.length > 1 ? data[1] : null;
+        const data2 = data.length > 2 ? data[2] : null;
+
+        // Mode Apprentissage
+        if (state.learningCommand) {
+            if ((cmd === 9 && data2 > 0) || cmd === 11) {
+                for (let key in state.transportMappings) {
+                    if (state.transportMappings[key] === state.learningCommand) delete state.transportMappings[key];
+                }
+                state.transportMappings[`${statusByte}_${data1}`] = state.learningCommand;
+                localStorage.setItem('midi-transport-mappings', JSON.stringify(state.transportMappings));
+                state.learningCommand = null;
+                updateTransportUI();
+                return;
+            }
+        }
+
+        // Execution Transport MIDI
+        const midiKey = `${statusByte}_${data1}`;
+        if (state.transportMappings[midiKey] && data2 > 0) {
+            const action = state.transportMappings[midiKey];
+            switch(action) {
+                case 'play': btnPlay.click(); break;
+                case 'stop': btnStop.click(); break;
+                case 'record': btnRec.click(); break;
+                case 'loop': btnLoop.click(); break;
+                case 'rewind': btnRew.click(); break;
+                case 'bank_next': changeBank('next'); break;
+                case 'bank_prev': changeBank('prev'); break;
+            }
+            return; 
+        }
+
+        // Réception Note / Clic
+        if (cmd === 9 && data2 > 0) {
+            processNote(data1, data2, true);
+            playNote(data1, data2);
+            recordEvent(cmd, data1, data2); // Capture si Rec On (Overdub inclus)
+            addLog("NOTE ON", `N:${data1} V:${data2}`, "t-note-on");
+        }
+        else if (cmd === 8 || (cmd === 9 && data2 === 0)) {
+            processNote(data1, 0, false);
+            stopNote(data1);
+            recordEvent(cmd, data1, 0); // Capture off
+            addLog("NOTE OFF", `N:${data1}`, "t-note-off");
+        }
+    }
+
+    // --- ACTIONS BOUTONS ---
+    btnPlay.onclick = () => {
+        if (state.isPlaying) stopPlayback();
+        else startPlayback();
+    };
+
+    btnStop.onclick = () => {
+        stopPlayback();
+        if (state.isRecording) {
+            state.isRecording = false;
+            processTimelineNotes();
+        }
+        updateTransportUI();
+    };
+
+    btnRec.onclick = () => {
+        if (state.isRecording) {
+            // Arrête l'enregistrement
+            state.isRecording = false;
+            processTimelineNotes();
+            addLog("SYSTEM", `Enregistrement clôturé.`, "t-accent");
+        } else {
+            // Démarre l'enregistrement
+            state.isRecording = true;
+            if (!state.isPlaying) {
+                // Depuis l'arrêt : on efface et on part à zéro
+                state.recordedEvents = [];
+                state.timelineNotes = [];
+                state.sequenceDuration = 0;
+                renderTimeline();
+                state.recordingStartTime = performance.now();
+                addLog("SYSTEM", "Nouvelle séquence (Rec)", "t-note-on");
+            } else {
+                // En pleine lecture : mode Overdub
+                addLog("SYSTEM", "Mode Overdub Activé", "t-note-on");
+            }
+        }
+        updateTransportUI();
+    };
+
+    btnLoop.onclick = () => {
+        state.isLooping = !state.isLooping;
+        updateTransportUI();
+    };
+
+    btnRew.onclick = () => {
+        stopPlayback();
+        state.recordedEvents = [];
+        state.timelineNotes = [];
+        state.sequenceDuration = 0;
+        renderTimeline();
+        addLog("SYSTEM", "Timeline effacée", "t-note-off");
+    };
+
+    // --- UI UPDATES ---
+    const updateTransportUI = () => {
+        btnPlay.classList.toggle('active-play', state.isPlaying);
+        btnRec.classList.toggle('active-rec', state.isRecording);
+        btnLoop.classList.toggle('active-loop', state.isLooping);
+
+        updateEnvironmentColors(); // Met à jour l'ambiance du studio
+
+        ['rewind', 'stop', 'play', 'loop', 'record', 'bank_next', 'bank_prev'].forEach(cmd => {
+            const el = document.getElementById(`map-${cmd}`);
+            if (el) el.innerText = '---';
+        });
+
+        for (const [key, cmd] of Object.entries(state.transportMappings)) {
+            const el = document.getElementById(`map-${cmd}`);
+            if (el) {
+                const [statusByte, id] = key.split('_');
+                const cmdNibble = parseInt(statusByte) >> 4;
+                el.innerText = `${(cmdNibble === 9) ? 'Note' : 'CC'} ${id}`;
+            }
+        }
+        
+        document.querySelectorAll('.learn-btn').forEach(btn => {
+            btn.innerText = 'L'; btn.style.background = '#334';
+        });
+    };
+    updateTransportUI();
+
+    // --- CONFIGS UI ---
+    globalSFList.innerHTML = gmInstruments.map(gi => `<option value="${gi}">${gi.replace(/_/g, ' ')}</option>`).join('');
+    globalInstSelect.onchange = (e) => {
+        if (!e.target.value) return;
+        const configs = JSON.parse(localStorage.getItem('midi-pad-configs')) || {};
+        activePads.forEach((_, id) => {
+            if (!configs[id]) configs[id] = { instrument: e.target.value };
+            else configs[id].instrument = e.target.value;
+        });
+        localStorage.setItem('midi-pad-configs', JSON.stringify(configs));
+        renderPads();
+    };
+
+    globalReleaseInput.value = state.globalRelease;
+    releaseValText.innerText = state.globalRelease;
+    globalReleaseInput.oninput = (e) => {
+        state.globalRelease = parseFloat(e.target.value);
+        releaseValText.innerText = state.globalRelease;
+        localStorage.setItem('midi-global-release', state.globalRelease);
+    };
+
+    document.querySelectorAll('.learn-btn').forEach(btn => {
+        btn.onclick = () => {
+            state.learningCommand = btn.dataset.cmd;
+            btn.innerText = '?';
+            btn.style.background = 'var(--warning)';
+        };
+    });
+
+    document.getElementById('grid-cols').value = state.gridCols;
+    document.getElementById('grid-rows').value = state.gridRows;
+    const updateGridCSS = () => {
+        padContainer.style.gridTemplateColumns = `repeat(${state.gridCols}, 1fr)`;
+        localStorage.setItem('midi-grid-cols', state.gridCols);
+        localStorage.setItem('midi-grid-rows', state.gridRows);
+    };
+    document.getElementById('grid-cols').onchange = (e) => { state.gridCols = e.target.value; updateGridCSS(); };
+    document.getElementById('grid-rows').onchange = (e) => { state.gridRows = e.target.value; updateGridCSS(); };
+    updateGridCSS();
+
+    function changeBank(direction) {
+        let current = parseInt(state.bank);
+        if (direction === 'next') current = (current % 4) + 1;
+        if (direction === 'prev') { current = current - 1; if (current < 1) current = 4; }
+        state.bank = current;
+        bankSelectEl.value = current;
+        uiBankDisplay.innerText = ['A','B','C','D'][current-1];
+        renderPads();
+    }
+    bankSelectEl.onchange = (e) => {
+        state.bank = e.target.value;
+        uiBankDisplay.innerText = ['A','B','C','D'][state.bank-1];
+    };
+
+    btnSort.onclick = () => {
+        state.padOrder.sort((a, b) => parseInt(a) - parseInt(b));
+        localStorage.setItem('midi-pad-order', JSON.stringify(state.padOrder));
+        renderPads();
+    };
+
+    // --- PADS VISUELS ---
+    function processNote(id, vel, isActive) {
+        if (!activePads.has(id)) {
+            createPadUI(id, id);
+            if (!state.padOrder.includes(id)) {
+                state.padOrder.push(id);
+                localStorage.setItem('midi-pad-order', JSON.stringify(state.padOrder));
+            }
+        }
+        const pad = activePads.get(id);
+        if (isActive) {
+            pad.classList.add('active');
+            pad.querySelector('.pad-vel').innerText = `V: ${vel}`;
+        } else {
+            pad.classList.remove('active');
+        }
+    }
+
+    function createPadUI(id, displayId) {
+        if (activePads.size === 0) padContainer.innerHTML = '';
+        const div = document.createElement('div');
+        div.className = 'visual-pad';
+        div.draggable = true;
+        const config = getPadConfig(id);
+        
+        div.innerHTML = `
+            <div class="pad-header"><span>ID:${id}</span></div>
+            <span class="pad-id">${displayId}</span>
+            <span class="pad-vel">V: 0</span>
+            <div class="pad-config-hover">
+                <div class="config-item">
+                    <select class="pad-inst">
+                        <optgroup label="Oscillateurs">
+                            <option value="sine" ${config.instrument === 'sine' ? 'selected' : ''}>Sine</option>
+                            <option value="square" ${config.instrument === 'square' ? 'selected' : ''}>Square</option>
+                            <option value="sawtooth" ${config.instrument === 'sawtooth' ? 'selected' : ''}>Saw</option>
+                            <option value="triangle" ${config.instrument === 'triangle' ? 'selected' : ''}>Tri</option>
+                        </optgroup>
+                        <optgroup label="Realistic">
+                            ${gmInstruments.map(gi => `<option value="${gi}" ${config.instrument === gi ? 'selected' : ''}>${gi.replace(/_/g, ' ')}</option>`).join('')}
+                        </optgroup>
+                    </select>
+                </div>
+            </div>
+        `;
+        
+        div.ondragstart = (e) => { e.dataTransfer.setData('text/plain', id); div.style.opacity = '0.5'; };
+        div.ondragend = () => div.style.opacity = '1';
+        div.ondragover = (e) => e.preventDefault();
+        div.ondrop = (e) => {
+            e.preventDefault();
+            const draggedId = parseInt(e.dataTransfer.getData('text/plain'));
+            if (draggedId === id) return;
+            const fromIndex = state.padOrder.indexOf(draggedId);
+            const toIndex = state.padOrder.indexOf(id);
+            state.padOrder.splice(fromIndex, 1);
+            state.padOrder.splice(toIndex, 0, draggedId);
+            localStorage.setItem('midi-pad-order', JSON.stringify(state.padOrder));
+            renderPads();
+        };
+
+        div.querySelector('.pad-inst').onclick = (e) => e.stopPropagation();
+        div.querySelector('.pad-inst').onchange = (e) => {
+            config.instrument = e.target.value; savePadConfig(id, config);
+        };
+
+        div.onmousedown = (e) => {
+            if (e.target.tagName === 'SELECT') return;
+            processNote(id, 100, true);
+            playNote(id, 100);
+            recordEvent(9, id, 100); // Record click
+        };
+        div.onmouseup = () => {
+            processNote(id, 0, false); stopNote(id); recordEvent(8, id, 0);
+        };
+        div.onmouseleave = div.onmouseup;
+
+        padContainer.appendChild(div);
+        activePads.set(id, div);
+    }
+
+    function renderPads() {
+        padContainer.innerHTML = '';
+        state.padOrder.forEach(id => createPadUI(id, id));
+    }
+    if (state.padOrder.length > 0) renderPads();
+
+    document.querySelectorAll('.collapsible-header').forEach(header => {
+        header.addEventListener('click', () => {
+            const parent = header.closest('.collapsible');
+            if (parent) parent.classList.toggle('collapsed');
+        });
+    });
+
+    function addLog(type, details, className) {
+        const line = document.createElement('div');
+        line.className = 'log-line';
+        line.innerHTML = `<span class="timestamp">${new Date().toLocaleTimeString()}</span><span style="font-weight:bold" class="${className}">${type}</span><span>${details}</span>`;
+        logOutput.prepend(line);
+        if (logOutput.childNodes.length > 50) logOutput.removeChild(logOutput.lastChild);
+    }
+    function clearLogs() { logOutput.innerHTML = ''; }
+</script>
+</body>
+</html>

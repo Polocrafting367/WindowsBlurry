@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,height=device-height, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+
+    <title>HabitMaster - V11 Fix & Records</title>
+    <!-- Import FontAwesome -->
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="ico.css">
+<link rel="icon" type="image/png" href="logo_tr.svg">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js').then(reg => {
+        reg.addEventListener('updatefound', () => {
+            const newWorker = reg.installing;
+            newWorker.addEventListener('statechange', () => {
+                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                    // Une nouvelle version est là ! 
+                    // On recharge la page automatiquement pour l'appliquer
+                    window.location.reload();
+                }
+            });
+        });
+    });
+}
+</script>
+</head>
+
+<style> 
+
+
+
+#loader-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #587081;
+    z-index: 999999;
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.5s ease, visibility 0.5s;
+}
+
+/* 2. L'animation : Quand on retire .preload du body, le voile s'efface */
+body:not(.preload) #loader-overlay {
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* 3. Optionnel : Empêcher de scroller pendant que le voile est là */
+body.preload {
+    overflow: hidden;
+}
+
+</style>
+
+
+<body class="preload">
+    <div id="app-wrapper">
+<div id="loader-overlay" style="
+    background: #587081; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    font-weight: bold;
+    font-size: 25px; 
+    color: var(--text); 
+    z-index: 9999;">
+    Chargement...
+</div>
+
+
+<div class="header-div" id="mainHeader">
+    <div class="stats-container">
+
+        <div class="currency-row" id="inventoryRow">
+
+            </div>
+
+        <div id="fullInventory" style="display: none; margin-top: 15px; border-top: 1px solid var(--grid-line); padding-top: 10px;">
+            </div>
+
+        <div class="xp-bar-bg" style="margin-top:10px;">
+            <div class="xp-bar-fill" id="xpBar"></div>
+        </div>   
+        <div id="ligne">
+        <div style="font-size:0.65rem; color:var(--text-dim); margin-top:4px; text-align:right;" id="xpText">
+            0 / 200 XP
+        </div>  
+               <div id="freeze-status"></div>
+                             
+</div>
+    </div>
+</div>
+
+<div id="toast-container"></div>
+
+<!-- CUSTOM MODAL -->
+<div id="customModal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-title" id="mTitle">Titre</div>
+        <div class="modal-body" id="mBody">Message ici...</div>
+        <div class="modal-actions">
+            <button class="modal-btn cancel" onclick="closeModal()">Fermer</button>
+            <button class="modal-btn confirm" id="mConfirmBtn">Confirmer</button>
+        </div>
+    </div>
+</div>
+
+<main>
+    <!-- PAGE 1: DASHBOARD -->
+<div id="dashboard" class="page active">
+    <div class="view-controls" style="display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 15px; padding: 0 5px;">
+        <button onclick="toggleView('grid')" id="btn-view-grid" style="background: var(--surface2); border: 1px solid var(--grid-line); padding: 8px 12px; border-radius: 8px; cursor: pointer; color: var(--text);">
+            <i class="fa-solid fa-grip"></i>
+        </button>
+        <button onclick="toggleView('list')" id="btn-view-list" style="background: var(--surface2); border: 1px solid var(--grid-line); padding: 8px 12px; border-radius: 8px; cursor: pointer; color: var(--text);">
+            <i class="fa-solid fa-list"></i>
+        </button>
+    </div>
+
+    <div id="dashboard-content" class="dashboard-grid"></div>
+</div>
+
+<div id="history" class="page">
+    <h3 style="margin-bottom: 10px;">
+        <i class="fa-solid fa-clock-rotate-left"></i> Historique
+    </h3>
+
+    <div style="position: -webkit-sticky; position: sticky; top: -1px; z-index: 100; ">
+        
+        <div class="content_history" style="display:flex; align-items:center; gap:10px; justify-content: space-between; background: var(--surface); padding: 10px; border-radius: 12px; border: 1px solid var(--grid-line); box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
+            
+            <button onclick="changeHistoryMonth(-1)" class="nav-cal-btn"><i class="fa-solid fa-chevron-left"></i></button>
+            
+            <div style="text-align:center">
+                <div id="historyMonthDisplay" style="font-weight:bold; font-size:1rem;">Janvier 2026</div>
+                <select id="historyFilter" onchange="changeHistoryFilter(this.value)" style="margin-top:5px; padding:2px 5px; border-radius:5px; background:var(--bg); color:var(--text); border:1px solid var(--grid-line);">
+                    <option value="all">Tout voir</option>
+                </select>
+            </div>
+
+            <button onclick="changeHistoryMonth(1)" class="nav-cal-btn"><i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+    </div>
+
+    <div id="monthly-history-list" class="history-vertical-list" style="margin-top:10px;">
+        </div>
+</div>
+    <!-- PAGE 2: RECORDS -->
+<div id="records" class="page">
+    <h3><i class="fa-solid fa-medal" style="color:var(--gold)"></i> Records</h3>
+    
+    <div id="records-list"></div>
+
+
+
+
+
+<div id="monthly-history-list" class="history-vertical-list">
+    </div>
+</div>
+
+<div id="calendar" class="page">
+    <div style="display:flex; justify-content:space-between; margin-bottom:15px; align-items:center;">
+        <button onclick="changeMonth(-1)" class="nav-cal-btn"><i class="fa-solid fa-chevron-left"></i></button>
+        <div style="text-align:center">
+            <h3 id="monthDisplay" style="margin:0"></h3>
+            <div id="calendarModeToggle" onclick="toggleCalendarMode()" style="font-size:0.7rem; color:var(--primary); cursor:pointer; text-transform:uppercase; margin-top:4px; font-weight:bold;">
+                <i class="fa-solid fa-repeat"></i> Mode Annuel
+            </div>
+        </div>
+        <button onclick="changeMonth(1)" class="nav-cal-btn"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+    <div id="calendarContainer">
+        <div class="calendar-grid" id="calendarGrid"></div>
+    </div>
+</div>
+
+    <!-- PAGE 4: RÉCOMPENSES -->
+    <div id="rewards" class="page">
+        
+        <div class="shop-section">
+            <h3 style="border-bottom:1px solid var(--grid-line); padding-bottom:5px;">🛒 Boutique</h3>
+            <div class="shop-grid">
+               
+            </div>
+        </div>
+
+        <div class="shop-section">
+            <h3 style="border-bottom:1px solid var(--grid-line); padding-bottom:5px;">🎨 Thèmes</h3>
+            <div class="shop-grid" id="themeGrid">
+                <!-- Thèmes -->
+            </div>
+        </div>
+        
+        <div class="shop-section">
+             <h3 style="border-bottom:1px solid var(--grid-line); padding-bottom:5px;">ℹ️ Grades</h3>
+             <div class="shop-grid" id="badgeLegendGrid"></div>
+        </div>
+    </div>
+
+    <!-- PAGE 5: SETTINGS -->
+    <div id="settings" class="page">
+        <button onclick="openContactModal('Habitude')" id="btnSaveProfile" 
+    style="background:var(--primary); color:#000; width:100%; border:none; padding:12px; border-radius:8px; font-weight:bold">
+    <i class="fas fa-bug"></i> Signaler un problème
+</button>
+<div class="settings-form">
+
+
+
+    <h3 id="formTitle">Nouveau Suivi</h3>
+    
+    <div class="form-group">
+        <label>Titre</label>
+        <input type="text" id="newProfileTitle" placeholder="Ex: Faire ceci, arreter cela..">
+    </div>
+    
+<div class="radio-group" style="display:flex; gap:10px; margin-bottom:15px;">
+    <div id="opt-good" class="type-option selected" onclick="selectType('good')" style="flex:1; padding:10px; text-align:center; border:1px solid var(--grid-line); border-radius:8px; cursor:pointer;">
+        <i class="fa-solid fa-face-smile" style="color:var(--secondary)"></i> À faire
+    </div>
+    <div id="opt-bad" class="type-option" onclick="selectType('bad')" style="flex:1; padding:10px; text-align:center; border:1px solid var(--grid-line); border-radius:8px; cursor:pointer;">
+        <i class="fa-solid fa-ban" style="color:var(--error)"></i> À éviter
+    </div>
+    <div id="opt-sport" class="type-option" onclick="selectType('sport')" style="flex:1; padding:10px; text-align:center; border:1px solid var(--grid-line); border-radius:8px; cursor:pointer;">
+        <i class="fa-solid fa-dumbbell" style="color:#ff9100"></i> Sport
+    </div>
+</div>
+
+    <div style="display:flex; gap:10px;">
+        <div class="form-group" style="flex:1;">
+            <label>Fréquence (jours)</label>
+            <input type="number" id="newProfileFreq" min="0.5" max="365" step="0.5" value="1">
+        </div>
+        <div class="form-group" style="width:60px;">
+            <label>Couleur</label>
+            <input type="color" id="newProfileColor" value="#03dac6" style="height:40px; width:100%; padding:0; border:none;">
+        </div>
+    </div>
+
+    <div class="form-group" style="margin-top:15px; border-top:1px solid var(--grid-line); padding-top:10px;">
+        <label>Données à suivre (Optionnel)</label>
+        <div id="noteInputsList" style="display:flex; flex-direction:column; gap:8px; margin-bottom:10px;"></div>
+        
+        <button onclick="addNoteField()" class="btn-buy" style="width:100%; py:5px; font-size:0.8rem; background:var(--surface); border:1px dashed var(--text-dim); color:var(--text);">
+            <i class="fa-solid fa-plus"></i> Ajouter un champ
+        </button>
+    </div>
+
+    <div style="display:flex; justify-content:space-between; margin-top:20px; gap:10px;">
+        <button id="btnCancelEdit" onclick="cancelEdit()" >Fermer</button>
+        <button id="btnSaveProfile" onclick="saveProfile()" class="btn-action" style="background:var(--primary); color:#000; width:100%; border:none; padding:12px; border-radius:8px; font-weight:bold;">
+            <i class="fa-solid fa-check"></i> Créer
+        </button>
+    </div>
+      
+        </div>
+<br>
+     <div class="settings-form">
+        Profils existants :
+        <div style="margin-top:5px" id="profilesList"></div>
+
+    </div>
+    <br>
+<div class="settings-form">
+    <h4 style="margin:0 0 10px 0; color:var(--text-dim)">Pro mode & Cloud</h4>
+
+    <div style="display:flex; justify-content:space-between; align-items:center; background:var(--bg); padding:10px; border-radius:8px; margin-bottom:10px; border:1px solid var(--grid-line); border-left: 4px solid #607d8b;">
+        <div style="text-align:left">
+            <div style="font-size:0.9rem; font-weight:bold;"><i class="fa-solid fa-briefcase" style="color:#607d8b"></i> Professional Use</div>
+            <div style="font-size:0.7rem; color:var(--text-dim);">Interface épurée</div>
+        </div>
+        <label class="switch">
+            <input type="checkbox" id="proModeToggle" onchange="toggleProMode(this.checked)">
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <div id="cloud-login-section" style="background:var(--surface2); padding:12px; border-radius:8px; border:1px solid var(--grid-line);">
+            <h4 style="margin:0 0 10px 0; color:var(--text-dim)">Faite une sauvegarde avant votre première connextion, puis réimporter vos données ! merci</h4>
+
+        <div id="login-form-fields">
+            <input type="text" id="cloud-user" placeholder="Utilisateur" style="width:100%; margin-bottom:8px; padding:8px; border-radius:5px; border:1px solid var(--grid-line); background:var(--bg); color:var(--text);">
+            <input type="password" id="cloud-pass" placeholder="Mot de passe" style="width:100%; margin-bottom:8px; padding:8px; border-radius:5px; border:1px solid var(--grid-line); background:var(--bg); color:var(--text);">
+            <button onclick="handleCloudConnect()" class="btn-action" style="width:100%; background:var(--primary); color:#000; border:none; padding:8px; border-radius:5px; font-weight:bold; cursor:pointer;">
+                <i class="fa-solid fa-cloud"></i> Connexion Cloud
+            </button>
+        </div>
+        <div id="logged-status" style="display:none; text-align:center;">
+            <span style="font-size:0.8rem; color:var(--secondary);">Connecté en tant que : <b id="display-username"></b></span>
+            <button onclick="handleCloudLogout()" style="background:none; border:none; color:var(--error); cursor:pointer; font-size:0.7rem; display:block; margin:5px auto; text-decoration:underline;">Déconnexion</button>
+        </div>
+    </div>
+</div>
+        <footer style="text-align: center; font-size: 0.9em; margin-top: 20px;">
+  <p>© 2026 HabitMaster - Une app <a href="https://polocrafting.fr" style="text-decoration: none; color: orange;">Polocrafting.fr</a></p>
+</footer>
+<div class="settings-form" id="savl">
+    <h4  style="margin:0 0 10px 0; color:var(--text-dim)">Paramètres & Sauvegarde</h4>
+    
+    <div style="display:flex; justify-content:space-between; align-items:center; background:var(--bg); padding:10px; border-radius:8px; margin-bottom:15px; border:1px solid var(--grid-line);">
+        <div style="text-align:left">
+            <div style="font-size:0.9rem; font-weight:bold;">Mode Local (Hors-ligne)</div>
+            <div style="font-size:0.7rem; color:var(--text-dim);">Force le chargement des fichiers locaux</div>
+        </div>
+        <label class="switch">
+            <input type="checkbox" id="localModeToggle" onchange="toggleLocalMode(this.checked)">
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <button class="btn-data" onclick="exportData()"><i class="fa-solid fa-download"></i> Sauvegarder (Export)</button>
+    <button class="btn-data" onclick="document.getElementById('fileInput').click()"><i class="fa-solid fa-upload"></i> Restaurer (Import)</button>
+    <input type="file" id="fileInput" style="display:none" onchange="importData(this)">
+</div>
+    </div>
+</main>
+<nav>
+    <button onclick="router('dashboard')" class="active" id="nav-dashboard">
+        <i class="fa-solid fa-trophy"></i> <span>Objectifs</span>
+    </button>
+        <button onclick="router('history')" id="nav-history">
+        <i class="fa-solid fa-clock-rotate-left"></i> <span>History</span>
+    </button>
+    <button onclick="router('records')" id="nav-records">
+        <i class="fa-solid fa-chart-line"></i> <span>Stats</span>
+    </button>
+
+    <button onclick="router('calendar')" id="nav-calendar">
+        <i class="fa-regular fa-calendar-days"></i> <span>Planning</span>
+    </button>
+    <button onclick="router('rewards')" id="nav-rewards">
+        <i class="fa-solid fa-gift"></i> <span>Bonus</span>
+    </button>
+    <button onclick="router('settings')" id="nav-settings">
+        <i class="fa-solid fa-plus"></i> <span>Créer</span>
+    </button>
+</nav>
+</div>
+</body>
+</html>
+
+
+<script>
+// On définit la fonction pour révéler le site
+function showSite() {
+    console.log("Révélation du site (suppression de la classe preload)");
+    document.body.classList.remove('preload');
+    init();
+}
+
+(function() {
+    const rawSettings = localStorage.getItem('pt_settings');
+    let forceLocal = false;
+    try {
+        if (rawSettings) forceLocal = JSON.parse(rawSettings).forceLocal || false;
+    } catch(e) {}
+
+    const urlDistant = "https://polocrafting.fr/HAPPY/";
+    const source = forceLocal ? "" : urlDistant;
+    
+    const version = Math.floor(Date.now() / 60000); 
+    const cacheBuster = "?v=" + version;
+
+    let cssReady = false;
+    let jsReady = false;
+    let fallbackTriggered = false;
+
+    // --- 1. SÉPARATION DES FICHIERS ---
+    
+    // Les librairies qui doivent être chargées AVANT le script principal
+    const dependencies = [
+        'JS/script.js',
+        'JS/core.js',
+        'JS/profiles.js',
+        'JS/history.js',
+        'JS/shop.js',
+                'JS/ui.js',
+
+    ];
+
+    // Le point d'entrée principal (qui contient init())
+    const mainScriptFile = 'JS/storage.js'; // ou 'JS/script.js' selon où tu l'as mis
+
+    let depLoadedCount = 0;
+
+    // Vérifie si TOUT est prêt (CSS + Main Script)
+    const tryShowSite = () => {
+        if (cssReady && jsReady && window.showSite) {
+            setTimeout(() => { showSite(); }, 350);
+        }
+    };
+
+    // --- LOGIQUE DE CHARGEMENT ---
+
+    // Étape 2 : Charge le script principal (une fois les dépendances finies)
+    const loadMainScript = (baseUrl) => {
+        const s = document.createElement("script");
+        s.src = baseUrl + mainScriptFile + cacheBuster;
+        s.defer = true;
+        
+        s.onload = () => {
+            console.log("✅ Main script chargé. Lancement.");
+            jsReady = true;
+            tryShowSite();
+        };
+        
+        // Si le main plante, on tente le fallback global
+        s.onerror = () => {
+            if (!fallbackTriggered) loadLocalFallback();
+        };
+        
+        document.body.appendChild(s);
+    };
+
+    // Étape 1 : Compte les dépendances
+    const onDependencyLoad = () => {
+        depLoadedCount++;
+        // Si toutes les dépendances sont là, on lance le Boss final (script.js)
+        if (depLoadedCount === dependencies.length) {
+            console.log("📦 Dépendances chargées. Chargement de script.js...");
+            // On utilise 'source' qui vaut soit l'URL distante, soit vide (local)
+            // Attention : en cas de fallback, cette fonction sera rappelée avec un contexte local
+            if (fallbackTriggered) {
+                loadMainScript(""); 
+            } else {
+                loadMainScript(source);
+            }
+        }
+    };
+
+    const loadLocalFallback = () => {
+        if (fallbackTriggered) return;
+        fallbackTriggered = true;
+        console.warn("⚠️ Mode local/secours activé.");
+        
+        // Fallback CSS
+        if (!cssReady) {
+            const lLocal = document.createElement("link");
+            lLocal.rel = "stylesheet";
+            lLocal.href = "style.css" + cacheBuster;
+            lLocal.onload = () => { cssReady = true; tryShowSite(); };
+            document.head.appendChild(lLocal);
+        }
+
+        // Fallback JS : On recommence tout en local
+        if (!jsReady) {
+            depLoadedCount = 0; // Reset du compteur
+            
+            dependencies.forEach(fileName => {
+                const sLocal = document.createElement("script");
+                sLocal.src = fileName + cacheBuster; // Local relatif
+                sLocal.defer = true;
+                sLocal.onload = onDependencyLoad; // Va déclencher loadMainScript("") à la fin
+                document.body.appendChild(sLocal);
+            });
+        }
+    };
+
+    // --- DÉMARRAGE ---
+
+    // 1. CSS
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = source + "style.css" + cacheBuster;
+    link.onload = () => { cssReady = true; tryShowSite(); };
+    link.onerror = loadLocalFallback;
+    document.head.appendChild(link);
+
+    // 2. JS (Dépendances d'abord)
+    dependencies.forEach(fileName => {
+        const script = document.createElement("script");
+        script.src = source + fileName + cacheBuster;
+        script.defer = true;
+        script.onload = onDependencyLoad;
+        script.onerror = loadLocalFallback;
+        document.body.appendChild(script);
+    });
+
+    // Timeout de sécurité
+    setTimeout(() => {
+        if (!jsReady || !cssReady) loadLocalFallback();
+    }, 2500); 
+})();
+</script>

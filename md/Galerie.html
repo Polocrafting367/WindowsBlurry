@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name='description' content='Découvrez ici tous mes projets.'>
+    <title>Mes projets</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- ESTHÉTIQUE GÉNÉRALE --- */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: transparent;
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        body.standalone {
+            background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            padding: 20px;
+        }
+
+        @keyframes gradientBG {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .iframe-mode {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 5px !important;
+        }
+
+        .iframe-mode h1,
+        .iframe-mode .search-container {
+            display: none !important;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 1.8em;
+            font-weight: 600;
+            margin-top: 0;
+            margin-bottom: 15px;
+            letter-spacing: -0.5px;
+            /* Aqua-White Gradient */
+            background: linear-gradient(to bottom, #ffffff, #abf0fb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.8));
+            text-transform: uppercase;
+        }
+
+        /* --- SEARCH --- */
+        .search-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 25px;
+        }
+
+        #searchInput {
+            width: 90%;
+            max-width: 380px;
+            padding: 10px 20px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            outline: none;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        #searchInput:focus {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 15px rgba(171, 240, 251, 0.1);
+        }
+
+        /* --- GALLERY --- */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+            justify-items: center;
+        }
+
+        .project {
+            width: 180px;
+            height: 185px;
+            /* 135px (img 4:3) + 50px (text) */
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .project:hover {
+            transform: translateY(-8px) scale(1.02);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(171, 240, 251, 0.3);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+        }
+
+        .project img {
+            width: 100%;
+            height: 135px;
+            object-fit: cover;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.4s ease;
+        }
+
+        .project:hover img {
+            transform: scale(1.05);
+        }
+
+        .project-info {
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            line-height: 1.2;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+
+            /* Grayish Center Gradient Background */
+            background-image: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.3), transparent);
+
+            /* Aqua-White Text Gradient */
+            background-color: white;
+            /* Fallback */
+            background: linear-gradient(to bottom, #ffffff, #abf0fb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6));
+        }
+
+        /* --- RESPONSIVE --- */
+        @media screen and (max-width: 600px) {
+            body:not(.standalone) .container {
+                border-radius: 0;
+                padding: 10px;
+                border: none;
+                background: transparent;
+            }
+
+            .gallery {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+
+            .project {
+                width: 100%;
+                height: auto;
+            }
+
+            .project img {
+                height: 110px;
+            }
+
+            .project-info {
+                height: 45px;
+                font-size: 14px;
+            }
+
+            h1 {
+                font-size: 1.4em;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Mes Projets</h1>
+
+        <div class="search-container">
+            <input type="text" id="searchInput" onkeyup="filterProjects()" placeholder="Rechercher un projet...">
+        </div>
+
+        <div class="gallery" id="galleryGrid">
+
+            <a href="G-MAPP/" class="project" target="_blank">
+                <img src="G-MAPP/IMG/Illu.png" alt="G-MAPP" onerror="this.src='ERR.webp'">
+                <div class="project-info">Démo de G-MAPP</div>
+            </a>
+
+            <a href="BD/" class="project" target="_blank">
+                <img src="BD/Illu.png" alt="BD" onerror="this.src='ERR.webp'">
+                <div class="project-info">Pointeuse H. Supp</div>
+            </a>
+            <a href="MasterPaint/" class="project" target="_blank">
+                <img src="MasterPaint/illu.png" alt="SVG" onerror="this.src='ERR.webp'">
+                <div class="project-info">MasterPain 98 PRO</div>
+            </a>
+            <a href="VIDEO/" class="project" target="_blank">
+                <img src="VIDEO/Illu.png" alt="Photos" onerror="this.src='ERR.webp'">
+                <div class="project-info">VHS EFFECT</div>
+            </a>
+            <a href="G-MAPP/Notes/OK.html" class="project" target="_blank">
+                <img src="G-MAPP/Notes/Illu.png" alt="Photos" onerror="this.src='ERR.webp'">
+                <div class="project-info">ToDoListe</div>
+            </a>
+            <a href="Polocraft 3.67/index.html" class="project" target="_blank">
+                <img src="Polocraft 3.67/Illu.png" alt="Polocraft" onerror="this.src='ERR.webp'">
+                <div class="project-info">Polocraft 3.67</div>
+            </a>
+
+            <a href="HAPPY/" class="project" target="_blank">
+                <img src="HAPPY/Illu.png" alt="Happy" onerror="this.src='ERR.webp'">
+                <div class="project-info">HabitMaster</div>
+            </a>
+            <a href="Annexe/Photos.html" class="project" target="_blank">
+                <img src="Annexe/Photos.jpeg" alt="Photos" onerror="this.src='ERR.webp'">
+                <div class="project-info">Photos</div>
+            </a>
+
+            <a href="G-MAPP/outils/back.html" class="project" target="_blank">
+                <img src="G-MAPP/outils/IMG/back.png" alt="Photos" onerror="this.src='ERR.webp'">
+                <div class="project-info">LV background type</div>
+            </a>
+
+
+            <a href="Boot/bios.html" class="project" target="_blank">
+                <img src="Annexe/windows.png" alt="Windows" onerror="this.src='ERR.webp'">
+                <div class="project-info">Windows 367</div>
+            </a>
+
+
+            <a href="G-MAPP/outils/json%20cleaner.html" class="project" target="_blank">
+                <img src="G-MAPP/outils/IMG/JSON.png" alt="Photos" onerror="this.src='ERR.webp'">
+                <div class="project-info">JSON Cleaner</div>
+            </a>
+
+            <a href="G-MAPP/outils/code%20compteur.html" class="project" target="_blank">
+                <img src="G-MAPP/outils/IMG/NB.png" alt="Photos" onerror="this.src='ERR.webp'">
+                <div class="project-info">Compteur de ligne code</div>
+            </a>
+
+
+
+
+            <a href="Annexe/Blog/index.html" class="project" target="_blank">
+                <img src="Annexe/Blog/illu.png" alt="Blog" onerror="this.src='ERR.webp'">
+                <div class="project-info">Blog (Archive)</div>
+            </a>
+
+            <a href="jeux3D/index.html" class="project" target="_blank">
+                <img src="jeux3D/illu.png" alt="Jeux NES" onerror="this.src='ERR.webp'">
+                <div class="project-info">Jeux NES</div>
+            </a>
+
+            <a href="STOPMOTION/index.html" class="project" target="_blank">
+                <img src="STOPMOTION/Illu.png" alt="StopMotion" onerror="this.src='ERR.webp'">
+                <div class="project-info">StopMotion Creator</div>
+            </a>
+
+
+
+            <a href="Annexe/OOBE.html" class="project" target="_blank">
+                <img src="Annexe/OOBE.jpeg" alt="OOBE" onerror="this.src='ERR.webp'">
+                <div class="project-info">OOBE (Win. 11)</div>
+            </a>
+
+            <a href="jeux 3d old/index.html" class="project" target="_blank">
+                <img src="jeux 3d old/illu.png" alt="Jeux 3D" onerror="this.src='ERR.webp'">
+                <div class="project-info">Jeux 3D Old</div>
+            </a>
+
+            <a href="Windows 367 V2/index.html" class="project" target="_blank">
+                <img src="Windows 367 V2/Illu.png" alt="Win 367 V2" onerror="this.src='ERR.webp'">
+                <div class="project-info">Windows 367 V2</div>
+            </a>
+
+            <a href="Annexe/mosaic.html" class="project" target="_blank">
+                <img src="Annexe/Photomosaic.png" alt="Mosaic" onerror="this.src='ERR.webp'">
+                <div class="project-info">Photomosaic</div>
+            </a>
+
+            <a href="Annexe/Img.html" class="project" target="_blank">
+                <img src="Annexe/IMG.png" alt="Planning" onerror="this.src='ERR.webp'">
+                <div class="project-info">Planning</div>
+            </a>
+
+            <a href="cube/index.html" class="project" target="_blank">
+                <img src="cube/index.png" alt="Cube" onerror="this.src='ERR.webp'">
+                <div class="project-info">Jeux Chelou</div>
+            </a>
+
+            <a href="Annexe/jeux couleur.html" class="project" target="_blank">
+                <img src="Annexe/jeux.png" alt="Couleur" onerror="this.src='ERR.webp'">
+                <div class="project-info">Jeux Couleur</div>
+            </a>
+
+            <a href="Annexe/Fack.html" class="project" target="_blank">
+                <img src="Annexe/Kack.jpeg" alt="Faux bureau" onerror="this.src='ERR.webp'">
+                <div class="project-info">Faux Bureau</div>
+            </a>
+
+
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.querySelector('.container');
+
+            if (window.self === window.top) {
+                // MODE NORMAL (Lien direct)
+                document.body.classList.add('standalone');
+            } else {
+                // MODE IFRAME
+                container.classList.add('iframe-mode');
+            }
+        });
+
+        function filterProjects() {
+            let input = document.getElementById('searchInput');
+            let filter = input.value.toUpperCase();
+            let container = document.getElementById("galleryGrid");
+            let projects = container.getElementsByClassName('project');
+
+            for (let i = 0; i < projects.length; i++) {
+                let txtValue = projects[i].textContent || projects[i].innerText;
+                projects[i].style.display = txtValue.toUpperCase().indexOf(filter) > -1 ? "" : "none";
+            }
+        }
+
+
+        trackVisit('TOUT PROJET')
+
+        function trackVisit(pageName = "Accueil") {
+            // 1. Générer ou récupérer un ID Appareil unique
+            let deviceId = localStorage.getItem('app_device_id');
+            if (!deviceId) {
+                deviceId = 'dev-' + Math.random().toString(36).substr(2, 9) + '-' + Date.now();
+                localStorage.setItem('app_device_id', deviceId);
+            }
+
+            // 2. Envoyer les données
+            fetch('/track.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    deviceId: deviceId,
+                    page: pageName
+                })
+            }).catch(e => console.log("Tracking error", e));
+        }
+
+
+    </script>
+</body>
+
+</html>

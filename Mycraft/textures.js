@@ -22,6 +22,9 @@ function loadTextures(texturePaths) {
     return textures; // Retourner un objet contenant toutes les textures
 }
 
+const invisibleMaterial = new THREE.MeshBasicMaterial({
+    visible: false // Rendre le bloc totalement invisible
+});
 
 // Exemple d'utilisation avec vos textures actuelles
 const texturePaths = [

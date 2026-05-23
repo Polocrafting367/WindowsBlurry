@@ -1,8 +1,9 @@
 User-agent: *
-Allow: /Annexe/
-Allow: /Boot/
-Allow: /App/
-Allow: /intervention/
-Allow: /jeux3D/
-Allow: /index.html
 Allow: /Galerie.html
+Allow: /G-MAPP/
+Allow: /MasterPaint/
+Allow: /G-MAPP/Notes
+Allow: /BD/
+Allow: /VIDEO/
+Allow: /Boot/
+Allow: /index.html

@@ -1,7 +1,7 @@
 let bordurecam = -1;
 let anglecam = 75;
 //vitesses
-let speed = 100;        // Vitesse horizontale
+let speed = 1;        // Vitesse horizontale
 let verticalSpeed = 10; // Vitesse verticale (ajustée à une valeur plus lente)
 
 let isFalling = true;  // Indique si le joueur tombe
@@ -35,94 +35,7 @@ let isFlying = false;  // Indique si le joueur vole
 let lastSpacePressTime = 0;  // Temps de la dernière pression sur Espace
 const doubleTapThreshold = 300;  // Seuil de temps pour détecter un double-tap (300 ms)
 
-document.addEventListener('mousedown', function (event) {
-    if (controls.isLocked) {
-        if (event.button === 0) {
-            // Clic gauche - casser un bloc
-            breakBlock();
-        } else if (event.button === 2) {
-            // Clic droit - poser un bloc
-            placeBlock();
-        }
-    }
-});
-
-
-let onKeyDown = function (event) {
-    switch (event.code) {
-        case 'ArrowUp':
-        case 'KeyW':
-            moveForward = true;
-            break;
-        case 'ArrowLeft':
-        case 'KeyA':
-            moveLeft = true;
-            break;
-        case 'ArrowDown':
-        case 'KeyS':
-            moveBackward = true;
-            break;
-        case 'ArrowRight':
-        case 'KeyD':
-            moveRight = true;
-            break;
-        case 'Space':  // Espace pour sauter ou monter en vol
-            const currentTime = performance.now();
-            if (currentTime - lastSpacePressTime <= doubleTapThreshold) {
-                // Double tap détecté, activer ou désactiver le vol
-                isFlying = !isFlying;
-                isFalling = !isFlying;  // Désactiver la gravité si on vole
-                velocityY = 0;  // Réinitialiser la vitesse verticale
-            } else if (!isFlying && isOnGround) {
-                // Saut normal si le joueur est au sol et ne vole pas
-                velocityY = jumpVelocity;
-                isJumping = true;
-                isOnGround = false;
-            } else if (isFlying) {
-                // Si on vole, appuyer sur Espace fait monter
-                moveUp = true;
-            }
-            lastSpacePressTime = currentTime;
-            break;
-        case 'ShiftLeft':  // Shift gauche pour descendre en vol
-            if (isFlying) {
-                moveDown = true;  // Descendre si on vole
-            }
-            break;
-    }
-};
-
-let onKeyUp = function (event) {
-    switch (event.code) {
-        case 'ArrowUp':
-        case 'KeyW':
-            moveForward = false;
-            break;
-        case 'ArrowLeft':
-        case 'KeyA':
-            moveLeft = false;
-            break;
-        case 'ArrowDown':
-        case 'KeyS':
-            moveBackward = false;
-            break;
-        case 'ArrowRight':
-        case 'KeyD':
-            moveRight = false;
-            break;
-        case 'Space':  // Arrêter de monter en vol quand Espace est relâché
-            if (isFlying) {
-                moveUp = false;  // Arrêter de monter
-            }
-            break;
-        case 'ShiftLeft':  // Arrêter de descendre quand Shift est relâché
-            if (isFlying) {
-                moveDown = false;  // Arrêter de descendre
-            }
-            break;
-    }
-};
-
+    const maxBlockHeight = 60;  // Par exemple, vous limitez à 60 blocs de hauteur
 
 // Obtenir les éléments du formulaire
 let bordurecamInput = document.getElementById("bordurecam");
@@ -134,6 +47,10 @@ let jumpVelocityInput = document.getElementById("jumpVelocity");
 let gravityInput = document.getElementById("gravity");
 let chunkSizeInput = document.getElementById("chunkSize");
 let chunkDistanceInput = document.getElementById("chunkDistance");
+const qualityInput = document.getElementById('quality');  // Récupérer l'élément
+
+let quality = parseInt(qualityInput.value);
+
 
 
 // Afficher les valeurs initiales dans le formulaire

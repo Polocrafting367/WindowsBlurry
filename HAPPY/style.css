@@ -1,0 +1,1475 @@
+/* THÈME PRO LIGHT - Version Profondeur */
+body.light-theme {
+    /* Fond principal : On l'assombrit un peu pour que le blanc ressorte vraiment */
+    --bg: #e9eff3; 
+    
+    /* Surfaces : Blanc pur pour donner l'impression qu'elles "flottent" */
+    --surface: #ffffff;
+    --card-solid: #e9eff3;
+    --cardlate: rgba(255, 255, 255, 0.9);
+
+    /* Variante : Un bleu-gris très doux pour les éléments de second plan (sidebar, inputs) */
+    --surface2: #ffffff; 
+
+    /* Textes : On renforce le contraste */
+    --text: #1a252f;
+    --text-dim: #5d6d7e;
+
+    /* Bordures : Plus subtiles pour ne pas étouffer le design */
+    --grid-line: rgba(0, 0, 0, 0.05);
+    --border: #ced6dd;
+
+    /* Accents */
+    --primary: #2980b9;    /* Bleu un peu plus saturé pour le mode Pro */
+    --secondary: #5dade2;
+    --error: #e74c3c;
+    --gold: #f39c12;
+
+    /* ASTUCE : Ajoute une variable d'ombre pour tes cartes dans ton CSS global */
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+:root {
+    /* THÈME PAR DÉFAUT (Dark Minimal) */
+    --bg: #121212;
+    --surface: #1e1e1e;
+    --text: #ffffff;
+    --text-dim: #b0b0b0;
+    --grid-line: #333;
+    --primary: #bb86fc;
+    --secondary: #03dac6;
+    --error: #cf6679;
+    --gold: #ffd700;
+    --test: #EEE;
+    --cardlate:#1e1e1eAA;
+    --card-solid:#1e1e1e;
+    --border:#333;
+}
+* {
+    box-sizing: border-box;
+}
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    /* On bloque le scroll natif (ce qui tue le bouton Samsung) */
+    overflow: hidden; 
+}
+
+#app-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    
+    background-color: var(--bg);
+    color: var(--text) !important;
+    font-family: 'Roboto', 'Segoe UI', sans-serif;
+    
+    display: flex;
+    flex-direction: column;
+
+    /* --- LA CORRECTION EST ICI --- */
+    /* On active le scroll vertical ICI, à l'intérieur de la div */
+    overflow-y: auto; 
+    overflow-x: hidden;
+    
+    /* Important pour la fluidité sur iPhone */
+    -webkit-overflow-scrolling: touch; 
+    
+    -webkit-user-select: none;
+    user-select: none;
+    overscroll-behavior-y: contain;
+}
+
+.page {
+    display: none;
+    animation: fadeIn 0.3s;
+}
+.page.active {
+    display: block;
+}
+/* On supprime ou on vide l'ancien style "header" */
+header {
+    display: none;
+}
+.header-div {
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    background: var(--cardlate);
+    backdrop-filter: blur(10px);
+    border-radius: 0 0 20px 20px;
+    border: 1px solid var(--border);
+    box-shadow: 0 8px 24px #00000080;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    z-index: 1000;
+}
+h3{
+    margin-top: 0px;
+}
+.stats-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+/* On s'assure que le main n'a plus de margin-top forcé */
+main {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 10px;
+    padding-bottom: 80px;
+    padding-top: 110px;
+}
+.stats-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+.currency-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-size: 0.8rem;
+    flex-wrap: wrap;
+}
+.coin-badge {
+    color: var(--text);
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 4px 10px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 0.75rem;
+}
+/* Style pour la ligne de badge dans l'inventaire ouvert */
+.inventory-item-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    width: 100%;
+}
+.item-name-label {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    font-weight: bold;
+    margin-left: 10px;
+    text-transform: uppercase;
+}
+.btn-inventory-toggle {
+    background: var(--surface);
+    border: 1px solid var(--grid-line);
+    color: var(--text);
+    border-radius: 8px;
+    padding: 4px 8px;
+    font-size: 0.7rem;
+    cursor: pointer;
+}
+.coin-badge i.fa-coins {
+    color: var(--gold);
+}
+.coin-badge i.fa-shield-halved {
+    color: var(--text-dim);
+}
+.coin-badge i.fa-flask {
+    color: #bb86fc;
+}
+.coin-badge i.fa-user-shield {
+    color: #03dac6;
+}
+.coin-badge i.fa-wand-magic-sparkles {
+    color: #ff00ff;
+}
+.xp-bar-bg {
+    width: 100%;
+    height: 6px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+}
+.xp-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    width: 0%;
+    transition: width 0.5s ease;
+}
+nav {
+    position:fixed;
+    bottom:10px;
+    /* Un peu plus haut pour l'esthétique */
+    left:50%;
+    transform:translateX(-50%);
+    width:97%;
+    /* Un peu plus de marge sur les côtés */
+    max-width:750px;
+    /* Sécurité pour ne pas être géant sur PC/Tablette */
+    background: var(--cardlate);
+    /* Assure-toi que cette variable existe, sinon met #222 */
+    backdrop-filter:blur(10px);
+    border-radius:20px;
+    /* 40px est parfois trop rond pour 5 boutons, 20-25px est mieux */
+    border:1px solid var(--grid-line);
+    box-shadow:0 8px 24px #00000080;
+    display:flex;
+    justify-content:space-between;
+    /* Distribue l'espace */
+    align-items:center;
+    padding:3px;
+    /* Un petit padding interne global */
+    z-index:100
+}
+nav button{
+    background:none;
+    border:none;
+    color:var(--text-muted);
+    /* Ou #888 si la var n'existe pas */
+    /* MAGIE ICI : flex: 1 permet à chaque bouton de prendre 20% exactement */
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    font-size:.65rem;
+    /* Texte un peu plus petit pour tenir sur 1 ligne */
+    padding:8px 0;
+    /* Espace vertical pour le confort tactile */
+    margin:0 2px;
+    /* Marge latérale minime */
+    cursor:pointer;
+    border-radius:17px;
+    /* Arrondi interne */
+    /* Sécurité pour ne pas que le texte casse la mise en page */
+    min-width:0;
+    white-space:nowrap;
+    overflow:hidden
+}
+nav button i{
+    font-size:1.2rem;
+    /* Icône légèrement réduite pour l'harmonie */
+    margin-bottom:4px
+}
+/* État Actif */
+nav button.active{
+    color:var(--primary);
+    /* Ou #3498db */
+    background:#ffffff14;
+    font-weight:bold;
+    /* On supprime la bordure ou on la met transparente pour éviter le décalage de pixel */
+    box-shadow:inset 0 0 0 1px #ffffff1a
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+/* --- Dashboard Cards --- */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 10px;
+}
+/* Style de base commun */
+.profile-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--surface2);
+    border: 1px solid var(--grid-line);
+    border-radius: 12px;
+    padding: 10px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+/* Vue Grille (Défaut) */
+.dashboard-grid .profile-card {
+    height: 330px; /* On remet la hauteur ici */
+}
+
+/* Vue Liste (Compacte) */
+.dashboard-list .profile-card {
+    height: auto; /* La carte s'adapte au contenu */
+    flex-direction: row; /* Aligne les éléments horizontalement */
+    align-items: center;
+    padding: 8px 15px;
+    margin-bottom: 7px;
+}
+.profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+.big-number {
+    font-size: 2rem;
+    font-weight: bold;
+    line-height: 1;
+    margin: 10px 0;
+}
+.unit-label {
+    font-size: 0.9rem;
+    color: var(--text-dim);
+}
+.rank-display {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,0,0,0.3);
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+.strikes-container {
+    display: flex;
+    gap: 2px;
+    font-size: 0.8rem;
+    margin-top: 5px;
+    color: var(--error);
+    justify-content: flex-end;
+}
+.btn-action {
+    width: 100%;
+    padding: 12px;
+    margin-top: auto;
+    /* Pousse le bouton en bas */
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: filter 0.2s;
+}
+.btn-action:hover {
+    filter: brightness(1.1);
+}
+.btn-action i {
+    font-size: 0.9rem;
+}
+/* --- Shop & Rewards --- */
+.shop-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 15px;
+}
+.reward-card {
+    background: var(--surface);
+    border: 1px solid var(--grid-line);
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+    position: relative;
+    opacity: 0.7;
+    transition: 0.2s;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+/* Style pour les labels au-dessus des inputs */
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-dim);
+    font-size: 0.85rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+.reward-card.unlocked {
+    opacity: 1;
+    border-color: var(--primary);
+    cursor: pointer;
+}
+.reward-card.locked {
+    filter: grayscale(1);
+    opacity: 0.4;
+}
+.reward-card.active-theme {
+    border: 2px solid var(--gold);
+    box-shadow: 0 0 10px var(--gold);
+    opacity: 1;
+}
+.reward-card.owned {
+    border-color: var(--secondary);
+    background: rgba(3, 218, 198, 0.05);
+    opacity: 1;
+    cursor: pointer;
+}
+.reward-card.rank-info {
+    border-color: var(--grid-line);
+    opacity: 1;
+    cursor: default;
+}
+.item-icon {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    display: block;
+    color: var(--text);
+}
+.item-cost {
+    color: var(--gold);
+    font-weight: bold;
+    font-size: 0.8rem;
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+.btn-buy {
+    background: var(--gold);
+    color: #000;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-weight: bold;
+    margin-top: 10px;
+    cursor: pointer;
+    width: 100%;
+}
+.btn-apply {
+    background: var(--secondary);
+    color: #000;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-weight: bold;
+    margin-top: 10px;
+    cursor: pointer;
+    width: 100%;
+}
+/* --- Records --- */
+.record-card {
+    background: var(--surface);
+    border: 1px solid var(--grid-line);
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 12px;
+}
+.record-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.record-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.record-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+    color: var(--text-dim);
+}
+.record-val {
+    font-weight: bold;
+    color: var(--text);
+}
+.record-date {
+    font-size: 0.75rem;
+    opacity: 0.8;
+}
+.record-rank-1 {
+    color: var(--gold);
+}
+.record-rank-2 {
+    color: #c0c0c0;
+}
+.record-rank-3 {
+    color: #cd7f32;
+}
+/* Grille flexible pour mobile */
+/* Grille principale */
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    /* On force la grille à prendre toute la hauteur disponible du conteneur */
+    grid-template-rows: repeat(6, 1fr); /* Optionnel: force 5 lignes égales */
+    gap: 2px;
+    width: 100%;
+    height: 100%;
+}
+
+
+/* Conteneur des tags à l'intérieur de la cellule */
+.event-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-top: auto; /* Pousse les tags vers le bas si tu veux, ou retire pour les coller au chiffre */
+}
+
+/* Optimisation des tags pour ne pas casser la largeur */
+.event-tag {
+    font-size: 0.5rem;
+    padding: 2px;
+    border-radius: 3px;
+    color: #000;
+    font-weight: bold;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Coupe le texte proprement avec "..." */
+    width: 100%;
+}
+/* --- Settings Form --- */
+.settings-form {
+    background: var(--surface);
+    padding: 10px;
+    border-radius: 12px;
+    margin: 0 auto;
+}
+.form-group {
+    margin-bottom: 15px;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--text-dim);
+    font-size:0.9rem;
+}
+.form-group input[type="text"], .form-group input[type="number"], .form-group input[type="color"] {
+    width: 100%;
+    padding: 10px;
+    background: rgba(0,0,0,0.2);
+    border: 1px solid var(--grid-line);
+    color: var(--text);
+    border-radius: 6px;
+    box-sizing: border-box;
+    height: 40px;
+}
+.radio-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 5px;
+}
+.radio-option {
+    flex: 1;
+    padding: 15px 10px;
+    background: var(--surface);
+    border: 2px solid var(--grid-line);
+    border-radius: 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+.radio-option i {
+    font-size: 1.2rem;
+    margin-bottom: 2px;
+}
+.radio-option small {
+    font-size: 0.7rem;
+    opacity: 0.6;
+}
+/* État sélectionné */
+.type-option.selected#opt-good {
+    border-color: var(--secondary);
+    background: rgba(3, 218, 198, 0.1);
+}
+.type-option.selected#opt-bad {
+    border-color: var(--error);
+    background: rgba(207, 102, 121, 0.1);
+}
+.type-option.selected {
+    border-color: var(--text);
+    background: rgba(255,255,255,0.05);
+    opacity: 1;
+}
+/* Edit Actions */
+.edit-actions {
+    display: flex;
+    gap: 5px;
+}
+.btn-cancel {
+    background: transparent;
+    border: 1px solid var(--grid-line);
+    color: var(--text);
+}
+.data-section {
+    border-top:1px solid var(--grid-line);
+    margin-top:20px;
+    padding-top:20px;
+}
+.btn-data {
+    background: var(--surface);
+    border:1px solid var(--grid-line);
+    color: var(--text-dim);
+    width:100%;
+    padding:10px;
+    margin-top:5px;
+    border-radius:6px;
+    cursor:pointer;
+}
+/* --- Toasts & Confetti --- */
+#toast-container {
+    position: fixed;
+    top: 110px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 99999;
+    width: 90%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.toast {
+    background: var(--surface);
+    border: 1px solid var(--grid-line);
+    color: var(--text);
+    padding: 12px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    animation: slideIn 0.3s forwards;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+.confetti {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    background-color: #f00;
+    animation: fall linear forwards;
+    z-index: 2000;
+}
+@keyframes fall {
+    to {
+        transform: translateY(100vh) rotate(720deg);
+    }
+}
+/* --- CUSTOM MODAL --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    z-index: 3000;
+    display: none;
+    /* Aligne le contenu en bas */
+    align-items: flex-end;
+    justify-content: center;
+}
+.modal-content {
+    background: var(--card-solid);
+    border: 1px solid var(--grid-line);
+    /* Arrondi uniquement les coins supérieurs */
+    border-radius: 20px 20px 0 0;
+    width: 100%;
+    max-width: 700px;
+    /* Un peu plus large pour le confort mobile */
+    box-shadow: 0 -5px 25px rgba(0,0,0,0.5);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    /* Animation pour l'apparition du bas vers le haut */
+    animation: slideUp 0.3s ease-out;
+    /* Ajoute un padding en bas pour les écrans avec encoche (iPhone) */
+    padding: 20px 20px calc(20px + env(safe-area-inset-bottom));
+}
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+.modal-content::before {
+    content: "";
+    width: 40px;
+    height: 4px;
+    background: var(--grid-line);
+    border-radius: 2px;
+    margin: -10px auto 15px;
+    flex-shrink: 0;
+}
+/* --- FIN DU CSS CORRIGÉ --- */
+.modal-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+.modal-body {
+    margin-bottom: 20px;
+    color: var(--text-dim);
+    font-size: 0.95rem;
+    overflow-y: auto;
+    text-align: left;
+    flex: 1;
+    -webkit-overflow-scrolling: touch;
+    padding-right: 5px;
+}
+/* <--- CETTE ACCOLADE MANQUAIT ICI */
+.modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 100%;
+    /* S'assure que les boutons prennent toute la largeur */
+}
+.modal-btn {
+    flex: 1;
+    padding: 14px;
+    border-radius: 10px;
+    border: none;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: transform 0.1s, opacity 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.modal-btn:active {
+    transform: scale(0.96);
+}
+.modal-btn.cancel {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--grid-line);
+    color: var(--text);
+}
+.modal-btn.confirm {
+    background: var(--primary);
+    color: #000;
+    box-shadow: 0 4px 15px rgba(187, 134, 252, 0.3);
+    /* Utilisation de la couleur primary */
+}
+/* --- HISTORIQUE & RECORDS --- */
+@keyframes goldPulse {
+    0% {
+        box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.7);
+    }
+    100% {
+        box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+    }
+}
+.gold-active-card {
+    animation: goldPulse 3s infinite ease-in-out;
+}
+.history-navigation {
+    display: flex;
+    padding: 15px 10px;
+    background: var(--surface);
+    border-radius: 12px;
+    margin-bottom: 20px;
+    justify-content: space-between;
+    flex-direction: column;
+    
+    /* AJOUT ICI : Centre les éléments enfants (le titre et la div content_history) horizontalement */
+    align-items: center; 
+}
+
+.content_history {
+    display: flex;
+
+    
+    align-content: space-between;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    
+    /* AJOUT ICI : Force la barre à prendre toute la largeur disponible */
+    width: 100%; 
+    box-sizing: border-box; 
+}
+.history-navigation button {
+    background: transparent;
+    border: none;
+    color: var(--primary);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 10px;
+}
+.history-item-card {
+    background: var(--surface);
+    /* On garde l'arrondi à droite, mais on le met à 0 à gauche pour la barre */
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 12px;
+    position: relative;
+    /* IMPORTANT : On définit d'abord la bordure générale discrète */
+    border: 1px solid var(--grid-line);
+    /* PUIS on force la bordure gauche épaisse (elle écrasera la bordure de gauche du dessus) */
+    border-left: 5px solid;
+    /* La couleur sera injectée par le JS via l'attribut style inline */
+}
+.history-vertical-list {
+    display: flex;
+    flex-direction: column;
+}
+.event-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow: hidden;
+}
+.event-tag {
+    font-size: 0.55rem;
+    /* Plus petit pour la discrétion */
+    padding: 1px 3px;
+    border-radius: 3px;
+    color: #000;
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+}
+/* BARRE D'ACTION FLOTTANTE POUR MULTI-SELECT */
+#multi-select-bar,#temp-update-popup{
+    z-index:5;
+    position:fixed;
+    bottom:75px;
+    left:50%;
+    width:90%;
+    background:var(--primary);
+    color:#fff;
+    border-radius:50px;
+    padding:10px 20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    box-shadow:0 5px 15px #00000080;
+    transition:transform .6s cubic-bezier(0.175,0.885,0.32,1.275);
+    visibility:hidden;
+    transform:translateX(-50%) translateY(125px);
+    transition:transform .3s ease,visibility .3s
+}
+#temp-update-popup{
+    background:#006400
+}
+#multi-select-bar.visible,#temp-update-popup.visible{
+    transform:translateX(-50%) translateY(0);
+    visibility:visible
+}
+.batch-btn{
+    background:#fff3;
+    border:none;
+    color:#fff;
+    padding:8px 15px;
+    border-radius:20px;
+    font-size:.9rem;
+    cursor:pointer
+}
+/* Container du switch */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 46px;
+    height: 24px;
+}
+/* Cache l'input par défaut */
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+/* Le slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #333;
+    transition: .3s;
+    border-radius: 24px;
+}
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .3s;
+    border-radius: 50%;
+}
+input:checked + .slider {
+    background-color: var(--primary);
+}
+input:checked + .slider:before {
+    transform: translateX(22px);
+}
+/* Style du slider quand il n'a pas été touché */
+input[type=range].slider-untouched {
+    accent-color: #777;       /* Couleur du rond : Gris */
+    filter: grayscale(100%);  /* Rend tout le slider gris */
+    opacity: 0.5;             /* Un peu transparent */
+}
+
+/* Style du slider quand il est activé (automatique quand on enlève la classe) */
+input[type=range] {
+    accent-color: var(--primary); /* TA COULEUR QUI POP */
+    filter: none;
+    opacity: 1;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); /* Petite animation "Paf" */
+}
+/* --- Styles Modale & Formulaires --- */
+
+/* Conteneur principal Modale Sport */
+.modal-sport-container {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Header Chrono */
+.chrono-header {
+    flex-shrink: 0;
+    text-align: center;
+    margin-bottom: 15px;
+    padding: 15px;
+    background: var(--surface2);
+    border-radius: 12px;
+    border: 1px solid var(--primary);
+}
+
+.chrono-time {
+    font-size: 2.5rem;
+    font-family: monospace;
+    font-weight: bold;
+    color: var(--text);
+    margin-bottom: 5px;
+}
+
+.chrono-label {
+    font-size: 0.8rem;
+    opacity: 0.7;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Zone de contenu défilant */
+.scroll-content {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Boîte standard pour les champs */
+.input-box {
+    background: var(--surface);
+    padding: 5px 10px;
+    border-radius: 10px;
+    border: 1px solid var(--grid-line);
+}
+
+/* Titre des champs */
+.input-label {
+    font-weight: bold;
+    color: var(--primary);
+    font-size: 0.95rem;
+}
+
+.input-label-block {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: var(--primary);
+    font-size: 0.95rem;
+}
+
+/* Contrôles Numériques (+/-) */
+.counter-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.counter-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-counter {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: none;
+    background: var(--surface2);
+    color: var(--text);
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 1.1rem;
+}
+
+.input-counter {
+    width: 60px;
+    text-align: center;
+    background: transparent;
+    border: none;
+    color: var(--text);
+    font-size: 1.2rem;
+    font-weight: bold;
+    appearance: textfield; /* Standard */
+    -moz-appearance: textfield; /* Firefox */
+}
+/* Enlève les flèches natives des inputs number */
+.input-counter::-webkit-outer-spin-button,
+.input-counter::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Slider */
+.slider-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.slider-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.slider-value-display {
+    font-weight: bold;
+    color: var(--text);
+    font-size: 1.1rem;
+}
+
+.slider-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.slider-bound {
+    font-size: 0.8rem;
+    opacity: 0.6;
+}
+
+.custom-range {
+    flex: 1;
+    cursor: pointer;
+    accent-color: var(--primary);
+}
+
+/* Checkbox */
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.custom-checkbox {
+    width: 24px;
+    height: 24px;
+    accent-color: var(--primary);
+    cursor: pointer;
+}
+
+/* Champs Texte / Textarea */
+.input-text-simple {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--grid-line);
+    padding: 5px;
+    color: var(--text);
+    font-size: 1rem;
+}
+
+.textarea-notes {
+    width: 100%;
+    margin-top: 10px;
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--grid-line);
+    border-radius: 10px;
+    padding: 10px;
+    min-height: 60px;
+    font-family: inherit;
+}
+
+/* Footer Boutons */
+.modal-footer {
+    flex-shrink: 0;
+    padding-top: 15px;
+    margin-top: 10px;
+    border-top: 1px solid var(--grid-line);
+    background: var(--cardlate);
+    z-index: 10;
+}
+
+.footer-btn-group {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-cancel, #btnCancelEdit {
+    flex: 1;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid var(--error);
+    background: transparent;
+    color: var(--error);
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-finish {
+    flex: 2;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    background: var(--primary);
+    color: var(--bg);
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Modale Standard (Good/Bad) */
+.standard-modal-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    text-align: left;
+}
+
+.cooldown-badge {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    padding: 4px 8px;
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    margin-top: 5px;
+    display: inline-block;
+    font-family: monospace;
+}
+
+/* Conteneurs et Header */
+.modal-sport-container .chrono-header {
+    position: relative;
+    padding-bottom: 5px;
+}
+
+.modal-sport-container .chrono-time {
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+.modal-sport-container .controls-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.modal-sport-container .nav-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+    padding: 0 10px;
+}
+
+/* Boutons de contrôle (Pause/Ignore) */
+.btn-chrono-ctrl {
+    border: 1px solid var(--grid-line);
+    color: white;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-chrono-ctrl.active {
+    background: var(--primary);
+}
+
+.btn-chrono-ctrl.inactive {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Navigation des séries */
+.btn-nav-set {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    border: 1px solid var(--grid-line);
+    border-radius: 6px;
+    transition: 0.2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.btn-nav-set.enabled {
+    background: linear-gradient(rgba(255,255,255,0.08), rgba(255,255,255,0.08)), var(--surface2);
+    color: var(--text);
+    cursor: pointer;
+    opacity: 1;
+}
+
+.btn-nav-set.disabled {
+    background: transparent;
+    color: var(--text-dim);
+    cursor: default;
+    opacity: 0.3;
+    box-shadow: none;
+}
+
+/* Infos et Labels */
+.chrono-label-serie {
+    font-weight: bold;
+    color: var(--primary);
+}
+
+.prev-val-info {
+    font-size: 0.7em;
+    opacity: 0.5;
+}
+
+/* Footer spécifique */
+.btn-full-width {
+    background: var(--surface);
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    margin-bottom: 8px;
+    width: 100%;
+}
+
+/* Header avec contrôles à gauche */
+.chrono-header-grid {
+    display: grid;
+    grid-template-columns: 60px 1fr 60px; /* Colonne vide à droite pour équilibrer */
+    align-items: center;
+    padding: 10px;
+}
+
+.side-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+}
+#ligne {
+display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    align-items: baseline;
+}
+.status-pause {
+    color: #a2d2ff;
+    font-size: 0.8rem;
+    text-align: center;
+    margin-top: 5px;
+    opacity: 0.7;
+    font-weight: bold; /* Ajout du gras */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+                padding: 0px 10px;
+}
+
+.status-pause .time-highlight {
+    color: #ffffff; /* Ajout du blanc */
+}
+.chrono-main-zone {
+    text-align: center;
+}
+
+/* Navigation séries compacte */
+.nav-row-compact {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 5px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 8px;
+}
+
+/* Style spécifique pour "Série Suivante" intégré plus haut */
+.btn-next-set-inline {
+    background: rgba(var(--primary-rgb), 0.1);
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    border-radius: 8px;
+    padding: 8px;
+    width: 100%;
+    margin:0 0 10px 0;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* Boutons de navigation du calendrier */
+.nav-cal-btn, .btn-action {
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--grid-line);
+    padding: 8px 16px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+}
+
+.nav-cal-btn:hover {
+    background: var(--grid-line);
+    border-color: var(--primary);
+}
+
+.nav-cal-btn:active {
+    transform: scale(0.95);
+}
+/* Conteneur principal */
+#calendarContainer {
+    background: var(--bg);
+    border-radius: 20px;
+    /* On utilise la hauteur de l'écran moins la barre de nav (environ 80px) */
+    height: calc(100vh - 250px); 
+    display: flex;
+    flex-direction: column;
+}
+
+.calendar-grid {
+    display: grid;
+    /* 7 colonnes égales */
+    grid-template-columns: repeat(7, 1fr);
+    /* Force 5 ou 6 lignes à se partager 100% de la hauteur disponible */
+    grid-template-rows: repeat(6, 1fr); 
+    gap: 2px;
+    width: 100%;
+    height: 100%;
+    flex-grow: 1;
+}
+
+.day-cell {
+    /* On laisse la grille piloter la taille */
+    height: 100%; 
+    width: 100%;
+    min-width: 0; /* Évite que le texte ne pousse les murs */
+    border: 1px solid var(--grid-line);
+    border-radius: 5px;
+    background: var(--surface);
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+/* Tags d'événements dans les cellules */
+.event-tag {
+    font-size: 0.55rem;
+    padding: 2px 4px;
+    border-radius: 4px;
+    margin-bottom: 2px;
+    color: #000;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    text-align: center;
+}
+
+/* Mode Annuel (Points) */
+.year-profile-card {
+    background: var(--surface);
+    border-radius: 16px;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid var(--grid-line);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.chart-scroll-container {
+    width: 100%;
+    overflow-x: auto;
+    background: var(--bg);
+    border-radius: 12px;
+    padding: 15px 5px;
+    margin: 15px 0;
+    border: 1px solid var(--grid-line);
+}
+
+.heatmap-row-large {
+    display: flex;
+    gap: 4px; /* Largeur forcée pour voir les jours clairement */
+    min-width: 800px; /* Force le scroll horizontal */
+}
+
+/* Masquage des éléments en mode PRO */
+body.pro-mode #mainHeader, 
+body.pro-mode #nav-rewards, 
+body.pro-mode #opt-sport, 
+body.pro-mode .rank-display, 
+body.pro-mode #opt-good, 
+body.pro-mode [id^="clambutt-"],
+body.pro-mode #savl, 
+body.pro-mode #cloud-login-section, 
+body.pro-mode .xp-text-display,
+body.pro-mode #opt-bad, 
+body.pro-mode #nav-records {
+    display: none !important;
+}
+
+body.pro-mode main {
+
+         padding-top: 10px;
+}
+

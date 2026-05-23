@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name='description' content='Découvrez ici tous mes projets.'>
+    <title>Mes projets</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- ESTHÉTIQUE GÉNÉRALE --- */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            /* Par défaut transparent (pour l'iframe) */
+            background-color: transparent; 
+            min-height: 100vh;
+            transition: background 0.5s ease;
+        }
+
+        /* Classe ajoutée via JS si on N'EST PAS dans une iframe */
+        body.standalone {
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+.container {
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+    transition: all 0.3s ease;
+}
+
+.iframe-mode {
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.iframe-mode h1 {
+    display: none; /* Optionnel : cache le titre dans l'iframe pour gagner de la place */
+}
+
+        h1 {
+            text-align: center;
+            color: #fff;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        /* --- BARRE DE RECHERCHE (Utilité) --- */
+        .search-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        #searchInput {
+            width: 80%;
+            max-width: 400px;
+            padding: 12px 20px;
+            border-radius: 30px;
+            border: none;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        #searchInput:focus {
+            outline: none;
+            transform: scale(1.02);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+        }
+
+        /* --- GALERIE --- */
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .project {
+            width: 250px;
+            height: 280px; /* Un peu plus haut pour l'esthétique */
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
+            /* Effet verre pour les cartes */
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+        }
+
+        .project:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.4);
+            z-index: 2;
+        }
+
+        .project img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .project-info {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.2); /* Fond sombre pour lisibilité texte */
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            text-align: center;
+            transition: background 0.3s;
+        }
+
+        .project:hover .project-info {
+            background: rgba(0, 123, 255, 0.8); /* Devient bleu au survol */
+        }
+
+        /* --- RESPONSIVE --- */
+        @media screen and (max-width: 600px) {
+            .project {
+                width: 45%; /* 2 par ligne sur mobile */
+                height: 200px;
+            }
+            .project img {
+                height: 120px;
+            }
+            .project-info {
+                font-size: 14px;
+                padding: 5px;
+            }
+            h1 { font-size: 1.8em; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Mes Projets</h1>
+        
+        <div class="search-container">
+            <input type="text" id="searchInput" onkeyup="filterProjects()" placeholder="Rechercher un projet...">
+        </div>
+
+        <div class="gallery" id="galleryGrid">
+            
+            <a href="G-MAPP/" class="project" target="_blank">
+                <img src="G-MAPP/IMG/Illu.png" alt="G-MAPP" onerror="this.src='https://cdn.pixabay.com/photo/2017/04/09/12/45/error-2215702_1280.png'">
+                <div class="project-info">Démo de G-MAPP</div>
+            </a>
+
+            <a href="BD/" class="project" target="_blank">
+                <img src="BD/Illu.png" alt="BD" onerror="this.src='https://cdn.pixabay.com/photo/2017/04/09/12/45/error-2215702_1280.png'">
+                <div class="project-info">Pointeuse H. Supp</div>
+            </a>
+            <a href="MasterPaint/" class="project" target="_blank">
+                <img src="MasterPaint/illu.png" alt="SVG" onerror="this.src='https://cdn.pixabay.com/photo/2017/04/09/12/45/error-2215702_1280.png'">
+                <div class="project-info">MasterPain 98 PRO</div>
+            </a>
+                <a href="VIDEO/" class="project" target="_blank">
+                <img src="VIDEO/Illu.png" alt="Photos" onerror="this.src='https://cdn.pixabay.com/photo/2017/04/09/12/45/error-2215702_1280.png'">
+                <div class="project-info">VHS EFFECT</div>
+            </a>
+    <a href="G-MAPP/Notes/OK.html" class="project" target="_blank">
+                <img src="G-MAPP/Notes/Illu.png" alt="Photos" onerror="this.src='https://cdn.pixabay.com/photo/2017/04/09/12/45/error-2215702_1280.png'">
+                <div class="project-info">ToDoListe</div>
+            </a>
+           <a href="Polocraft 3.67/index.html" class="project" target="_blank">
+                <img src="Polocraft 3.67/Illu.png" alt="Polocraft" onerror="this.src='https://cdn.pixabay.com/photo/2017/04/09/12/45/error-2215702_1280.png'">
+                <div class="project-info">Polocraft 3.67</div>
+            </a>
+
+            <a href="HAPPY/" class="project" target="_blank">
+                <img src="HAPPY/Illu.png" alt="Happy" onerror="this.src='https://cdn.pixabay.com/photo/2017/04/09/12/45/error-2215702_1280.png'">
+                <div class="project-info">HabitMaster</div>
+            </a>
+            <a href="Annexe/Photos.html" class="project" target="_blank">
+                <img src="Annexe/Photos.jpeg" alt="Photos" onerror="this.src='https://cdn.pixabay.com/photo/2017/04/09/12/45/error-2215702_1280.png'">
+                <div class="project-info">Photos</div>
+            </a>
+
+                <a href="G-MAPP/outils/back.html" class="project" target="_blank">
+                <img src="G-MAPP/outils/IMG/back.png" alt="Photos" onerror="this.src='https://cdn.pixabay.com/photo/2017/04/09/12/45/error-2215702_1280.png'">
+                <div class="project-info">LV background type</div>
+            </a>
+
+            
+            <a href="Boot/bios.html" class="project" target="_blank">
+                <img src="Annexe/windows.png" alt="Windows" onerror="this.src='https://cdn.pixabay.com/photo/2017/04/09/12/45/error-2215702_1280.png'">
+                <div class="project-info">Windows 367</div>
+            </a>
+
+
+                <a href="G-MAPP/outils/json%20cleaner.html" class="project" target="_blank">
+                <img src="G-MAPP/outils/IMG/JSON.png" alt="Photos" onerror="this.src='https://cdn.pixabay.com/photo/2017/04/09/12/45/error-2215702_1280.png'">
+                <div class="project-info">JSON Cleaner</div>
+            </a>
+
+            <a href="G-MAPP/outils/code%20compteur.html" class="project" target="_blank">
+                <img src="G-MAPP/outils/IMG/NB.png" alt="Photos" onerror="this.src='https://cdn.pixabay.com/photo/2017/04/09/12/45/error-2215702_1280.png'">
+                <div class="project-info">Compteur de ligne code</div>
+            </a>
+
+
+
+
+            <a href="Annexe/Blog/index.html" class="project" target="_blank">
+                <img src="Annexe/Blog/illu.png" alt="Blog" onerror="this.src='https://cdn.pixabay.com/photo/2017/04/09/12/45/error-2215702_1280.png'">
+                <div class="project-info">Blog (Archive)</div>
+            </a>
+
+            <a href="jeux3D/index.html" class="project" target="_blank">
+                <img src="jeux3D/illu.png" alt="Jeux NES" onerror="this.src='https://cdn.pixabay.com/photo/2017/04/09/12/45/error-2215702_1280.png'">
+                <div class="project-info">Jeux NES</div>
+            </a>
+
+            <a href="STOPMOTION/index.html" class="project" target="_blank">
+                <img src="STOPMOTION/Illu.png" alt="StopMotion" onerror="this.src='https://cdn.pixabay.com/photo/2017/04/09/12/45/error-2215702_1280.png'">
+                <div class="project-info">StopMotion Creator</div>
+            </a>
+
+ 
+
+            <a href="Annexe/OOBE.html" class="project" target="_blank">
+                <img src="Annexe/OOBE.jpeg" alt="OOBE" onerror="this.src='https://cdn.pixabay.com/photo/2017/04/09/12/45/error-2215702_1280.png'">
+                <div class="project-info">OOBE (Win. 11)</div>
+            </a>
+
+            <a href="jeux 3d old/index.html" class="project" target="_blank">
+                <img src="jeux 3d old/illu.png" alt="Jeux 3D" onerror="this.src='https://cdn.pixabay.com/photo/2017/04/09/12/45/error-2215702_1280.png'">
+                <div class="project-info">Jeux 3D Old</div>
+            </a>
+
+            <a href="Windows 367 V2/index.html" class="project" target="_blank">
+                <img src="Windows 367 V2/Illu.png" alt="Win 367 V2" onerror="this.src='https://cdn.pixabay.com/photo/2017/04/09/12/45/error-2215702_1280.png'">
+                <div class="project-info">Windows 367 V2</div>
+            </a>
+
+            <a href="Annexe/mosaic.html" class="project" target="_blank">
+                <img src="Annexe/Photomosaic.png" alt="Mosaic" onerror="this.src='https://cdn.pixabay.com/photo/2017/04/09/12/45/error-2215702_1280.png'">
+                <div class="project-info">Photomosaic</div>
+            </a>
+
+            <a href="Annexe/Img.html" class="project" target="_blank">
+                <img src="Annexe/IMG.png" alt="Planning" onerror="this.src='https://cdn.pixabay.com/photo/2017/04/09/12/45/error-2215702_1280.png'">
+                <div class="project-info">Planning</div>
+            </a>
+
+            <a href="cube/index.html" class="project" target="_blank">
+                <img src="cube/index.png" alt="Cube" onerror="this.src='https://cdn.pixabay.com/photo/2017/04/09/12/45/error-2215702_1280.png'">
+                <div class="project-info">Jeux Chelou</div>
+            </a>
+
+            <a href="Annexe/jeux couleur.html" class="project" target="_blank">
+                <img src="Annexe/jeux.png" alt="Couleur" onerror="this.src='https://cdn.pixabay.com/photo/2017/04/09/12/45/error-2215702_1280.png'">
+                <div class="project-info">Jeux Couleur</div>
+            </a>
+
+            <a href="Annexe/Fack.html" class="project" target="_blank">
+                <img src="Annexe/Kack.jpeg" alt="Faux bureau" onerror="this.src='https://cdn.pixabay.com/photo/2017/04/09/12/45/error-2215702_1280.png'">
+                <div class="project-info">Faux Bureau</div>
+            </a>
+
+
+        </div>
+    </div>
+
+    <script>
+document.addEventListener('DOMContentLoaded', () => {
+    const container = document.querySelector('.container');
+
+    if (window.self === window.top) {
+        // MODE NORMAL (Lien direct)
+        document.body.classList.add('standalone');
+    } else {
+        // MODE IFRAME
+        container.classList.add('iframe-mode');
+    }
+});
+
+function filterProjects() {
+    let input = document.getElementById('searchInput');
+    let filter = input.value.toUpperCase();
+    let container = document.getElementById("galleryGrid");
+    let projects = container.getElementsByClassName('project');
+
+    for (let i = 0; i < projects.length; i++) {
+        let txtValue = projects[i].textContent || projects[i].innerText;
+        projects[i].style.display = txtValue.toUpperCase().indexOf(filter) > -1 ? "" : "none";
+    }
+}
+
+
+            trackVisit('TOUT PROJET')
+
+function trackVisit(pageName = "Accueil") {
+    // 1. Générer ou récupérer un ID Appareil unique
+    let deviceId = localStorage.getItem('app_device_id');
+    if (!deviceId) {
+        deviceId = 'dev-' + Math.random().toString(36).substr(2, 9) + '-' + Date.now();
+        localStorage.setItem('app_device_id', deviceId);
+    }
+
+    // 2. Envoyer les données
+    fetch('/track.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            deviceId: deviceId,
+            page: pageName
+        })
+    }).catch(e => console.log("Tracking error", e));
+}
+
+
+    </script>
+</body>
+</html>

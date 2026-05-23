@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>URL Actuelle</title>
+    <style>
+        body { 
+            font-family: sans-serif; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            background: #1a1a1a; 
+            color: white; 
+            margin: 0;
+        }
+        .container {
+            padding: 20px;
+            background: #2a2a2a;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+        code {
+            display: block;
+            margin-top: 10px;
+            color: #ffd700;
+            word-break: break-all;
+            background: #000;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h3>L'URL exacte est :</h3>
+        <code id="url-display">Chargement...</code>
+    </div>
+
+    <script>
+        // window.location.href récupère l'URL complète (domaine + chemin + paramètres)
+        document.getElementById('url-display').innerText = window.location.href;
+    </script>
+
+</body>
+</html>

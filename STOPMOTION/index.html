@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stop Motion Studio Pro</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="theme-dark">
+    <div class="app-container">
+        <!-- Top Toolbar -->
+        <header class="app-header">
+            <div class="header-left">
+                <div class="brand">
+                    <i class="fa-solid fa-film"></i>
+                    <h1>Stop Motion <span>Pro</span></h1>
+                </div>
+            </div>
+            
+            <div class="header-center">
+                <div class="camera-selector-wrap">
+                    <i class="fa-solid fa-camera"></i>
+                    <select id="cameraSelector">
+                        <option value="">Chargement des caméras...</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="header-right">
+                <div class="header-actions">
+                    <button id="btn-project-new" title="Nouveau Projet"><i class="fa-solid fa-file-circle-plus"></i></button>
+                    <button id="btn-project-save" title="Sauvegarder le Projet"><i class="fa-solid fa-floppy-disk"></i></button>
+                    <div class="sep"></div>
+                    <button id="btn-export-options" class="btn-accent"><i class="fa-solid fa-file-export"></i> <span>Exporter</span></button>
+                </div>
+            </div>
+        </header>
+
+        <main class="app-main">
+            <!-- Left Inspector -->
+            <aside class="inspector-panel left">
+                <section class="sec">
+                    <h3 class="sec-h"><i class="fa-solid fa-sliders"></i> Caméra</h3>
+                    <div class="sec-body">
+                        <div class="field-row">
+                            <label>Résolution</label>
+                            <select id="resolution">
+                                <option value="1920x1080">1080p (FHD)</option>
+                                <option value="1280x720" selected>720p (HD)</option>
+                                <option value="640x480">480p (SD)</option>
+                            </select>
+                        </div>
+                        <div class="field-row-v">
+                            <label>Luminosité <span id="val-brightness">100%</span></label>
+                            <input type="range" id="brightness" min="0" max="200" value="100">
+                        </div>
+                        <div class="field-row-v">
+                            <label>Contraste <span id="val-contrast">100%</span></label>
+                            <input type="range" id="contrast" min="0" max="200" value="100">
+                        </div>
+                        <div class="field-row-v">
+                            <label>Saturation <span id="val-saturation">100%</span></label>
+                            <input type="range" id="saturation" min="0" max="200" value="100">
+                        </div>
+                    </div>
+                </section>
+
+                <section class="sec">
+                    <h3 class="sec-h"><i class="fa-solid fa-layer-group"></i> Pelure d'oignon</h3>
+                    <div class="sec-body">
+                        <div class="field-row-v">
+                            <label>Opacité <span id="val-onion-opacity">50%</span></label>
+                            <input type="range" id="onionOpacity" min="0" max="100" value="50">
+                        </div>
+                        <div class="field-row">
+                            <label>Nombre d'images</label>
+                            <select id="onionDepth">
+                                <option value="0">Désactivé</option>
+                                <option value="1" selected>1 image</option>
+                                <option value="2">2 images</option>
+                                <option value="3">3 images</option>
+                            </select>
+                        </div>
+                    </div>
+                </section>
+            </aside>
+
+            <!-- Workspace -->
+            <div class="workspace">
+                <div class="preview-container" id="preview-area">
+                    <div class="view-layers">
+                        <video id="cameraPreview" autoplay playsinline muted></video>
+                        <canvas id="onionCanvas"></canvas>
+                        <canvas id="uiOverlayCanvas"></canvas>
+                    </div>
+                    
+                    <div class="capture-controls">
+                        <button id="btn-capture" class="btn-capture" title="Capturer (Espace)">
+                            <div class="inner"></div>
+                        </button>
+                    </div>
+
+                    <div class="playback-overlay" id="playback-hud">
+                        <div class="hud-fps"><span id="hud-fps-val">12</span> FPS</div>
+                    </div>
+                </div>
+
+                <div class="workspace-footer">
+                    <div class="playback-controls">
+                        <div class="group">
+                            <button id="btn-prev" title="Image précédente"><i class="fa-solid fa-backward-step"></i></button>
+                            <button id="btn-play" class="btn-play" title="Lecture (P)"><i class="fa-solid fa-play"></i></button>
+                            <button id="btn-next" title="Image suivante"><i class="fa-solid fa-forward-step"></i></button>
+                        </div>
+                        <div class="sep"></div>
+                        <div class="fps-control">
+                            <label>Vitesse</label>
+                            <input type="range" id="playbackFPS" min="1" max="60" value="12">
+                            <span class="val">12 FPS</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Inspector (optional/extended) -->
+            <!-- <aside class="inspector-panel right"></aside> -->
+        </main>
+
+        <!-- Timeline Section -->
+        <footer class="app-timeline">
+            <div class="timeline-header">
+                <div class="left">
+                    <span class="frame-count"><i class="fa-solid fa-images"></i> <span id="total-frames">0</span> images</span>
+                </div>
+                <div class="right">
+                    <button id="btn-timeline-clear" class="btn-danger-text"><i class="fa-solid fa-trash-can"></i> Tout effacer</button>
+                </div>
+            </div>
+            <div class="timeline-scroll" id="timeline">
+                <!-- Thumbnails injected here -->
+            </div>
+        </footer>
+    </div>
+
+    <!-- Export Modal -->
+    <div id="export-modal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Exporter l'animation</h2>
+                <button class="btn-close-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="export-options">
+                    <div class="export-card" id="export-zip">
+                        <i class="fa-solid fa-file-zipper"></i>
+                        <h3>Séquence d'images (ZIP)</h3>
+                        <p>Toutes les images en PNG haute qualité.</p>
+                    </div>
+                    <div class="export-card" id="export-video">
+                        <i class="fa-solid fa-video"></i>
+                        <h3>Vidéo (WebM)</h3>
+                        <p>Vidéo prête à être partagée.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

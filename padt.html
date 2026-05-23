@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scanner MIDI Sortie (LEDs)</title>
+    <style>
+        :root {
+            --bg: #111;
+            --panel: #222;
+            --border: #444;
+            --accent: #ff0055;
+            --text: #eee;
+            --success: #00ff88;
+            --warning: #ffaa00;
+        }
+
+        body {
+            font-family: monospace;
+            background: var(--bg);
+            color: var(--text);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .panel {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        h1, h2 { margin-top: 0; color: var(--accent); }
+
+        select, input, button {
+            background: #000;
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 8px;
+            font-family: monospace;
+            border-radius: 4px;
+        }
+
+        button {
+            cursor: pointer;
+            background: #333;
+            transition: 0.2s;
+        }
+
+        button:hover { background: var(--accent); color: #fff; }
+        button:active { transform: scale(0.95); }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .control-group {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+            flex-wrap: wrap;
+        }
+
+        .control-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .pad-grid {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .test-pad {
+            aspect-ratio: 1;
+            background: #1a1a1a;
+            border: 1px solid #555;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: #888;
+        }
+        .test-pad:active, .test-pad.active {
+            background: var(--success);
+            color: #000;
+            border-color: #fff;
+            box-shadow: 0 0 15px var(--success);
+        }
+
+        #log {
+            height: 150px;
+            overflow-y: auto;
+            background: #000;
+            padding: 10px;
+            border: 1px solid var(--border);
+            font-size: 0.9rem;
+            display: flex;
+            flex-direction: column-reverse;
+        }
+        .log-entry { border-bottom: 1px solid #222; padding: 3px 0; }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 12px; height: 12px;
+            border-radius: 50%;
+            background: red;
+            margin-right: 10px;
+        }
+        .status-indicator.ready { background: var(--success); box-shadow: 0 0 10px var(--success); }
+
+        .info-box {
+            background: rgba(255, 170, 0, 0.1);
+            border-left: 4px solid var(--warning);
+            padding: 10px;
+            margin-bottom: 15px;
+            font-family: sans-serif;
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="panel">
+        <h1><span id="status-dot" class="status-indicator"></span> MIDI LED Scanner & Debugger</h1>
+        <p>Sélectionnez la SORTIE correspondant à votre Pocket Pad.</p>
+        <select id="midi-out" style="width: 100%; font-size: 1.1rem;">
+            <option>Recherche des périphériques...</option>
+        </select>
+    </div>
+
+    <div class="info-box">
+        <strong>À propos des appareils Worlde / Plugger Studio :</strong> Si aucun de ces tests ne fait réagir votre appareil, il est très probable que le matériel soit "Hard-wired" (câblé en dur). Cela signifie que les LEDs s'allument physiquement quand vous appuyez sur le bouton, mais qu'elles n'ont pas de circuit pour écouter les ordres venant de l'ordinateur.
+    </div>
+
+    <div class="panel">
+        <h2>1. Envoi Manuel Personnalisé</h2>
+        <div class="control-group">
+            <div class="control-item">
+                <label>Type de Message</label>
+                <select id="msg-type">
+                    <option value="9">Note ON (144 / 0x90)</option>
+                    <option value="11">Control Change (176 / 0xB0)</option>
+                </select>
+            </div>
+            <div class="control-item">
+                <label>Canal MIDI (1-16)</label>
+                <input type="number" id="msg-chan" value="10" min="1" max="16" style="width: 80px;">
+            </div>
+            <div class="control-item">
+                <label>ID (Note/CC)</label>
+                <input type="number" id="msg-id" value="36" min="0" max="127" style="width: 80px;">
+            </div>
+            <div class="control-item">
+                <label>Valeur (Vélocité)</label>
+                <input type="number" id="msg-val" value="127" min="0" max="127" style="width: 80px;">
+            </div>
+            <div class="control-item">
+                <button id="btn-send" style="background: var(--accent); padding: 8px 20px; font-weight: bold;">ENVOYER</button>
+            </div>
+            <div class="control-item">
+                <button id="btn-send-off">Envoyer OFF (Val 0)</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel">
+        <h2>2. Scanner de Touches (ID Brute Force)</h2>
+        <p style="font-size: 0.8rem; color: #aaa;">Envoie une vélocité maximale (127) sur tous les IDs (0 à 127) pour voir si une touche réagit.</p>
+        <div class="control-group">
+            <div class="control-item">
+                <label>Canal</label>
+                <input type="number" id="scan-chan" value="10" min="1" max="16" style="width: 80px;">
+            </div>
+            <div class="control-item">
+                <label>Vitesse (ms)</label>
+                <input type="number" id="scan-speed" value="100" min="10" max="1000" style="width: 80px;">
+            </div>
+            <button id="btn-scan" style="background: #e67e22; color: #000; font-weight: bold;">SCAN IDs</button>
+            <button id="btn-scan-stop" disabled>STOP</button>
+        </div>
+        <div style="margin-top: 10px; font-size: 0.9rem;">
+            Progression: <span id="scan-progress">En attente...</span>
+        </div>
+    </div>
+
+    <div class="panel">
+        <h2>3. Scanner de Couleurs/Vélocités (NOUVEAU)</h2>
+        <p style="font-size: 0.8rem; color: #aaa;">Fixe une seule note, et essaie toutes les vélocités (0 à 127) pour voir si la couleur change ou s'active à une valeur précise.</p>
+        <div class="control-group">
+            <div class="control-item">
+                <label>Canal</label>
+                <input type="number" id="vel-chan" value="10" min="1" max="16" style="width: 80px;">
+            </div>
+            <div class="control-item">
+                <label>Note Cible (ex: 36)</label>
+                <input type="number" id="vel-note" value="36" min="0" max="127" style="width: 80px;">
+            </div>
+            <div class="control-item">
+                <label>Vitesse (ms)</label>
+                <input type="number" id="vel-speed" value="150" min="10" max="1000" style="width: 80px;">
+            </div>
+            <button id="btn-scan-vel" style="background: #3498db; color: #000; font-weight: bold;">SCAN VELOCITÉS</button>
+            <button id="btn-scan-vel-stop" disabled>STOP</button>
+        </div>
+        <div style="margin-top: 10px; font-size: 0.9rem;">
+            Test Vélocité: <span id="vel-progress">En attente...</span>
+        </div>
+    </div>
+
+    <div class="panel">
+        <h2>Logs de Sortie (TX)</h2>
+        <div id="log"></div>
+    </div>
+</div>
+
+<script>
+    let midiAccess = null;
+    let outputPort = null;
+    let scanInterval = null;
+    let velInterval = null;
+
+    const selectOut = document.getElementById('midi-out');
+    const logDiv = document.getElementById('log');
+    const statusDot = document.getElementById('status-dot');
+
+    // Initialisation
+    if (navigator.requestMIDIAccess) {
+        // Demande d'accès avec SysEx autorisé, au cas où
+        navigator.requestMIDIAccess({ sysex: true }).then(onMIDISuccess, () => log("Erreur d'accès MIDI"));
+    } else {
+        log("Web MIDI non supporté.");
+    }
+
+    function onMIDISuccess(access) {
+        midiAccess = access;
+        updateOutputs();
+        midiAccess.onstatechange = updateOutputs;
+    }
+
+    function updateOutputs() {
+        const outputs = Array.from(midiAccess.outputs.values());
+        selectOut.innerHTML = '';
+        
+        if (outputs.length === 0) {
+            selectOut.innerHTML = '<option>Aucune sortie détectée</option>';
+            statusDot.className = 'status-indicator';
+            outputPort = null;
+            return;
+        }
+
+        let worldeFound = false;
+        outputs.forEach(port => {
+            const opt = document.createElement('option');
+            opt.value = port.id;
+            opt.text = port.name;
+            selectOut.appendChild(opt);
+
+            if ((port.name.toLowerCase().includes('worlde') || port.name.toLowerCase().includes('pocket')) && !worldeFound) {
+                opt.selected = true;
+                worldeFound = true;
+            }
+        });
+
+        statusDot.className = 'status-indicator ready';
+        selectOutput(selectOut.value);
+    }
+
+    selectOut.onchange = (e) => selectOutput(e.target.value);
+
+    async function selectOutput(id) {
+        if (!midiAccess) return;
+        outputPort = midiAccess.outputs.get(id);
+        if (outputPort) {
+            await outputPort.open();
+            log(`Sortie connectée : ${outputPort.name}`);
+        }
+    }
+
+    function log(msg) {
+        const div = document.createElement('div');
+        div.className = 'log-entry';
+        div.innerText = `[${new Date().toLocaleTimeString()}] ${msg}`;
+        logDiv.prepend(div);
+        if(logDiv.children.length > 50) logDiv.removeChild(logDiv.lastChild);
+    }
+
+    // --- MOTEUR D'ENVOI ---
+    function sendMidiRaw(typeNibble, channel, data1, data2) {
+        if (!outputPort) return alert("Veuillez sélectionner un port de sortie !");
+        
+        const status = (parseInt(typeNibble) << 4) | (parseInt(channel) - 1);
+        
+        try {
+            outputPort.send([status, parseInt(data1), parseInt(data2)]);
+            log(`TX ➜ Status: 0x${status.toString(16).toUpperCase()} | ID: ${data1} | Val: ${data2}`);
+        } catch (err) {
+            log(`ERREUR TX: ${err.message}`);
+        }
+    }
+
+    // --- UI: Envoi Manuel ---
+    document.getElementById('btn-send').onclick = () => {
+        sendMidiRaw(
+            document.getElementById('msg-type').value,
+            document.getElementById('msg-chan').value,
+            document.getElementById('msg-id').value,
+            document.getElementById('msg-val').value
+        );
+    };
+
+    document.getElementById('btn-send-off').onclick = () => {
+        sendMidiRaw(
+            document.getElementById('msg-type').value,
+            document.getElementById('msg-chan').value,
+            document.getElementById('msg-id').value,
+            0 
+        );
+    };
+
+    // --- UI: Scanner Brute Force (IDs) ---
+    const btnScan = document.getElementById('btn-scan');
+    const btnScanStop = document.getElementById('btn-scan-stop');
+    const progText = document.getElementById('scan-progress');
+
+    btnScan.onclick = () => {
+        if (!outputPort) return alert("Sélectionnez une sortie");
+        
+        const chan = document.getElementById('scan-chan').value;
+        const speed = document.getElementById('scan-speed').value;
+        let currentId = 0;
+
+        btnScan.disabled = true;
+        btnScanStop.disabled = false;
+        log(`DÉBUT DU SCAN ID sur Canal ${chan}...`);
+
+        scanInterval = setInterval(() => {
+            if (currentId > 127) {
+                stopScan();
+                progText.innerText = "Terminé !";
+                return;
+            }
+
+            if (currentId > 0) sendMidiRaw(9, chan, currentId - 1, 0);
+            progText.innerText = `Test de l'ID : ${currentId} ...`;
+            sendMidiRaw(9, chan, currentId, 127);
+            
+            currentId++;
+        }, speed);
+    };
+
+    function stopScan() {
+        clearInterval(scanInterval);
+        btnScan.disabled = false;
+        btnScanStop.disabled = true;
+        const chan = document.getElementById('scan-chan').value;
+        sendMidiRaw(11, chan, 123, 0); // All Notes Off CC
+    }
+
+    btnScanStop.onclick = stopScan;
+
+    // --- UI: Scanner de Vélocité / Couleurs ---
+    const btnScanVel = document.getElementById('btn-scan-vel');
+    const btnScanVelStop = document.getElementById('btn-scan-vel-stop');
+    const velProgText = document.getElementById('vel-progress');
+
+    btnScanVel.onclick = () => {
+        if (!outputPort) return alert("Sélectionnez une sortie");
+        
+        const chan = document.getElementById('vel-chan').value;
+        const note = document.getElementById('vel-note').value;
+        const speed = document.getElementById('vel-speed').value;
+        let currentVel = 1; // On commence à 1 (0 = Note Off)
+
+        btnScanVel.disabled = true;
+        btnScanVelStop.disabled = false;
+        log(`DÉBUT DU SCAN VÉLOCITÉ sur Note ${note} (Canal ${chan})...`);
+
+        velInterval = setInterval(() => {
+            if (currentVel > 127) {
+                stopVelScan();
+                velProgText.innerText = "Terminé !";
+                return;
+            }
+
+            velProgText.innerText = `Envoi Vélocité : ${currentVel} ...`;
+            sendMidiRaw(9, chan, note, currentVel);
+            
+            currentVel++;
+        }, speed);
+    };
+
+    function stopVelScan() {
+        clearInterval(velInterval);
+        btnScanVel.disabled = false;
+        btnScanVelStop.disabled = true;
+        const chan = document.getElementById('vel-chan').value;
+        const note = document.getElementById('vel-note').value;
+        sendMidiRaw(9, chan, note, 0); // Eteindre la note
+    }
+
+    btnScanVelStop.onclick = stopVelScan;
+
+</script>
+
+</body>
+</html>

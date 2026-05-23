@@ -1,0 +1,7 @@
+# Gestion des erreurs 404 pour le launcher Polocrafting
+# Redirige les erreurs vers l'index avec les paramètres de texte pour l'affichage dans la fenêtre
+
+ErrorDocument 404 /md/index.html?Text=404&Rep=Erreur%20404
+
+# Optionnel : Empêcher le listage des répertoires pour la sécurité
+Options -Indexes

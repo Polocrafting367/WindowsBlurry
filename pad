@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testeur MIDI - Plugger Studio</title>
+    <style>
+        body { font-family: sans-serif; background: #1a1a1a; color: white; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        #status { padding: 10px; border-radius: 5px; margin-bottom: 20px; }
+        .success { background: #2e7d32; }
+        .error { background: #c62828; }
+        
+        #log-container {
+            width: 100%;
+            max-width: 600px;
+            background: #000;
+            border: 1px solid #444;
+            height: 400px;
+            overflow-y: auto;
+            padding: 10px;
+            font-family: monospace;
+            display: flex;
+            flex-direction: column-reverse;
+        }
+        .log-entry { border-bottom: 1px solid #222; padding: 5px 0; font-size: 14px; }
+        .note-on { color: #4af; }
+        .note-off { color: #888; }
+        .cc { color: #f90; }
+        
+        .visual-pad {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            background: #333;
+            margin: 5px;
+            border-radius: 4px;
+            transition: background 0.1s;
+        }
+        .active { background: #4af !important; box-shadow: 0 0 15px #4af; }
+    </style>
+</head>
+<body>
+
+    <h1>MIDI Monitor - Plugger Studio</h1>
+    <div id="status">En attente d'autorisation MIDI...</div>
+
+    <div id="log-container">
+        </div>
+
+    <script>
+        const statusEl = document.getElementById('status');
+        const logContainer = document.getElementById('log-container');
+
+        // Vérification du support navigateur
+        if (navigator.requestMIDIAccess) {
+            navigator.requestMIDIAccess()
+                .then(onMIDISuccess, onMIDIFailure);
+        } else {
+            statusEl.innerText = "Désolé, votre navigateur ne supporte pas l'API Web MIDI.";
+            statusEl.className = "error";
+        }
+
+        function onMIDISuccess(midiAccess) {
+            statusEl.innerText = "Prêt ! Appuyez sur une touche de votre Pocket Pad.";
+            statusEl.className = "success";
+
+            const inputs = midiAccess.inputs.values();
+            for (let input of inputs) {
+                input.onmidimessage = getMIDIMessage;
+                console.log("Connecté à : ", input.name);
+            }
+            
+            // Écouter les connexions/déconnexions
+            midiAccess.onstatechange = (e) => {
+                console.log(e.port.name, e.port.state);
+            };
+        }
+
+        function onMIDIFailure() {
+            statusEl.innerText = "Erreur : Impossible d'accéder à vos périphériques MIDI.";
+            statusEl.className = "error";
+        }
+
+        function getMIDIMessage(message) {
+            const command = message.data[0];
+            const note = message.data[1];
+            const velocity = (message.data.length > 2) ? message.data[2] : 0;
+
+            let type = "Inconnu";
+            let className = "";
+
+            // Analyse du message (Canal 1 par défaut)
+            if (command >= 144 && command <= 159) { // Note ON
+                type = "NOTE ON";
+                className = "note-on";
+            } else if (command >= 128 && command <= 143) { // Note OFF
+                type = "NOTE OFF";
+                className = "note-off";
+            } else if (command >= 176 && command <= 191) { // Control Change (Potards)
+                type = "CC (Potard/Slider)";
+                className = "cc";
+            }
+
+            addLog(type, command, note, velocity, className);
+        }
+
+        function addLog(type, cmd, note, vel, className) {
+            const div = document.createElement('div');
+            div.className = `log-entry ${className}`;
+            div.innerHTML = `[${new Date().toLocaleTimeString()}] <b>${type}</b> | ID (Note/CC): ${note} | Vélocité/Valeur: ${vel} | (Raw: ${cmd})`;
+            logContainer.appendChild(div);
+        }
+    </script>
+</body>
+</html>
