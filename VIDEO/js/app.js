@@ -6,7 +6,7 @@ const defaultParams = {
     enable_effect: true, render_format: 'sd_43', record_raw: false,
     enable_y: true, enable_r: true, enable_g: true, enable_b: true,
     luma_contrast: 1.0, luma_brightness: 0,
-    crop_padding: 6, crop_feather: 4, pixel_size: 1,
+    crop_padding: 6, crop_feather: 4, pixel_size: 1, band_patina: 0.9,
     apply_jpeg: false, jpeg_quality: 86,
     chroma_blur: 25, chroma_bleed: 12, chroma_saturation: 2.4, edge_sat: 4.8,
     luma_smear: 0, right_pink: 0, right_pink_width: 0.4, shadow_sat: 0.0, hs_sat: 0.0, chroma_phase: 0,
@@ -21,12 +21,12 @@ const defaultParams = {
 
 const proParams = {
     ...defaultParams,
-    apply_jpeg: true, jpeg_quality: 92, crop_padding: 8, crop_feather: 8,
+    apply_jpeg: false, jpeg_quality: 92, crop_padding: 8, crop_feather: 8,
     chroma_blur: 15, chroma_bleed: 45, chroma_saturation: 1.5, edge_sat: 3.0,
     shift_r: -6, shift_g: 2, shift_b: 4,
-    noise_intensity_y: 8, noise_intensity_c: 18,
+    noise_intensity_y: 0, noise_intensity_c: 18,
     jitter_freq: 0.15, jitter_amp: 0.5,
-    head_switch_rows: 50, head_switch_pull: 15, head_switch_freq: 0.25, head_switch_noise: 10, hs_color_tear: 0.05,
+    head_switch_rows: 50, head_switch_pull: 15, head_switch_freq: 0.25, head_switch_noise: 0, hs_color_tear: 0.05,
     apply_color_cast: true, cast_r: 15, cast_g: -2, cast_b: -5
 };
 
@@ -36,9 +36,9 @@ const damagedParams = {
     chroma_blur: 35, chroma_bleed: 60, chroma_saturation: 2.8, edge_sat: 6.0, luma_smear: 80, right_pink: 60, right_pink_width: 0.6,
     shift_r: -20, shift_g: 5, shift_b: 15,
     glitch_intensity: 8.5,
-    noise_intensity_y: 25, noise_intensity_c: 50,
+    noise_intensity_y: 0, noise_intensity_c: 50,
     jitter_freq: 0.8, jitter_amp: 4.5, dropout_chance: 0.15, dropout_len: 0.6, dropout_thickness: 8,
-    head_switch_rows: 150, head_switch_pull: 60, head_switch_wave: 2.0, head_switch_noise: 40,
+    head_switch_rows: 150, head_switch_pull: 60, head_switch_wave: 2.0, head_switch_noise: 0,
     hs_color_tear: 0.8, tear_color: 'random', tear_max_height: 100, tear_length: 100, tear_thickness: 15, hs_sat: 2.0,
     apply_color_cast: true, cast_r: 10, cast_g: 15, cast_b: -20
 };
@@ -48,7 +48,7 @@ const pelliculeParams = {
     crop_padding: 15, crop_feather: 10, luma_contrast: 1.2, luma_brightness: -10,
     chroma_blur: 5, chroma_bleed: 0, chroma_saturation: 1.2, edge_sat: 1.5, shadow_sat: -1.0,
     shift_r: 2, shift_g: 0, shift_b: -2,
-    noise_intensity_y: 25, noise_intensity_c: 5,
+    noise_intensity_y: 0, noise_intensity_c: 5,
     jitter_freq: 0.8, jitter_amp: 2.5, dropout_chance: 0.05, dropout_len: 0.05, dropout_thickness: 4,
     head_switch_rows: 0, head_switch_pull: 0, head_switch_noise: 0,
     apply_color_cast: true, cast_r: 20, cast_g: 10, cast_b: -10
@@ -59,9 +59,9 @@ const vintageParams = {
     enable_r: false, enable_g: false, enable_b: false, 
     luma_contrast: 1.4, luma_brightness: 10, crop_padding: 20, crop_feather: 15, edge_sat: 0,
     glitch_intensity: 3.0,
-    noise_intensity_y: 50, noise_intensity_c: 0,
+    noise_intensity_y: 0, noise_intensity_c: 0,
     jitter_freq: 0.6, jitter_amp: 1.5, dropout_chance: 0.1, dropout_len: 0.1, dropout_thickness: 3,
-    head_switch_rows: 60, head_switch_pull: 8, head_switch_noise: 15, apply_color_cast: false
+    head_switch_rows: 60, head_switch_pull: 8, head_switch_noise: 0, apply_color_cast: false
 };
 
 const photoParams = {
@@ -69,7 +69,7 @@ const photoParams = {
     luma_contrast: 1.5, luma_brightness: -5, crop_padding: 4, crop_feather: 2,
     chroma_blur: 8, chroma_bleed: 0, chroma_saturation: 2.0, edge_sat: 2.0, shadow_sat: -1.0,
     shift_r: 3, shift_g: 0, shift_b: -3,
-    noise_intensity_y: 5, noise_intensity_c: 5,
+    noise_intensity_y: 0, noise_intensity_c: 5,
     jitter_amp: 0.0, head_switch_rows: 0, head_switch_pull: 0, head_switch_noise: 0,
     apply_color_cast: true, cast_r: 15, cast_g: 5, cast_b: -5
 };
@@ -81,7 +81,7 @@ const matrixParams = {
     shift_r: 0, shift_g: 15, shift_b: -5, chroma_phase: 45,
     chroma_blur: 20, chroma_bleed: 40, chroma_saturation: 3.0, edge_sat: 6.0, luma_smear: 40,
     glitch_intensity: 5.0, tear_color: 'green', hs_color_tear: 0.5,
-    noise_intensity_y: 10, noise_intensity_c: 40,
+    noise_intensity_y: 0, noise_intensity_c: 40,
     jitter_freq: 0.2, jitter_amp: 0.5, dropout_chance: 0.02, dropout_len: 0.1, dropout_thickness: 1,
     head_switch_pull: 15, head_switch_rows: 60, head_switch_noise: 0
 };
@@ -92,7 +92,7 @@ const duneParams = {
     luma_contrast: 1.1, luma_brightness: 5, right_pink: 15, right_pink_width: 0.3, chroma_phase: -20,
     shift_r: 8, shift_g: 0, shift_b: -8,
     chroma_blur: 15, chroma_bleed: 10, chroma_saturation: 1.5, edge_sat: 2.5,
-    noise_intensity_y: 15, noise_intensity_c: 10
+    noise_intensity_y: 0, noise_intensity_c: 10
 };
 
 const cyberpunkParams = {
@@ -101,10 +101,34 @@ const cyberpunkParams = {
     luma_contrast: 1.2, shadow_sat: 2.5, hs_sat: 4.0, right_pink: 40, right_pink_width: 0.8, chroma_phase: 90,
     shift_r: 25, shift_g: -5, shift_b: -20,
     chroma_blur: 40, chroma_bleed: 60, chroma_saturation: 4.5, edge_sat: 8.0, luma_smear: 60,
-    glitch_intensity: 6.0, tear_color: 'magenta', hs_color_tear: 0.7, head_switch_noise: 20,
-    noise_intensity_y: 5, noise_intensity_c: 60,
+    glitch_intensity: 6.0, tear_color: 'magenta', hs_color_tear: 0.7, head_switch_noise: 0,
+    noise_intensity_y: 0, noise_intensity_c: 60,
     jitter_freq: 1.2, jitter_amp: 2.0,
     head_switch_pull: 40
+};
+
+const vhsParams = {
+    ...defaultParams,
+    band_patina: 0.75,
+    apply_jpeg: false, crop_padding: 10, crop_feather: 6,
+    chroma_blur: 35, chroma_bleed: 30, chroma_saturation: 2.0, edge_sat: 4.0, luma_smear: 15,
+    shift_r: -15, shift_g: 5, shift_b: 10,
+    noise_intensity_y: 0, noise_intensity_c: 40,
+    jitter_freq: 0.5, jitter_amp: 1.5,
+    head_switch_rows: 100, head_switch_pull: 25, head_switch_freq: 0.5, head_switch_noise: 0,
+    apply_color_cast: true, cast_r: 25, cast_g: -10, cast_b: -5
+};
+
+const minidvParams = {
+    ...defaultParams,
+    band_patina: 1.0, pixel_size: 1,
+    apply_jpeg: false, crop_padding: 2, crop_feather: 1,
+    chroma_blur: 5, chroma_bleed: 0, chroma_saturation: 1.1, edge_sat: 1.5,
+    shift_r: -2, shift_g: 0, shift_b: 2,
+    noise_intensity_y: 0, noise_intensity_c: 10,
+    jitter_freq: 0.0, jitter_amp: 0.0,
+    head_switch_rows: 0, head_switch_pull: 0, head_switch_noise: 0,
+    apply_color_cast: false
 };
 
 function saveSettings() {
@@ -129,7 +153,7 @@ function applyParamsToUI(params) {
     setChk('enable_y', params.enable_y); setChk('enable_r', params.enable_r); setChk('enable_g', params.enable_g); setChk('enable_b', params.enable_b);
     
     setVal('luma_contrast', params.luma_contrast); setVal('luma_brightness', params.luma_brightness);
-    setVal('crop_padding', params.crop_padding); setVal('crop_feather', params.crop_feather); setVal('pixel_size', params.pixel_size || 1);
+    setVal('crop_padding', params.crop_padding); setVal('crop_feather', params.crop_feather); setVal('pixel_size', params.pixel_size || 1); setVal('band_patina', params.band_patina || 1.0);
     setChk('apply_jpeg', params.apply_jpeg); setVal('jpeg_quality', params.jpeg_quality);
     
     setVal('chroma_blur', params.chroma_blur); setVal('chroma_bleed', params.chroma_bleed); setVal('chroma_saturation', params.chroma_saturation); 
@@ -165,7 +189,7 @@ function collectParams() {
         enable_effect: getChk('enable_effect'), record_raw: getChk('record_raw'), render_format: formatEl ? formatEl.value : 'sd_43', tear_color: tearColorEl ? tearColorEl.value : 'cyan',
         enable_y: getChk('enable_y'), enable_r: getChk('enable_r'), enable_g: getChk('enable_g'), enable_b: getChk('enable_b'), 
         luma_contrast: parseFloat(getVal('luma_contrast')), luma_brightness: parseInt(getVal('luma_brightness')),
-        crop_padding: parseInt(getVal('crop_padding')), crop_feather: parseInt(getVal('crop_feather')), pixel_size: parseInt(getVal('pixel_size')),
+        crop_padding: parseInt(getVal('crop_padding')), crop_feather: parseInt(getVal('crop_feather')), pixel_size: parseInt(getVal('pixel_size')), band_patina: parseFloat(getVal('band_patina') || 1.0),
         apply_jpeg: getChk('apply_jpeg'), jpeg_quality: parseInt(getVal('jpeg_quality')),
         chroma_blur: parseInt(getVal('chroma_blur')), chroma_bleed: parseFloat(getVal('chroma_bleed')), chroma_saturation: parseFloat(getVal('chroma_saturation')),
         edge_sat: parseFloat(getVal('edge_sat')), luma_smear: parseInt(getVal('luma_smear')), right_pink: parseInt(getVal('right_pink')), right_pink_width: parseFloat(getVal('right_pink_width')),
@@ -338,6 +362,8 @@ function setupEventListeners() {
         const val = e.target.value;
         if(val === 'default') applyPreset(defaultParams);
         else if(val === 'pro') applyPreset(proParams);
+        else if(val === 'vhs') applyPreset(vhsParams);
+        else if(val === 'minidv') applyPreset(minidvParams);
         else if(val === 'damaged') applyPreset(damagedParams);
         else if(val === 'pellicule') applyPreset(pelliculeParams);
         else if(val === 'vintage') applyPreset(vintageParams);
@@ -555,11 +581,19 @@ async function renderOfflineVideo() {
 
     try {
         const fps = 30;
-        const duration = sourceVideo.duration;
+        let baseDuration = sourceVideo.duration;
+        const trimStartStr = document.getElementById('trim-start').value;
+        const trimEndStr = document.getElementById('trim-end').value;
+        const trimStart = parseFloat(trimStartStr) || 0;
+        let trimEnd = parseFloat(trimEndStr) || 0;
+        if (trimEnd <= 0) trimEnd = baseDuration;
+        
+        let duration = trimEnd - trimStart;
+
         if (!Number.isFinite(duration) || duration <= 0) {
-            alert('Durée vidéo invalide. Rechargez le fichier.');
+            alert('Durée vidéo invalide ou extrait trop court.');
             hideLoading();
-            sourceVideo.currentTime = 0;
+            sourceVideo.currentTime = trimStart;
             startVideoLoop();
             return;
         }
@@ -669,7 +703,7 @@ async function renderOfflineVideo() {
             }
             if (videoEncError) throw videoEncError;
 
-            const time = i / fps;
+            const time = trimStart + (i / fps);
             timeOffset = time; 
             
             await new Promise(resolve => {
@@ -745,6 +779,7 @@ async function startWebcam() {
         webcamStream = stream; currentFileMode = 'webcam'; sourceVideo.srcObject = stream; sourceVideo.play();
         
         dropZone.classList.add('hidden'); document.getElementById('video-controls').classList.add('hidden'); document.getElementById('btn-export-full-video').classList.add('hidden');
+        document.getElementById('canvas-container').classList.remove('hidden');
         
         sourceVideo.onloadedmetadata = () => { updateCanvasSize(); startVideoLoop(); hideLoading(); };
     } catch (err) {
@@ -777,6 +812,40 @@ function setupVideoControls() {
         sourceVideo.currentTime = (e.target.value / 100) * sourceVideo.duration;
         if (sourceVideo.paused) renderCurrentFrame();
     });
+
+    const trimStartEl = document.getElementById('trim-start');
+    const trimEndEl = document.getElementById('trim-end');
+    if (trimStartEl && trimEndEl) {
+        trimStartEl.addEventListener('input', updateTrimUI);
+        trimEndEl.addEventListener('input', updateTrimUI);
+        trimStartEl.addEventListener('change', () => { if(sourceVideo.paused) { sourceVideo.currentTime = trimStartEl.value; renderCurrentFrame(); } });
+        trimEndEl.addEventListener('change', () => { if(sourceVideo.paused) { sourceVideo.currentTime = trimEndEl.value; renderCurrentFrame(); } });
+    }
+}
+
+function updateTrimUI() {
+    const ts = document.getElementById('trim-start');
+    const te = document.getElementById('trim-end');
+    const fill = document.getElementById('trim-fill');
+    const display = document.getElementById('trim-display');
+    if (!ts || !te || !fill || !display) return;
+    
+    let startVal = parseFloat(ts.value);
+    let endVal = parseFloat(te.value);
+    
+    if (startVal >= endVal) {
+        if (ts === document.activeElement) { ts.value = endVal - 0.1; startVal = endVal - 0.1; }
+        else { te.value = startVal + 0.1; endVal = startVal + 0.1; }
+    }
+    
+    const max = parseFloat(ts.max) || 100;
+    const startPct = (startVal / max) * 100;
+    const endPct = (endVal / max) * 100;
+    
+    fill.style.left = startPct + '%';
+    fill.style.width = (endPct - startPct) + '%';
+    
+    display.textContent = `${startVal.toFixed(1)}s - ${endVal.toFixed(1)}s`;
 }
 
 function formatTime(seconds) {
@@ -806,32 +875,58 @@ function applyVHSEffect(frameSource, isVideo = false) {
         effectScratchCanvas = document.createElement('canvas');
         effectScratchCtx = effectScratchCanvas.getContext('2d', { willReadFrequently: true });
     }
-    if (effectScratchCanvas.width !== canvas.width || effectScratchCanvas.height !== canvas.height) {
-        effectScratchCanvas.width = canvas.width;
-        effectScratchCanvas.height = canvas.height;
+    
+    const params = collectParams();
+    let iw = canvas.width;
+    let ih = canvas.height;
+    
+    if (params.band_patina && params.band_patina < 1.0) {
+        iw = Math.max(1, Math.floor(canvas.width * params.band_patina));
+        ih = Math.max(1, Math.floor(canvas.height * params.band_patina));
+    }
+
+    if (effectScratchCanvas.width !== iw || effectScratchCanvas.height !== ih) {
+        effectScratchCanvas.width = iw;
+        effectScratchCanvas.height = ih;
     }
     const tempCanvas = effectScratchCanvas;
     const tempCtx = effectScratchCtx;
     
-    const params = collectParams();
-    drawCover(tempCtx, frameSource, canvas.width, canvas.height);
+    drawCover(tempCtx, frameSource, iw, ih);
 
-    if (!params.enable_effect) { ctx.drawImage(tempCanvas, 0, 0); return; }
+    if (!params.enable_effect) { 
+        ctx.imageSmoothingEnabled = true;
+        ctx.drawImage(tempCanvas, 0, 0, iw, ih, 0, 0, canvas.width, canvas.height);
+        return; 
+    }
 
     if (params.apply_jpeg) tempCtx.filter = `blur(${Math.max(0, 100 - params.jpeg_quality) / 20}px)`;
     else tempCtx.filter = 'none';
-    if (params.apply_jpeg) drawCover(tempCtx, frameSource, canvas.width, canvas.height);
+    if (params.apply_jpeg) drawCover(tempCtx, frameSource, iw, ih);
     
-    const imageData = tempCtx.getImageData(0, 0, canvas.width, canvas.height);
-    const resultBytes = process_hybrid_heisei(new Uint8Array(imageData.data.buffer), canvas.width, canvas.height, JSON.stringify(params), timeOffset);
-    const newImageData = new ImageData(new Uint8ClampedArray(resultBytes.buffer), canvas.width, canvas.height);
-    ctx.putImageData(newImageData, 0, 0);
+    const imageData = tempCtx.getImageData(0, 0, iw, ih);
+    const resultBytes = process_hybrid_heisei(new Uint8Array(imageData.data.buffer), iw, ih, JSON.stringify(params), timeOffset);
+    const newImageData = new ImageData(new Uint8ClampedArray(resultBytes.buffer), iw, ih);
+    
+    tempCtx.putImageData(newImageData, 0, 0);
+    
+    ctx.imageSmoothingEnabled = true;
+    ctx.drawImage(tempCanvas, 0, 0, iw, ih, 0, 0, canvas.width, canvas.height);
 }
 
 function startVideoLoop() {
     if(videoLoopId) cancelAnimationFrame(videoLoopId);
     function loop() {
         if(currentFileMode === 'video' && !sourceVideo.paused && !sourceVideo.ended) {
+            const trimStartStr = document.getElementById('trim-start').value;
+            const trimEndStr = document.getElementById('trim-end').value;
+            const trimStart = parseFloat(trimStartStr) || 0;
+            let trimEnd = parseFloat(trimEndStr) || 0;
+            if (trimEnd <= 0) trimEnd = sourceVideo.duration;
+
+            if (sourceVideo.currentTime < trimStart) sourceVideo.currentTime = trimStart;
+            if (sourceVideo.currentTime >= trimEnd) sourceVideo.currentTime = trimStart;
+
             timeOffset = sourceVideo.currentTime; applyVHSEffect(sourceVideo, true);
         } else if (currentFileMode === 'webcam') {
             timeOffset = performance.now() / 1000; applyVHSEffect(sourceVideo, true);
@@ -959,11 +1054,26 @@ function handleFileUpload(e) {
     if (file.type.startsWith('video/')) {
         currentFileMode = 'video';
         videoControls.classList.remove('hidden'); btnExportFull.classList.remove('hidden');
+        document.getElementById('canvas-container').classList.remove('hidden');
         sourceVideo.crossOrigin = "anonymous"; sourceVideo.src = fileUrl;
-        sourceVideo.onloadedmetadata = () => { updateCanvasSize(); sourceVideo.play(); startVideoLoop(); hideLoading(); };
+        sourceVideo.onloadedmetadata = () => { 
+            updateCanvasSize(); 
+            const ts = document.getElementById('trim-start');
+            const te = document.getElementById('trim-end');
+            if (ts && te) {
+                ts.max = sourceVideo.duration;
+                te.max = sourceVideo.duration;
+                te.value = sourceVideo.duration;
+                updateTrimUI();
+            }
+            sourceVideo.play(); 
+            startVideoLoop(); 
+            hideLoading(); 
+        };
     } else if (file.type.startsWith('image/')) {
         currentFileMode = 'image';
         videoControls.classList.add('hidden'); btnExportFull.classList.add('hidden');
+        document.getElementById('canvas-container').classList.remove('hidden');
         if(videoLoopId) cancelAnimationFrame(videoLoopId); sourceVideo.pause();
         const img = new Image(); img.crossOrigin = "anonymous";
         img.onload = () => { currentOriginalImage = img; updateCanvasSize(); hideLoading(); };

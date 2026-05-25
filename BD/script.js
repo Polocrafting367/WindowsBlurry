@@ -1,322 +1,20 @@
+let autoStartAfterProfileSelection = false; // Témoin pour le lancement auto
 
-
- let autoStartAfterProfileSelection = false; // Témoin pour le lancement auto
- const PROTECTED_KEYS = ['pt_cloud_auth', 'sys_last_auto_export_date'];
-let cloudUser = null;
-let cloudPass = null;
-let pendingSyncKeys = new Set(); // Liste des fichiers modifiés à envoyer
-let syncTimer = null;           // Timer pour ne pas envoyer à chaque touche frappe
-let isCloudLoading = false; // <--- C'EST CETTE LIGNE QUI TE MANQUE !
-// --- Initialisation Auto au démarrage ---
-// On regarde tout de suite si on est connecté
-try {
-    const auth = localStorage.getItem('pt_cloud_auth');
-    if (auth) {
-        const parsed = JSON.parse(auth);
-        cloudUser = parsed.user;
-        cloudPass = parsed.pass;
-        // On ne lance pas loadFromCloud() ici directement pour ne pas bloquer l'affichage,
-        // on le fera dans initApp()
-    }
-} catch(e) {}
-
-// --- NOS 3 FONCTIONS MAISON (Les "Wrappers") ---
-
-// A. Remplacer localStorage.setItem
-function setItem(key, value) {
-    // 1. Action Locale (Obligatoire)
-    localStorage.setItem(key, value);
-
-    // 2. Action Cloud (Si connecté)
-    if (cloudUser) {
-        pendingSyncKeys.add(key);
-        triggerSync(); // On lance le compte à rebours
-    }
-}
-
-// B. Remplacer localStorage.getItem
-function getItem(key) {
-    // Ici, c'est simple : on lit le local.
-    // Comme le Cloud remplit le local au démarrage, c'est toujours à jour.
-    return localStorage.getItem(key);
-}
-
-// C. Remplacer localStorage.removeItem
-function removeItem(key) {
-    // 1. Action Locale
-    localStorage.removeItem(key);
-
-    // 2. Action Cloud
-    if (cloudUser) {
-        // Astuce : Pour dire au PHP de supprimer, on envoie la valeur null
-        // Mais comme pendingSyncKeys ne stocke que la CLÉ, 
-        // c'est syncToPhp qui verra que localStorage.getItem(key) renvoie null.
-        pendingSyncKeys.add(key);
-        triggerSync();
-    }
-}
-
-function triggerSync() {
-    if (syncTimer) clearTimeout(syncTimer);
-    
-    // Changement d'état visuel (optionnel)
-    const statusIcon = document.getElementById('cloud-sync-icon');
-    if(statusIcon) statusIcon.style.color = "orange"; // En attente
-
-    syncTimer = setTimeout(syncToPhp, 2000);
-}
-// 1. Connexion
-async function handleCloudConnect() {
-    // 1. Récupération des valeurs
-    const userInput = document.getElementById('cloud-user');
-    const passInput = document.getElementById('cloud-pass');
-    
-    // On nettoie les espaces inutiles
-    const userVal = userInput.value.trim();
-    const passVal = passInput.value.trim();
-
-    // Vérification champs vides
-    if (!userVal || !passVal) {
-        alert("Veuillez remplir le nom d'utilisateur et le mot de passe.");
-        return;
-    }
-
-    // Petit effet visuel sur le bouton (optionnel mais sympa)
-    const btn = document.querySelector('#cloud-login-section button');
-    const originalText = btn ? btn.innerHTML : "Connexion";
-    if(btn) {
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Vérification...';
-        btn.disabled = true;
-    }
-
-    try {
-        // 2. Requête vers le serveur PHP
-        const response = await fetch('auth.php', {
-            method: 'POST',
-            body: JSON.stringify({ user: userVal, pass: passVal }),
-            headers: { 'Content-Type': 'application/json' }
-        });
-
-        // On vérifie si le fichier PHP existe bien (404 check)
-        if (!response.ok) throw new Error("Erreur serveur ou fichier auth.php introuvable");
-
-        const result = await response.json();
-
-        if (result.success) {
-            // === CONNEXION RÉUSSIE ===
-            console.log("✅ Authentification réussie pour :", userVal);
-
-            // A. Mise à jour des variables globales
-            cloudUser = userVal;
-            cloudPass = passVal;
-
-            // B. Sauvegarde des identifiants dans le téléphone
-            // On utilise localStorage direct ici pour éviter que 'setItem' n'essaie d'envoyer
-            // le mot de passe au serveur via la synchro (boucle inutile).
-            localStorage.setItem('pt_cloud_auth', JSON.stringify({ user: cloudUser, pass: cloudPass }));
-            
-            // C. UI : On cache le formulaire immédiatement
-            const loginSection = document.getElementById('login-form-fields');
-            if(loginSection) loginSection.style.display = 'none';
-
-            // D. TÉLÉCHARGEMENT DES DONNÉES (Crucial !)
-            if (typeof loadFromCloud === 'function') {
-                if(btn) btn.innerHTML = '<i class="fas fa-download"></i> Récupération des données...';
-                await loadFromCloud(); 
-            }
-
-            // E. Rechargement propre
-            // On recharge la page pour être sûr que initApp() relance tout avec les nouvelles données
-            alert(`Bienvenue ${cloudUser} ! Vos données ont été synchronisées.`);
-            location.reload();
-
-        } else {
-            // === ÉCHEC (Mauvais mot de passe) ===
-            alert("Erreur : " + (result.message || "Identifiants incorrects."));
-            if(btn) {
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-            }
-        }
-
-    } catch (e) {
-        // === ERREUR TECHNIQUE ===
-        console.error("Erreur Auth:", e);
-        alert("Impossible de se connecter au serveur. Vérifiez votre connexion internet.");
-        if(btn) {
-            btn.innerHTML = originalText;
-            btn.disabled = false;
-        }
-    }
-}
-
-// Téléchargement (Au login ou démarrage)
-async function loadFromCloud() {
-    if (!cloudUser) return;
-    
-    // On verrouille pour éviter que des actions déclenchent des sauvegardes pendant le chargement
-    isCloudLoading = true; 
-
-    console.log("☁️ Récupération des données Cloud...");
-    try {
-        const response = await fetch(`load.php?user=${encodeURIComponent(cloudUser)}&pass=${encodeURIComponent(cloudPass)}&t=${Date.now()}`);
-        if (response.ok) {
-            const data = await response.json();
-            
-            // === ETAPE 1 : NETTOYAGE LOCAL (Priorité Serveur) ===
-            // On supprime TOUTES les données locales 'pt_' sauf les clés protégées (Auth).
-            // Si le serveur est vide, cela garantit que l'app devient vide aussi.
-            const keysToRemove = [];
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                // On cible les clés de l'app (pt_) mais on protège l'auth
-                if (key.startsWith('pt_') && !PROTECTED_KEYS.includes(key)) {
-                    keysToRemove.push(key);
-                }
-            }
-            // On utilise removeItem natif pour ne PAS déclencher triggerSync
-            keysToRemove.forEach(k => localStorage.removeItem(k));
-
-            // === ETAPE 2 : INJECTION DES DONNÉES SERVEUR ===
-            // Si data est vide, on a juste fait un "Reset" complet, c'est ce qu'on veut.
-            if (data && typeof data === 'object') {
-                Object.keys(data).forEach(key => {
-                    // Sécurité : on ne touche pas aux clés protégées via l'import cloud
-                    if (PROTECTED_KEYS.includes(key)) return;
-
-                    let valToStore = data[key];
-                    if (typeof valToStore !== 'string') {
-                        valToStore = JSON.stringify(valToStore);
-                    }
-                    // Ecriture directe sans triggerSync
-                    localStorage.setItem(key, valToStore);
-                });
-                
-                console.log("✅ Données Cloud restaurées (Local écrasé).");
-                
-                // === ETAPE 3 : MISE A JOUR MEMOIRE JS ===
-                // Indispensable pour que l'interface reflète le changement (vide ou plein)
-                if (typeof loadData === 'function') loadData();
-                if (typeof loadLogsForView === 'function') loadLogsForView();
-            }
-        }
-    } catch (e) { 
-        console.error("Erreur Load Cloud", e); 
-    } finally {
-        isCloudLoading = false;
-    }
-}
-
-function handleCloudLogout() {
-    // On utilise removeItem !
-    removeItem('pt_cloud_auth');
-    cloudUser = null;
-    location.reload();
-}
-
-// 4. Synchro vers le serveur (Upload)
-function triggerSync() {
-    if (syncTimer) clearTimeout(syncTimer);
-    
-    // Changement d'état visuel (optionnel)
-    const statusIcon = document.getElementById('cloud-sync-icon');
-    if(statusIcon) statusIcon.style.color = "orange"; // En attente
-
-    syncTimer = setTimeout(syncToPhp, 2000);
-}
-
-// L'envoi réel vers le PHP
-async function syncToPhp() {
-    if (!cloudUser || pendingSyncKeys.size === 0) return;
-
-    const dataToSend = {};
-    
-    // On prépare le paquet
-    pendingSyncKeys.forEach(key => {
-        const val = localStorage.getItem(key);
-        // Si val est null (supprimé), on envoie null, le PHP devra gérer la suppression
-        dataToSend[key] = val; 
-    });
-
-    console.log(`☁️ Envoi de ${pendingSyncKeys.size} modifications...`);
-
-    try {
-        const response = await fetch('save.php', {
-            method: 'POST',
-            body: JSON.stringify({ user: cloudUser, pass: cloudPass, data: dataToSend }),
-            headers: { 'Content-Type': 'application/json' }
-        });
-        
-        // Si tout va bien, on vide la liste d'attente
-        pendingSyncKeys.clear();
-        
-        const statusIcon = document.getElementById('cloud-sync-icon');
-        if(statusIcon) statusIcon.style.color = "#2ecc71"; // Vert (OK)
-
-    } catch (e) { 
-        console.error("Erreur Synchro Upload", e); 
-        const statusIcon = document.getElementById('cloud-sync-icon');
-        if(statusIcon) statusIcon.style.color = "red"; // Erreur
-    }
-}
-
-// 5. Helper pour marquer une clé comme "à sauvegarder"
-function markForSync(key) {
-    if (!cloudUser || isCloudLoading) return;
-    pendingSyncKeys.add(key);
-    
-    // Debounce : on attend 2 secondes avant d'envoyer pour grouper les changements
-    if (window.syncTimer) clearTimeout(window.syncTimer);
-    window.syncTimer = setTimeout(syncToPhp, 2000);
-}
-
-// 6. UI Update
-function updateCloudUI() {
-    if (cloudUser) {
-        document.getElementById('login-form-fields').style.display = 'none';
-        document.getElementById('logged-status').style.display = 'block';
-        document.getElementById('display-username').textContent = cloudUser;
-    }
-}
-
-// 7. Force Sync (Bouton manuel)
-function forceFullSync() {
-    if(!confirm("Envoyer TOUTES les données locales vers le cloud ? (Écrasera la version serveur)")) return;
-    
-    Object.keys(localStorage).forEach(k => {
-        if (k.startsWith('pt_')) pendingSyncKeys.add(k);
-    });
-    syncToPhp().then(() => alert("Synchronisation complète terminée."));
-}
-// 1. On met tout le code d'initialisation dans une fonction nommée
 function initApp() {
-
-const settingsPage = document.getElementById('page-settings');
-const cloudCard = createCloudSyncCard();
-settingsPage.appendChild(cloudCard);    //requestNotificationPermission();
     console.log("🚀 Démarrage de l'application..."); // Pour vérifier dans la console
-
-if (cloudUser && cloudPass) {
-        updateCloudUI(); // Affiche "Connecté en tant que..."
-        // On charge les données, et on attend qu'elles soient là avant de lancer la suite
-        loadFromCloud().then(() => {
-            continueInit();
-        });
-    } else {
-        continueInit();
-    }
+    continueInit();
 }
 
 function continueInit() {
-    showOneTimeMessage(12, "Mise à jour du code appliquée ! v1.2.17.01");
-    migrateOldData(); 
-   forceMigrateFrozenMetrics(); 
-migrateOldSchedule();
-initStatisticsModule();
-    loadData(); 
+    showOneTimeMessage(13, "Mise à jour du code appliquée ! v1.2.18");
+    migrateOldData();
+    forceMigrateFrozenMetrics();
+    migrateOldSchedule();
+    initStatisticsModule();
+    loadData();
     injectEditModalHTML();
     trackVisit("Pointeuse");
-injectContactButton()
+    injectContactButton()
     // Gestion des profils par défaut (seulement si vide)
     if (!profiles || profiles.length === 0) {
         console.log("Aucun profil trouvé, création des défauts...");
@@ -324,13 +22,13 @@ injectContactButton()
             { id: 1, name: "Matin", start: "05:30", end: "13:30", pause: 30, color: "#c733db", days: [0, 1, 2, 3, 4] },
             { id: 2, name: "Journée", start: "08:30", end: "16:00", pause: 30, color: "#90db33", days: [0, 1, 2, 3, 4] }
         ];
-        saveData(); 
+        saveData();
     }
 
     loadLogsForView();
 
     // Init Settings UI
-    if(document.getElementById('setting-ignore-early')) {
+    if (document.getElementById('setting-ignore-early')) {
         document.getElementById('setting-ignore-early').checked = appSettings.ignoreEarlyStart;
         document.getElementById('setting-calc-ot').checked = appSettings.countOvertime;
         document.getElementById('setting-deduct-pause').checked = appSettings.deductPause;
@@ -340,7 +38,7 @@ injectContactButton()
         document.getElementById('settings-night-start').value = appSettings.nightStart || "21:00";
         document.getElementById('settings-night-end').value = appSettings.nightEnd || "06:00";
         document.getElementById('setting-auto-backup').checked = appSettings.autoBackup === true;
-           document.getElementById('setting-force-local').checked = appSettings.forceLocal === true;
+        document.getElementById('setting-force-local').checked = appSettings.forceLocal === true;
 
     }
 
@@ -348,7 +46,7 @@ injectContactButton()
     renderCalendar();
     renderHistory();
     checkAlreadyLogged();
-    
+
     // Navigation initiale
     const navBtn = document.querySelector('.nav-item[onclick*="page-chrono"]');
     navTo('page-chrono', navBtn);
@@ -357,18 +55,18 @@ injectContactButton()
     if (currentSession) {
         restoreTimerUI();
     }
-    
+
     checkTodaySchedule();
 
     const dateDisplay = document.getElementById('current-date-display');
-    if(dateDisplay) {
+    if (dateDisplay) {
         const options = { weekday: 'long', day: 'numeric', month: 'long' };
         dateDisplay.textContent = new Date().toLocaleDateString('fr-FR', options);
     }
 
     // Android Listener
     window.addEventListener('android-stop-timer', () => {
-        if(currentSession) stopTimer();
+        if (currentSession) stopTimer();
     });
     runDailyAutoExport();
 }
@@ -382,7 +80,7 @@ const allowedColors = [
     "#7f8c8d", // Gris moyen
 
     // 🔴 ROUGES & BRUNS
-        "#a52a2a", // Marron terre
+    "#a52a2a", // Marron terre
 
     "#4f2121", // Brun-rouge profond
     "#b71c1c", // Rouge sang sombre
@@ -458,36 +156,36 @@ function initColorPicker() {
     });
 }
 function openColorModal() {
-initColorPicker(); // Rafraîchir pour montrer la sélection actuelle
-document.getElementById('color-modal').style.display = 'flex';
+    initColorPicker(); // Rafraîchir pour montrer la sélection actuelle
+    document.getElementById('color-modal').style.display = 'flex';
 }
 
 function selectColor(color, element) {
-// 1. Mise à jour de la valeur et de la preview
-document.getElementById('new-p-color').value = color;
-document.getElementById('current-color-preview').style.backgroundColor = color;
+    // 1. Mise à jour de la valeur et de la preview
+    document.getElementById('new-p-color').value = color;
+    document.getElementById('current-color-preview').style.backgroundColor = color;
 
-// 2. Visuel de la pastille
-document.querySelectorAll('.color-dot').forEach(d => {
-    d.style.borderColor = "transparent";
-    d.style.transform = "scale(1)";
-});
-element.style.borderColor = "white";
-element.style.transform = "scale(1.1)";
+    // 2. Visuel de la pastille
+    document.querySelectorAll('.color-dot').forEach(d => {
+        d.style.borderColor = "transparent";
+        d.style.transform = "scale(1)";
+    });
+    element.style.borderColor = "white";
+    element.style.transform = "scale(1.1)";
 
-// Optionnel : fermer la modale automatiquement après sélection (si vous préférez)
-// setTimeout(() => { document.getElementById('color-modal').style.display = 'none'; }, 200);
+    // Optionnel : fermer la modale automatiquement après sélection (si vous préférez)
+    // setTimeout(() => { document.getElementById('color-modal').style.display = 'none'; }, 200);
 }
 
 // Helper indispensable pour la comparaison
 function hexToRgb(hex) {
-const r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16);
-return `rgb(${r}, ${g}, ${b})`;
+    const r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16);
+    return `rgb(${r}, ${g}, ${b})`;
 }
-    // --- ETAT GLOBAL ---
-    let profiles = [];
-    let schedule = {};
-    let logs = []; // Représente désormais UNIQUEMENT les logs du mois affiché dans l'historique
+// --- ETAT GLOBAL ---
+let profiles = [];
+let schedule = {};
+let logs = []; // Représente désormais UNIQUEMENT les logs du mois affiché dans l'historique
 // Ajoutez ignoreEarlyStart dans vos réglages par défaut
 // Configuration des réglages par défaut
 let appSettings = {
@@ -500,121 +198,117 @@ let appSettings = {
     nightStart: "21:00",
     nightEnd: "06:00",
     autoBackup: false,
-        forceLocal: false
+    forceLocal: false
 
 };
 
-    let currentSession = null;
-    let pendingLogData = null;
-    let timerInterval = null;
+let currentSession = null;
+let pendingLogData = null;
+let timerInterval = null;
 
-    let currentPlanningDate = new Date();
-    let currentHistoryDate = new Date(); // Mois affiché dans l'historique
+let currentPlanningDate = new Date();
+let currentHistoryDate = new Date(); // Mois affiché dans l'historique
 
-    let selectedDayForModal = null;
-    let selectedDaysInForm = [];
+let selectedDayForModal = null;
+let selectedDaysInForm = [];
 
-    let multiSelectMode = false;
-    let selectedBatchDates = new Set();
-    let longPressTimer;
+let multiSelectMode = false;
+let selectedBatchDates = new Set();
+let longPressTimer;
 
-    // --- GESTION STOCKAGE PAR MOIS ---
+// --- GESTION STOCKAGE PAR MOIS ---
 
-    // Génère la clé "pt_logs_YYYY_MM"
-    function getStorageKey(date) {
-        let d = new Date(date);
-        // Si le format n'est pas standard (DD/MM/YYYY utilisé dans l'affichage parfois)
-        if(isNaN(d.getTime())) {
-            const parts = date.split('/');
-            if(parts.length === 3) d = new Date(parts[2], parts[1]-1, parts[0]);
-        }
-        if(isNaN(d.getTime())) d = new Date(); // Fallback aujourd'hui
-
-        const m = (d.getMonth() + 1).toString().padStart(2, '0');
-        return `pt_logs_${d.getFullYear()}_${m}`;
+// Génère la clé "pt_logs_YYYY_MM"
+function getStorageKey(date) {
+    let d = new Date(date);
+    // Si le format n'est pas standard (DD/MM/YYYY utilisé dans l'affichage parfois)
+    if (isNaN(d.getTime())) {
+        const parts = date.split('/');
+        if (parts.length === 3) d = new Date(parts[2], parts[1] - 1, parts[0]);
     }
+    if (isNaN(d.getTime())) d = new Date(); // Fallback aujourd'hui
 
-    // Migration unique : Découpe l'ancien tableau monolithique en fichiers mensuels
-    function migrateOldData() {
-        const old = localStorage.getItem('pt_logs');
-        if (old) {
-            try {
-                const all = JSON.parse(old);
-                if (Array.isArray(all) && all.length > 0) {
-                    const buckets = {};
-                    all.forEach(log => {
-                        // On se base sur dateStr (ISO) ou date (Locale)
-                        const k = getStorageKey(log.dateStr || log.date);
-                        if (!buckets[k]) buckets[k] = [];
-                        buckets[k].push(log);
-                    });
+    const m = (d.getMonth() + 1).toString().padStart(2, '0');
+    return `pt_logs_${d.getFullYear()}_${m}`;
+}
 
-                    // Sauvegarde dans les nouveaux buckets
-                    for (const [key, val] of Object.entries(buckets)) {
-                        // Fusionner avec existant si jamais (sécurité)
-                        const existing = localStorage.getItem(key);
-                        let combined = val;
-                        if (existing) {
-                            combined = [...JSON.parse(existing), ...val];
-                        }
-                        localStorage.setItem(key, JSON.stringify(combined));
+// Migration unique : Découpe l'ancien tableau monolithique en fichiers mensuels
+function migrateOldData() {
+    const old = localStorage.getItem('pt_logs');
+    if (old) {
+        try {
+            const all = JSON.parse(old);
+            if (Array.isArray(all) && all.length > 0) {
+                const buckets = {};
+                all.forEach(log => {
+                    // On se base sur dateStr (ISO) ou date (Locale)
+                    const k = getStorageKey(log.dateStr || log.date);
+                    if (!buckets[k]) buckets[k] = [];
+                    buckets[k].push(log);
+                });
+
+                // Sauvegarde dans les nouveaux buckets
+                for (const [key, val] of Object.entries(buckets)) {
+                    // Fusionner avec existant si jamais (sécurité)
+                    const existing = localStorage.getItem(key);
+                    let combined = val;
+                    if (existing) {
+                        combined = [...JSON.parse(existing), ...val];
                     }
+                    localStorage.setItem(key, JSON.stringify(combined));
                 }
-                localStorage.removeItem('pt_logs'); // Nettoyage ancien
-                console.log("Migration des données effectuée (Stockage par mois).");
-            } catch (e) {
-                console.error("Erreur migration", e);
             }
+            localStorage.removeItem('pt_logs'); // Nettoyage ancien
+            console.log("Migration des données effectuée (Stockage par mois).");
+        } catch (e) {
+            console.error("Erreur migration", e);
         }
     }
+}
 
-    // Charge les logs pour le mois visualisé (currentHistoryDate)
-    function loadLogsForView() {
-        const key = getStorageKey(currentHistoryDate);
-        const raw = localStorage.getItem(key);
-        logs = raw ? JSON.parse(raw) : [];
-    }
+// Charge les logs pour le mois visualisé (currentHistoryDate)
+function loadLogsForView() {
+    const key = getStorageKey(currentHistoryDate);
+    const raw = localStorage.getItem(key);
+    logs = raw ? JSON.parse(raw) : [];
+}
 
-    // Sauvegarde le tableau 'logs' (qui correspond au mois visualisé)
+// Sauvegarde le tableau 'logs' (qui correspond au mois visualisé)
 function saveLogsCurrentView() {
     const key = getStorageKey(currentHistoryDate);
     localStorage.setItem(key, JSON.stringify(logs));
-    
-    // TRIGGER CLOUD
-    markForSync(key);
 }
-    // Ajoute ou met à jour un log dans son fichier mensuel approprié
-    // (Gère le cas où on ajoute un log pour un mois différent de celui affiché)
-    function saveLogToStorage(log) {
-        const targetKey = getStorageKey(log.dateStr || log.date);
-        const currentViewKey = getStorageKey(currentHistoryDate);
+// Ajoute ou met à jour un log dans son fichier mensuel approprié
+// (Gère le cas où on ajoute un log pour un mois différent de celui affiché)
+function saveLogToStorage(log) {
+    const targetKey = getStorageKey(log.dateStr || log.date);
+    const currentViewKey = getStorageKey(currentHistoryDate);
 
-        // Si le log appartient au mois qu'on regarde actuellement
-        if (targetKey === currentViewKey) {
-            // On l'ajoute à la variable globale et on sauvegarde
-            // (Note: Cette fonction est appelée après un unshift/push dans les fonctions d'ajout)
-            // Donc on sauvegarde juste la vue courante
-            saveLogsCurrentView();
-        } else {
-            // Le log est pour un autre mois (ex: on pointe Octobre mais on regarde Septembre)
-            const raw = localStorage.getItem(targetKey);
-            let targetLogs = raw ? JSON.parse(raw) : [];
-            targetLogs.unshift(log); // Ajout en début
-            localStorage.setItem(targetKey, JSON.stringify(targetLogs));
-        }
-        markForSync(targetKey);
+    // Si le log appartient au mois qu'on regarde actuellement
+    if (targetKey === currentViewKey) {
+        // On l'ajoute à la variable globale et on sauvegarde
+        // (Note: Cette fonction est appelée après un unshift/push dans les fonctions d'ajout)
+        // Donc on sauvegarde juste la vue courante
+        saveLogsCurrentView();
+    } else {
+        // Le log est pour un autre mois (ex: on pointe Octobre mais on regarde Septembre)
+        const raw = localStorage.getItem(targetKey);
+        let targetLogs = raw ? JSON.parse(raw) : [];
+        targetLogs.unshift(log); // Ajout en début
+        localStorage.setItem(targetKey, JSON.stringify(targetLogs));
     }
+}
 
-    // Met à jour un log existant (Edition/Suppression)
-    // Ici on suppose qu'on édite toujours un log visible, donc dans 'logs'
-    // Si on change la date d'un log vers un autre mois, c'est plus complexe,
-    // mais pour l'instant restons simple : on sauvegarde la vue courante.
-    // Si la date change de mois, idéalement il faudrait déplacer le log,
-    // mais pour cette version on garde dans le fichier d'origine ou on sauvegarde currentView.
-    function saveLogsAfterEdit() {
-         // On part du principe que l'édition se fait sur le mois affiché
-         saveLogsCurrentView();
-    }
+// Met à jour un log existant (Edition/Suppression)
+// Ici on suppose qu'on édite toujours un log visible, donc dans 'logs'
+// Si on change la date d'un log vers un autre mois, c'est plus complexe,
+// mais pour l'instant restons simple : on sauvegarde la vue courante.
+// Si la date change de mois, idéalement il faudrait déplacer le log,
+// mais pour cette version on garde dans le fichier d'origine ou on sauvegarde currentView.
+function saveLogsAfterEdit() {
+    // On part du principe que l'édition se fait sur le mois affiché
+    saveLogsCurrentView();
+}
 
 function exportData() {
     const data = {};
@@ -624,7 +318,7 @@ function exportData() {
             data[key] = localStorage.getItem(key);
         }
     }
-    
+
     const jsonString = JSON.stringify(data, null, 2);
     const fileName = `pointeuse_backup_${new Date().toISOString().split('T')[0]}.json`;
 
@@ -634,7 +328,7 @@ function exportData() {
         window.Android.saveFile(jsonString, fileName);
     } else {
         // Fallback pour navigateur PC uniquement
-        const blob = new Blob([jsonString], {type: 'application/json'});
+        const blob = new Blob([jsonString], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
@@ -655,7 +349,7 @@ function importData() {
 }
 function triggerImport() {
     const el = document.getElementById('import-file-input');
-    if(el) el.click();
+    if (el) el.click();
 }
 
 // 3. Fonction liée à l'événement onchange de l'input HTML
@@ -667,69 +361,35 @@ function processImportFile(file) {
     if (!file) return;
 
     const reader = new FileReader();
-    
+
     // On passe en ASYNC pour gérer la synchro avant le reload
-    reader.onload = async function(event) {
+    reader.onload = async function (event) {
         try {
             const importedData = JSON.parse(event.target.result);
-            
+
             if (confirm("ATTENTION : L'importation va remplacer vos données (Planning, Logs, Profils).\nVotre connexion et les sauvegardes auto seront conservées.\n\nContinuer ?")) {
-                
+
                 // --- ETAPE A : NETTOYAGE SÉCURISÉ ---
-                // On supprime tout ce qui est 'pt_' SAUF les clés protégées
                 for (let i = localStorage.length - 1; i >= 0; i--) {
                     const key = localStorage.key(i);
-                    
                     if (key && key.startsWith('pt_')) {
-                        // Si la clé est dans la liste des protégées, on ne touche PAS
-                        if (PROTECTED_KEYS.includes(key)) continue;
-
-                        removeItem(key); // Wrapper qui signale la suppression au serveur
+                        localStorage.removeItem(key);
                     }
                 }
 
                 // --- ETAPE B : INJECTION DES DONNÉES ---
                 Object.keys(importedData).forEach(key => {
-                    // SÉCURITÉ : On refuse d'importer les clés protégées depuis le fichier
-                    // (On garde celles qui sont actuellement en mémoire)
-                    if (PROTECTED_KEYS.includes(key)) return;
-
                     let val = importedData[key];
                     const valToStore = typeof val === 'object' ? JSON.stringify(val) : val;
-                    
-                    setItem(key, valToStore); // Wrapper qui signale l'ajout au serveur
+                    localStorage.setItem(key, valToStore);
                 });
 
                 // Mise à jour de la mémoire JS immédiate
-                loadData(); 
-                loadLogsForView(); 
-
-                // --- ETAPE C : SYNCHRONISATION FORCÉE AVANT RELOAD ---
-                if (cloudUser && typeof syncToPhp === 'function') {
-                    // On coupe le timer auto pour prendre la main manuellement
-                    if (typeof syncTimer !== 'undefined' && syncTimer) clearTimeout(syncTimer);
-                    
-                    // Écran d'attente pour bloquer l'utilisateur
-                    const overlay = document.createElement('div');
-                    overlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);color:white;display:flex;flex-direction:column;justify-content:center;align-items:center;z-index:99999;font-family:sans-serif;";
-                    overlay.innerHTML = `
-                        <i class="fas fa-cloud-upload-alt" style="font-size:3rem; margin-bottom:20px;"></i>
-                        <h2>Mise à jour du Cloud...</h2>
-                        <p>Veuillez patienter.</p>
-                    `;
-                    document.body.appendChild(overlay);
-
-                    try {
-                        // On attend la confirmation du serveur
-                        await syncToPhp(); 
-                    } catch (syncErr) {
-                        console.error("Erreur synchro import:", syncErr);
-                        alert("Données importées en local, mais erreur lors de l'envoi au serveur.");
-                    }
-                }
+                loadData();
+                loadLogsForView();
 
                 alert("Importation réussie ! L'application va redémarrer.");
-                location.reload(); 
+                location.reload();
             }
         } catch (err) {
             alert("Erreur fichier invalide : " + err.message);
@@ -748,13 +408,13 @@ if (document.readyState === 'loading') {
     initApp();
 }
 
-    // --- UTILS ---
-    function getWeekNumber(d) {
-        d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-        d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay()||7));
-        var yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
-        return Math.ceil(( ( (d - yearStart) / 86400000) + 1)/7);
-    }
+// --- UTILS ---
+function getWeekNumber(d) {
+    d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+    d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+    var yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+    return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+}
 
 function calculateOvertime(durationMs, p, actualStartMs, forceCountEarly = false) {
     const [hS, mS] = p.start.split(':').map(Number);
@@ -773,12 +433,12 @@ function calculateOvertime(durationMs, p, actualStartMs, forceCountEarly = false
 
     // Calcul de la durée théorique contractuelle
     let spanMins = (hE * 60 + mE) - (hS * 60 + mS);
-    if(spanMins < 0) spanMins += 1440;
+    if (spanMins < 0) spanMins += 1440;
     const netTargetMins = spanMins - p.pause;
 
     let finalDurationMs = effectiveDurationMs;
     // Déduction de la pause si l'option globale est cochée
-    if(appSettings.deductPause) {
+    if (appSettings.deductPause) {
         finalDurationMs -= (p.pause * 60000);
     }
 
@@ -786,11 +446,11 @@ function calculateOvertime(durationMs, p, actualStartMs, forceCountEarly = false
 }
 function getAccentColor(baseColor) {
     if (!baseColor) return 'var(--primary)';
-    
+
     const ctx = document.createElement('canvas').getContext('2d');
     ctx.fillStyle = baseColor;
-    const colorRgb = ctx.fillStyle; 
-    
+    const colorRgb = ctx.fillStyle;
+
     let r = parseInt(colorRgb.substring(1, 3), 16) / 255;
     let g = parseInt(colorRgb.substring(3, 5), 16) / 255;
     let b = parseInt(colorRgb.substring(5, 7), 16) / 255;
@@ -812,7 +472,7 @@ function getAccentColor(baseColor) {
     }
 
     // --- LOGIQUE DE CONTRASTE UNIQUE ---
-    const percent = 0.3; 
+    const percent = 0.3;
     if (l < 0.1) { l = 0.55; } // Noir -> Gris clair
     else if (l > 0.4 && l < 0.6) { l = l; } // Milieu -> Ne pas toucher
     else if (l >= 0.6) { l = l - percent; } // Très clair -> Assombrir
@@ -821,16 +481,16 @@ function getAccentColor(baseColor) {
     const hue2rgb = (p, q, t) => {
         if (t < 0) t += 1;
         if (t > 1) t -= 1;
-        if (t < 1/6) return p + (q - p) * 6 * t;
-        if (t < 1/2) return q;
-        if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+        if (t < 1 / 6) return p + (q - p) * 6 * t;
+        if (t < 1 / 2) return q;
+        if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
         return p;
     };
     const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
     const p = 2 * l - q;
-    const fR = Math.round(hue2rgb(p, q, h + 1/3) * 255);
+    const fR = Math.round(hue2rgb(p, q, h + 1 / 3) * 255);
     const fG = Math.round(hue2rgb(p, q, h) * 255);
-    const fB = Math.round(hue2rgb(p, q, h - 1/3) * 255);
+    const fB = Math.round(hue2rgb(p, q, h - 1 / 3) * 255);
 
     return `rgb(${fR}, ${fG}, ${fB})`;
 }
@@ -850,11 +510,11 @@ function updateThemeColor(pageId) {
             }
         }
     }
-    
+
     // On applique la transformation
     root.style.setProperty('--primary', getAccentColor(baseColor));
 }
-    // --- NAVIGATION ---
+// --- NAVIGATION ---
 function navTo(pageId, btnElement) {
     // 1. Gestion des classes actives sur les pages
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -862,7 +522,7 @@ function navTo(pageId, btnElement) {
 
     // 2. Gestion des classes actives sur les boutons de navigation
     document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-    
+
     if (btnElement) {
         // Si on a passé l'élément (clic manuel)
         btnElement.classList.add('active');
@@ -879,31 +539,31 @@ function navTo(pageId, btnElement) {
     // 4. Remonter en haut et logiques spécifiques
     const targetPage = document.getElementById(pageId);
     if (targetPage) targetPage.scrollTop = 0;
-    
-    if(pageId === 'page-chrono') {
+
+    if (pageId === 'page-chrono') {
         checkTodaySchedule();
         checkAlreadyLogged();
     }
-    if(pageId === 'page-history') renderHistory();
-    if(pageId === 'page-planning') {
+    if (pageId === 'page-history') renderHistory();
+    if (pageId === 'page-planning') {
         renderCalendar();
         if (typeof exitMultiSelect === 'function') exitMultiSelect();
     }
 }
-    function goToSettingsFromModal() {
-        document.getElementById('day-modal').style.display = 'none';
-        const btn = document.querySelector('button[onclick*="page-settings"]');
-        navTo('page-settings', btn);
-        document.getElementById('profile-form-card').scrollIntoView();
-    }
+function goToSettingsFromModal() {
+    document.getElementById('day-modal').style.display = 'none';
+    const btn = document.querySelector('button[onclick*="page-settings"]');
+    navTo('page-settings', btn);
+    document.getElementById('profile-form-card').scrollIntoView();
+}
 
-    // --- HELPER DATA STRUCTURE ---
-    function getScheduleData(dateKey) {
-        const entry = schedule[dateKey];
-        if (!entry) return null;
-        if (typeof entry === 'object') return entry;
-        return { id: entry, note: "" };
-    }
+// --- HELPER DATA STRUCTURE ---
+function getScheduleData(dateKey) {
+    const entry = schedule[dateKey];
+    if (!entry) return null;
+    if (typeof entry === 'object') return entry;
+    return { id: entry, note: "" };
+}
 
 function updateSettings() {
     appSettings.countOvertime = document.getElementById('setting-calc-ot').checked;
@@ -918,24 +578,24 @@ function updateSettings() {
     appSettings.nightEnd = document.getElementById('settings-night-end').value;
 
     saveData();
-    if(document.getElementById('page-history').classList.contains('active')) renderHistory();
+    if (document.getElementById('page-history').classList.contains('active')) renderHistory();
 }
-    // --- LOGIQUE PLANNING (CALENDRIER) ---
-    function changeMonth(delta) {
-        currentPlanningDate.setMonth(currentPlanningDate.getMonth() + delta);
-        renderCalendar();
-    }
+// --- LOGIQUE PLANNING (CALENDRIER) ---
+function changeMonth(delta) {
+    currentPlanningDate.setMonth(currentPlanningDate.getMonth() + delta);
+    renderCalendar();
+}
 
 function renderCalendar() {
     loadScheduleForMonthView(); // <--- AJOUTE CECI
-const year = currentPlanningDate.getFullYear();
+    const year = currentPlanningDate.getFullYear();
     const month = currentPlanningDate.getMonth();
-    const monthNames = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
-    
+    const monthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+
     const calTitle = document.getElementById('cal-month-year');
     calTitle.textContent = `${monthNames[month]} ${year}`;
     calTitle.style.fontSize = "1em";
-    
+
     const feries = getJoursFeries(year);
     const firstDayOfMonth = new Date(year, month, 1);
     const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -945,7 +605,7 @@ const year = currentPlanningDate.getFullYear();
     const grid = document.getElementById('calendar-body');
     grid.innerHTML = "";
 
-    for(let i=0; i<startDay; i++) {
+    for (let i = 0; i < startDay; i++) {
         const empty = document.createElement('div');
         empty.className = "cal-day empty";
         grid.appendChild(empty);
@@ -953,24 +613,24 @@ const year = currentPlanningDate.getFullYear();
 
     const todayStr = new Date().toISOString().split('T')[0];
 
-    for(let d=1; d<=daysInMonth; d++) {
+    for (let d = 1; d <= daysInMonth; d++) {
         const cell = document.createElement('div');
         cell.className = "cal-day";
         const dateObj = new Date(year, month, d);
         dateObj.setHours(12, 0, 0, 0);
         const dateKey = dateObj.toISOString().split('T')[0];
 
-        if(dateKey === todayStr) cell.classList.add('today');
-        if(multiSelectMode && selectedBatchDates.has(dateKey)) {
+        if (dateKey === todayStr) cell.classList.add('today');
+        if (multiSelectMode && selectedBatchDates.has(dateKey)) {
             cell.classList.add('multi-selected');
         }
 
         const ferieObj = feries.find(f => f.d.getDate() === d && f.d.getMonth() === month);
-        if(ferieObj) {
+        if (ferieObj) {
             cell.classList.add('ferie');
             const nameBadge = document.createElement('div');
             nameBadge.className = "ferie-name";
-            nameBadge.textContent = ferieObj.n; 
+            nameBadge.textContent = ferieObj.n;
             cell.appendChild(nameBadge);
         }
 
@@ -978,7 +638,7 @@ const year = currentPlanningDate.getFullYear();
         numSpan.className = 'cal-day-num';
         numSpan.textContent = d;
         cell.appendChild(numSpan);
-        
+
         if (dateObj.getDay() === 1) {
             const weekBadge = document.createElement('span');
             weekBadge.className = 'week-badge';
@@ -987,11 +647,11 @@ const year = currentPlanningDate.getFullYear();
         }
 
         // Récupération des profils du jour (Logs + Planning)
-        const dayData = getDayProfiles(dateKey); 
-        
+        const dayData = getDayProfiles(dateKey);
+
         const labelsContainer = document.createElement('div');
         labelsContainer.style.cssText = "width: 100%; display: flex; flex-direction: column; align-items: center; gap: 2px; margin-top: 14px; padding: 0 2px; overflow: hidden;";
-        
+
         // On n'affiche l'heure en dessous que s'il y a un profil unique
         const showHours = dayData.list.length === 1;
 
@@ -1001,14 +661,14 @@ const year = currentPlanningDate.getFullYear();
             label.className = "cal-profile-label";
             label.style.backgroundColor = p.color;
             label.style.color = "#fff";
-            label.style.fontSize = "0.75rem"; 
+            label.style.fontSize = "0.75rem";
             label.style.width = "95%";
             label.style.textAlign = "center";
             label.style.borderRadius = "3px";
             label.style.whiteSpace = "nowrap";
             label.style.overflow = "hidden";
             label.style.textOverflow = "ellipsis";
-            
+
             if (p.source === 'log') {
                 label.innerHTML = `<i class="fas fa-check" style="font-size:0.6rem; margin-right:2px;"></i> ${p.name}`;
             } else {
@@ -1039,57 +699,57 @@ const year = currentPlanningDate.getFullYear();
 
         cell.appendChild(labelsContainer);
 
-        if(dayData.note) {
+        if (dayData.note) {
             const noteDiv = document.createElement('div');
             noteDiv.className = "cal-note-preview";
             noteDiv.textContent = dayData.note;
             cell.appendChild(noteDiv);
         }
 
-        cell.addEventListener('touchstart', (e) => startLongPress(dateKey), {passive: true});
+        cell.addEventListener('touchstart', (e) => startLongPress(dateKey), { passive: true });
         cell.addEventListener('mousedown', (e) => startLongPress(dateKey));
         ['touchend', 'touchmove', 'mouseup', 'mouseleave'].forEach(evt => {
             cell.addEventListener(evt, cancelLongPress);
         });
         cell.onclick = (e) => {
-            if(multiSelectMode) toggleBatchSelection(dateKey);
+            if (multiSelectMode) toggleBatchSelection(dateKey);
             else openDayModal(dateKey);
         };
         grid.appendChild(cell);
     }
 }
-    // --- MULTI-SELECT & MODALS ---
-    function startLongPress(dateKey) {
-        longPressTimer = setTimeout(() => {
-            if(!multiSelectMode) {
-                enterMultiSelect();
-                toggleBatchSelection(dateKey);
-                if(navigator.vibrate) navigator.vibrate(50);
-            }
-        }, 600);
-    }
-    function cancelLongPress() { clearTimeout(longPressTimer); }
-    function enterMultiSelect() {
-        multiSelectMode = true;
-        selectedBatchDates.clear();
-        document.getElementById('multi-select-bar').classList.add('visible');
-        renderCalendar();
-    }
-    function exitMultiSelect() {
-        multiSelectMode = false;
-        selectedBatchDates.clear();
-        document.getElementById('multi-select-bar').classList.remove('visible');
-        renderCalendar();
-    }
-    function toggleBatchSelection(dateKey) {
-        if(selectedBatchDates.has(dateKey)) selectedBatchDates.delete(dateKey);
-        else selectedBatchDates.add(dateKey);
-        document.getElementById('multi-count').textContent = `${selectedBatchDates.size} sélectionné(s)`;
-        renderCalendar();
-    }
+// --- MULTI-SELECT & MODALS ---
+function startLongPress(dateKey) {
+    longPressTimer = setTimeout(() => {
+        if (!multiSelectMode) {
+            enterMultiSelect();
+            toggleBatchSelection(dateKey);
+            if (navigator.vibrate) navigator.vibrate(50);
+        }
+    }, 600);
+}
+function cancelLongPress() { clearTimeout(longPressTimer); }
+function enterMultiSelect() {
+    multiSelectMode = true;
+    selectedBatchDates.clear();
+    document.getElementById('multi-select-bar').classList.add('visible');
+    renderCalendar();
+}
+function exitMultiSelect() {
+    multiSelectMode = false;
+    selectedBatchDates.clear();
+    document.getElementById('multi-select-bar').classList.remove('visible');
+    renderCalendar();
+}
+function toggleBatchSelection(dateKey) {
+    if (selectedBatchDates.has(dateKey)) selectedBatchDates.delete(dateKey);
+    else selectedBatchDates.add(dateKey);
+    document.getElementById('multi-count').textContent = `${selectedBatchDates.size} sélectionné(s)`;
+    renderCalendar();
+}
 
 // --- 1. VARIABLE GLOBALE (Indispensable pour stocker le choix) ---
-let batchSelectedId = null; 
+let batchSelectedId = null;
 
 // --- 2. OUVERTURE DE LA MODAL ---
 function openBatchModal() {
@@ -1107,7 +767,7 @@ function openBatchModal() {
     modalDiv.id = 'dynamic-batch-modal';
     modalDiv.className = 'modal-overlay';
     modalDiv.style.display = 'flex';
-    
+
     // HTML (Liste + Bouton)
     modalDiv.innerHTML = `
         <div class="modal-content" onclick="event.stopPropagation()">
@@ -1145,7 +805,7 @@ function openBatchModal() {
 function renderBatchListItems() {
     const container = document.getElementById('batch-profiles-list');
     if (!container) return;
-    container.innerHTML = ""; 
+    container.innerHTML = "";
 
     // Option Repos
     const isReposSelected = (batchSelectedId === null);
@@ -1162,7 +822,7 @@ function renderBatchListItems() {
     reposBtn.innerHTML = `<i class="fas fa-umbrella-beach"></i> Repos / Effacer`;
     reposBtn.onclick = () => {
         batchSelectedId = null;
-        renderBatchListItems(); 
+        renderBatchListItems();
     };
     container.appendChild(reposBtn);
 
@@ -1192,7 +852,7 @@ function renderBatchListItems() {
             `;
             btn.onclick = () => {
                 batchSelectedId = p.id;
-                renderBatchListItems(); 
+                renderBatchListItems();
             };
             container.appendChild(btn);
         });
@@ -1212,7 +872,7 @@ function saveBatchSchedule() {
             // Création / Modif
             const currentNote = (schedule[dateKey] && schedule[dateKey].note) ? schedule[dateKey].note : "";
             batchUpdates[dateKey] = {
-                id: parseInt(selectedProfileId), 
+                id: parseInt(selectedProfileId),
                 note: currentNote
             };
         }
@@ -1220,16 +880,16 @@ function saveBatchSchedule() {
 
     // Appel unique qui gère les mois différents automatiquement
     saveBatchScheduleEntries(batchUpdates);
-    
-    renderCalendar(); 
-    closeDynamicBatchModal(); 
-    
+
+    renderCalendar();
+    closeDynamicBatchModal();
+
     if (typeof exitMultiSelect === 'function') {
         exitMultiSelect();
     } else {
         selectedBatchDates.clear();
         const bar = document.getElementById('multi-select-bar');
-        if(bar) bar.classList.remove('visible');
+        if (bar) bar.classList.remove('visible');
         renderCalendar();
     }
 }
@@ -1256,7 +916,7 @@ function openBatchModal() {
     modalDiv.id = 'dynamic-batch-modal';
     modalDiv.className = 'modal-overlay';
     modalDiv.style.display = 'flex';
-    
+
     // Structure HTML (Sans bouton annuler, avec conteneur pour la liste)
     modalDiv.innerHTML = `
         <div class="modal-content" onclick="event.stopPropagation()">
@@ -1315,7 +975,7 @@ function renderBatchListItems() {
             // Est-ce que ce profil est celui sélectionné ?
             // Attention : p.id est un nombre, batchSelectedId aussi normalement
             const isSelected = (p.id === batchSelectedId);
-            
+
             const btn = document.createElement('div');
             btn.style.cssText = `
                 padding: 10px 15px;
@@ -1329,7 +989,7 @@ function renderBatchListItems() {
                 align-items: center;
                 transition: all 0.2s;
             `;
-            
+
             btn.innerHTML = `
                 <div>
                     <strong style="color:${isSelected ? '#fff' : '#aaa'};">${p.name}</strong><br>
@@ -1337,7 +997,7 @@ function renderBatchListItems() {
                 </div>
                 ${isSelected ? `<i class="fas fa-check-circle" style="color:${p.color}"></i>` : ''}
             `;
-            
+
             btn.onclick = () => {
                 batchSelectedId = p.id;
                 renderBatchListItems(); // On redessine pour déplacer la sélection
@@ -1349,12 +1009,12 @@ function renderBatchListItems() {
 
 
 
-    let tempSelectedProfileId = null; // Variable temporaire pour stocker le choix
+let tempSelectedProfileId = null; // Variable temporaire pour stocker le choix
 function openDayModal(dateKey) {
     selectedDayForModal = dateKey;
     const [y, m, d] = dateKey.split('-');
     document.getElementById('modal-date-title').textContent = `${d}/${m}/${y}`;
-    
+
     const data = getScheduleData(dateKey);
     tempSelectedProfileId = data ? data.id : null;
     document.getElementById('modal-note').value = data ? data.note : "";
@@ -1389,7 +1049,7 @@ function renderProfilesInModal() {
             align-items: center;
             transition: all 0.2s;
         `;
-        
+
         btn.innerHTML = `
             <div>
                 <strong style="color:${isSelected ? '#fff' : '#aaa'};">${p.name}</strong><br>
@@ -1397,7 +1057,7 @@ function renderProfilesInModal() {
             </div>
             ${isSelected ? `<i class="fas fa-check-circle" style="color:${p.color}"></i>` : ''}
         `;
-        
+
         btn.onclick = () => {
             tempSelectedProfileId = p.id;
             renderProfilesInModal(); // Rafraîchir pour montrer la sélection
@@ -1405,25 +1065,25 @@ function renderProfilesInModal() {
         container.appendChild(btn);
     });
 }
-    function closeModal(e, id) { if(e.target.id === id) document.getElementById(id).style.display = 'none'; }
+function closeModal(e, id) { if (e.target.id === id) document.getElementById(id).style.display = 'none'; }
 
 function saveDaySchedule() {
     const val = tempSelectedProfileId; // On utilise la variable mise à jour par les clics
     const noteVal = document.getElementById('modal-note').value;
     const dateKey = selectedDayForModal;
 
-let dataToSave = null;
+    let dataToSave = null;
     if (val !== null || noteVal !== "") {
         dataToSave = { id: parseInt(val), note: noteVal };
     }
-saveScheduleEntry(dateKey, dataToSave);
+    saveScheduleEntry(dateKey, dataToSave);
 
     const pid = val === null ? null : parseInt(val);
     if (pid) schedule[dateKey] = { id: pid, note: noteVal };
     else delete schedule[dateKey];
 
     const p = profiles.find(x => x.id === pid);
-    
+
     if (pid && p && p.days && p.days.length > 0) {
         document.getElementById('confirm-week-modal').style.display = 'flex';
         // Les boutons "Toute la semaine" / "Ce jour" restent les mêmes
@@ -1445,8 +1105,8 @@ function closeAndRefresh() {
 }
 function fillWeekWithProfile(refDateKey, profileId, activeDays) {
     const refDate = new Date(refDateKey + 'T12:00:00');
-    const dayOfWeek = refDate.getDay(); 
-    
+    const dayOfWeek = refDate.getDay();
+
     // Calage sur le Lundi
     const distToMon = (dayOfWeek + 6) % 7;
     const monday = new Date(refDate);
@@ -1461,15 +1121,15 @@ function fillWeekWithProfile(refDateKey, profileId, activeDays) {
         const d = new Date(monday);
         d.setDate(monday.getDate() + i);
         const k = d.toISOString().split('T')[0];
-        
+
         // --- LA MODIFICATION EST ICI ---
         // On vérifie si une donnée existe déjà pour cette date 'k'
         if (schedule[k]) {
             // Si oui, on ne touche à rien, on passe au jour suivant
-            continue; 
+            continue;
         }
         // -------------------------------
-        
+
         // Si on arrive ici, c'est que la case est vide, donc on remplit
         batchUpdates[k] = { id: profileId, note: "" };
     }
@@ -1482,41 +1142,41 @@ function fillWeekWithProfile(refDateKey, profileId, activeDays) {
     }
 }
 
-    // --- LOGIQUE CHRONO ---
-    function checkAlreadyLogged() {
-        const container = document.getElementById('already-logged-container');
-        const today = new Date();
-        const todayIso = today.toISOString().split('T')[0];
+// --- LOGIQUE CHRONO ---
+function checkAlreadyLogged() {
+    const container = document.getElementById('already-logged-container');
+    const today = new Date();
+    const todayIso = today.toISOString().split('T')[0];
 
-        let todayLogs = [];
-        if (getStorageKey(currentHistoryDate) === getStorageKey(today)) {
-            todayLogs = logs;
-        } else {
-            const key = getStorageKey(today);
-            const raw = localStorage.getItem(key);
-            todayLogs = raw ? JSON.parse(raw) : [];
-        }
-
-        const todaysLogsFiltered = todayLogs.filter(l => {
-             if(l.dateStr) return l.dateStr === todayIso;
-             const parts = l.date.split('/');
-             const d = new Date(parts[2], parts[1]-1, parts[0]);
-             return d.toISOString().split('T')[0] === todayIso;
-        });
-
-        if(todaysLogsFiltered.length > 0) {
-            container.style.display = "block";
-            container.innerHTML = "";
-            todaysLogsFiltered.forEach(l => {
-                const div = document.createElement('div');
-                div.className = "already-logged-info";
-                div.innerHTML = `<i class="fas fa-check-circle"></i> Déjà enregistré : <strong>${l.startTime} - ${l.endTime}</strong>`;
-                container.appendChild(div);
-            });
-        } else {
-            container.style.display = "none";
-        }
+    let todayLogs = [];
+    if (getStorageKey(currentHistoryDate) === getStorageKey(today)) {
+        todayLogs = logs;
+    } else {
+        const key = getStorageKey(today);
+        const raw = localStorage.getItem(key);
+        todayLogs = raw ? JSON.parse(raw) : [];
     }
+
+    const todaysLogsFiltered = todayLogs.filter(l => {
+        if (l.dateStr) return l.dateStr === todayIso;
+        const parts = l.date.split('/');
+        const d = new Date(parts[2], parts[1] - 1, parts[0]);
+        return d.toISOString().split('T')[0] === todayIso;
+    });
+
+    if (todaysLogsFiltered.length > 0) {
+        container.style.display = "block";
+        container.innerHTML = "";
+        todaysLogsFiltered.forEach(l => {
+            const div = document.createElement('div');
+            div.className = "already-logged-info";
+            div.innerHTML = `<i class="fas fa-check-circle"></i> Déjà enregistré : <strong>${l.startTime} - ${l.endTime}</strong>`;
+            container.appendChild(div);
+        });
+    } else {
+        container.style.display = "none";
+    }
+}
 
 function checkTodaySchedule() {
     const infoBox = document.getElementById('today-schedule-info');
@@ -1524,7 +1184,7 @@ function checkTodaySchedule() {
     const btnText = document.getElementById('btn-change-profile-text');
     const profileNameDisplay = document.getElementById('today-profile-name');
     const hoursDisplay = document.getElementById('today-profile-hours');
-    
+
     const todayKey = new Date().toISOString().split('T')[0];
 
     // On s'assure que l'infoBox est TOUJOURS visible
@@ -1535,27 +1195,27 @@ function checkTodaySchedule() {
         const p = currentSession.profileSnap || profiles.find(x => x.id === currentSession.profileId);
         if (p) {
             const accentColor = getAccentColor(p.color);
-            
+
             profileNameDisplay.textContent = "En cours : " + p.name;
             profileNameDisplay.style.color = accentColor;
             hoursDisplay.textContent = `${p.start} - ${p.end}`;
-            
+
             timerUi.style.borderColor = accentColor;
             timerUi.style.boxShadow = `0 0 30px ${accentColor}40`;
-            
+
             btnText.textContent = "Modifier le profil actuel";
-            
+
             // Mise à jour de la couleur de statut et du thème global
             document.getElementById('timer-status').style.color = accentColor;
             updateThemeColor('page-chrono');
-            return; 
+            return;
         }
     }
 
     // --- 2. SI UN POINTAGE EST DÉJÀ FINI POUR AUJOURD'HUI ---
     // On cherche dans les logs du mois en cours
     const alreadyLogged = logs.find(l => l.dateStr === todayKey);
-    
+
     // On vérifie le planning
     const data = getScheduleData(todayKey);
     let plannedProfile = null;
@@ -1571,15 +1231,15 @@ function checkTodaySchedule() {
         timerUi.style.borderColor = "#333";
         timerUi.style.boxShadow = "none";
         btnText.textContent = "Créer un nouveau pointage";
-    } 
+    }
     // --- 3. SI PLANNING DÉFINI (MAIS PAS ENCORE POINTÉ) ---
     else if (plannedProfile) {
         const accentColor = getAccentColor(plannedProfile.color);
-        
+
         profileNameDisplay.textContent = plannedProfile.name + (data.note ? ` (${data.note})` : "");
         profileNameDisplay.style.color = accentColor;
         hoursDisplay.textContent = `${plannedProfile.start} - ${plannedProfile.end}`;
-        
+
         timerUi.style.borderColor = accentColor;
         timerUi.style.boxShadow = `0 0 20px ${accentColor}20`;
         btnText.textContent = "Modifier le profil prévu";
@@ -1587,7 +1247,7 @@ function checkTodaySchedule() {
     // --- 4. SI RIEN AU PLANNING ET PAS DE CHRONO ---
     else {
         profileNameDisplay.textContent = "Rien de défini";
-        profileNameDisplay.style.color = "#888"; 
+        profileNameDisplay.style.color = "#888";
         hoursDisplay.textContent = "Choisissez un profil pour pointer";
         timerUi.style.borderColor = "#333";
         timerUi.style.boxShadow = "none";
@@ -1612,7 +1272,7 @@ function toggleTimer() {
             if (data) pid = data.id;
         }
 
-if (!pid) {
+        if (!pid) {
             autoStartAfterProfileSelection = true; // On lève le drapeau !
             openChangeProfileModal(); // On ouvre la liste
             return;
@@ -1625,18 +1285,18 @@ if (!pid) {
         todayLogs = raw ? JSON.parse(raw) : [];
         const alreadyLog = todayLogs.some(l => (l.dateStr || '').startsWith(todayIso));
 
-        if(alreadyLog && !confirm("Déjà pointé aujourd'hui. Continuer ?")) return;
+        if (alreadyLog && !confirm("Déjà pointé aujourd'hui. Continuer ?")) return;
 
         // 3. Lancement de la session
         const baseP = profiles.find(x => x.id === pid);
         const pSnapshot = getProfileParams(baseP, today);
-        
-        currentSession = { 
-            start: Date.now(), 
-            profileId: pid, 
-            profileSnap: pSnapshot 
+
+        currentSession = {
+            start: Date.now(),
+            profileId: pid,
+            profileSnap: pSnapshot
         };
-        
+
         saveData();
         restoreTimerUI();
         tempSelectedProfileId = null; // Reset pour la prochaine fois
@@ -1649,14 +1309,14 @@ function restoreTimerUI() {
     if (!currentSession) return;
 
 
-sendTimerNotification();
+    sendTimerNotification();
 
     // Sécurité : on récupère le snapshot ou le profil, avec un repli (fallback)
     const p = currentSession.profileSnap || profiles.find(x => x.id === currentSession.profileId) || { color: '#3498db', name: 'Inconnu', start: '--:--', end: '--:--' };
     if (!p) return;
 
 
-const profileNameDisplay = document.getElementById('today-profile-name');
+    const profileNameDisplay = document.getElementById('today-profile-name');
     if (profileNameDisplay) {
         profileNameDisplay.textContent = "En cours : " + p.name;
         profileNameDisplay.style.color = p.color;
@@ -1664,8 +1324,8 @@ const profileNameDisplay = document.getElementById('today-profile-name');
     document.getElementById('today-profile-hours').textContent = `${p.start} - ${p.end}`;
 
 
-        const btn = document.getElementById('btn-main-action');
-        const ui = document.getElementById('timer-ui');
+    const btn = document.getElementById('btn-main-action');
+    const ui = document.getElementById('timer-ui');
 
     // Utilisation d'une couleur par défaut si p.color est absent pour une raison X
     const accentColor = p.color || '#3498db';
@@ -1673,21 +1333,21 @@ const profileNameDisplay = document.getElementById('today-profile-name');
     ui.style.borderColor = accentColor;
     ui.style.boxShadow = `0 0 30px ${accentColor}60`;
 
-const nameDisp = document.getElementById('today-profile-name');
+    const nameDisp = document.getElementById('today-profile-name');
     nameDisp.style.color = accentColor;
 
 
     document.getElementById('timer-status').textContent = "EN COURS";
     document.getElementById('timer-status').style.color = accentColor;
-    
+
     btn.textContent = "TERMINER";
     btn.className = "btn-primary btn-danger";
-    
+
     document.getElementById('active-edit-btn').style.display = 'block';
-    document.getElementById('active-start-val').textContent = new Date(currentSession.start).toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
+    document.getElementById('active-start-val').textContent = new Date(currentSession.start).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
     document.getElementById('estimated-end-block').style.display = 'block';
 
-    if(typeof Android !== 'undefined' && Android.startChrono) {
+    if (typeof Android !== 'undefined' && Android.startChrono) {
         Android.startChrono(p.end);
     }
 
@@ -1695,19 +1355,19 @@ const nameDisp = document.getElementById('today-profile-name');
 }
 
 function editActiveStartTime() {
-    if(!currentSession) return;
-    
+    if (!currentSession) return;
+
     // On récupère l'heure actuelle du chrono pour pré-remplir l'input
     const startDate = new Date(currentSession.start);
     const hh = startDate.getHours().toString().padStart(2, '0');
     const mm = startDate.getMinutes().toString().padStart(2, '0');
-    
+
     document.getElementById('edit-active-start-input').value = `${hh}:${mm}`;
     document.getElementById('edit-start-modal').style.display = 'flex';
 }
 function saveActiveStartTime() {
     const newVal = document.getElementById('edit-active-start-input').value;
-    if(!newVal) return;
+    if (!newVal) return;
 
     const [h, m] = newVal.split(':').map(Number);
     const now = new Date();
@@ -1724,55 +1384,63 @@ function saveActiveStartTime() {
     }
 
     startDate.setHours(h, m, 0, 0);
-    
+
     // Mise à jour de la session avec le timestamp précis (hier ou aujourd'hui)
     currentSession.start = startDate.getTime();
     saveData();
-    
+
     // Mise à jour de l'affichage (on peut ajouter "Hier" visuellement pour confirmer)
     const prefix = (minsSaisies > minsActuelles) ? "Hier " : "";
     document.getElementById('active-start-val').textContent = prefix + newVal;
-    
+
     document.getElementById('edit-start-modal').style.display = 'none';
-    
+
     // Relancer l'intervalle pour recalculer la durée totale et la fin prévue
     startInterval();
 }
 function startInterval() {
     if (timerInterval) clearInterval(timerInterval);
-    
+
     // 1. SÉCURITÉ : Vérifier si la session existe
     if (!currentSession) return;
 
     // 2. SÉCURITÉ : Trouver le profil ou utiliser un profil par défaut (fallback)
-const p = currentSession.profileSnap || profiles.find(x => x.id === currentSession.profileId);
-    
-    if (!p || !p.start || !p.end) {
+    const p = currentSession.profileSnap || profiles.find(x => x.id === currentSession.profileId);
+
+    // Un profil est invalide SEULEMENT s'il est absent, ou si (non-100%HS ET sans horaires)
+    const profileInvalid = !p || (!p.isAllOvertime && (!p.start || !p.end));
+
+    if (profileInvalid) {
         console.warn("Profil manquant pour le chrono actif.");
-        
-        // Au lieu de crash, on demande à l'utilisateur de choisir
         const choice = alert("Le profil utilisé pour ce chrono n'existe plus. Veuillez le sélectionner à nouveau.");
-        
-        // On affiche le chrono simple en attendant
-        runSimpleTimer(); 
-        
-        // On affiche le sélecteur manuel pour qu'il puisse corriger
-        document.getElementById('no-schedule-warning').style.display = 'block';
+        runSimpleTimer();
+        openChangeProfileModal();
         return;
     }
-    // Calcul de la fin prévue
-    const [hS, mS] = p.start.split(':').map(Number);
-    const [hE, mE] = p.end.split(':').map(Number);
-    let spanMins = (hE * 60 + mE) - (hS * 60 + mS);
-    if(spanMins < 0) spanMins += 1440;
-    const targetTimestamp = currentSession.start + (spanMins * 60000);
+
+    // Calcul de la fin prévue (seulement pour les profils avec horaires fixes)
+    let targetTimestamp = currentSession.start + (8 * 3600000); // fallback 8h
+    if (!p.isAllOvertime && p.start && p.end) {
+        const [hS, mS] = p.start.split(':').map(Number);
+        const [hE, mE] = p.end.split(':').map(Number);
+        let spanMins = (hE * 60 + mE) - (hS * 60 + mS);
+        if (spanMins < 0) spanMins += 1440;
+        targetTimestamp = currentSession.start + (spanMins * 60000);
+    }
 
     const estimatedEndEl = document.getElementById('estimated-end-display');
-    if (estimatedEndEl) estimatedEndEl.textContent = p.end;
+    if (estimatedEndEl) {
+        if (p.isAllOvertime) {
+            estimatedEndEl.parentElement.style.display = 'none';
+        } else {
+            estimatedEndEl.parentElement.style.display = 'block';
+            estimatedEndEl.textContent = p.end;
+        }
+    }
 
     timerInterval = setInterval(() => {
         const now = Date.now();
-        
+
         // Calcul du temps écoulé réel
         const diff = now - currentSession.start;
         const absDiff = Math.max(0, diff);
@@ -1780,23 +1448,23 @@ const p = currentSession.profileSnap || profiles.find(x => x.id === currentSessi
         const hrs = Math.floor(absDiff / 3600000);
         const mins = Math.floor((absDiff % 3600000) / 60000);
         const secs = Math.floor((absDiff % 60000) / 1000);
-        
+
         const displayEl = document.getElementById('timer-display');
         if (displayEl) {
-            displayEl.textContent = `${hrs.toString().padStart(2,'0')}:${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+            displayEl.textContent = `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         }
 
         // Gestion des Heures Sup
         const otBlock = document.getElementById('overtime-timer-block');
         const otDisplay = document.getElementById('overtime-timer-display');
-        
+
         if (otBlock && otDisplay) {
-            if(now > targetTimestamp) {
+            if (!p.isAllOvertime && now > targetTimestamp) {
                 const otDiff = now - targetTimestamp;
                 const oHrs = Math.floor(otDiff / 3600000);
                 const oMins = Math.floor((otDiff % 3600000) / 60000);
                 const oSecs = Math.floor((otDiff % 60000) / 1000);
-                otDisplay.textContent = `+ ${oHrs.toString().padStart(2,'0')}:${oMins.toString().padStart(2,'0')}:${oSecs.toString().padStart(2,'0')}`;
+                otDisplay.textContent = `+ ${oHrs.toString().padStart(2, '0')}:${oMins.toString().padStart(2, '0')}:${oSecs.toString().padStart(2, '0')}`;
                 otBlock.style.display = 'block';
             } else {
                 otBlock.style.display = 'none';
@@ -1813,8 +1481,8 @@ function runSimpleTimer() {
         const hrs = Math.floor(diff / 3600000);
         const mins = Math.floor((diff % 3600000) / 60000);
         const secs = Math.floor((diff % 60000) / 1000);
-        document.getElementById('timer-display').textContent = 
-            `${hrs.toString().padStart(2,'0')}:${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+        document.getElementById('timer-display').textContent =
+            `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
     }, 1000);
 }
 function resetTimerUI() {
@@ -1823,18 +1491,18 @@ function resetTimerUI() {
     document.getElementById('timer-status').style.color = "#aaa";
     document.getElementById('timer-ui').style.borderColor = "#333";
     document.getElementById('timer-ui').style.boxShadow = "none";
-    
 
-if (navigator.serviceWorker.controller) {
-    navigator.serviceWorker.controller.postMessage({
-        type: 'STOP_TIMER_NOTIF'
-    });
-}
+
+    if (navigator.serviceWorker.controller) {
+        navigator.serviceWorker.controller.postMessage({
+            type: 'STOP_TIMER_NOTIF'
+        });
+    }
 
     const btn = document.getElementById('btn-main-action');
     btn.textContent = "POINTER L'ENTRÉE";
     btn.className = "btn-primary";
-    
+
     document.getElementById('active-edit-btn').style.display = 'none';
     document.getElementById('estimated-end-block').style.display = 'none';
     document.getElementById('overtime-timer-block').style.display = 'none';
@@ -1850,55 +1518,65 @@ function stopTimer() {
     const end = Date.now();
     // 2. Vérification du profil
     const p = currentSession.profileSnap || profiles.find(x => x.id === currentSession.profileId);
-    
+
     if (!p) {
-        alert("Erreur : Impossible de retrouver le profil de cette session.");
-        resetTimerUI();
+        if (confirm("Erreur : Impossible de retrouver le profil de cette session. Voulez-vous annuler et supprimer ce chronomètre en cours ?\n\n(Si vous voulez conserver vos heures, cliquez sur Annuler, puis utilisez 'Changer le profil d'horaire' avant de repointer la sortie).")) {
+            currentSession = null;
+            saveData();
+            resetTimerUI();
+            if (timerInterval) clearInterval(timerInterval);
+            checkTodaySchedule();
+        }
         return;
     }
 
     const actualStartMs = currentSession.start;
-    
 
 
-// Calcul de la durée à enregistrer (respecte le switch)
-const [hS, mS] = p.start.split(':').map(Number);
-const startTimeTheo = new Date(actualStartMs);
-startTimeTheo.setHours(hS, mS, 0, 0);
 
-let durationToSave = end - actualStartMs;
-if (appSettings.ignoreEarlyStart && actualStartMs < startTimeTheo.getTime()) {
-    durationToSave = end - startTimeTheo.getTime();
-}
+    // Calcul de la durée à enregistrer (respecte le switch)
+    let durationToSave = end - actualStartMs;
 
-const rawOvertimeMs = calculateOvertime(end - actualStartMs, p, actualStartMs);
+    // Pour les profils 100% HS, on ne compare pas aux horaires théoriques
+    if (!p.isAllOvertime) {
+        const [hS, mS] = p.start.split(':').map(Number);
+        const startTimeTheo = new Date(actualStartMs);
+        startTimeTheo.setHours(hS, mS, 0, 0);
+        if (appSettings.ignoreEarlyStart && actualStartMs < startTimeTheo.getTime()) {
+            durationToSave = end - startTimeTheo.getTime();
+        }
+    }
 
-pendingLogData = {
-    dateStr: new Date(actualStartMs).toISOString().split('T')[0],
-    date: new Date(actualStartMs).toLocaleDateString('fr-FR'),
-    startTime: new Date(actualStartMs).toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'}),
-    endTime: new Date(end).toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'}),
-    duration: durationToSave,
-    overtime: rawOvertimeMs,
-    profileName: p.name,
-    color: p.color,
-    profileSnap: p
-};
+    const rawOvertimeMs = p.isAllOvertime
+        ? (end - actualStartMs)  // 100% HS : tout le temps est de l'overtime
+        : calculateOvertime(end - actualStartMs, p, actualStartMs);
 
-if(appSettings.countOvertime && rawOvertimeMs > 0) {
-    document.getElementById('ot-modal-text').textContent = "Vous avez dépassé l'horaire de " + msToTime(rawOvertimeMs);
-    document.getElementById('ot-comment-input').value = "";
-    document.getElementById('ot-comment-modal').style.display = 'flex';
-} else {
-    finalizeStopTimer();
-}
+    pendingLogData = {
+        dateStr: new Date(actualStartMs).toISOString().split('T')[0],
+        date: new Date(actualStartMs).toLocaleDateString('fr-FR'),
+        startTime: new Date(actualStartMs).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+        endTime: new Date(end).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+        duration: durationToSave,
+        overtime: rawOvertimeMs,
+        profileName: p.name,
+        color: p.color,
+        profileSnap: currentSession.profileSnap || p  // Toujours garder le profil complet avec isAllOvertime
+    };
+
+    if (appSettings.countOvertime && rawOvertimeMs > 0) {
+        document.getElementById('ot-modal-text').textContent = "Vous avez dépassé l'horaire de " + msToTime(rawOvertimeMs);
+        document.getElementById('ot-comment-input').value = "";
+        document.getElementById('ot-comment-modal').style.display = 'flex';
+    } else {
+        finalizeStopTimer();
+    }
 }
 
 function finalizeStopTimer() {
     // 1. Récupération des infos brutes (Saisie utilisateur + Chrono)
     const comment = document.getElementById('ot-comment-input').value;
     const takeAccount = document.getElementById('ot-modal-take-account').checked;
-    
+
     const actualStartMs = currentSession.start;
     const endMs = Date.now();
     const p = pendingLogData.profileSnap; // Le profil utilisé
@@ -1908,18 +1586,18 @@ function finalizeStopTimer() {
     const draftLog = {
         dateStr: new Date(actualStartMs).toISOString().split('T')[0],
         date: new Date(actualStartMs).toLocaleDateString('fr-FR'),
-        startTime: new Date(actualStartMs).toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'}),
-        endTime: new Date(endMs).toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'}),
-        
+        startTime: new Date(actualStartMs).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+        endTime: new Date(endMs).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+
         profileName: p.name,
         color: p.color,
         profileSnap: p,
-        
+
         // Données fictives temporaires (seront recalculées par saveLogEdit)
-        duration: 0, 
+        duration: 0,
         overtime: 0,
         validatedOtMins: null,
-        
+
         comment: comment,       // On passe le commentaire
         ignoreOT: !takeAccount  // On passe le choix de l'utilisateur
     };
@@ -1928,26 +1606,26 @@ function finalizeStopTimer() {
     // Cela permet à openEditLogModal(0) de lire ces données
     const targetKey = getStorageKey(draftLog.dateStr);
     const currentViewKey = getStorageKey(currentHistoryDate);
-    
+
     // Gestion multi-mois (rare mais propre)
     if (targetKey !== currentViewKey) {
         // Si on change de mois, on force la vue sur le mois du log pour que l'édition marche
         currentHistoryDate = new Date(draftLog.dateStr);
         loadLogsForView();
     }
-    
+
     logs.unshift(draftLog);
     saveLogsCurrentView(); // Sauvegarde temporaire
 
     // =========================================================
     // 4. LE TRAITEMENT EN ARRIÈRE-PLAN (La "Magie")
     // =========================================================
-    
+
     const editModal = document.getElementById('edit-log-modal');
-    
+
     // A. On cache visuellement la fenêtre, mais on l'active dans le DOM
-    editModal.style.visibility = 'hidden'; 
-    editModal.style.display = 'flex'; 
+    editModal.style.visibility = 'hidden';
+    editModal.style.display = 'flex';
 
     // B. On ouvre la modale sur notre brouillon (Index 0)
     // -> openEditLogModal va lire Start/End et calculer l'Overtime brut théorique
@@ -1960,7 +1638,7 @@ function finalizeStopTimer() {
 
     // D. IMPORTANT : On lance le calcul du champ "HS Validées" (l'input time)
     // C'est cette fonction qui applique le palier (15min) et remplit l'input
-    updateEditLogPreview(); 
+    updateEditLogPreview();
 
     // E. On valide !
     // saveLogEdit va lire les inputs, recalculer la durée exacte (nuit, ignore early...) et sauvegarder proprement.
@@ -1978,7 +1656,7 @@ function finalizeStopTimer() {
     saveData(); // Sauvegarde l'état "plus de session active"
 
     // 6. Android
-    if(typeof Android !== 'undefined' && Android.stopChrono) {
+    if (typeof Android !== 'undefined' && Android.stopChrono) {
         Android.stopChrono();
     }
 
@@ -1994,28 +1672,28 @@ function finalizeStopTimer() {
     navTo('page-history', historyBtn);
 }
 
-    // --- GESTION AJOUT MANUEL LOG ---
-    function openAddLogModal() {
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById('add-log-date').value = today;
-        document.getElementById('add-log-start').value = "08:00";
-        document.getElementById('add-log-end').value = "16:00";
-        document.getElementById('add-log-comment').value = "";
-        const select = document.getElementById('add-log-profile');
-        select.innerHTML = '<option value="">Sélectionner...</option>';
-        profiles.forEach(p => { select.innerHTML += `<option value="${p.id}">${p.name}</option>`; });
-        document.getElementById('add-log-modal').style.display = 'flex';
-    }
+// --- GESTION AJOUT MANUEL LOG ---
+function openAddLogModal() {
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('add-log-date').value = today;
+    document.getElementById('add-log-start').value = "08:00";
+    document.getElementById('add-log-end').value = "16:00";
+    document.getElementById('add-log-comment').value = "";
+    const select = document.getElementById('add-log-profile');
+    select.innerHTML = '<option value="">Sélectionner...</option>';
+    profiles.forEach(p => { select.innerHTML += `<option value="${p.id}">${p.name}</option>`; });
+    document.getElementById('add-log-modal').style.display = 'flex';
+}
 
-    function fillAddLogHours() {
-        const id = document.getElementById('add-log-profile').value;
-        if(!id) return;
-        const p = profiles.find(x => x.id == id);
-        if(p) {
-            document.getElementById('add-log-start').value = p.start;
-            document.getElementById('add-log-end').value = p.end;
-        }
+function fillAddLogHours() {
+    const id = document.getElementById('add-log-profile').value;
+    if (!id) return;
+    const p = profiles.find(x => x.id == id);
+    if (p) {
+        document.getElementById('add-log-start').value = p.start;
+        document.getElementById('add-log-end').value = p.end;
     }
+}
 function saveManualLog() {
     const dateVal = document.getElementById('add-log-date').value;
     const pid = document.getElementById('add-log-profile').value;
@@ -2023,11 +1701,11 @@ function saveManualLog() {
     const endVal = document.getElementById('add-log-end').value;
     const comment = document.getElementById('add-log-comment').value;
 
-    if(!dateVal || !pid || !startVal || !endVal) return alert("Remplissez tous les champs obligatoires");
+    if (!dateVal || !pid || !startVal || !endVal) return alert("Remplissez tous les champs obligatoires");
 
     const pBase = profiles.find(x => x.id == pid);
     const [y, m, d] = dateVal.split('-').map(Number);
-    let dateObj = new Date(y, m-1, d); 
+    let dateObj = new Date(y, m - 1, d);
 
     const [h1, m1] = startVal.split(':').map(Number);
     const [h2, m2] = endVal.split(':').map(Number);
@@ -2037,9 +1715,9 @@ function saveManualLog() {
     }
 
     const actualStartMs = new Date(dateObj).setHours(h1, m1, 0, 0);
-    let actualEndMs = new Date(y, m-1, d).setHours(h2, m2, 0, 0);
+    let actualEndMs = new Date(y, m - 1, d).setHours(h2, m2, 0, 0);
 
-    const p = getProfileParams(pBase, new Date(y, m-1, d));
+    const p = getProfileParams(pBase, new Date(y, m - 1, d));
     const [phS, pmS] = p.start.split(':').map(Number);
     let theoStartMs = new Date(dateObj).setHours(phS, pmS, 0, 0);
 
@@ -2054,7 +1732,7 @@ function saveManualLog() {
 
     const newLog = {
         dateStr: dateVal,
-        date: new Date(y, m-1, d).toLocaleDateString('fr-FR'),
+        date: new Date(y, m - 1, d).toLocaleDateString('fr-FR'),
         startTime: startVal,
         endTime: endVal,
         duration: durationToSave,
@@ -2074,26 +1752,26 @@ function saveManualLog() {
 
     const targetKey = getStorageKey(newLog.dateStr);
     if (targetKey === getStorageKey(currentHistoryDate)) logs.unshift(newLog);
-    
+
     saveLogToStorage(newLog);
     renderHistory();
     document.getElementById('add-log-modal').style.display = 'none';
 }
 
 
-    // --- HISTORIQUE & EDITION ---
-    function changeHistoryMonth(delta) {
-        currentHistoryDate.setMonth(currentHistoryDate.getMonth() + delta);
-        loadLogsForView();
-        renderHistory();
-    }
+// --- HISTORIQUE & EDITION ---
+function changeHistoryMonth(delta) {
+    currentHistoryDate.setMonth(currentHistoryDate.getMonth() + delta);
+    loadLogsForView();
+    renderHistory();
+}
 
 function calculateLogMetrics(log) {
     // 1. Reconstitution des Dates/Heures
     let dLog = log.dateStr ? new Date(log.dateStr) : new Date(log.date.split('/').reverse().join('-'));
     const [h1, m1] = log.startTime.split(':').map(Number);
     const [h2, m2] = log.endTime.split(':').map(Number);
-    
+
     let startDate = new Date(dLog);
     if (h1 > h2) startDate.setDate(startDate.getDate() - 1);
 
@@ -2103,13 +1781,54 @@ function calculateLogMetrics(log) {
     // 2. Récupération du Profil Théorique
     const pSnap = log.profileSnap || profiles.find(pr => pr.name === log.profileName);
     const pParams = getProfileParams(pSnap, dLog);
-    
+
+    // --- MODE 100% HEURES SUPP ---
+    if (pParams && pParams.isAllOvertime) {
+        const stepVal = Math.max(1, parseInt(appSettings.otStep) || 15);
+        const stepMs = stepVal * 60000;
+
+        // Arrondi des BORNES :
+        // Debut -> palier suivant (ceil) : 4h23 -> 4h30
+        // Fin   -> palier precedent (floor) : 10h42 -> 10h30
+        const roundedStartMs = Math.ceil(actualStartMs / stepMs) * stepMs;
+        const roundedEndMs = Math.floor(actualEndMs / stepMs) * stepMs;
+
+        const finalValidOtMs = Math.max(0, roundedEndMs - roundedStartMs);
+        const finalValidNightOtMs = finalValidOtMs > 0
+            ? getNightDurationInRange(roundedStartMs, roundedEndMs)
+            : 0;
+
+        const rawActualMs = Math.max(0, actualEndMs - actualStartMs);
+
+        let endM = h2 * 60 + m2;
+        let startM = h1 * 60 + m1;
+        if (endM <= startM) endM += 1440;
+        const visualDurationMs = (endM - startM) * 60000;
+
+        return {
+            dLog,
+            pSnap,
+            effectiveDuration: finalValidOtMs,
+            visualDurationMs: visualDurationMs,
+            validOtMs: finalValidOtMs,
+            validNightOtMs: finalValidNightOtMs,
+            validNightStandardMs: 0,
+            totalLostMs: 0,
+            surplusOtMs: Math.max(0, rawActualMs - finalValidOtMs),
+            details: {
+                early: { valid: 0, night: 0, lost: 0 },
+                late: { valid: finalValidOtMs, night: finalValidNightOtMs, lost: 0 }
+            },
+            isOTEnabled: true
+        };
+    }
+
     const [phS, pmS] = pParams.start.split(':').map(Number);
     const [phE, pmE] = pParams.end.split(':').map(Number);
-    
+
     let theoStartMs = new Date(startDate).setHours(phS, pmS, 0, 0);
     let theoEndMs = new Date(dLog).setHours(phE, pmE, 0, 0); // Attention: dLog est le jour de fin présumé
-    
+
     // Correction si le théorique passe minuit (ex: 15h - 23h, ou 21h - 05h)
     // On doit aligner theoStartMs proche de actualStartMs
     // Si l'écart est trop grand (>12h), c'est qu'il y a un décalage de jour
@@ -2153,7 +1872,7 @@ function calculateLogMetrics(log) {
     let coreStart = Math.max(actualStartMs, theoStartMs);
     let coreEnd = Math.min(actualEndMs, theoEndMs);
     let validNightStandardMs = 0;
-    
+
     if (coreEnd > coreStart) {
         validNightStandardMs = getNightDurationInRange(coreStart, coreEnd);
     }
@@ -2163,12 +1882,12 @@ function calculateLogMetrics(log) {
     let rawEarlyMs = Math.max(0, theoStartMs - actualStartMs);
     // Brut Soir
     let rawLateMs = Math.max(0, actualEndMs - theoEndMs);
-    
+
     // Si l'option "Ignorer Avance" est active et qu'on a pas forcé le comptage, rawEarly est considéré comme 0 perte (car ignoré volontairement)
     // Mais ici on veut savoir ce qu'on a "perdu" par rapport au réel pointé.
     let lostEarlyMs = Math.max(0, rawEarlyMs - validEarlyMs);
     let lostLateMs = Math.max(0, rawLateMs - validLateMs);
-    
+
     // Cas particulier : Si "Ignorer Avance" est coché globalement et PAS forcé localement,
     // on ne considère pas ça comme de la "Perte" affichée en rouge, c'est juste ignoré.
     if (appSettings.ignoreEarlyStart && log.countEarly !== true) {
@@ -2185,7 +1904,7 @@ function calculateLogMetrics(log) {
     // 5. Totaux
     const validOtMs = validEarlyMs + validLateMs;
     const validNightOtMs = nightEarlyMs + nightLateMs;
-    
+
     // Durée Effective = Durée Totale Réelle - (Ce qu'on a coupé au début + Ce qu'on a coupé à la fin)
     const rawDuration = actualEndMs - actualStartMs;
     // Note : On soustrait les pertes "réelles" par rapport aux bornes théoriques
@@ -2197,25 +1916,31 @@ function calculateLogMetrics(log) {
     if (endM <= startM) endM += 1440;
     const visualDurationMs = (endM - startM) * 60000;
 
+    let finalValidOtMs = validEarlyMs + validLateMs;
+    let finalValidNightOtMs = nightEarlyMs + nightLateMs;
+    let finalValidNightStandardMs = validNightStandardMs;
+
+
+
     return {
         dLog,
         pSnap,
         effectiveDuration,
         visualDurationMs,
-        
-        validOtMs,             // Total HS (Matin + Soir)
-        validNightOtMs,        // Total Nuit HS (Matin + Soir)
-        validNightStandardMs,  // Nuit Standard (Cœur de poste)
-        
+
+        validOtMs: finalValidOtMs,             // Total HS (Matin + Soir)
+        validNightOtMs: finalValidNightOtMs,        // Total Nuit HS (Matin + Soir)
+        validNightStandardMs: finalValidNightStandardMs,  // Nuit Standard (Cœur de poste)
+
         totalLostMs,           // Temps coupé (Rouge)
         surplusOtMs: totalLostMs,
-        
+
         // Infos debug utiles si besoin
         details: {
             early: { valid: validEarlyMs, night: nightEarlyMs, lost: lostEarlyMs },
             late: { valid: validLateMs, night: nightLateMs, lost: lostLateMs }
         },
-        
+
         isOTEnabled: log.ignoreOT !== true
     };
 }
@@ -2226,17 +1951,17 @@ function createLogCardHTML(log, metrics, index) {
     // Formatage de la date (ex: Jeu 1 Janv)
     const dateOptions = { weekday: 'short', day: 'numeric', month: 'short' };
     let displayDate = dLog.toLocaleDateString('fr-FR', dateOptions)
-        .replace(/\./g, '') 
+        .replace(/\./g, '')
         .replace(/^\w/, c => c.toUpperCase());
-    
-    const displayP = pSnap || {name: "?", color: "#ccc", start: "--:--", end: "--:--"};
+
+    const displayP = pSnap || { name: "?", color: "#ccc", start: "--:--", end: "--:--" };
     const baseColor = log.color || displayP.color;
-const accentColor = getAccentColor(baseColor); // <--- Ici
-const bgColor = accentColor.replace('rgb', 'rgba').replace(')', ', 0.1)');
+    const accentColor = getAccentColor(baseColor); // <--- Ici
+    const bgColor = accentColor.replace('rgb', 'rgba').replace(')', ', 0.1)');
     // --- 1. LOGIQUE DES BOUTONS ---
     // Reprendre le chrono (uniquement si c'est aujourd'hui)
-    const resumeBtn = (log.dateStr === todayStr && !currentSession) 
-        ? `<button class="btn-icon-action" style="color:var(--success);" onclick="resumeLog(${index})"><i class="fas fa-play" style="font-size: 0.9rem;"></i></button>` 
+    const resumeBtn = (log.dateStr === todayStr && !currentSession)
+        ? `<button class="btn-icon-action" style="color:var(--success);" onclick="resumeLog(${index})"><i class="fas fa-play" style="font-size: 0.9rem;"></i></button>`
         : "";
 
     // Ajouter une note (si pas de commentaire et présence de HS)
@@ -2246,9 +1971,9 @@ const bgColor = accentColor.replace('rgb', 'rgba').replace(')', ', 0.1)');
         : "";
 
     // --- 2. LOGIQUE DES BADGES HS (Vert / Rouge) ---
-// --- 2. LOGIQUE DES BADGES HS (Vert / Rouge) ---
+    // --- 2. LOGIQUE DES BADGES HS (Vert / Rouge) ---
     let badgesHS_HTML = "";
-    
+
     // Calcul de la part HS Jour (Total validé moins la part de nuit dans ces HS)
     const validDayOtMs = validOtMs - validNightOtMs;
 
@@ -2292,7 +2017,7 @@ const bgColor = accentColor.replace('rgb', 'rgba').replace(')', ', 0.1)');
                     ${log.startTime} - ${log.endTime} <span style="font-weight:normal; font-size:0.8rem; color:#888;">(${msToTime(visualDurationMs)})</span>
                 </div>
                      <div style="font-size:0.9rem; color:#888; margin-bottom:2px;">
-                    Prévu : ${displayP.start} - ${displayP.end}
+                    Prévu : ${displayP.isAllOvertime ? 'Libre (100% HS)' : displayP.start + ' - ' + displayP.end}
                 </div>
                 ${commentHTML}
             </div>
@@ -2328,15 +2053,15 @@ function renderHistory() {
     const list = document.getElementById('history-list');
     if (!list) return;
     list.innerHTML = "";
-    
-    const monthNames = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
+
+    const monthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
     const mIndex = currentHistoryDate.getMonth();
     const yIndex = currentHistoryDate.getFullYear();
     document.getElementById('hist-month-year').textContent = `${monthNames[mIndex]} ${yIndex}`;
 
     let mDuration = 0, mNightStandard = 0, mOtDay = 0, mOtNight = 0;
-    
-    const filteredLogs = logs.map((log, idx) => ({...log, _originalIndex: idx}))
+
+    const filteredLogs = logs.map((log, idx) => ({ ...log, _originalIndex: idx }))
         .filter(log => {
             let d = log.dateStr ? new Date(log.dateStr) : new Date(log.date.split('/').reverse().join('-'));
             return d.getMonth() === mIndex && d.getFullYear() === yIndex;
@@ -2364,12 +2089,12 @@ function renderHistory() {
             metrics = calculateLogMetrics(log);
         }
         // -----------------------------
-        
+
         const wn = getWeekNumber(metrics.dLog);
         if (!weekStats[wn]) {
             weekStats[wn] = { duration: 0, ot: 0, night: 0, nightOt: 0 };
         }
-        
+
         weekStats[wn].duration += metrics.effectiveDuration;
         weekStats[wn].ot += metrics.validOtMs;
         weekStats[wn].night += metrics.validNightStandardMs;
@@ -2387,13 +2112,13 @@ function renderHistory() {
     // --- SECONDE PASSE : RENDU ---
     filteredLogs.forEach(log => {
         const wn = log._weekNumber;
-        
+
         if (wn !== lastWeek) {
             const stats = weekStats[wn];
             const header = document.createElement('div');
             header.className = 'week-header';
             header.style.cssText = "display: flex; justify-content: space-between; align-items: center; background: #2a2a2a; color: #fff; padding: 10px 15px; font-weight: bold; border-radius: 6px; margin: 20px 0 10px 0; font-size: 0.8rem; border-left: 4px solid var(--primary);";
-            
+
             const otDayOnly = stats.ot - stats.nightOt;
 
             header.innerHTML = `
@@ -2420,22 +2145,22 @@ function renderHistory() {
 // Petite fonction pour mettre à jour les carrés de stats en haut
 function updateStatsUI(duration, night, otDay, otNight) {
 
-    if(document.getElementById('month-hours-total')) document.getElementById('month-hours-total').textContent = msToTime(duration);
-    if(document.getElementById('month-night-total')) document.getElementById('month-night-total').textContent = msToTime(night);
-    if(document.getElementById('month-ot-total')) document.getElementById('month-ot-total').textContent = msToTime(otDay);
-    if(document.getElementById('month-night-ot-total')) document.getElementById('month-night-ot-total').textContent = msToTime(otNight);
+    if (document.getElementById('month-hours-total')) document.getElementById('month-hours-total').textContent = msToTime(duration);
+    if (document.getElementById('month-night-total')) document.getElementById('month-night-total').textContent = msToTime(night);
+    if (document.getElementById('month-ot-total')) document.getElementById('month-ot-total').textContent = msToTime(otDay);
+    if (document.getElementById('month-night-ot-total')) document.getElementById('month-night-ot-total').textContent = msToTime(otNight);
 }
 
-    function openQuickComment(index) {
-        document.getElementById('quick-comment-index').value = index;
-        document.getElementById('quick-comment-text').value = "";
-        document.getElementById('quick-comment-modal').style.display = 'flex';
-    }
+function openQuickComment(index) {
+    document.getElementById('quick-comment-index').value = index;
+    document.getElementById('quick-comment-text').value = "";
+    document.getElementById('quick-comment-modal').style.display = 'flex';
+}
 function saveQuickComment() {
     const index = document.getElementById('quick-comment-index').value;
     const text = document.getElementById('quick-comment-text').value;
-    
-    if(logs[index]) {
+
+    if (logs[index]) {
         logs[index].comment = text; // Mise à jour de la donnée
         saveLogsAfterEdit();       // Sauvegarde dans localStorage
         renderHistory();           // RE-DESSINE l'historique pour voir le commentaire
@@ -2447,7 +2172,7 @@ function saveQuickComment() {
 function openEditLogModal(index) {
     const log = logs[index];
     if (!log) return;
-    
+
     // 1. Remplissage des champs de base
     document.getElementById('edit-log-index').value = index;
     document.getElementById('edit-log-date').value = log.dateStr;
@@ -2467,7 +2192,7 @@ function openEditLogModal(index) {
     // "countEarly" est une nouvelle propriété, false par défaut si undefined
     const hasCountEarly = log.countEarly === true;
     document.getElementById('edit-log-count-early').checked = hasCountEarly;
-    
+
     // "ignoreOT" existe déjà (true = on ignore). Donc checked (prendre en compte) = !ignoreOT
     const takeAccount = log.ignoreOT !== true;
     document.getElementById('edit-log-take-account').checked = takeAccount;
@@ -2475,7 +2200,7 @@ function openEditLogModal(index) {
     // 4. Gestion des Inputs de Temps (Avance vs Débordement)
     const inputEarly = document.getElementById('edit-log-validated-early');
     const inputLate = document.getElementById('edit-log-validated-ot');
-    
+
     // Reset visuel par défaut
     inputEarly.value = "00:00";
     inputLate.value = "00:00";
@@ -2483,7 +2208,7 @@ function openEditLogModal(index) {
     // 5. Logique de remplissage des heures
     if (log.validatedOtMins !== undefined && log.validatedOtMins !== null) {
         // CAS A : On a une donnée sauvegardée (Total HS Validées)
-        
+
         if (hasCountEarly) {
             // Si l'option "Avance" était activée, le total contient potentiellement un mélange Matin + Soir.
             // Le plus simple et le plus sûr pour l'affichage estde relancer le calcul théorique
@@ -2501,7 +2226,7 @@ function openEditLogModal(index) {
         // On lance le calcul automatique pour pré-remplir les champs selon les horaires théoriques.
         setTimeout(updateEditLogPreview, 0);
     }
-    
+
     // 6. Affichage de la modale
     document.getElementById('edit-log-modal').style.display = 'flex';
 }
@@ -2514,11 +2239,11 @@ function saveLogEdit() {
     const newEnd = document.getElementById('edit-log-end').value;
     const profileId = document.getElementById('edit-log-profile').value;
 
-    if(!newDateStr) return alert("La date est obligatoire");
+    if (!newDateStr) return alert("La date est obligatoire");
 
     const pBase = profiles.find(pr => pr.id == profileId);
     let logDate = new Date(newDateStr);
-    
+
     const [h1, m1] = newStart.split(':').map(Number);
     const [h2, m2] = newEnd.split(':').map(Number);
     let startDate = new Date(logDate);
@@ -2528,13 +2253,59 @@ function saveLogEdit() {
     const actualEndMs = new Date(logDate).setHours(h2, m2, 0, 0);
 
     const p = getProfileParams(pBase, logDate);
-    const [hS, mS] = p.start.split(':').map(Number);
-    const theoStartMs = new Date(startDate).setHours(hS, mS, 0, 0);
 
+    // Déclaration anticipée des switchs (nécessaire pour les deux branches)
     const forceCountEarly = document.getElementById('edit-log-count-early').checked;
     const forceCountLate = document.getElementById('edit-log-take-account').checked;
 
-    // Calcul Durée
+    // --- MODE 100% HEURES SUPP : court-circuit total ---
+    if (p && p.isAllOvertime) {
+        const stepVal = Math.max(1, parseInt(appSettings.otStep) || 15);
+        const stepMs = stepVal * 60000;
+        // Arrondi des BORNES : debut ceil, fin floor
+        const roundedStartMs = Math.ceil(actualStartMs / stepMs) * stepMs;
+        const roundedEndMs = Math.floor(actualEndMs / stepMs) * stepMs;
+        const validMs = Math.max(0, roundedEndMs - roundedStartMs);
+        const totalValidatedMins = Math.floor(validMs / 60000);
+
+        const updatedLog = {
+            ...oldLog,
+            dateStr: newDateStr,
+            date: new Date(logDate).toLocaleDateString('fr-FR'),
+            profileName: p.name,
+            color: p.color,
+            profileSnap: { ...pBase },
+            startTime: newStart,
+            endTime: newEnd,
+            comment: document.getElementById('edit-log-comment').value,
+            duration: validMs,
+            overtime: validMs,
+            ignoreOT: !forceCountLate,
+            countEarly: false,
+            valEarlyMins: 0,
+            valLateMins: totalValidatedMins,
+            validatedOtMins: totalValidatedMins > 0 ? totalValidatedMins : null
+        };
+
+        const finalMetrics = calculateLogMetrics(updatedLog);
+        updatedLog.frozenMetrics = finalMetrics;
+
+        const oldKey = getStorageKey(oldLog.dateStr);
+        const newKey = getStorageKey(newDateStr);
+        if (oldKey === newKey) { logs[index] = updatedLog; saveLogsCurrentView(); }
+        else { logs.splice(index, 1); saveLogsCurrentView(); saveLogToStorage(updatedLog); }
+
+        renderHistory();
+        checkAlreadyLogged();
+        document.getElementById('edit-log-modal').style.display = 'none';
+        return;
+    }
+    // --- FIN MODE 100% HS ---
+
+    const [hS, mS] = p.start.split(':').map(Number);
+    const theoStartMs = new Date(startDate).setHours(hS, mS, 0, 0);
+
+    // Calcul Durée (profil standard)
     let finalDuration = actualEndMs - actualStartMs;
     if (appSettings.ignoreEarlyStart && !forceCountEarly && actualStartMs < theoStartMs) {
         finalDuration = actualEndMs - theoStartMs;
@@ -2544,11 +2315,11 @@ function saveLogEdit() {
 
     // --- RÉCUPÉRATION DISTINCTE DES VALEURS VALIDÉES ---
     const getMins = (str) => {
-        if(!str) return 0;
+        if (!str) return 0;
         const [h, m] = str.split(':').map(Number);
         return h * 60 + m;
     };
-    
+
     const minsEarly = getMins(document.getElementById('edit-log-validated-early').value);
     const minsLate = getMins(document.getElementById('edit-log-validated-ot').value);
     const totalValidatedMins = minsEarly + minsLate;
@@ -2566,13 +2337,13 @@ function saveLogEdit() {
         comment: document.getElementById('edit-log-comment').value,
         duration: finalDuration,
         overtime: rawOvertime,
-        ignoreOT: !forceCountLate, 
+        ignoreOT: !forceCountLate,
         countEarly: forceCountEarly,
-        
+
         // --- NOUVEAU : On stocke la répartition exacte ---
         valEarlyMins: minsEarly, // Ex: 30
         valLateMins: minsLate,   // Ex: 15
-        
+
         validatedOtMins: totalValidatedMins > 0 ? totalValidatedMins : null
     };
 
@@ -2588,7 +2359,7 @@ function saveLogEdit() {
         saveLogsCurrentView();
     } else {
         logs.splice(index, 1);
-        saveLogsCurrentView(); 
+        saveLogsCurrentView();
         saveLogToStorage(updatedLog);
     }
 
@@ -2597,29 +2368,24 @@ function saveLogEdit() {
     document.getElementById('edit-log-modal').style.display = 'none';
 }
 
-    function deleteLog() {
-        if(confirm("Supprimer ce pointage ?")) {
-            const index = document.getElementById('edit-log-index').value;
-            logs.splice(index, 1);
-            saveLogsAfterEdit();
-            renderHistory();
-            checkAlreadyLogged();
-            document.getElementById('edit-log-modal').style.display = 'none';
-        }
+function deleteLog() {
+    if (confirm("Supprimer ce pointage ?")) {
+        const index = document.getElementById('edit-log-index').value;
+        logs.splice(index, 1);
+        saveLogsAfterEdit();
+        renderHistory();
+        checkAlreadyLogged();
+        document.getElementById('edit-log-modal').style.display = 'none';
     }
+}
 
-    // --- STORAGE & UTILS ---
+// --- STORAGE & UTILS ---
 function saveData() {
     // 1. Sauvegarde locale
     localStorage.setItem('pt_profiles', JSON.stringify(profiles));
     localStorage.setItem('pt_settings', JSON.stringify(appSettings));
-    if(currentSession) localStorage.setItem('pt_session', JSON.stringify(currentSession));
+    if (currentSession) localStorage.setItem('pt_session', JSON.stringify(currentSession));
     else localStorage.removeItem('pt_session');
-
-    // 2. TRIGGER CLOUD (Ajout)
-    markForSync('pt_profiles');
-    markForSync('pt_settings');
-    markForSync('pt_session');
 }
 
 function loadData() {
@@ -2656,7 +2422,7 @@ function loadData() {
     // --- CHARGEMENT DU PLANNING ---
     const s = safeLoad('pt_schedule', {});
     // On s'assure que c'est bien un objet et pas null
-schedule = {};
+    schedule = {};
     // --- CHARGEMENT DES REGLAGES ---
     const set = safeLoad('pt_settings', null);
     if (set && typeof set === 'object') {
@@ -2670,117 +2436,140 @@ schedule = {};
     }
 
 }
-    function toggleDay(dayIndex) {
-        const circles = document.querySelectorAll('#new-p-days .day-circle');
-        if(selectedDaysInForm.includes(dayIndex)) {
-            selectedDaysInForm = selectedDaysInForm.filter(d => d !== dayIndex);
-            circles[dayIndex].classList.remove('selected');
-        } else {
-            selectedDaysInForm.push(dayIndex);
-            circles[dayIndex].classList.add('selected');
-        }
+function toggleDay(dayIndex) {
+    const circles = document.querySelectorAll('#new-p-days .day-circle');
+    if (selectedDaysInForm.includes(dayIndex)) {
+        selectedDaysInForm = selectedDaysInForm.filter(d => d !== dayIndex);
+        circles[dayIndex].classList.remove('selected');
+    } else {
+        selectedDaysInForm.push(dayIndex);
+        circles[dayIndex].classList.add('selected');
     }
+}
 
-    function setDaysInForm(daysArray) {
-        selectedDaysInForm = [...daysArray];
-        const circles = document.querySelectorAll('#new-p-days .day-circle');
-        circles.forEach((c, idx) => {
-            if(selectedDaysInForm.includes(idx)) c.classList.add('selected');
-            else c.classList.remove('selected');
-        });
-    }
-    function handleProfileSave() {
-        const id = document.getElementById('edit-id').value;
-        if(id) updateProfile(parseInt(id));
-        else createProfile();
-    }
+function setDaysInForm(daysArray) {
+    selectedDaysInForm = [...daysArray];
+    const circles = document.querySelectorAll('#new-p-days .day-circle');
+    circles.forEach((c, idx) => {
+        if (selectedDaysInForm.includes(idx)) c.classList.add('selected');
+        else c.classList.remove('selected');
+    });
+}
+function handleProfileSave() {
+    const id = document.getElementById('edit-id').value;
+    if (id) updateProfile(parseInt(id));
+    else createProfile();
+}
 function createProfile() {
     const name = document.getElementById('new-p-name').value;
-    if(!name) return alert("Le nom est obligatoire");
+    if (!name) return alert("Le nom est obligatoire");
     const newP = {
-        id: Date.now(), 
+        id: Date.now(),
         name: name,
         start: document.getElementById('new-p-start').value,
         end: document.getElementById('new-p-end').value,
         pause: parseInt(document.getElementById('new-p-pause').value) || 0,
         color: document.getElementById('new-p-color').value,
+        isAllOvertime: document.getElementById('new-p-all-ot').checked,
         days: selectedDaysInForm,
         customSchedules: JSON.parse(JSON.stringify(tempCustomSchedules)) // Sauvegarde profonde
     };
-    profiles.push(newP); 
+    profiles.push(newP);
     finishProfileEdit("Profil créé !");
 }
-    function loadProfileForEdit(id) {
-        const p = profiles.find(x => x.id === id); if(!p) return;
-        document.getElementById('form-title').textContent = "Modifier : " + p.name;
-        document.getElementById('profile-form-card').classList.add('editing-mode');
-        document.getElementById('current-color-preview').style.backgroundColor = p.color;
-        document.getElementById('edit-id').value = p.id;
-        document.getElementById('new-p-name').value = p.name;
-        document.getElementById('new-p-start').value = p.start;
-        document.getElementById('new-p-end').value = p.end;
-        document.getElementById('new-p-pause').value = p.pause;
-        document.getElementById('new-p-color').value = p.color;
-        setDaysInForm(p.days || []);
-        document.getElementById('btn-save-profile').textContent = "Mettre à jour";
-        document.getElementById('btn-cancel-edit').style.display = "block";
-        document.querySelector('.page.active').scrollTop = 0;
-        tempCustomSchedules = p.customSchedules ? JSON.parse(JSON.stringify(p.customSchedules)) : {};
+function loadProfileForEdit(id) {
+    const p = profiles.find(x => x.id === id); if (!p) return;
+    document.getElementById('form-title').textContent = "Modifier : " + p.name;
+    document.getElementById('profile-form-card').classList.add('editing-mode');
+    document.getElementById('current-color-preview').style.backgroundColor = p.color;
+    document.getElementById('edit-id').value = p.id;
+    document.getElementById('new-p-name').value = p.name;
+    document.getElementById('new-p-start').value = p.start;
+    document.getElementById('new-p-end').value = p.end;
+    document.getElementById('new-p-pause').value = p.pause;
+    document.getElementById('new-p-color').value = p.color;
+    document.getElementById('new-p-all-ot').checked = p.isAllOvertime || false;
+    toggleAllOtInputs();
+    setDaysInForm(p.days || []);
+    document.getElementById('btn-save-profile').textContent = "Mettre à jour";
+    document.getElementById('btn-cancel-edit').style.display = "block";
+    document.querySelector('.page.active').scrollTop = 0;
+    tempCustomSchedules = p.customSchedules ? JSON.parse(JSON.stringify(p.customSchedules)) : {};
     renderCustomSchedulesList();
-    }
-    function updateProfile(id) {
-const index = profiles.findIndex(p => p.id === id); if(index === -1) return;
-        profiles[index].name = document.getElementById('new-p-name').value;
-        profiles[index].start = document.getElementById('new-p-start').value;
-        profiles[index].end = document.getElementById('new-p-end').value;
-        profiles[index].pause = parseInt(document.getElementById('new-p-pause').value) || 0;
-        profiles[index].color = document.getElementById('new-p-color').value;
-profiles[index].days = selectedDaysInForm;
+}
+function updateProfile(id) {
+    const index = profiles.findIndex(p => p.id === id); if (index === -1) return;
+    profiles[index].name = document.getElementById('new-p-name').value;
+    profiles[index].start = document.getElementById('new-p-start').value;
+    profiles[index].end = document.getElementById('new-p-end').value;
+    profiles[index].pause = parseInt(document.getElementById('new-p-pause').value) || 0;
+    profiles[index].color = document.getElementById('new-p-color').value;
+    profiles[index].isAllOvertime = document.getElementById('new-p-all-ot').checked;
+    profiles[index].days = selectedDaysInForm;
     profiles[index].customSchedules = JSON.parse(JSON.stringify(tempCustomSchedules)); // MAJ
     finishProfileEdit("Profil mis à jour !");
-    }
-    function finishProfileEdit(msg) { saveData(); renderSettingsList(); resetForm(); alert(msg); }
-    function resetForm() {
-        document.getElementById('new-p-color').value = "#3498db";
-document.getElementById('current-color-preview').style.backgroundColor = "#3498db";
-        document.getElementById('edit-id').value = ""; document.getElementById('new-p-name').value = "";
-        document.getElementById('new-p-start').value = "08:00"; document.getElementById('new-p-end').value = "16:00";
-        document.getElementById('new-p-pause').value = "30"; document.getElementById('new-p-color').value = "#3498db";
-        selectedDaysInForm = []; document.querySelectorAll('#new-p-days .day-circle').forEach(c => c.classList.remove('selected'));
-        document.getElementById('form-title').textContent = "Créer un profil"; document.getElementById('profile-form-card').classList.remove('editing-mode');
-        document.getElementById('btn-save-profile').textContent = "Ajouter ce profil"; document.getElementById('btn-cancel-edit').style.display = "none";
-        tempCustomSchedules = {};
+}
+function finishProfileEdit(msg) { saveData(); renderSettingsList(); resetForm(); alert(msg); }
+function resetForm() {
+    document.getElementById('new-p-color').value = "#3498db";
+    document.getElementById('current-color-preview').style.backgroundColor = "#3498db";
+    document.getElementById('edit-id').value = ""; document.getElementById('new-p-name').value = "";
+    document.getElementById('new-p-start').value = "08:00"; document.getElementById('new-p-end').value = "16:00";
+    document.getElementById('new-p-pause').value = "30"; document.getElementById('new-p-color').value = "#3498db";
+    document.getElementById('new-p-all-ot').checked = false;
+    toggleAllOtInputs();
+    selectedDaysInForm = []; document.querySelectorAll('#new-p-days .day-circle').forEach(c => c.classList.remove('selected'));
+    document.getElementById('form-title').textContent = "Créer un profil"; document.getElementById('profile-form-card').classList.remove('editing-mode');
+    document.getElementById('btn-save-profile').textContent = "Ajouter ce profil"; document.getElementById('btn-cancel-edit').style.display = "none";
+    tempCustomSchedules = {};
     renderCustomSchedulesList();
     document.getElementById('custom-day-selector').style.display = 'none';
-    }
+}
+
+function toggleAllOtInputs() {
+    const isAllOt = document.getElementById('new-p-all-ot').checked;
+
+    // On désactive les champs pour la sécurité de la sauvegarde
+    document.getElementById('new-p-start').disabled = isAllOt;
+    document.getElementById('new-p-end').disabled = isAllOt;
+    document.getElementById('new-p-pause').disabled = isAllOt;
+
+    // On masque COMPLÈTEMENT les éléments visuels concernés
+    document.getElementById('row-time-inputs').style.display = isAllOt ? 'none' : 'flex';
+    document.getElementById('col-pause-input').style.display = isAllOt ? 'none' : 'block';
+    document.getElementById('custom-schedule-container').style.display = isAllOt ? 'none' : 'block';
+}
+
+// Attach listener to checkbox
+document.getElementById('new-p-all-ot').addEventListener('change', toggleAllOtInputs);
 function deleteProfile(id) {
     if (currentSession && currentSession.profileId === id) {
         alert("Impossible de supprimer ce profil car il est utilisé par le chronomètre actif !");
         return;
     }
-    
-    if(confirm("Supprimer ce profil ?")) { 
-        profiles = profiles.filter(p => p.id !== id); 
-        saveData(); 
-        renderSettingsList(); 
-    } 
+
+    if (confirm("Supprimer ce profil ?")) {
+        profiles = profiles.filter(p => p.id !== id);
+        saveData();
+        renderSettingsList();
+    }
 }
 function renderSettingsList() {
-const list = document.getElementById('settings-profiles-list');
-list.innerHTML = "";
+    const list = document.getElementById('settings-profiles-list');
+    list.innerHTML = "";
 
 
-profiles.forEach((p, index) => {
-    const div = document.createElement('div');
-    div.className = "profile-list-item";
-    div.style.borderLeftColor = p.color;
-    const daysMap = ["L","M","M","J","V","S","D"];
-    let daysStr = (p.days || []).map(d => daysMap[d]).join(" ");
+    profiles.forEach((p, index) => {
+        const div = document.createElement('div');
+        div.className = "profile-list-item";
+        div.style.borderLeftColor = p.color;
+        const daysMap = ["L", "M", "M", "J", "V", "S", "D"];
+        let daysStr = (p.days || []).map(d => daysMap[d]).join(" ");
 
-    div.innerHTML = `
+        div.innerHTML = `
         <div>
             <strong>${p.name}</strong> <small style="color:${p.color}">●</small><br>
-            <small>${p.start} - ${p.end}</small><br>
+            <small>${p.isAllOvertime ? '100% Heures Supp' : p.start + ' - ' + p.end}</small><br>
             <small style="color:#777">${daysStr}</small>
         </div>
         <div class="profile-actions">
@@ -2798,30 +2587,30 @@ profiles.forEach((p, index) => {
                 <i class="fas fa-trash"></i>
             </button>
         </div>`;
-    list.appendChild(div);
-});
+        list.appendChild(div);
+    });
 }
 function moveProfile(index, direction) {
-const newIndex = index + direction;
+    const newIndex = index + direction;
 
-// Vérifier si le déplacement est possible
-if (newIndex < 0 || newIndex >= profiles.length) return;
+    // Vérifier si le déplacement est possible
+    if (newIndex < 0 || newIndex >= profiles.length) return;
 
-// Échanger les positions dans le tableau
-const temp = profiles[index];
-profiles[index] = profiles[newIndex];
-profiles[newIndex] = temp;
+    // Échanger les positions dans le tableau
+    const temp = profiles[index];
+    profiles[index] = profiles[newIndex];
+    profiles[newIndex] = temp;
 
-// Sauvegarder et rafraîchir l'affichage
-saveData();
-renderSettingsList();
+    // Sauvegarder et rafraîchir l'affichage
+    saveData();
+    renderSettingsList();
 }
-    function msToTime(duration) {
-        let minutes = Math.floor((duration / (1000 * 60)) % 60);
-        let hours = Math.floor((duration / (1000 * 60 * 60)));
-        return (hours + "h" + (minutes < 10 ? "0" : "") + minutes);
-    }
-    function calculateNightHours(startTime, endTime) {
+function msToTime(duration) {
+    let minutes = Math.floor((duration / (1000 * 60)) % 60);
+    let hours = Math.floor((duration / (1000 * 60 * 60)));
+    return (hours + "h" + (minutes < 10 ? "0" : "") + minutes);
+}
+function calculateNightHours(startTime, endTime) {
     // Récupérer les réglages (valeurs par défaut si vide)
     const nStartStr = document.getElementById('settings-night-start').value || "21:00";
     const nEndStr = document.getElementById('settings-night-end').value || "06:00";
@@ -2838,12 +2627,12 @@ renderSettingsList();
     // On boucle minute par minute (simple et robuste pour les chevauchements)
     // Pour optimiser, on pourrait utiliser des maths pures, mais ceci est plus sûr pour les dates.
     let current = new Date(start);
-    
+
     while (current < end) {
         const h = current.getHours();
         const m = current.getMinutes();
         const currentMins = h * 60 + m;
-        
+
         let isNight = false;
         if (nightStart > nightEnd) { // Ex: 21:00 à 06:00 (nuit traverse minuit)
             if (currentMins >= nightStart || currentMins < nightEnd) isNight = true;
@@ -2879,7 +2668,7 @@ function getJoursFeries(annee) {
     const L = I - J_paques;
     const MonthPaques = 3 + Math.floor((L + 40) / 44);
     const DayPaques = L + 28 - 31 * Math.floor(MonthPaques / 4);
-    
+
     const P = new Date(annee, MonthPaques - 1, DayPaques);
     const LP = new Date(P.getTime() + 24 * 3600 * 1000);
     const Asc = new Date(P.getTime() + 39 * 24 * 3600 * 1000);
@@ -2907,22 +2696,22 @@ function analyzeSession(log) {
     let endMs = startMs + log.duration;
 
     // Profil théorique
-    const p = log.profileSnap || profiles.find(pr => pr.name === log.profileName) || {start:"08:00", end:"16:00"};
+    const p = log.profileSnap || profiles.find(pr => pr.name === log.profileName) || { start: "08:00", end: "16:00" };
     const [phS, pmS] = p.start.split(':').map(Number);
     let theoStartMs = new Date(dStart).setHours(phS, pmS, 0, 0);
 
     // Initialisation compteurs minutes
     let segs = { early: 0, day: 0, night: 0, otDay: 0, otNight: 0, ignored: 0 };
-    
+
     // On parcourt minute par minute
     // C'est moins performant que les maths pures mais infaillible pour les cas complexes (nuit à cheval, HS nuit, etc.)
     let currentMs = startMs;
     // Durée totale à analyser (hors HS ignorées pour l'instant)
     // On considère que les HS ignorées sont à la fin
-    
+
     // Est-ce qu'on ignore les HS ?
     const isOtDisabled = log.ignoreOT === true;
-    const validDuration = log.duration; 
+    const validDuration = log.duration;
 
     for (let i = 0; i < (validDuration / 60000); i++) {
         let currentDate = new Date(currentMs);
@@ -2941,40 +2730,40 @@ function analyzeSession(log) {
         // 1. Avant l'heure théorique = Early (si activé)
         // 2. Pendant la durée théorique du profil = Normal
         // 3. Après = HS
-        
+
         let type = 'normal';
         // Note: ceci est une approximation visuelle. 
         // Pour être exact il faudrait comparer currentMs à theoStartMs et theoEndMs
-        
+
         // Simplification visuelle basée sur les totaux calculés précédemment
         // On ne peut pas facilement savoir si CETTE minute précise est une HS sans une logique complexe
         // On va plutôt compter combien de minutes de nuit on a au total
-        if(isNight) segs.night++;
+        if (isNight) segs.night++;
         else segs.day++;
 
         currentMs += 60000;
     }
-    
+
     // Réconciliation avec les totaux calculés (log.overtime, etc.)
     // On sait combien on a d'HS (log.overtime).
     // On va arbitrairement dire que les HS sont à la fin.
     // Si la fin était la nuit, les HS sont de nuit.
-    
+
     // Méthode simplifiée demandée pour l'affichage :
     // On va juste retourner le total Nuit calculé
     return segs.night * 60000;
 }
 function resumeLog(index) {
-    if(!confirm("Voulez-vous reprendre ce chronomètre ? L'entrée actuelle sera supprimée de l'historique et le chrono reprendra.")) return;
-    
+    if (!confirm("Voulez-vous reprendre ce chronomètre ? L'entrée actuelle sera supprimée de l'historique et le chrono reprendra.")) return;
+
     const log = logs[index];
-    if(!log) return;
+    if (!log) return;
 
     // 1. Reconstruire la session
     const [h, m] = log.startTime.split(':').map(Number);
     const d = new Date(); // Aujourd'hui
     d.setHours(h, m, 0, 0);
-    
+
     // Récupérer le profil
     const p = log.profileSnap || profiles.find(pr => pr.name === log.profileName);
 
@@ -2983,7 +2772,7 @@ function resumeLog(index) {
         profileId: p ? p.id : 0, // 0 si profil supprimé
         profileSnap: p
     };
-    
+
     // 2. Supprimer le log de l'historique
     logs.splice(index, 1);
     saveLogsCurrentView(); // Sauvegarder la suppression
@@ -2996,35 +2785,69 @@ function resumeLog(index) {
 function generateTimelineHTML(log) {
     // 1. RECONSTRUCTION DES TIMESTAMPS
     let dStart = log.dateStr ? new Date(log.dateStr) : new Date();
-    const [h1, m1] = log.startTime.split(':').map(Number);
-    const [h2, m2] = log.endTime.split(':').map(Number);
-    
+    const [h1, m1] = log.startTime ? log.startTime.split(':').map(Number) : [0, 0];
+    const [h2, m2] = log.endTime ? log.endTime.split(':').map(Number) : [0, 0];
+
     let startDate = new Date(dStart);
     if (h1 > h2) startDate.setDate(startDate.getDate() - 1);
 
     let currentMs = new Date(startDate).setHours(h1, m1, 0, 0);
-    
+
     // Durée totale
-    const [hStart, mStart] = log.startTime.split(':').map(Number);
-    const [hEnd, mEnd] = log.endTime.split(':').map(Number);
-    let startTotalMins = hStart * 60 + mStart;
-    let endTotalMins = hEnd * 60 + mEnd;
-    if (endTotalMins <= startTotalMins) endTotalMins += 1440; 
-    
+    let startTotalMins = h1 * 60 + m1;
+    let endTotalMins = h2 * 60 + m2;
+    if (endTotalMins <= startTotalMins) endTotalMins += 1440;
+
     const totalMins = endTotalMins - startTotalMins;
+    if (totalMins <= 0) return '';
 
     // 2. PROFIL THÉORIQUE
     const pSnap = log.profileSnap || profiles.find(pr => pr.name === log.profileName);
     const pParams = getProfileParams(pSnap, dStart);
-    
+
+    // --- MODE 100% HS : Timeline avec arrondi des bornes ---
+    if (!pParams || pParams.isAllOvertime) {
+        const stepVal = Math.max(1, parseInt(appSettings.otStep) || 15);
+        const stepMs = stepVal * 60000;
+
+        // Mêmes bornes arrondies que dans le calcul
+        const roundedStartMs = Math.ceil(currentMs / stepMs) * stepMs;
+        const roundedEndMs = Math.floor(currentMs + (totalMins * 60000)) / stepMs * stepMs;
+
+        const raw = [];
+        let last = null, count = 0;
+        const pushSeg = (type) => {
+            if (type === last) { count++; }
+            else { if (last) raw.push({ type: last, mins: count }); last = type; count = 1; }
+        };
+
+        for (let i = 0; i < totalMins; i++) {
+            const timeCheck = currentMs + (i * 60000);
+            let type;
+            if (timeCheck < roundedStartMs) {
+                // Avant le palier de début → minutes non comptées (rouge)
+                type = 'red';
+            } else if (timeCheck >= roundedEndMs) {
+                // Après le palier de fin → minutes non comptées (rouge)
+                type = 'red';
+            } else {
+                // Zone comptée en HS
+                type = isNight(timeCheck) ? 'night-ot' : 'green';
+            }
+            pushSeg(type);
+        }
+        if (last) raw.push({ type: last, mins: count });
+        return renderSegmentsHTML(raw, totalMins);
+    }
+    // --- FIN MODE 100% HS ---
+
     const [phS, pmS] = pParams.start.split(':').map(Number);
     const [phE, pmE] = pParams.end.split(':').map(Number);
-    
+
     let theoStartMs = new Date(startDate).setHours(phS, pmS, 0, 0);
     let theoEndMs = new Date(startDate).setHours(phE, pmE, 0, 0);
     if (theoEndMs <= theoStartMs) theoEndMs += 24 * 3600 * 1000;
 
-    // 3. LOGIQUE QUOTAS (Séparés)
     const isEarlyActive = (!appSettings.ignoreEarlyStart) || (log.countEarly === true);
     const isLateActive = log.ignoreOT !== true;
 
@@ -3055,7 +2878,7 @@ function generateTimelineHTML(log) {
                 const msDistanceToStart = theoStartMs - timeCheck;
                 // ex: 14:13 (check) -> 15:00 (target) = 47 min.
                 // ex: 14:59 (check) -> 15:00 (target) = 1 min.
-                
+
                 // En minutes pleines (arrondi sup pour inclure la minute en cours)
                 const minsDistance = Math.ceil(msDistanceToStart / 60000);
 
@@ -3131,8 +2954,8 @@ function toggleCustomSelector() {
 }
 
 function addCustomDay(dayIndex) {
-    if(tempCustomSchedules[dayIndex]) return alert("Ce jour a déjà une configuration spécifique.");
-    
+    if (tempCustomSchedules[dayIndex]) return alert("Ce jour a déjà une configuration spécifique.");
+
     // Valeurs par défaut = celles du formulaire principal
     const defStart = document.getElementById('new-p-start').value;
     const defEnd = document.getElementById('new-p-end').value;
@@ -3149,7 +2972,7 @@ function removeCustomDay(dayIndex) {
 }
 
 function updateCustomValue(dayIndex, field, value) {
-    if(tempCustomSchedules[dayIndex]) {
+    if (tempCustomSchedules[dayIndex]) {
         tempCustomSchedules[dayIndex][field] = value;
     }
 }
@@ -3163,7 +2986,7 @@ function renderCustomSchedulesList() {
     Object.keys(tempCustomSchedules).sort().forEach(idx => {
         const d = tempCustomSchedules[idx];
         const dayName = dayNames[idx];
-        
+
         const div = document.createElement('div');
         div.className = "custom-row-item";
         div.innerHTML = `
@@ -3192,17 +3015,30 @@ function renderCustomSchedulesList() {
 // Retourne les paramètres du profil (start, end, pause) adaptés au jour donné
 function getProfileParams(profile, dateObj) {
     if (!profile) return null;
-    
+
     // Attention: getDay() renvoie 0=Dimanche, 1=Lundi... 
     // Votre sélecteur utilise 0=Lundi...6=Dimanche
-    let dayIndex = dateObj.getDay() - 1; 
-    if(dayIndex === -1) dayIndex = 6; // Dimanche
+    let dayIndex = dateObj.getDay() - 1;
+    if (dayIndex === -1) dayIndex = 6; // Dimanche
+
+    // Les profils 100% HS n'ont pas d'horaires, on retourne directement
+    if (profile.isAllOvertime) {
+        return {
+            name: profile.name,
+            color: profile.color,
+            isAllOvertime: true,
+            start: null,
+            end: null,
+            pause: 0
+        };
+    }
 
     // Y a-t-il une exception pour ce jour ?
     if (profile.customSchedules && profile.customSchedules[dayIndex]) {
         return {
             name: profile.name,
             color: profile.color,
+            isAllOvertime: false,
             start: profile.customSchedules[dayIndex].start,
             end: profile.customSchedules[dayIndex].end,
             pause: parseInt(profile.customSchedules[dayIndex].pause) || 0
@@ -3213,6 +3049,7 @@ function getProfileParams(profile, dateObj) {
     return {
         name: profile.name,
         color: profile.color,
+        isAllOvertime: false,
         start: profile.start,
         end: profile.end,
         pause: profile.pause
@@ -3225,10 +3062,10 @@ function getNightDuration(log) {
     let dRef = log.dateStr ? new Date(log.dateStr) : new Date();
     const [h1, m1] = log.startTime.split(':').map(Number);
     const [h2, m2] = log.endTime.split(':').map(Number);
-    
+
     let startMs = new Date(dRef).setHours(h1, m1, 0, 0);
     let endMs = new Date(dRef).setHours(h2, m2, 0, 0);
-    
+
     // Si l'heure de fin est inférieure à l'heure de début, on est sur le lendemain
     if (endMs <= startMs) {
         endMs += 24 * 3600 * 1000;
@@ -3245,8 +3082,8 @@ function getNightDuration(log) {
     const isNightMinute = (ms) => {
         const d = new Date(ms);
         const mins = d.getHours() * 60 + d.getMinutes();
-        return (nsMins > neMins) 
-            ? (mins >= nsMins || mins < neMins) 
+        return (nsMins > neMins)
+            ? (mins >= nsMins || mins < neMins)
             : (mins >= nsMins && mins < neMins);
     };
 
@@ -3257,7 +3094,7 @@ function getNightDuration(log) {
         if (isNightMinute(checkMs)) nightMs += 60000;
         checkMs += 60000;
     }
-    
+
     return nightMs;
 }
 // Ouvre la modal et génère la liste des profils
@@ -3306,7 +3143,7 @@ function openChangeProfileModal() {
         btn.innerHTML = `
             <div>
                 <strong>${p.name}</strong><br>
-                <small style="color:#aaa;">${p.start} - ${p.end}</small>
+                <small style="color:#aaa;">${p.isAllOvertime ? '<i class="fas fa-infinity" style="color:#f39c12"></i> Libre — 100% HS' : p.start + ' - ' + p.end}</small>
             </div>
             <i class="fas fa-chevron-right" style="opacity:0.3;"></i>
         `;
@@ -3324,7 +3161,7 @@ function getDayProfiles(dateKey) {
     // On doit charger les logs du mois concerné par la dateKey pour être sûr
     const d = new Date(dateKey);
     const key = getStorageKey(d); // Utilise votre fonction existante
-    
+
     // Astuce: Si le mois affiché dans l'historique est le même, on utilise la variable globale 'logs'
     // Sinon on lit le localStorage (c'est rapide)
     let targetLogs = [];
@@ -3337,7 +3174,7 @@ function getDayProfiles(dateKey) {
 
     // Filtrer les logs pour ce jour précis
     const dayLogs = targetLogs.filter(l => (l.dateStr === dateKey) || (l.date && l.date.split('/').reverse().join('-') === dateKey));
-    
+
     dayLogs.forEach(l => {
         // On évite les doublons de nom/couleur
         if (!profilesFound.find(p => p.name === l.profileName && p.color === l.color)) {
@@ -3384,8 +3221,8 @@ function applyNewProfileToChrono(profileId) {
     if (profileId === null) {
         // Supprimer du planning
         // (La ligne delete schedule... est inutile car saveScheduleEntry le fait déjà)
-        saveScheduleEntry(todayKey, null); 
-        
+        saveScheduleEntry(todayKey, null);
+
         tempSelectedProfileId = null; // <--- AJOUT : Pour garder l'interface cohérente
 
         // Si une session est en cours, on retire le profil
@@ -3398,13 +3235,13 @@ function applyNewProfileToChrono(profileId) {
         if (!pBase) return;
 
         const pSnapshot = getProfileParams(pBase, new Date());
-        
+
         // On récupère la note si elle existe déjà
         const currentNote = (schedule[todayKey] && schedule[todayKey].note) ? schedule[todayKey].note : "";
-        
+
         const dataToSave = { id: profileId, note: currentNote };
-        
-        saveScheduleEntry(todayKey, dataToSave); 
+
+        saveScheduleEntry(todayKey, dataToSave);
 
         tempSelectedProfileId = profileId; // <--- AJOUT : Pour garder l'interface cohérente
 
@@ -3416,8 +3253,8 @@ function applyNewProfileToChrono(profileId) {
 
     // On garde saveData() ici car il sauvegarde 'currentSession' (qui a été modifié juste au-dessus)
     // Mais il ne touchera plus au planning grâce à tes modifs précédentes.
-    saveData(); 
-    
+    saveData();
+
     renderCalendar();
     checkTodaySchedule();
     document.getElementById('change-profile-modal').style.display = 'none';
@@ -3426,13 +3263,13 @@ function startNewSession(pid) {
     const today = new Date();
     const baseP = profiles.find(x => x.id === pid);
     const pSnapshot = getProfileParams(baseP, today);
-    
-    currentSession = { 
-        start: Date.now(), 
-        profileId: pid, 
-        profileSnap: pSnapshot 
+
+    currentSession = {
+        start: Date.now(),
+        profileId: pid,
+        profileSnap: pSnapshot
     };
-    
+
     saveData();
     restoreTimerUI();
     tempSelectedProfileId = null;
@@ -3444,11 +3281,11 @@ function updateEditLogPreview() {
     const startVal = document.getElementById('edit-log-start').value;
     const endVal = document.getElementById('edit-log-end').value;
     const newDateStr = document.getElementById('edit-log-date').value;
-    
+
     // Inputs
     const inputEarly = document.getElementById('edit-log-validated-early');
     const inputLate = document.getElementById('edit-log-validated-ot');
-    
+
     // Switchs
     const countEarly = document.getElementById('edit-log-count-early').checked;
     const countLate = document.getElementById('edit-log-take-account').checked;
@@ -3474,9 +3311,29 @@ function updateEditLogPreview() {
 
     // 2. Profil théorique
     const p = getProfileParams(pBase, logDate);
+
+    // --- MODE 100% HEURES SUPP ---
+    // Tout le temps travaillé = HS, arrondi par bornes (debut ceil, fin floor)
+    if (p.isAllOvertime) {
+        inputEarly.value = "00:00";
+        if (countLate) {
+            const stepVal = Math.max(1, parseInt(appSettings.otStep) || 15);
+            const stepMs = stepVal * 60000;
+            const roundedStartMs = Math.ceil(actualStartMs / stepMs) * stepMs;
+            const roundedEndMs = Math.floor(actualEndMs / stepMs) * stepMs;
+            const validMs = Math.max(0, roundedEndMs - roundedStartMs);
+            const totalMins = Math.floor(validMs / 60000);
+            const hh = Math.floor(totalMins / 60).toString().padStart(2, '0');
+            const mm = (totalMins % 60).toString().padStart(2, '0');
+            inputLate.value = `${hh}:${mm}`;
+        }
+        return;
+    }
+    // --- FIN MODE 100% HS ---
+
     const [hS, mS] = p.start.split(':').map(Number);
     const [hE, mE] = p.end.split(':').map(Number);
-    
+
     const theoStartMs = new Date(startDate).setHours(hS, mS, 0, 0);
     const theoEndMs = new Date(logDate).setHours(hE, mE, 0, 0);
 
@@ -3490,12 +3347,10 @@ function updateEditLogPreview() {
     }
 
     // Retard (HS Soir) : si on finit après la fin théorique
-    // Attention : on suppose ici que theoEnd est le même jour ou jour suivant correctement géré
-    // Simplification : Durée réelle vs Durée théorique n'est pas suffisante, il faut comparer les bornes
     let dEndTheo = new Date(theoEndMs);
     // Petit fix si le profil passe minuit (ex 21h-05h)
     if (theoEndMs <= theoStartMs) dEndTheo.setDate(dEndTheo.getDate() + 1);
-    
+
     if (actualEndMs > dEndTheo.getTime()) {
         rawLateMs = actualEndMs - dEndTheo.getTime();
     }
@@ -3518,7 +3373,7 @@ function updateEditLogPreview() {
     if (countEarly && validEarlyMs > 0) {
         inputEarly.value = msToInput(validEarlyMs);
     }
-    
+
     if (countLate && validLateMs > 0) {
         inputLate.value = msToInput(validLateMs);
     }
@@ -3527,7 +3382,7 @@ function runDailyAutoExport() {
     // 1. VÉRIFICATION DU PARAMÈTRE : On ne fait rien si l'auto-backup est désactivé
     // On suppose ici que votre réglage est stocké sous 'settings-auto-backup'
     const isAutoBackupEnabled = localStorage.getItem('settings-auto-backup') === 'true';
-    
+
     if (!isAutoBackupEnabled) {
         console.log("🚫 Sauvegarde auto désactivée dans les réglages.");
         return;
@@ -3552,12 +3407,12 @@ function runDailyAutoExport() {
     }
 
     const jsonString = JSON.stringify(data, null, 2);
-    
+
     // NOM FIXE : Pour permettre l'écrasement côté Android
-    const fileName = "backup_auto_latest.json"; 
+    const fileName = "backup_auto_latest.json";
 
     console.log("📤 Envoi de la sauvegarde auto vers Android...");
-    
+
     // Appel direct (sans vérification d'interface comme demandé)
     window.Android.saveFile(jsonString, fileName);
 
@@ -3609,7 +3464,7 @@ function migrateOldSchedule() {
 function loadScheduleForMonthView() {
     // On charge le mois en cours + le mois précédent + le mois suivant
     // (Pour gérer les cases vides du début/fin de calendrier)
-    
+
     const d = new Date(currentPlanningDate);
     const monthsToLoad = [
         new Date(d.getFullYear(), d.getMonth() - 1, 1), // Mois d'avant
@@ -3619,9 +3474,9 @@ function loadScheduleForMonthView() {
 
     monthsToLoad.forEach(dateObj => {
         // Astuce pour avoir YYYY-MM-DD
-        const dateKeyFake = dateObj.toISOString().split('T')[0]; 
+        const dateKeyFake = dateObj.toISOString().split('T')[0];
         const key = getSchedKey(dateKeyFake);
-        
+
         const raw = localStorage.getItem(key);
         if (raw) {
             const data = JSON.parse(raw);
@@ -3633,11 +3488,11 @@ function loadScheduleForMonthView() {
 
 function saveScheduleEntry(dateKey, val) {
     const key = getSchedKey(dateKey);
-    
+
     // 1. Lire le fichier du mois
     let monthData = {};
     const raw = localStorage.getItem(key);
-    if(raw) monthData = JSON.parse(raw);
+    if (raw) monthData = JSON.parse(raw);
 
     // 2. Modifier ou Supprimer
     if (val === null) {
@@ -3648,17 +3503,14 @@ function saveScheduleEntry(dateKey, val) {
         schedule[dateKey] = val;   // Ajout en mémoire
     }
 
-// Sauvegarde fichier
+    // Sauvegarde fichier
     localStorage.setItem(key, JSON.stringify(monthData));
-
-    // 2. TRIGGER CLOUD (Ajout)
-    markForSync(key);
 }
 
 // Sauvegarde un lot de jours en une seule opération (Optimisé pour les semaines à cheval sur 2 mois)
 function saveBatchScheduleEntries(updates) {
     // updates est un objet : { "2024-01-31": {id:1}, "2024-02-01": {id:1} }
-    
+
     const buckets = {};
 
     // 1. On trie les mises à jour par mois (Bucket sort)
@@ -3701,122 +3553,122 @@ function initStatisticsModule() {
     // --- VARIABLES & FONCTIONS GLOBALES (Accessibles via onclick) ---
     window.currentStatsYear = new Date().getFullYear();
 
-    window.changeStatsYear = function(delta) {
+    window.changeStatsYear = function (delta) {
         window.currentStatsYear += delta;
         renderStatsView(); // Recalcule et redessine tout
     };
 
-window.renderStatsView = function() {
-    const year = window.currentStatsYear;
-    document.getElementById('stats-year-display').textContent = year;
+    window.renderStatsView = function () {
+        const year = window.currentStatsYear;
+        document.getElementById('stats-year-display').textContent = year;
 
-    // 1. CALCUL
-    const stats = calculateYearlyStats(year); 
+        // 1. CALCUL
+        const stats = calculateYearlyStats(year);
 
-    // 2. CARTES
-    updateStatsCards(stats);
+        // 2. CARTES
+        updateStatsCards(stats);
 
-    // 3. GRAPHIQUES PAR DÉFAUT (Sécurisés)
-    
-    // On vérifie si le canvas HS existe encore avant de dessiner
-    if (document.getElementById('hs-chart')) {
-        drawGenericChart('hs-chart', stats.monthlyHS, {
-            color1: "rgba(52, 209, 60, 0.4)", 
-            color2: "rgba(52, 209, 60, 0.9)",
-            title: "HS Validées",
-            unit: "h", mode: "time"
-        });
-    }
+        // 3. GRAPHIQUES PAR DÉFAUT (Sécurisés)
 
-    // On vérifie si le canvas Travail existe encore avant de dessiner
-    if (document.getElementById('work-chart')) {
-        drawGenericChart('work-chart', stats.monthlyWork, {
-            color1: "rgba(52, 152, 219, 0.4)", 
-            color2: "rgba(52, 152, 219, 0.9)",
-            title: "Heures Travaillées",
-            unit: "h", mode: "time"
-        });
-    }
-
-    // 4. GRAPHIQUES DYNAMIQUES
-    const dynamicWrappers = document.querySelectorAll('.dynamic-chart');
-    dynamicWrappers.forEach(wrapper => {
-        const type = wrapper.dataset.type;
-        const color = wrapper.dataset.color;
-        const unit = wrapper.dataset.unit;
-        const mode = wrapper.dataset.mode;
-        const title = wrapper.dataset.title;
-        
-        const canvas = wrapper.querySelector('canvas');
-        if (!canvas) return;
-
-        let newDataset = [];
-        switch(type) {
-            case 'days':  newDataset = stats.monthlyDays; break;
-            case 'work':  newDataset = stats.monthlyWork; break;
-            case 'avg':   newDataset = stats.monthlyWork.map((w, i) => stats.monthlyDays[i] > 0 ? Math.floor(w / stats.monthlyDays[i]) : 0); break;
-            case 'hs':    newDataset = stats.monthlyHS; break;
-            case 'night': newDataset = stats.monthlyNight; break;
-            case 'lost':  newDataset = stats.monthlyLost; break;
+        // On vérifie si le canvas HS existe encore avant de dessiner
+        if (document.getElementById('hs-chart')) {
+            drawGenericChart('hs-chart', stats.monthlyHS, {
+                color1: "rgba(52, 209, 60, 0.4)",
+                color2: "rgba(52, 209, 60, 0.9)",
+                title: "HS Validées",
+                unit: "h", mode: "time"
+            });
         }
 
-        const colorTransparent = getTransparentColor(color, 0.4);
-        drawGenericChart(canvas.id, newDataset, {
-            color1: colorTransparent,
-            color2: color,
-            title: title,
-            unit: unit,
-            mode: mode
+        // On vérifie si le canvas Travail existe encore avant de dessiner
+        if (document.getElementById('work-chart')) {
+            drawGenericChart('work-chart', stats.monthlyWork, {
+                color1: "rgba(52, 152, 219, 0.4)",
+                color2: "rgba(52, 152, 219, 0.9)",
+                title: "Heures Travaillées",
+                unit: "h", mode: "time"
+            });
+        }
+
+        // 4. GRAPHIQUES DYNAMIQUES
+        const dynamicWrappers = document.querySelectorAll('.dynamic-chart');
+        dynamicWrappers.forEach(wrapper => {
+            const type = wrapper.dataset.type;
+            const color = wrapper.dataset.color;
+            const unit = wrapper.dataset.unit;
+            const mode = wrapper.dataset.mode;
+            const title = wrapper.dataset.title;
+
+            const canvas = wrapper.querySelector('canvas');
+            if (!canvas) return;
+
+            let newDataset = [];
+            switch (type) {
+                case 'days': newDataset = stats.monthlyDays; break;
+                case 'work': newDataset = stats.monthlyWork; break;
+                case 'avg': newDataset = stats.monthlyWork.map((w, i) => stats.monthlyDays[i] > 0 ? Math.floor(w / stats.monthlyDays[i]) : 0); break;
+                case 'hs': newDataset = stats.monthlyHS; break;
+                case 'night': newDataset = stats.monthlyNight; break;
+                case 'lost': newDataset = stats.monthlyLost; break;
+            }
+
+            const colorTransparent = getTransparentColor(color, 0.4);
+            drawGenericChart(canvas.id, newDataset, {
+                color1: colorTransparent,
+                color2: color,
+                title: title,
+                unit: unit,
+                mode: mode
+            });
         });
-    });
-};
-function updateStatsCards(stats) {
-    // Petit helper pour formater 11 -> "0h11"
-    const formatMins = (m) => {
-        if (!m) return "0h00";
-        const h = Math.floor(m / 60);
-        const mn = Math.round(m % 60);
-        return `${h}h${mn < 10 ? '0' : ''}${mn}`;
     };
+    function updateStatsCards(stats) {
+        // Petit helper pour formater 11 -> "0h11"
+        const formatMins = (m) => {
+            if (!m) return "0h00";
+            const h = Math.floor(m / 60);
+            const mn = Math.round(m % 60);
+            return `${h}h${mn < 10 ? '0' : ''}${mn}`;
+        };
 
-    // 1. Mise à jour des cartes classiques
-    document.getElementById('stat-total-hs').textContent = formatMins(stats.totalHSMins);
-    document.getElementById('stat-total-hours').textContent = formatMins(stats.totalWorkMins);
-    
-    // Moyenne
-    const avg = stats.daysWorked > 0 ? Math.floor(stats.totalWorkMins / stats.daysWorked) : 0;
-    document.getElementById('stat-avg-hours').textContent = formatMins(avg);
-    
-    // Jours travaillés
-    document.getElementById('stat-days-count').textContent = stats.daysWorked;
+        // 1. Mise à jour des cartes classiques
+        document.getElementById('stat-total-hs').textContent = formatMins(stats.totalHSMins);
+        document.getElementById('stat-total-hours').textContent = formatMins(stats.totalWorkMins);
 
-    // Heures Nuit
-    const elNight = document.getElementById('stat-total-night');
-    if(elNight) elNight.textContent = formatMins(stats.totalNightMins);
+        // Moyenne
+        const avg = stats.daysWorked > 0 ? Math.floor(stats.totalWorkMins / stats.daysWorked) : 0;
+        document.getElementById('stat-avg-hours').textContent = formatMins(avg);
 
-    // --- C'EST ICI QUE CA MANQUAIT ---
-    // On connecte le calcul (totalLostMins) à la case HTML (stat-total-lost)
-    const elLost = document.getElementById('stat-total-lost');
-    if(elLost) {
-        elLost.textContent = formatMins(stats.totalLostMins);
-        
-        // Optionnel : Mettre en rouge si > 0 pour bien le voir
-        if (stats.totalLostMins > 0) {
-            elLost.style.fontWeight = "bold";
-        } else {
-             elLost.style.color = "inherit"; 
-             elLost.style.fontWeight = "normal";
+        // Jours travaillés
+        document.getElementById('stat-days-count').textContent = stats.daysWorked;
+
+        // Heures Nuit
+        const elNight = document.getElementById('stat-total-night');
+        if (elNight) elNight.textContent = formatMins(stats.totalNightMins);
+
+        // --- C'EST ICI QUE CA MANQUAIT ---
+        // On connecte le calcul (totalLostMins) à la case HTML (stat-total-lost)
+        const elLost = document.getElementById('stat-total-lost');
+        if (elLost) {
+            elLost.textContent = formatMins(stats.totalLostMins);
+
+            // Optionnel : Mettre en rouge si > 0 pour bien le voir
+            if (stats.totalLostMins > 0) {
+                elLost.style.fontWeight = "bold";
+            } else {
+                elLost.style.color = "inherit";
+                elLost.style.fontWeight = "normal";
+            }
         }
     }
-}
 }
 function createStatsPage() {
     if (document.getElementById('page-stats')) return;
     const page = document.createElement('div');
     page.id = 'page-stats';
     page.className = 'page';
-    page.style.paddingBottom = "80px"; 
-    
+    page.style.paddingBottom = "80px";
+
     page.innerHTML = `
         <header>
             <h1>Statistiques</h1>
@@ -3893,7 +3745,7 @@ function createStatsPage() {
             
         </div>
     `;
-    
+
     document.body.insertBefore(page, document.querySelector('.bottom-nav'));
 }
 // --- SOUS-FONCTION 3 : BOUTON NAV ---
@@ -3901,13 +3753,13 @@ function addStatsNavButton() {
     const navContainer = document.querySelector('.bottom-nav');
     // On vérifie que le bouton n'existe pas déjà pour ne pas le créer en double
     if (navContainer && !document.getElementById('nav-btn-stats')) {
-        
+
         const btn = document.createElement('button');
         btn.id = 'nav-btn-stats';
         btn.className = 'nav-item';
-        
+
         // --- C'EST ICI QUE TOUT SE JOUE ---
-        btn.onclick = function() { 
+        btn.onclick = function () {
             // 1. Si on est en "Mode Sélection" (le fond est grisé), on ANNULE tout.
             if (typeof isGraphSelectionMode !== 'undefined' && isGraphSelectionMode) {
                 toggleGraphSelectionMode(); // Cette fonction éteint le mode et nettoie le style
@@ -3915,13 +3767,13 @@ function addStatsNavButton() {
             }
 
             // 2. Sinon (Comportement normal), on va sur la page et on calcule
-            navTo('page-stats', this); 
-            renderStatsView(); 
+            navTo('page-stats', this);
+            renderStatsView();
         };
         // ----------------------------------
 
         btn.innerHTML = `<i class="fas fa-chart-bar"></i><span>Stats</span>`;
-        
+
         // Insertion du bouton dans le menu (avant le dernier élément ou à la fin)
         const lastItem = navContainer.lastElementChild;
         if (lastItem) navContainer.insertBefore(btn, lastItem);
@@ -3936,7 +3788,7 @@ function calculateYearlyStats(year) {
     const monthlyNight = Array(12).fill(0);
     const monthlyLost = Array(12).fill(0); // <--- NOUVEAU
     const monthlyDays = Array(12).fill(0); // <--- NOUVEAU
-    
+
     let totalHSMins = 0;
     let totalWorkMins = 0;
     let totalNightMins = 0;
@@ -3947,7 +3799,7 @@ function calculateYearlyStats(year) {
         const mStr = (m + 1).toString().padStart(2, '0');
         const storageKey = `pt_logs_${year}_${mStr}`;
         const raw = localStorage.getItem(storageKey);
-        
+
         if (raw) {
             try {
                 const logs = JSON.parse(raw);
@@ -3987,16 +3839,16 @@ function calculateYearlyStats(year) {
                         }
                     });
                 }
-            } catch(e) { console.error(e); }
+            } catch (e) { console.error(e); }
         }
     }
 
     // On stocke ces données globalement pour y accéder lors du clic sur une carte
     window.currentStatsData = { monthlyHS, monthlyWork, monthlyNight, monthlyLost, monthlyDays };
 
-    return { 
+    return {
         monthlyHS, monthlyWork, monthlyNight, monthlyLost, monthlyDays,
-        totalHSMins, totalWorkMins, totalNightMins, totalLostMins, daysWorked 
+        totalHSMins, totalWorkMins, totalNightMins, totalLostMins, daysWorked
     };
 }
 function updateStatsCards(stats) {
@@ -4014,29 +3866,29 @@ function updateStatsCards(stats) {
 
     const elTotal = document.getElementById('stat-total-hours');
     if (elTotal) elTotal.textContent = formatMins(stats.totalWorkMins);
-    
+
     // Moyenne
     const avg = stats.daysWorked > 0 ? Math.floor(stats.totalWorkMins / stats.daysWorked) : 0;
     const elAvg = document.getElementById('stat-avg-hours');
     if (elAvg) elAvg.textContent = formatMins(avg);
-    
+
     // Jours travaillés
     const elDays = document.getElementById('stat-days-count');
     if (elDays) elDays.textContent = stats.daysWorked;
 
     // Heures Nuit
     const elNight = document.getElementById('stat-total-night');
-    if(elNight) elNight.textContent = formatMins(stats.totalNightMins);
+    if (elNight) elNight.textContent = formatMins(stats.totalNightMins);
 
     // --- LE POINT CRITIQUE : HEURES COUPÉES ---
     const elLost = document.getElementById('stat-total-lost');
-    
+
     if (elLost) {
         // On récupère la valeur calculée (11 min dans votre cas)
-        const val = stats.totalLostMins || 0; 
-        
+        const val = stats.totalLostMins || 0;
+
         elLost.textContent = formatMins(val);
-        
+
         // Petit effet visuel pour confirmer que ça marche (flash rouge)
         elLost.style.color = val > 0 ? "#e74c3c" : "inherit";
     } else {
@@ -4047,7 +3899,7 @@ function updateStatsCards(stats) {
 function drawGenericChart(canvasId, dataArr, styleOptions) {
     const canvas = document.getElementById(canvasId);
     if (!canvas) return;
-    
+
     // Options par défaut
     const unit = styleOptions.unit || "h";       // "h" ou "j"
     const mode = styleOptions.mode || "time";    // "time" (minutes -> heures) ou "count" (entiers)
@@ -4058,10 +3910,10 @@ function drawGenericChart(canvasId, dataArr, styleOptions) {
     const rect = parent.getBoundingClientRect();
     canvas.width = rect.width * dpr;
     canvas.height = rect.height * dpr;
-    
+
     const ctx = canvas.getContext('2d');
     ctx.scale(dpr, dpr);
-    
+
     const width = rect.width;
     const height = rect.height;
     const padding = { top: 25, bottom: 20, left: 35, right: 10 };
@@ -4070,7 +3922,7 @@ function drawGenericChart(canvasId, dataArr, styleOptions) {
 
     // --- 1. CALCUL DE L'ÉCHELLE ---
     const maxVal = Math.max(...dataArr, mode === "time" ? 60 : 1); // Min 1h ou 1 unité
-    
+
     // Si mode Temps : on divise par 60 (Minutes -> Heures)
     // Si mode Compteur : on garde la valeur brute (Jours)
     const maxScaleVal = mode === "time" ? Math.ceil(maxVal / 60) : Math.ceil(maxVal);
@@ -4091,14 +3943,14 @@ function drawGenericChart(canvasId, dataArr, styleOptions) {
     ctx.fillStyle = "#888";
     ctx.font = "10px sans-serif";
     ctx.textAlign = "right";
-    
-    for(let i = 0; i <= yAxisMax; i += step) {
+
+    for (let i = 0; i <= yAxisMax; i += step) {
         const ratio = i / yAxisMax;
         const y = height - padding.bottom - (ratio * (height - padding.top - padding.bottom));
-        
+
         // Affiche "10h" ou "10j"
         if (i > 0 || step > 1) {
-             ctx.fillText(i + unit, padding.left - 6, y + 3);
+            ctx.fillText(i + unit, padding.left - 6, y + 3);
         }
 
         ctx.beginPath();
@@ -4109,18 +3961,18 @@ function drawGenericChart(canvasId, dataArr, styleOptions) {
 
     // --- 3. DESSIN DES BARRES ---
     const monthNames = ["J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"];
-    const barWidth = (width - padding.left - padding.right) / 12 * 0.6; 
+    const barWidth = (width - padding.left - padding.right) / 12 * 0.6;
     const gap = (width - padding.left - padding.right) / 12;
 
     dataArr.forEach((val, i) => {
-        if(val > 0) {
+        if (val > 0) {
             // Normalisation de la hauteur
             // Si Temps : val (min) / 60 / maxHours
             // Si Count : val / maxCount
             const normalizedVal = mode === "time" ? (val / 60) : val;
             const barHeight = (normalizedVal / yAxisMax) * (height - padding.top - padding.bottom);
-            
-            const x = padding.left + (i * gap) + (gap - barWidth)/2;
+
+            const x = padding.left + (i * gap) + (gap - barWidth) / 2;
             const y = height - padding.bottom - barHeight;
 
             // Dégradé
@@ -4131,11 +3983,11 @@ function drawGenericChart(canvasId, dataArr, styleOptions) {
             ctx.fillRect(x, y, barWidth, barHeight);
 
             // Étiquette (Tooltip)
-            if(barHeight > 10) {
+            if (barHeight > 10) {
                 ctx.fillStyle = "#fff";
                 ctx.textAlign = "center";
                 ctx.font = "9px sans-serif";
-                
+
                 let text = "";
                 if (mode === "time") {
                     // Format Heure : 2h30
@@ -4146,11 +3998,11 @@ function drawGenericChart(canvasId, dataArr, styleOptions) {
                     // Format Compteur : 12j
                     text = val + unit;
                 }
-                
-                ctx.fillText(text, x + barWidth/2, y - 4);
+
+                ctx.fillText(text, x + barWidth / 2, y - 4);
             }
         }
-        
+
         // Mois (X-Axis)
         ctx.fillStyle = "#888";
         ctx.textAlign = "center";
@@ -4165,11 +4017,11 @@ function forceMigrateFrozenMetrics() {
     // 1. VÉRIFICATION : Est-ce qu'on l'a déjà fait ?
     if (localStorage.getItem(MIGRATION_KEY) === 'true') {
         // Déjà fait, on arrête tout de suite, on ne consomme pas de ressources.
-        return; 
+        return;
     }
 
     console.log("❄️ Démarrage de la migration FrozenMetrics (Exécution unique)...");
-    
+
     let totalLogsFixed = 0;
     let totalFilesUpdated = 0;
 
@@ -4182,7 +4034,7 @@ function forceMigrateFrozenMetrics() {
             try {
                 const raw = localStorage.getItem(key);
                 if (!raw) continue;
-                
+
                 const logsList = JSON.parse(raw);
                 if (!Array.isArray(logsList)) continue;
 
@@ -4195,7 +4047,7 @@ function forceMigrateFrozenMetrics() {
                         // On lance le calcul avec les réglages ACTUELS
                         const metrics = calculateLogMetrics(log);
                         log.frozenMetrics = metrics;
-                        
+
                         fileChanged = true;
                         totalLogsFixed++;
                     }
@@ -4218,10 +4070,10 @@ function forceMigrateFrozenMetrics() {
 
     // 6. Rafraîchir l'interface uniquement si des changements ont eu lieu
     if (totalLogsFixed > 0) {
-        loadLogsForView(); 
+        loadLogsForView();
         renderHistory();
         if (typeof renderStatsView === 'function') renderStatsView();
-        
+
         // Petit message discret (pas d'alerte bloquante)
         const msg = `Mise à jour des calculs terminée.\n${totalLogsFixed} entrées optimisées.`;
         console.log(msg);
@@ -4232,31 +4084,31 @@ function forceMigrateFrozenMetrics() {
 }
 
 
-let isGraphSelectionMode = false;
+let isGraphSelectionMode = false; // Déclaration globale (avant tout usage)
 
 function toggleGraphSelectionMode() {
     isGraphSelectionMode = !isGraphSelectionMode;
     const body = document.body;
     const cards = document.querySelectorAll('.stat-card');
-    
+
     if (isGraphSelectionMode) {
         body.classList.add('graph-selecting');
         showOneTimeMessage('graph_tip_1_v2', "Cliquez sur une données pour créer son graphique", 0);
-        
+
         cards.forEach(card => {
             // 1. Récupérer la couleur du contour
-            const borderColor = card.style.borderColor; 
-            
+            const borderColor = card.style.borderColor;
+
             // 2. Appliquer en fond avec transparence (0.2 = 20%)
             card.style.backgroundColor = getTransparentColor(borderColor, 0.2);
-            
+
             // 3. Ajouter une classe pour l'effet de clic
             card.classList.add('selectable-card');
         });
 
     } else {
         body.classList.remove('graph-selecting');
-        
+
         // Nettoyage
         cards.forEach(card => {
             card.style.backgroundColor = ""; // On enlève le fond
@@ -4278,9 +4130,9 @@ function handleStatCardClick(element, type) {
     let title = element.querySelector('.stat-label').textContent;
     let icon = "fa-chart-bar";
     let unit = "h";
-    let mode = "time"; 
+    let mode = "time";
 
-    switch(type) {
+    switch (type) {
         case 'days':
             dataset = data.monthlyDays; icon = "fa-calendar-check"; unit = "j"; mode = "count";
             break;
@@ -4310,11 +4162,11 @@ function handleStatCardClick(element, type) {
 function addDynamicChartToPage(title, dataset, color, iconClass, unit = "h", mode = "time", type = "") {
     const container = document.getElementById('charts-container');
     const canvasId = 'chart-' + Date.now();
-    
+
     const wrapper = document.createElement('div');
     wrapper.className = 'chart-wrapper new-chart-anim dynamic-chart'; // Ajout de classe 'dynamic-chart'
-    wrapper.style.borderLeft = `4px solid ${color}`; 
-    
+    wrapper.style.borderLeft = `4px solid ${color}`;
+
     // --- SAUVEGARDE DES METADONNÉES ---
     // On "tatoue" le graphique pour s'en souvenir au changement d'année
     wrapper.dataset.type = type;   // ex: 'night'
@@ -4337,17 +4189,17 @@ function addDynamicChartToPage(title, dataset, color, iconClass, unit = "h", mod
     `;
 
     container.insertBefore(wrapper, container.firstChild);
-    
+
     const colorTransparent = getTransparentColor(color, 0.4);
 
     drawGenericChart(canvasId, dataset, {
-        color1: colorTransparent, 
+        color1: colorTransparent,
         color2: color,
         title: title,
         unit: unit,
         mode: mode
     });
-    
+
     wrapper.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 function getTransparentColor(color, alpha) {
@@ -4357,22 +4209,22 @@ function getTransparentColor(color, alpha) {
         let g = parseInt(color.slice(3, 5), 16);
         let b = parseInt(color.slice(5, 7), 16);
         return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-    } 
+    }
     // Si c'est déjà du rgb(...)
     else if (color.startsWith('rgb')) {
         // On extrait juste les chiffres
         const rgbValues = color.match(/\d+/g);
-        if(rgbValues && rgbValues.length >= 3) {
+        if (rgbValues && rgbValues.length >= 3) {
             return `rgba(${rgbValues[0]}, ${rgbValues[1]}, ${rgbValues[2]}, ${alpha})`;
         }
     }
     // Fallback sécurité
-    return color; 
+    return color;
 }
 
 // On ajoute 'delay = 1500' : si tu ne donnes rien, ça vaut 1500. Si tu donnes un chiffre, ça prend ce chiffre.
 function showOneTimeMessage(id, text, delay = 1500) {
-    const GLOBAL_KEY = 'pt_read_messages'; 
+    const GLOBAL_KEY = 'pt_read_messages';
 
     // 1. Récupération de la liste actuelle
     let readList = [];
@@ -4389,11 +4241,11 @@ function showOneTimeMessage(id, text, delay = 1500) {
 
     // 3. On attend le délai défini (1500ms par défaut ou ta valeur perso)
     setTimeout(() => {
-        
+
         // --- Création de la Div ---
         const popup = document.createElement('div');
-        popup.id = 'temp-update-popup'; 
-        
+        popup.id = 'temp-update-popup';
+
         popup.innerHTML = `
             <span style="margin-right: 15px; font-weight: 500;">${text}</span>
             <button id="btn-popup-ok" class="batch-btn">OK</button>
@@ -4408,7 +4260,7 @@ function showOneTimeMessage(id, text, delay = 1500) {
 
         // --- Fonction de fermeture et sauvegarde ---
         const closeAndSave = () => {
-            popup.classList.remove('visible'); 
+            popup.classList.remove('visible');
 
             try {
                 const rawNow = localStorage.getItem(GLOBAL_KEY);
@@ -4461,26 +4313,26 @@ function checkAndRequestNotifications() {
             console.log("Permission notif :", permission);
             // Une fois autorisé, on peut envoyer la première notif
             if (permission === 'granted' && currentSession) {
-                sendStartNotification(); 
+                sendStartNotification();
             }
         });
     }
 }
 navigator.serviceWorker.addEventListener('message', (event) => {
     if (event.data.type === 'FORCE_STOP_TIMER') {
-        stopTimer(); 
+        stopTimer();
         showPage('page-chrono');
     }
 
     if (event.data.type === 'NAV_TO_CHRONO') {
         console.log("Navigation forcée vers le chrono...");
         showPage('page-chrono');
-sendTimerNotification();
+        sendTimerNotification();
         // Attendre 1 seconde avant de relancer la notification
         setTimeout(() => {
 
-                sendTimerNotification(); 
-            
+            sendTimerNotification();
+
         }, 1000); // 1000 ms = 1 seconde
     }
 });
@@ -4512,8 +4364,8 @@ function getNightDurationInRange(startMs, endMs) {
     const isNightMinute = (ms) => {
         const d = new Date(ms);
         const mins = d.getHours() * 60 + d.getMinutes();
-        return (nsMins > neMins) 
-            ? (mins >= nsMins || mins < neMins) 
+        return (nsMins > neMins)
+            ? (mins >= nsMins || mins < neMins)
             : (mins >= nsMins && mins < neMins);
     };
 
@@ -4592,63 +4444,18 @@ function injectEditModalHTML() {
     `;
 }
 
-function createCloudSyncCard() {
-    // 1. Création du conteneur principal
-    const card = document.createElement('div');
-    card.className = 'card settings-card cloud-sync-card';
-
-    // 2. Injection du contenu HTML (propre, sans style inline)
-    card.innerHTML = `
-        <h3><i class="fas fa-cloud"></i> Synchronisation Cloud</h3>
-        
-        <div id="cloud-login-section" class="cloud-login-box">
-            <p class="cloud-description">
-                Sauvegardez vos données en ligne pour y accéder depuis plusieurs appareils.
-            </p>
-
-            <div id="login-form-fields" class="cloud-input-group">
-                <input type="text" id="cloud-user" placeholder="Nom d'utilisateur" class="modal-input cloud-input-user">
-                <input type="password" id="cloud-pass" placeholder="Mot de passe" class="modal-input cloud-input-pass">
-                
-                <button onclick="handleCloudConnect()" class="btn-primary btn-cloud-login">
-                    <i class="fas fa-plug"></i> Connexion
-                </button>
-            </div>
-
-            <div id="logged-status" class="cloud-logged-status">
-                <div class="cloud-success-msg">
-                    <i class="fas fa-check-circle"></i> Connecté : <b id="display-username"></b>
-                </div>
-                <p class="cloud-auto-sync-text">Vos données sont synchronisées automatiquement.</p>
-                
-                <button onclick="forceFullSync()" class="btn-primary btn-force-sync">
-                    <i class="fas fa-sync"></i> Forcer l'envoi total
-                </button>
-                
-                <button onclick="handleCloudLogout()" class="btn-cloud-logout">
-                    Déconnexion
-                </button>
-            </div>
-        </div>
-    `;
-
-    return card;
-}
-
-
-
 function openContactModal(titre) {
     currentAppTitle = titre || "Defaut";
-    
+
     // 1. Vérifier si la modale existe déjà, sinon la créer
     let modal = document.getElementById('contact-modal');
-    
+
     if (!modal) {
         modal = document.createElement('div');
         modal.id = 'contact-modal';
         modal.className = 'modal-overlay'; // Utilise ta classe existante
         modal.style.display = 'none';
-        
+
         // Structure HTML
         modal.innerHTML = `
             <div class="modal-content" style="max-width: 400px; width: 90%;">
@@ -4701,10 +4508,10 @@ async function sendContactData() {
         return;
     }
 
-    const btn = document.querySelector('#contact-modal .confirm'); 
+    const btn = document.querySelector('#contact-modal .confirm');
     let originalText = "Envoyer";
-    
-    if(btn) {
+
+    if (btn) {
         originalText = btn.textContent;
         btn.textContent = "Envoi...";
         btn.disabled = true;
@@ -4725,7 +4532,7 @@ async function sendContactData() {
     };
 
     try {
-        const response = await fetch('/contact_save.php', { 
+        const response = await fetch('/contact_save.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
@@ -4745,7 +4552,7 @@ async function sendContactData() {
         console.error("Erreur Fetch:", e);
         alert("Impossible de contacter le serveur.");
     } finally {
-        if(btn) {
+        if (btn) {
             btn.textContent = originalText;
             btn.disabled = false;
             btn.style.opacity = "1";
@@ -4769,10 +4576,10 @@ function injectContactButton() {
     // Style : Violet (#8e44ad) pour se différencier, pleine largeur
     btn.style.cssText = "width: 100%; background-color: #8e44ad; color: white; display:flex; justify-content:center; align-items:center; gap:10px; padding: 12px;";
     btn.innerHTML = `<i class="fas fa-paper-plane"></i> Signaler un Bug / Idée`;
-    
-    btn.onclick = function() {
-        if(typeof openContactModal === 'function') {
-            openContactModal("Pointeuse"); 
+
+    btn.onclick = function () {
+        if (typeof openContactModal === 'function') {
+            openContactModal("Pointeuse");
         }
     };
 

@@ -21,7 +21,7 @@ if ('serviceWorker' in navigator) {
                 }
             });
         });
-    });
+    }).catch(e => console.warn("ServiceWorker non activé (normal en local sans HTTPS)"));
 }
 </script>
 
@@ -338,7 +338,7 @@ body.preload {
 
         <input type="text" id="new-p-name" placeholder="Nom (ex: Matin, Soir)">
 
-        <div class="row-inputs">
+        <div class="row-inputs" id="row-time-inputs">
             <div>
                 <label>Début</label>
                 <input type="time" id="new-p-start" value="08:00">
@@ -350,7 +350,7 @@ body.preload {
         </div>
 
         <div class="row-inputs">
-            <div>
+            <div id="col-pause-input">
                 <label>Pause (min)</label>
                 <input type="number" id="new-p-pause" value="30">
             </div>
@@ -376,6 +376,14 @@ body.preload {
             </div>
         </div>
 
+        <label class="toggle-row" style="margin-top: 15px; margin-bottom: 10px;">
+            <span style="font-size: 0.9rem;">100% Heures Supplémentaires (tout le temps de travail = HS)</span>
+            <label class="switch">
+                <input type="checkbox" id="new-p-all-ot">
+                <span class="slider round"></span>
+            </label>
+        </label>
+
         <label style="margin-top:10px;">Jours types travaillés :</label>
         <div class="day-selector" id="new-p-days">
             <div class="day-circle" onclick="toggleDay(0)">L</div>
@@ -386,7 +394,7 @@ body.preload {
             <div class="day-circle" onclick="toggleDay(5)">S</div>
             <div class="day-circle" onclick="toggleDay(6)">D</div>
         </div>
-<div class="custom-schedule-section">
+<div class="custom-schedule-section" id="custom-schedule-container">
     <button class="btn-secondary" style="width:100%; font-size:0.85rem;" onclick="toggleCustomSelector()">
         <i class="fas fa-plus-circle"></i> Personnaliser un jour spécifique
     </button>
@@ -586,69 +594,19 @@ body.preload {
       console.log("Révélation du site (suppression de la classe preload)");
       document.body.classList.remove('preload');
   }
-(function() {
-    const rawSettings = localStorage.getItem('pt_settings');
-    let forceLocal = false;
-    try {
-        if (rawSettings) forceLocal = JSON.parse(rawSettings).forceLocal || false;
-    } catch(e) {}
 
-    const urlDistant = "https://polocrafting.fr/BD/";
-    const source = forceLocal ? "" : urlDistant;
-    
-    // Génère un numéro de version basé sur l'heure (change toutes les minutes)
-    // Cela évite de retélécharger à chaque seconde, mais garantit une MAJ rapide.
-    const version = Math.floor(Date.now() / 60000); 
-    const cacheBuster = "?v=" + version;
+  // Chargement 100% Local
+  const version = Math.floor(Date.now() / 60000); 
+  const cacheBuster = "?v=" + version;
 
-    let cssReady = false;
-    let jsReady = false;
-    let fallbackTriggered = false;
+  const link = document.createElement("link");
+  link.rel = "stylesheet";
+  link.href = "style.css" + cacheBuster;
+  document.head.appendChild(link);
 
-    const tryShowSite = () => {
-        if (cssReady && jsReady && window.showSite) {
-            setTimeout(() => { showSite(); }, 350);
-        }
-    };
-
-    const loadLocalFallback = () => {
-        if (fallbackTriggered) return;
-        fallbackTriggered = true;
-        console.warn("⚠️ Mode local/secours activé.");
-        
-        if (!cssReady) {
-            const lLocal = document.createElement("link");
-            lLocal.rel = "stylesheet";
-            lLocal.href = "style.css" + cacheBuster;
-            lLocal.onload = () => { cssReady = true; tryShowSite(); };
-            document.head.appendChild(lLocal);
-        }
-
-        if (!jsReady) {
-            const sLocal = document.createElement("script");
-            sLocal.src = "script.js" + cacheBuster;
-            sLocal.onload = () => { jsReady = true; tryShowSite(); };
-            document.body.appendChild(sLocal);
-        }
-    };
-
-    // 1. Tentative Distant avec Cache Buster
-    const link = document.createElement("link");
-    link.rel = "stylesheet";
-    link.href = source + "style.css" + cacheBuster;
-    link.onload = () => { cssReady = true; tryShowSite(); };
-    link.onerror = loadLocalFallback;
-    document.head.appendChild(link);
-
-    const script = document.createElement("script");
-    script.src = source + "script.js" + cacheBuster;
-    script.onload = () => { jsReady = true; tryShowSite(); };
-    script.onerror = loadLocalFallback;
-    document.body.appendChild(script);
-
-    setTimeout(() => {
-        if (!jsReady || !cssReady) loadLocalFallback();
-    }, 2500); 
-})();
+  const script = document.createElement("script");
+  script.src = "script.js" + cacheBuster;
+  script.onload = () => { setTimeout(() => { showSite(); }, 350); };
+  document.body.appendChild(script);
 </script>
 </html>

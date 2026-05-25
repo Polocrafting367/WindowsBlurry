@@ -19,7 +19,7 @@
 
     <div class="workspace">
         <main class="viewport" id="preview-viewport">
-            <div id="canvas-container">
+            <div id="canvas-container" class="hidden">
                 <canvas id="main-canvas"></canvas>
                 <video id="source-video" loop playsinline crossorigin="anonymous" class="hidden"></video>
             </div>
@@ -30,10 +30,22 @@
             </div>
 
             <div id="video-controls" class="viewport-controls hidden">
-                <div class="playback-group">
-                    <button id="btn-play-pause" style="width: 40px; padding: 0; font-size: 16px;">▶</button>
-                    <input type="range" id="video-progress" min="0" max="100" value="0" step="0.1">
-                    <span id="video-time" class="time-display">0:00 / 0:00</span>
+                <div class="playback-group" style="flex-wrap: wrap;">
+                    <div style="display:flex; width:100%; align-items:center; gap:12px;">
+                        <button id="btn-play-pause" style="width: 40px; padding: 0; font-size: 16px;">▶</button>
+                        <input type="range" id="video-progress" min="0" max="100" value="0" step="0.1">
+                        <span id="video-time" class="time-display">0:00 / 0:00</span>
+                    </div>
+                    <div style="display:flex; width:100%; align-items:center; gap:12px; margin-top: 4px; border-top: 1px dotted var(--border); padding-top: 12px; position:relative;">
+                        <span style="color:var(--text-dim); font-size:11px; white-space:nowrap; margin-right:8px;">Extrait</span>
+                        <div class="dual-slider-container">
+                            <div class="dual-slider-track"></div>
+                            <div class="dual-slider-fill" id="trim-fill" style="left:0%; width:100%;"></div>
+                            <input type="range" id="trim-start" min="0" max="100" value="0" step="0.1">
+                            <input type="range" id="trim-end" min="0" max="100" value="100" step="0.1">
+                        </div>
+                        <span id="trim-display" style="color:var(--text-dim); font-size:11px; font-family:monospace; white-space:nowrap; margin-left:8px;">0.0s - 0.0s</span>
+                    </div>
                 </div>
                 
                 <div class="tools-group">
@@ -58,6 +70,8 @@
                     <select id="p_preset_selector" style="margin-bottom:0; border-color: #004488;">
                         <option value="default">Défaut Favori (Équilibré)</option>
                         <option value="pro">Rendu Pro VHS (Doux)</option>
+                        <option value="vhs">Cassette VHS (Réaliste)</option>
+                        <option value="minidv">Caméscope Mini DV (Numérique)</option>
                         <option value="damaged">VHS Abîmée (Erreur Tracking)</option>
                         <option value="vintage">Pellicule 8mm (Vieux Film)</option>
                         <option value="photo">Photo Polaroïd</option>
@@ -311,6 +325,10 @@
                     <div class="control-row" style="margin-top: 12px; padding-top: 12px; border-top: 1px dotted var(--border);">
                         <div class="control-label"><span>Pixelisation Mosaïque (SD)</span> <span id="val_pixel_size" class="control-value">1</span></div>
                         <input type="range" id="p_pixel_size" class="param-input" min="1" max="15" step="1" value="1">
+                    </div>
+                    <div class="control-row" style="margin-top: 12px; padding-top: 12px; border-top: 1px dotted var(--border);">
+                        <div class="control-label"><span style="color:#ffa;">Patine / Flou de Bande (Résolution interne)</span> <span id="val_band_patina" class="control-value">1.0</span></div>
+                        <input type="range" id="p_band_patina" class="param-input" min="0.2" max="1.0" step="0.01" value="1.0">
                     </div>
                     <div class="control-row" style="margin-top: 12px;">
                         <label class="check-item"><input type="checkbox" id="p_apply_jpeg" class="param-input"> Flou de génération (Codec)</label>

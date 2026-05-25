@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pointeuse-v1.2.16.05'; 
+const CACHE_NAME = 'pointeuse-v1.2.18';
 const ASSETS_TO_CACHE = [
     'index.html',
     'script.js',
@@ -29,7 +29,7 @@ self.addEventListener('fetch', (event) => {
 });
 
 self.addEventListener('message', (event) => {
-if (event.data.type === 'START_TIMER_NOTIF') {
+    if (event.data.type === 'START_TIMER_NOTIF') {
         const options = {
             body: `Chrono en cours : ${event.data.profileName}`,
             icon: 'logo.png',
@@ -44,7 +44,7 @@ if (event.data.type === 'START_TIMER_NOTIF') {
                 { action: 'stop-action', title: 'Arrêter le chrono', icon: 'stop-icon.png' }
             ]
         };
-        
+
         // Utilise self.registration pour être sûr d'avoir accès aux notifs
         event.waitUntil(
             self.registration.showNotification('Pointeuse Mobile', options)
@@ -68,11 +68,11 @@ self.addEventListener('notificationclick', (event) => {
             // 1. Chercher si l'app est déjà ouverte
             for (const client of clientList) {
                 if (client.url.includes(self.location.origin)) {
-                    
+
                     // Si clic sur le bouton STOP
                     if (action === 'stop-action') {
                         client.postMessage({ type: 'FORCE_STOP_TIMER' });
-                    } 
+                    }
                     // Si clic sur le corps de la notification
                     else {
                         client.postMessage({ type: 'NAV_TO_CHRONO' });
